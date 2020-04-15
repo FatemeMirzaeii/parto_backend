@@ -2,7 +2,7 @@ const express = require("express");
 const router = express();
 
 //interview
-router.get("/getInterviewQuestion/:questionId", (req, res) => {
+router.get("/getInterviewQuestion/:prevQuestionId", (req, res) => {
   res.send("Question2");
 });
 

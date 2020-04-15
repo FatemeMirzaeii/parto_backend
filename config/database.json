@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "root",
+    "password": "12345",
+    "database": "Parto",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}

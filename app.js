@@ -1,4 +1,5 @@
 const express = require("express");
+const sequelize = require("./config/database");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");

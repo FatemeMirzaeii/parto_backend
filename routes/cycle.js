@@ -15,7 +15,9 @@ router.delete("/deleteCycle/:cycleId", (req, res) => {
 });
 
 router.get("/getCyclePeriodDays/:cycleId", (req, res) => {
-  res.send(["99/1/7", "99/1/8", "99/1/9", "99/1/10"]);
+  var params = req.params;
+  res.send(params.cycleId);
+//  res.send(["99/1/7", "99/1/8", "99/1/9", "99/1/10"]);
 });
 
 router.get("/getCycleFertilityDays/:cycleId", (req, res) => {
