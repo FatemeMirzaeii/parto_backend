@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-//cycle
 router.post("/addNewCycle", (req, res) => {
   res.send(req.headers, req.params, req.body);
 });
@@ -46,14 +45,6 @@ router.get("/getCycleForecast/:userId", (req, res) => {
 
 router.get("/getCycleIdFromDate/:userId/:date", (req, res) => {
   res.send(12);
-});
-
-router.get("/getNote/:userId/:date", (req, res) => {
-  res.send("Hey it's my first note in parto!");
-});
-
-router.post("/setNote", (req, res) => {
-  res.send(req.headers, req.params, req.body);
 });
 
 module.exports = router;

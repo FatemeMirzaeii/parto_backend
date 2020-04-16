@@ -5,6 +5,7 @@ const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
 const interview = require("./routes/interview");
 const healthTracking = require("./routes/health-tracking");
+const note = require("./routes/note");
 const app = express();
 
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use("/pregnancy", pregnancy);
 app.use("/article", article);
 app.use("/interview", interview);
 app.use("/healthTracking", healthTracking);
+app.use("/note", note);
 
 app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");
