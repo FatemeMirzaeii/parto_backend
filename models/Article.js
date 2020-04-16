@@ -9,6 +9,7 @@ const Article = sequelize.define(
       primaryKey: true,
       type: Sequelize.INTEGER,
       allowNull: false,
+      autoIncrement: true
     },
     title: {
       type: Sequelize.STRING,

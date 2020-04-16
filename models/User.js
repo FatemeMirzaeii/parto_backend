@@ -1,26 +1,28 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../config/database");
 
-const Note = sequelize.define(
-  "note",
+const User = sequelize.define(
+  "user",
   {
     id: {
       primaryKey: true,
       type: Sequelize.INTEGER,
       allowNull: false,
-      autoIncrement: true
+      autoIncrement: true,
     },
-    title: {
+    name: {
       type: Sequelize.STRING,
     },
-    content: {
+    // username: {
+    //   type: Sequelize.STRING,
+    //   unique: true,
+    // },
+    password: {
       type: Sequelize.STRING,
     },
-    user_id: {
-      type: Sequelize.INTEGER,
-    },
-    note_date: {
-      type: Sequelize.DATE,
+    email: {
+      type: Sequelize.STRING,
+      unique: true,
     },
     active: {
       type: Sequelize.BOOLEAN,
@@ -32,4 +34,4 @@ const Note = sequelize.define(
   }
 );
 
-module.exports = Note;
+module.exports = User;

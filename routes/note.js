@@ -8,11 +8,9 @@ router.get("/:userId/:date", (req, res) => {
     userId: Joi.number().positive().integer().required(),
     date: Joi.date(),
   };
-  const result = Joi.validate(req.params, schema);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
+  const { error } = Joi.validate(req.params, schema);
+  if (error) return res.status(400).send(result.error.details[0].message);
+
   Note.findAll({
     where: {
       user_id: req.params.userId,
@@ -29,11 +27,9 @@ router.post("/", (req, res) => {
     date: Joi.date().required(),
     content: Joi.string().min(1),
   };
-  const result = Joi.validate(req.body, schema);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
+  const { error } = Joi.validate(req.body, schema);
+  if (error) return res.status(400).send(result.error.details[0].message);
+
   res.send(req.headers, req.params, req.body);
 });
 
