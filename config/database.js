@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize");
+const db = require("./database.json");
 
-const sequelize = new Sequelize("Parto", "root", "12345", {
-  host: "localhost",
+const sequelize = new Sequelize(db.name, db.username, db.password, {
+  host: db.host,
   dialect: "mysql",
 });
 sequelize
@@ -12,5 +13,6 @@ sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
+sequelize.sync({ alter: true });
 
 module.exports = sequelize;

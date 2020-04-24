@@ -1,20 +1,22 @@
-const Sequelize = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Pregnancy = sequelize.define(
-  "pregnancy",
+class Pregnancy extends Model {}
+
+Pregnancy.init(
   {
     id: {
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true
-    }
+      autoIncrement: true,
+    },
   },
   {
+    sequelize,
     freezeTableName: true,
-    timestamps: false,
-  }
+    underscored: true,
+ }
 );
 
 module.exports = Pregnancy;

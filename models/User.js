@@ -1,37 +1,45 @@
-const Sequelize = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-const User = sequelize.define(
-  "user",
+class User extends Model {}
+
+User.init(
   {
     id: {
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
+      max: 128,
     },
     // username: {
-    //   type: Sequelize.STRING,
+    //   type: DataTypes.STRING,
     //   unique: true,
     // },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       unique: true,
+      isEmail: true,
     },
     active: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
     },
   },
   {
+    sequelize,
     freezeTableName: true,
-    timestamps: false,
+    underscored: true,
   }
 );
+
+User.hasMany(sequelize.models.Note, {
+  onDelete: "RESTRICT",
+});
 
 module.exports = User;

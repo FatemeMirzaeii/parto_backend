@@ -1,34 +1,33 @@
-const Sequelize = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Note = sequelize.define(
-  "note",
+class Note extends Model {}
+
+Note.init(
   {
     id: {
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true
+      autoIncrement: true,
     },
     title: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     content: {
-      type: Sequelize.STRING,
-    },
-    user_id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.STRING,
     },
     note_date: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
     },
     active: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
     },
   },
   {
+    sequelize,
     freezeTableName: true,
-    timestamps: false,
+    underscored: true,
   }
 );
 

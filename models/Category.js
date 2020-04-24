@@ -1,8 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Article extends Model {}
-Article.init(
+class Category extends Model {}
+
+Category.init(
   {
     // attributes
     id: {
@@ -15,10 +16,6 @@ Article.init(
       type: DataTypes.STRING,
       // allowNull defaults to true
     },
-    content: {
-      type: DataTypes.STRING,
-      // allowNull defaults to true
-    },
   },
   {
     sequelize,
@@ -28,4 +25,12 @@ Article.init(
   }
 );
 
-module.exports = Article;
+Category.belongsTo(sequelize.models.Category, {
+  foreignKey: "parent_category_id",
+});
+
+Category.hasMany(sequelize.models.Article, {
+  onDelete: "RESTRICT",
+  //onUpdate is set to "CASCADE" by default
+});
+module.exports = Category;

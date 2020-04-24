@@ -1,19 +1,22 @@
+const { DataTypes, Model } = require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize = require("../config/database");
 
-const Health_Tracking_Options = sequelize.define(
-  "health_tracking_options",
+class Health_Tracking_Options extends Model {}
+
+Health_Tracking_Options.init(
   {
     id: {
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true
+      autoIncrement: true,
     },
   },
   {
+    sequelize,
     freezeTableName: true,
-    timestamps: false,
+    underscored: true,
   }
 );
 

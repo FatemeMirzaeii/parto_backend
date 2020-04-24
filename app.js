@@ -1,5 +1,5 @@
 const express = require("express");
-const sequelize = require("./config/database");
+require("./config/database");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -24,4 +24,4 @@ app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");
 });
 
-app.listen(3000, () => console.log("Listening on port 3000..."));
+app.listen(2218, () => console.log("Listening on port 2218..."));

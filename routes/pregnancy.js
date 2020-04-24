@@ -1,12 +1,14 @@
 const express = require("express");
+const Pregnancy = require("../models/Pregnancy");
 const router = express();
 
 //Pregnancy
 router.get("/getWeekData/:userId/:date", (req, res) => {
+  Pregnancy.findByPk(1);
   res.send({
     weekNo: 24,
     startDate: 99 / 1 / 4,
-    endDate: 99 / 1 / 11
+    endDate: 99 / 1 / 11,
   });
 });
 router.get("/getWeekCount/:userId", (req, res) => {
@@ -22,7 +24,7 @@ router.get("/getFetusInfo/:userId", (req, res) => {
   res.send({
     size: 10,
     weight: "500g",
-    age: "24weeks"
+    age: "24weeks",
   });
 });
 
