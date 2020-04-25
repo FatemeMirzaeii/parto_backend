@@ -3,7 +3,6 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const router = express.Router();
-
 router.post("/signUp", (req, res) => {
   const schema = {
     name: Joi.string().min(1).max(50).required(),
@@ -27,7 +26,8 @@ router.post("/signUp", (req, res) => {
       email: req.body.email,
       password: hash,
     }).then((user) => {
-      res.send("new user Id is: " + user.id);
+      const token = user.generateAuthToken();
+      res.header("x-auth-token", token).send("new user Id is: " + user.id);
     });
   });
 });

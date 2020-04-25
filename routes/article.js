@@ -1,10 +1,11 @@
 const express = require("express");
 const Joi = require("joi");
+const auth = require("../middleware/auth");
 const Article = require("../models/Article");
 const category = require("../models/Category");
 const router = express();
 
-router.get("/getArticleContent/:articleId", (req, res) => {
+router.get("/getArticleContent/:articleId", auth, (req, res) => {
   const schema = {
     articleId: Joi.number().positive().integer().required(),
   };
@@ -17,7 +18,7 @@ router.get("/getArticleContent/:articleId", (req, res) => {
   });
 });
 
-router.get("/getArticleTitle/:articleId", (req, res) => {
+router.get("/getArticleTitle/:articleId", auth, (req, res) => {
   const schema = {
     articleId: Joi.number().positive().integer().required(),
   };

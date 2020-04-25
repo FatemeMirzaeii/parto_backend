@@ -1,7 +1,14 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
+const jwt = require("jsonwebtoken");
+var fs = require('fs');
+const secret = fs.readFileSync("./private.key", "utf8");
 
-class User extends Model {}
+class User extends Model {
+  generateAuthToken() {
+    return jwt.sign({ _id: this.id }, secret);
+  }
+}
 
 User.init(
   {

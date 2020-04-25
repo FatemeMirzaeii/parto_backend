@@ -1,5 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
+var fs = require('fs');
 require("./config/database");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
@@ -21,6 +22,11 @@ app.use("/healthTracking", healthTracking);
 app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
+
+if (!fs.readFileSync("./private.key", "utf8")) {
+  console.error("FATAL ERROR: jwt secret is not defined.");
+  process.exit(1);
+}
 
 app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");

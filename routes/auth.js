@@ -1,7 +1,6 @@
 const express = require("express");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const router = express.Router();
 
@@ -19,19 +18,22 @@ router.post("/signIn", (req, res) => {
     },
   }).then((user) => {
     if (!user) return res.status(400).send("اطلاعات وارد شده صحیح نیست.");
-    bcrypt.compare(req.body.password, user.password).then((res) => {
-      if (!res) return res.status(400).send("رمز نامعتبر");
+    bcrypt.compare(req.body.password, user.password).then((result) => {
+      if (!result) return res.status(400).send("رمز نامعتبر");
+      const token = user.generateAuthToken();
+      res.send(token);
     });
   });
 });
-//todo: incomplete
-router.post("/signOut", (req, res) => {
-  const schema = {};
-  const { error } = Joi.validate(req.body, schema);
-  if (error) return res.status(400).send(error.details[0].message);
-  res.send(req.headers, req.params, req.body);
-});
+// !!!!!!!!!!!!!!!! sign out should be implemented in client-side !!!!!!!!!!!!!!!!!!!!!!!!!!!
+// router.post("/signOut", (req, res) => {
+//   const schema = {};
+//   const { error } = Joi.validate(req.body, schema);
+//   if (error) return res.status(400).send(error.details[0].message);
+//   res.send(req.headers, req.params, req.body);
+// });
 
+//todo: incomplete
 router.post("/forgotPassword", (req, res) => {
   const schema = {};
   const { error } = Joi.validate(req.body, schema);

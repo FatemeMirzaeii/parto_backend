@@ -1,9 +1,10 @@
 const express = require("express");
+const auth = require("../middleware/auth");
 const Note = require("../models/Note");
 const Joi = require("joi");
 const router = express.Router();
 
-router.get("/:userId/:date", (req, res) => {
+router.get("/:userId/:date", auth, (req, res) => {
   const schema = {
     userId: Joi.number().positive().integer().required(),
     date: Joi.date(),
@@ -21,7 +22,7 @@ router.get("/:userId/:date", (req, res) => {
   });
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
   const schema = {
     userId: Joi.number().positive().integer().required(),
     date: Joi.date().required(),
