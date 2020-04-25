@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 require("./config/database");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
@@ -10,6 +11,7 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const app = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use("/cycle", cycle);
 app.use("/pregnancy", pregnancy);
