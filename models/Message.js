@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Note extends Model {}
+class Message extends Model {}
 
-Note.init(
+Message.init(
   {
     id: {
       primaryKey: true,
@@ -14,6 +14,14 @@ Note.init(
         isInt: true,
       },
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "user",
+        key: "id",
+      },
+      onDelete:"RESTRICT"
+    },
     title: {
       type: DataTypes.STRING,
       validate: {
@@ -23,22 +31,13 @@ Note.init(
     content: {
       type: DataTypes.STRING,
     },
-    user_id: {
+    parent_message_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "user",
+        model: "message",
         key: "id",
       },
-      onDelete: "RESTRICT",
-    },
-    note_date: {
-      type: DataTypes.DATE,
-      validate: {
-        isDate: true,
-      },
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
+      onDelete:"RESTRICT"
     },
   },
   {
@@ -48,4 +47,4 @@ Note.init(
   }
 );
 
-module.exports = Note;
+module.exports = Message;

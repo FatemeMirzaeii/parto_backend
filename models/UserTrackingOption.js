@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Pregnancy extends Model {}
+class UserTrackingOption extends Model {}
 
-Pregnancy.init(
+UserTrackingOption.init(
   {
     id: {
       primaryKey: true,
@@ -11,18 +11,7 @@ Pregnancy.init(
       allowNull: false,
       autoIncrement: true,
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "user",
-        key: "id",
-      },
-      onDelete: "RESTRICT",
-    },
-    abortion: {
-      type: DataTypes.BOOLEAN,
-    },
-    due_date: {
+    date: {
       type: DataTypes.DATE,
       validate: {
         isDate: true,
@@ -32,8 +21,9 @@ Pregnancy.init(
   {
     sequelize,
     freezeTableName: true,
+    tableName: "user_tracking_option",
     underscored: true,
   }
 );
 
-module.exports = Pregnancy;
+module.exports = UserTrackingOption;

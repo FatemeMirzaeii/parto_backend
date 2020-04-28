@@ -1,7 +1,8 @@
 const express = require("express");
 const helmet = require("helmet");
-var fs = require('fs');
+var fs = require("fs");
 require("./config/database");
+const winston = require("winston");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -11,6 +12,11 @@ const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const app = express();
+winston.add(winston.transports.File, { fileName: "log.log" });
+
+process.on("uncaughtException", (ex) => {
+  winston.error(ex.message, ex);
+});
 
 app.use(helmet());
 app.use(express.json());

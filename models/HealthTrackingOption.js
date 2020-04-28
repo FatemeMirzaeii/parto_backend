@@ -1,51 +1,37 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Note extends Model {}
+class HealthTrackingOption extends Model {}
 
-Note.init(
+HealthTrackingOption.init(
   {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
-      validate: {
-        isInt: true,
-      },
     },
     title: {
       type: DataTypes.STRING,
       validate: {
-        max: 1024,
+        notEmpty: true,
       },
     },
-    content: {
-      type: DataTypes.STRING,
-    },
-    user_id: {
+    category_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "user",
+        model: "health_tracking_category",
         key: "id",
       },
       onDelete: "RESTRICT",
-    },
-    note_date: {
-      type: DataTypes.DATE,
-      validate: {
-        isDate: true,
-      },
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
     },
   },
   {
     sequelize,
     freezeTableName: true,
+    tableName: "health_tracking_option",
     underscored: true,
   }
 );
 
-module.exports = Note;
+module.exports = HealthTrackingOption;

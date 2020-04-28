@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/addNewCycle", (req, res) => {
-  res.send(req.headers, req.params, req.body);
-});
+// router.post("/addNewCycle", (req, res) => {
+//   res.send(req.headers, req.params, req.body);
+// });
 
-router.put("/editCycle/:cycleId", (req, res) => {
-  res.send(req.headers, req.params, req.body);
-});
+// router.put("/editCycle/:cycleId", (req, res) => {
+//   res.send(req.headers, req.params, req.body);
+// });
 
 router.delete("/deleteCycle/:cycleId", (req, res) => {
   res.send(req.headers, req.params, req.body);

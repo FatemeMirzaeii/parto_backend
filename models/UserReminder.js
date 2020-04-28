@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Note extends Model {}
+class UserReminder extends Model {}
 
-Note.init(
+UserReminder.init(
   {
     id: {
       primaryKey: true,
@@ -14,15 +14,6 @@ Note.init(
         isInt: true,
       },
     },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-      },
-    },
-    content: {
-      type: DataTypes.STRING,
-    },
     user_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -31,11 +22,22 @@ Note.init(
       },
       onDelete: "RESTRICT",
     },
-    note_date: {
-      type: DataTypes.DATE,
-      validate: {
-        isDate: true,
-      },
+    Weekday: {
+      type: DataTypes.ENUM(
+        "شنبه",
+        "یکشنبه",
+        "دوشنبه",
+        "سه شنبه",
+        "چهارشنبه",
+        "پنجشنبه",
+        "جمعه"
+      ),
+    },
+    Hour: {
+      type: DataTypes.TIME,
+    },
+    type: {
+      type: DataTypes.ENUM,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -43,9 +45,10 @@ Note.init(
   },
   {
     sequelize,
+    tableName: "user_reminder",
     freezeTableName: true,
     underscored: true,
   }
 );
 
-module.exports = Note;
+module.exports = UserReminder;

@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Note extends Model {}
+class Log extends Model {}
 
-Note.init(
+Log.init(
   {
     id: {
       primaryKey: true,
@@ -14,31 +14,17 @@ Note.init(
         isInt: true,
       },
     },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-      },
+    type: {
+      type: DataTypes.ENUM("ERROR", "INFO", "WARNING"),
     },
     content: {
       type: DataTypes.STRING,
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "user",
-        key: "id",
-      },
-      onDelete: "RESTRICT",
-    },
-    note_date: {
+    date: {
       type: DataTypes.DATE,
       validate: {
         isDate: true,
       },
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
     },
   },
   {
@@ -48,4 +34,4 @@ Note.init(
   }
 );
 
-module.exports = Note;
+module.exports = Log;

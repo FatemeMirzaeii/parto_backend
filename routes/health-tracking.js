@@ -1,15 +1,31 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const Health_Tracking_Option = require("../models/Health_Tracking_Options");
+const HealthTrackingOption = require("../models/HealthTrackingOption");
+const HealthTrackingCategory = require("../models/HealthTrackingCategory");
+const UserTrackingOption = require("../models/UserTrackingOption");
+const UserLog = require("../models/UserLog");
 const router = express();
 
-//Health Tracking
-router.post("/setUserHealthTrackingInfo ", auth, (req, res) => {
-  Health_Tracking_Option.findByPk(1);
-  res.send(req.headers, req.params, req.body);
+router.post("/setUserHealthTrackingInfo", auth, (req, res) => {
+  req.body.options.forEach((element) => {
+    UserTrackingOption.create(element).then((g) => {
+      res.send(g);
+    });
+  });
 });
-router.get("/getUserHealthTrackingInfo/:userId/:date ", auth, (req, res) => {
-  res.send([{ option1: 1, option2: 2 }]);
+
+router.get("/getUserHealthTrackingInfo/:userId/:date", auth, (req, res) => {
+  HealthTrackingCategory.findByPK(1);
+  HealthTrackingOption.findByPK(1);
+  UserLog.findByPK(1);
+  UserTrackingOption.findAll({
+    where: {
+      user_id: req.params.userId,
+      date: req.params.date,
+    },
+  }).then((tp) => {
+    res.send(tp);
+  });
 });
 
 module.exports = router;

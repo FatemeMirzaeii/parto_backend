@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Note extends Model {}
+class UserLog extends Model {}
 
-Note.init(
+UserLog.init(
   {
     id: {
       primaryKey: true,
@@ -14,38 +14,42 @@ Note.init(
         isInt: true,
       },
     },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-      },
-    },
-    content: {
-      type: DataTypes.STRING,
-    },
     user_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "user",
         key: "id",
       },
-      onDelete: "RESTRICT",
+      onDelete:"RESTRICT"
     },
-    note_date: {
+    IP: {
+      type: DataTypes.STRING,
+      validate: {
+        isIP: true,
+      },
+    },
+    version: {
+      type: DataTypes.STRING,
+    },
+    login_date: {
       type: DataTypes.DATE,
       validate: {
         isDate: true,
       },
     },
-    active: {
-      type: DataTypes.BOOLEAN,
+    logout_date: {
+      type: DataTypes.DATE,
+      validate: {
+        isDate: true,
+      },
     },
   },
   {
     sequelize,
+    tableName: "user_log",
     freezeTableName: true,
     underscored: true,
   }
 );
 
-module.exports = Note;
+module.exports = UserLog;

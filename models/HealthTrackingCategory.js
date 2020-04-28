@@ -1,27 +1,17 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class Article extends Model {}
-Article.init(
+class HealthTrackingCategory extends Model {}
+
+HealthTrackingCategory.init(
   {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
-      validate: {
-        isInt: true,
-      },
     },
     title: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: "لطفا تیتر مقاله را وارد کنید.",
-        },
-      },
-    },
-    content: {
       type: DataTypes.STRING,
       validate: {
         notEmpty: true,
@@ -31,7 +21,9 @@ Article.init(
   {
     sequelize,
     freezeTableName: true,
+    tableName: "health_tracking_category",
     underscored: true,
   }
 );
-module.exports = Article;
+
+module.exports = HealthTrackingCategory;
