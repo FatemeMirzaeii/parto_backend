@@ -10,6 +10,8 @@ npm-debug.log
 yarn-error.log
 config/database.json
 private.key
+error.log
+exception.log
 # BUCK
 buck-out/
 \.buckd/
