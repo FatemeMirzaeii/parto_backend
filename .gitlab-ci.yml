@@ -1,0 +1,23 @@
+ image: node:latest
+
+    stages:
+      - build
+      # - test
+
+    cache:
+      paths:
+        - node_modules/
+
+    install_dependencies:
+      stage: build
+      script:
+        - echo "Running app..."
+        - npm install
+        - nodemon app.js
+      # artifacts:
+      #   paths:
+      #     - node_modules/
+
+    # testing:
+    #   stage: test
+    #   script: npm test
