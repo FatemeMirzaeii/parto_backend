@@ -1,8 +1,12 @@
 const express = require("express");
 const helmet = require("helmet");
 var fs = require("fs");
+const logger = require("./config/logger");
 require("./config/database");
-require("./config/logger");
+
+process.on("uncaughtException", (ex) => {
+  logger.error(ex.message);
+});
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -12,10 +16,6 @@ const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const app = express();
-
-process.on("uncaughtException", (ex) => {
-  winston.error(ex.message, ex);
-});
 
 app.use(helmet());
 app.use(express.json());
@@ -27,11 +27,6 @@ app.use("/healthTracking", healthTracking);
 app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
-
-if (!fs.readFileSync("./private.key", "utf8")) {
-  console.error("FATAL ERROR: jwt secret is not defined.");
-  process.exit(1);
-}
 
 app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");
