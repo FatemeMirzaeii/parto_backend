@@ -14,13 +14,25 @@ Log.init(
         isInt: true,
       },
     },
-    type: {
-      type: DataTypes.ENUM("ERROR", "INFO", "WARNING"),
-    },
-    content: {
+    level: {
       type: DataTypes.STRING,
+      validate: {
+        max: 16,
+      },
     },
-    date: {
+    message: {
+      type: DataTypes.STRING,
+      validate: {
+        max: 512,
+      },
+    },
+    meta: {
+      type: DataTypes.STRING,
+      validate: {
+        max: 1024,
+      },
+    },
+    timestamp: {
       type: DataTypes.DATE,
       validate: {
         isDate: true,
@@ -33,5 +45,4 @@ Log.init(
     underscored: true,
   }
 );
-
 module.exports = Log;

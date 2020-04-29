@@ -1,12 +1,12 @@
 const express = require("express");
 const helmet = require("helmet");
-var fs = require("fs");
 const logger = require("./config/logger");
 require("./config/database");
 
 process.on("uncaughtException", (ex) => {
   logger.error(ex.message);
 });
+
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
