@@ -6,7 +6,7 @@ stages:
 cache:
   paths:
     - node_modules/
-run:
+running_parto:
   stage: run
   script: 
     - echo "Running Parto..."
