@@ -1,12 +1,12 @@
 const express = require("express");
 const helmet = require("helmet");
+const nodeadmin = require("nodeadmin");
 const logger = require("./config/logger");
 require("./config/database");
 
 process.on("uncaughtException", (ex) => {
   logger.error(ex.message);
 });
-
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -18,6 +18,7 @@ const auth = require("./routes/auth");
 const app = express();
 
 app.use(helmet());
+app.use(nodeadmin(app));
 app.use(express.json());
 app.use("/cycle", cycle);
 app.use("/pregnancy", pregnancy);
