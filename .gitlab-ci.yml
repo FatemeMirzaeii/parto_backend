@@ -11,4 +11,4 @@ running_parto:
   script: 
     - echo "Running Parto..."
     - npm install
-    - nodemon app.js
+    - node app.js
