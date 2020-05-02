@@ -3,15 +3,17 @@ const auth = require("../middleware/auth");
 const Note = require("../models/Note");
 const router = express.Router();
 
-router.get("/:userId/:date", auth, (req, res) => {
+router.get("/:userId/:date", auth, (req, res, next) => {
   Note.findAll({
     where: {
       user_id: req.params.userId,
       note_date: req.params.date,
     },
-  }).then((note) => {
-    res.send(note.content);
-  });
+  })
+    .then((note) => {
+      res.send(note.content);
+    })
+    .catch(next);
 });
 
 router.post("/", auth, (req, res) => {

@@ -18,9 +18,14 @@ winston.configure({
     //new winston_mysql(options),
   ],
   exceptionHandlers: [
+    new winston.transports.Console({ colorize: true, prettyPrint: true }),
     new winston.transports.File({
       filename: "exception.log",
     }),
   ],
+});
+
+process.on("unhandledRejection", (ex) => {
+  throw ex;
 });
 module.exports = winston;

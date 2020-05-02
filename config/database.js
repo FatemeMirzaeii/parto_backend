@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const logger = require("./logger");
 const db = require("./database.json");
 
 const sequelize = new Sequelize(db.name, db.username, db.password, {
@@ -8,10 +9,10 @@ const sequelize = new Sequelize(db.name, db.username, db.password, {
 sequelize
   .authenticate()
   .then(() => {
-    console.log("Connection to database has been established successfully.");
+    logger.info("Connection to database has been established successfully.");
   })
   .catch((err) => {
-    console.error("ERROR: Unable to connect to the database:", err);
+    logger.error("ERROR: Unable to connect to the database:", err);
   });
 sequelize.sync({ alter: true });
 

@@ -1,12 +1,10 @@
 const express = require("express");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
+const error = require("./middleware/error");
 const logger = require("./config/logger");
 require("./config/database");
 
-process.on("uncaughtException", (ex) => {
-  logger.error(ex.message);
-});
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -15,6 +13,7 @@ const healthTracking = require("./routes/health-tracking");
 const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
+
 const app = express();
 
 app.use(helmet());
@@ -28,9 +27,10 @@ app.use("/healthTracking", healthTracking);
 app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
+app.use(error);
 
 app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");
 });
 
-app.listen(2218, () => console.log("Listening on port 2218..."));
+app.listen(2218, () => logger.info("Listening on port 2218..."));

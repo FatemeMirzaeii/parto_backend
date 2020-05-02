@@ -8,14 +8,16 @@ router.post("/signIn", (req, res) => {
     where: {
       email: req.body.email,
     },
-  }).then((user) => {
-    if (!user) return res.status(400).send("اطلاعات وارد شده صحیح نیست.");
-    bcrypt.compare(req.body.password, user.password).then((result) => {
-      if (!result) return res.status(400).send("رمز نامعتبر");
-      const token = user.generateAuthToken();
-      res.header("x-auth-token", token);
-    });
-  });
+  })
+    .then((user) => {
+      if (!user) return res.status(400).send("اطلاعات وارد شده صحیح نیست.");
+      bcrypt.compare(req.body.password, user.password).then((result) => {
+        if (!result) return res.status(400).send("رمز نامعتبر");
+        const token = user.generateAuthToken();
+        res.header("x-auth-token", token);
+      });
+    })
+    .catch(next);
 });
 // !!!!!!!!!!!!!!!! sign out should be implemented in client-side !!!!!!!!!!!!!!!!!!!!!!!!!!!
 // router.post("/signOut", (req, res) => {
