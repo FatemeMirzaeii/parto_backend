@@ -8,9 +8,9 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-private.key
 error.log
 exception.log
+
 # BUCK
 buck-out/
 \.buckd/

@@ -3,7 +3,7 @@ const sequelize = require("../config/database");
 const jwt = require("jsonwebtoken");
 
 var fs = require("fs");
-const secret = fs.readFileSync("./private.key", "utf8");
+const secret = fs.readFileSync("../private.key", "utf8");
 
 class User extends Model {
   generateAuthToken() {

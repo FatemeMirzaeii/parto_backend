@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 var fs = require("fs");
 
-const secret = fs.readFileSync("./private.key", "utf8");
+const secret = fs.readFileSync("../private.key", "utf8");
 
 module.exports = function (req, res, next) {
   const token = req.header("x-auth-token");
