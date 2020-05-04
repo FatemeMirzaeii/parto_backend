@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const logger = require("./logger");
-const db = require("./database.json");
+const env = process.env.NODE_ENV || "development";
+const db = require("./database.json")[env];
 
 const sequelize = new Sequelize(db.name, db.username, db.password, {
   host: db.host,

@@ -1,7 +1,23 @@
 {
-  "name": "Parto2",
-  "username": "root",
-  "password": "12345",
-  "host": "localhost",
-  "dialect": "mysql"
+  "development": {
+    "name": "Parto2",
+    "username": "root",
+    "password": "12345",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "name": "Parto",
+    "username": "root",
+    "password": "P@rto2020",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "name": "Parto2",
+    "username": "root",
+    "password": "12345",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
 }
