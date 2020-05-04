@@ -8,16 +8,16 @@
   },
   "test": {
     "name": "Parto",
-    "username": "root",
+    "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
-    "name": "Parto2",
-    "username": "root",
-    "password": "12345",
-    "host": "localhost",
+    "name": "Parto",
+    "username": "",
+    "password": "",
+    "host": "",
     "dialect": "mysql"
   }
 }
