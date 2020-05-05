@@ -39,7 +39,7 @@ User.init(
       type: DataTypes.STRING,
       validate: {
         max: 1024,
-        isHash: true,
+        //isHash: true,
       },
     },
     email: {
