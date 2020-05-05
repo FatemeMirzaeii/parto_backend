@@ -10,6 +10,7 @@ running_parto:
   stage: run
   script: 
     - echo "Running Parto..."
+    - export NODE_ENV=test
     - echo $NODE_ENV
     - npm install
     - node app.js
