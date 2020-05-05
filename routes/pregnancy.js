@@ -1,11 +1,10 @@
 const express = require("express");
-const Pregnancy = require("../models/Pregnancy");
+//const Pregnancy = require("../models/Pregnancy");
 const auth = require("../middleware/auth");
 const router = express();
 
 //Pregnancy
 router.get("/getWeekData/:userId/:date", auth, (req, res) => {
-  Pregnancy.findByPk(1);
   res.send({
     weekNo: 24,
     startDate: 99 / 1 / 4,
