@@ -1,13 +1,13 @@
 {
   "development": {
-    "name": "Parto2",
+    "name": "parto2",
     "username": "root",
     "password": "12345",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
-    "name": "Parto",
+    "name": "parto",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
