@@ -13,5 +13,5 @@ running_parto:
     - export NODE_ENV=test
     - echo $NODE_ENV
     - npm install
-    - killall node
+    - killall node || echo "No other instnaces is running."
     - node app.js
