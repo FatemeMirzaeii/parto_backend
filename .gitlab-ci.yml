@@ -8,9 +8,10 @@ cache:
     - node_modules/
 running_parto:
   stage: run
+  variables:
+   NODE_ENV: "test"
   script: 
     - echo "Running Parto..."
-    - export NODE_ENV=test
     - echo $NODE_ENV
     - npm install
     - killall node || echo "No other instnaces is running."
