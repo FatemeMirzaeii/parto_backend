@@ -23,6 +23,7 @@ Article.init(
     },
     content: {
       type: DataTypes.STRING,
+      max: 65000,
       validate: {
         notEmpty: true,
       },
