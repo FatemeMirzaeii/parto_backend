@@ -22,8 +22,7 @@ Article.init(
       },
     },
     content: {
-      type: DataTypes.STRING,
-      max: 65000,
+      type: DataTypes.STRING(10000),
       validate: {
         notEmpty: true,
       },
