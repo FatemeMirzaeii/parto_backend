@@ -4,16 +4,16 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 
 router.post("/signIn", async (req, res) => {
-  const exists = await User.findOne({
+  const user = await User.findOne({
     where: {
       email: req.body.email,
     },
   });
-  if (!exists) return res.status(400).json({ message: "اطلاعات وارد شده صحیح نیست." });
+  if (!user) return res.status(400).json({ message: "اطلاعات وارد شده صحیح نیست." });
   const pass = await bcrypt.compare(req.body.password, user.password);
   if (!pass) return res.status(400).json({ message: "رمز نامعتبر" });
   const token = user.generateAuthToken();
-  res.sendStatus(200).header("x-auth-token", token);
+  res.header("x-auth-token", token).status(200).json({ data: { id: user.id } });
 });
 
 // !!!!!!!!!!!!!!!! sign out should be implemented in client-side !!!!!!!!!!!!!!!!!!!!!!!!!!!
