@@ -6,33 +6,25 @@ const UserTrackingOption = require("../models/UserTrackingOption");
 const UserLog = require("../models/UserLog");
 const router = express();
 
-router.post("/setUserHealthTrackingInfo", auth, (req, res, next) => {
-  req.body.options.forEach((element) => {
-    UserTrackingOption.create(element)
-      .then((g) => {
-        res.send(g);
-      })
-      .catch(next);
+router.post("/setUserHealthTrackingInfo", auth, async (req, res) => {
+  req.body.options.forEach(async (option) => {
+    await UserTrackingOption.create(option);
   });
+  res.status(200);
 });
 
-router.get(
-  "/getUserHealthTrackingInfo/:userId/:date",
-  auth,
-  (req, res, next) => {
+router.get("/getUserHealthTrackingInfo/:userId/:date", auth,
+  async (req, res) => {
     HealthTrackingCategory.findByPK(1);
     HealthTrackingOption.findByPK(1);
     UserLog.findByPK(1);
-    UserTrackingOption.findAll({
+    const options = await UserTrackingOption.findAll({
       where: {
         user_id: req.params.userId,
         date: req.params.date,
       },
     })
-      .then((tp) => {
-        res.send(tp);
-      })
-      .catch(next);
+    res.status(200).json({ data: { options: options } });
   }
 );
 

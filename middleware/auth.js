@@ -5,12 +5,12 @@ const secret = fs.readFileSync("../private.key", "utf8");
 
 module.exports = function (req, res, next) {
   const token = req.header("x-auth-token");
-  if (!token) return res.status(401).send("شما مجوز دسترسی ندارید.");
+  if (!token) return res.status(401).json({ message: "شما مجوز دسترسی ندارید." });
   try {
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
   } catch (ex) {
-    res.status(400).send("مجوز نامعتبر");
+    res.status(400).json({ message: "مجوز نامعتبر" });
   }
 };

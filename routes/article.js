@@ -4,33 +4,26 @@ const Article = require("../models/Article");
 const category = require("../models/Category");
 const router = express();
 
-router.get("/getArticleContent/:articleId", auth, (req, res, next) => {
-  Article.findByPk(req.params.articleId)
-    .then((article) => {
-      if (!article) return res.status(404).send("مقاله مورد نظر یافت نشد.");
-      res.send(article.content);
-    })
-    .catch(next);
+router.get("/getArticleContent/:articleId", auth, async (req, res) => {
+  const article = await Article.findByPk(req.params.articleId);
+  if (!article) return res.status(404).json({ message: "مقاله مورد نظر یافت نشد." });
+  res.status(200).json({ data: { content: article.content } });
 });
 
-router.get("/getArticleTitle/:articleId", auth, (req, res) => {
-  Article.findByPk(req.params.articleId).then((article) => {
-    if (!article) return res.status(404).send("مقاله مورد نظر یافت نشد.");
-    res.send(article.title);
-  });
+router.get("/getArticleTitle/:articleId", auth, async (req, res) => {
+  const article = await Article.findByPk(req.params.articleId);
+  if (!article) return res.status(404).json({ message: "مقاله مورد نظر یافت نشد." });
+  res.status(200).json({ data: { title: article.title } });
 });
 
-router.get("/getArticlesList/:categoryId", (req, res, next) => {
+router.get("/getArticlesList/:categoryId", async (req, res) => {
   category.findByPk(req.params.categoryId);
-  Article.findAll({
+  const articles = await Article.findAll({
     where: {
       category_id: req.params.categoryId,
     },
   })
-    .then((articles) => {
-      res.send(articles);
-    })
-    .catch(next);
+  res.status(200).json({ data: { articles: articles } });
 });
 
 module.exports = router;

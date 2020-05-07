@@ -3,21 +3,21 @@ const auth = require("../middleware/auth");
 const Note = require("../models/Note");
 const router = express.Router();
 
-router.get("/:userId/:date", auth, (req, res, next) => {
-  Note.findAll({
+router.get("/:userId/:date", auth, async (req, res) => {
+  const note = await Note.findAll({
     where: {
       user_id: req.params.userId,
       note_date: req.params.date,
     },
-  })
-    .then((note) => {
-      res.send(note.content);
-    })
-    .catch(next);
+  });
+  if (note.length == 0) return res.status(204).json({ message: "برای امروز چیزی ثبت نکرده بودی :)" });
+  res.status(200).json({ data: { content: note.content } });
 });
 
-router.post("/", auth, (req, res) => {
-  res.send(req.headers, req.params, req.body);
+router.post("/", auth, async (req, res) => {
+  res.sendStatus(200).json({
+    data: { headers: req.headers, params: req.params, body: req.body },
+  });
 });
 
 module.exports = router;

@@ -39,7 +39,9 @@ User.init(
       type: DataTypes.STRING,
       validate: {
         max: 1024,
-        //isHash: true,
+        notEmpty: {
+          msg: "لطفا رمز خود را وارد کنید.",
+        },
       },
     },
     email: {
