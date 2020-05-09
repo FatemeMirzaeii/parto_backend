@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/database");
 
-class HealthTrackingCategory extends Model {}
+class HealthTrackingCategory extends Model { }
 
 HealthTrackingCategory.init(
   {
@@ -14,7 +14,9 @@ HealthTrackingCategory.init(
     title: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: true,
+        notEmpty: {
+          msg: "لطفا نام را وارد نمایید."
+        }
       },
     },
   },
