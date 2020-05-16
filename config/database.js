@@ -11,6 +11,6 @@ sequelize
   .then(() => {
     console.log("Connection to database has been established successfully.");
   });
-//sequelize.sync({ alter: true });
+sequelize.sync({ alter: true });
 
 module.exports = sequelize;
