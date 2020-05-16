@@ -3,7 +3,7 @@ const express = require("express");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
-const logger = require("./config/logger");
+const logger = require("./config/logger/logger");
 require("./config/database");
 
 const cycle = require("./routes/cycle");

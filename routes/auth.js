@@ -16,11 +16,6 @@ router.post("/signIn", async (req, res) => {
   res.header("x_auth_token", token).status(200).json({ data: { id: user.id } });
 });
 
-// !!!!!!!!!!!!!!!! sign out should be implemented in client-side !!!!!!!!!!!!!!!!!!!!!!!!!!!
-// router.post("/signOut", (req, res) => {
-//   res.send(req.headers, req.params, req.body);
-// });
-
 //todo: incomplete
 router.post("/forgotPassword", (req, res) => {
   res.send(req.headers, req.params, req.body);

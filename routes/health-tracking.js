@@ -3,7 +3,6 @@ const auth = require("../middleware/auth");
 const HealthTrackingOption = require("../models/HealthTrackingOption");
 const HealthTrackingCategory = require("../models/HealthTrackingCategory");
 const UserTrackingOption = require("../models/UserTrackingOption");
-const UserLog = require("../models/UserLog");
 const router = express();
 
 router.get("/getCategories", auth, async (req, res) => {
