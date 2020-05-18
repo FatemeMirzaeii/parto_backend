@@ -17,7 +17,7 @@ router.post("/signUp", async (req, res) => {
     password: hash,
   });
   const token = user.generateAuthToken();
-  res.header("x_auth_token", token).status(200).json({ data: { id: user.id } });
+  res.header("x-auth-token", token).status(200).json({ data: { id: user.id } });
 });
 
 module.exports = router;

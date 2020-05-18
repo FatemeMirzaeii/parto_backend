@@ -4,7 +4,7 @@ var fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
 
 module.exports = function (req, res, next) {
-  const token = req.header("x_auth_token");
+  const token = req.header("x-auth-token");
   console.log(req.headers);
   if (!token) return res.status(401).json({ message: "شما مجوز دسترسی ندارید." });
   try {

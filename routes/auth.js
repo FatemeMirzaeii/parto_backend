@@ -13,7 +13,7 @@ router.post("/signIn", async (req, res) => {
   const pass = await bcrypt.compare(req.body.password, user.password);
   if (!pass) return res.status(400).json({ message: "رمز نامعتبر" });
   const token = user.generateAuthToken();
-  res.header("x_auth_token", token).status(200).json({ data: { id: user.id } });
+  res.header("x-auth-token", token).status(200).json({ data: { id: user.id } });
 });
 
 //todo: incomplete
