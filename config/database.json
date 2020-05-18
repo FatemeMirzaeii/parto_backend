@@ -1,6 +1,6 @@
 {
   "development": {
-    "database": "parto3",
+    "database": "parto2",
     "username": "root",
     "password": "12345",
     "host": "localhost",

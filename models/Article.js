@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
   Article.associate = function (models) {
-    // associations can be defined here
+    Article.belongsTo(models.category, {
+      onDelete: "RESTRICT"
+    })
   };
   return Article;
 };

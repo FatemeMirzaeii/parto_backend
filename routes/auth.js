@@ -1,5 +1,5 @@
 const express = require("express");
-const { user } = require("../models");
+const { user, user_log } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
@@ -14,6 +14,11 @@ router.post("/signIn", async (req, res) => {
   if (!pass) return res.status(400).json({ message: "رمز نامعتبر" });
   const token = usr.generateAuthToken();
   res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
+  await user_log.create({
+    IP: req.connection.remoteAddress,
+    version: req.body.version,
+    login_date: Date.now(),
+  });
 });
 
 //todo: incomplete

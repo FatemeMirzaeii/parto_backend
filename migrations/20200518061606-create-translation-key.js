@@ -1,25 +1,15 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('article', {
+    return queryInterface.createTable('translation_key', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      key: {
         type: Sequelize.STRING
-      },
-      content: {
-        type: Sequelize.STRING(10000)
-      },
-      category_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "category",
-          key: "id",
-        },
       },
       created_at: {
         allowNull: false,
@@ -32,6 +22,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('article');
+    return queryInterface.dropTable('translation_key');
   }
 };

@@ -1,25 +1,31 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('article', {
+    return queryInterface.createTable('translation_text', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING
-      },
-      content: {
-        type: Sequelize.STRING(10000)
-      },
-      category_id: {
+      language_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "category",
+          model: "language",
           key: "id",
         },
+        onDelete: "RESTRICT",
+      },
+      key_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "translation_key",
+          key: "id",
+        },
+        onDelete: "RESTRICT",
+      },
+      text: {
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
@@ -32,6 +38,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('article');
+    return queryInterface.dropTable('translation_text');
   }
 };
