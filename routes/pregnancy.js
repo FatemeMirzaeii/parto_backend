@@ -1,5 +1,5 @@
 const express = require("express");
-//const Pregnancy = require("../models/Pregnancy");
+const { pregnancy } = require("../models");
 const auth = require("../middleware/auth");
 const router = express();
 

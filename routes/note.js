@@ -1,17 +1,17 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const Note = require("../models/Note");
+const { note } = require("../models");
 const router = express.Router();
 
 router.get("/:userId/:date", auth, async (req, res) => {
-  const note = await Note.findAll({
+  const nt = await note.findAll({
     where: {
       user_id: req.params.userId,
       note_date: req.params.date,
     },
   });
-  if (note.length == 0) return res.status(204).json({ message: "برای امروز چیزی ثبت نکرده بودی :)" });
-  res.status(200).json({ data: { content: note.content } });
+  if (nt.length == 0) return res.status(204).json({ message: "برای امروز چیزی ثبت نکرده بودی :)" });
+  res.status(200).json({ data: { content: nt.content } });
 });
 
 router.post("/", auth, async (req, res) => {

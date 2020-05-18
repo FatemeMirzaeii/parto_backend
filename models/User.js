@@ -1,27 +1,10 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
+'use strict';
 const jwt = require("jsonwebtoken");
-
-var fs = require("fs");
+const fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
 
-class User extends Model {
-  generateAuthToken() {
-    return jwt.sign({ _id: this.id }, secret);
-  }
-}
-
-User.init(
-  {
-    id: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      validate: {
-        isInt: true,
-      },
-    },
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -58,20 +41,17 @@ User.init(
     active: {
       type: DataTypes.BOOLEAN,
     },
-  },
-  {
-    sequelize,
+  }, {
     freezeTableName: true,
     underscored: true,
+  });
+  User.associate = function (models) {
+    User.belongsToMany(models.category, {
+      through: "user_favorite_category",
+    })
+  };
+  User.prototype.generateAuthToken = () => {
+    return jwt.sign({ _id: this.id }, secret);
   }
-);
-
-User.belongsToMany(sequelize.models.HealthTrackingOption, {
-  through: sequelize.models.UserTrackingOption,
-});
-
-User.belongsToMany(sequelize.models.Category, {
-  through: "user_favorite_category",
-});
-
-module.exports = User;
+  return User;
+};

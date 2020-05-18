@@ -1,8 +1,9 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const HealthTrackingOption = require("../models/HealthTrackingOption");
-const HealthTrackingCategory = require("../models/HealthTrackingCategory");
-const UserTrackingOption = require("../models/UserTrackingOption");
+const {
+  HealthTrackingOption,
+  HealthTrackingCategory,
+  UserTrackingOption } = require("../models");
 const router = express();
 
 router.get("/getCategories", auth, async (req, res) => {

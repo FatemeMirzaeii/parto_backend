@@ -1,27 +1,6 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
-
-class Message extends Model {}
-
-Message.init(
-  {
-    id: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      validate: {
-        isInt: true,
-      },
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "user",
-        key: "id",
-      },
-      onDelete:"RESTRICT"
-    },
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Message = sequelize.define('message', {
     title: {
       type: DataTypes.STRING,
       validate: {
@@ -29,22 +8,21 @@ Message.init(
       },
     },
     content: {
-      type: DataTypes.STRING,
-    },
-    parent_message_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "message",
-        key: "id",
-      },
-      onDelete:"RESTRICT"
-    },
-  },
-  {
-    sequelize,
+      type: DataTypes.STRING
+    }
+  }, {
     freezeTableName: true,
     underscored: true,
-  }
-);
-
-module.exports = Message;
+  });
+  Message.associate = function (models) {
+    Message.belongsTo(models.message, {
+      foreignKey: "parent_message_id",
+      onDelete: "RESTRICT"
+    });
+    Message.belongsTo(models.user,{
+      foreignKey: "user_id",
+      onDelete: "RESTRICT"
+    })
+  };
+  return Message;
+};

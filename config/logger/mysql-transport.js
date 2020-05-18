@@ -1,12 +1,12 @@
 const Transport = require('winston-transport');
-const Log = require("../../models/Log");
+const { log } = require("../../models");
 
 class Mysql_tranport extends Transport {
     constructor(opts) {
         super(opts);
     }
     async log(info, callback) {
-        await Log.create({
+        await log.create({
             level: info.level,
             message: info.message,
             timestamp: info.timestamp,

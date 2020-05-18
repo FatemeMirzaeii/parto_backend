@@ -1,32 +1,35 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Note = sequelize.define('note', {
-    title: {
+  const User_log = sequelize.define('user_log', {
+    IP: {
       type: DataTypes.STRING,
       validate: {
-        max: 1024,
+        isIP: true,
       },
     },
-    content: {
+    version: {
       type: DataTypes.STRING,
     },
-    note_date: {
+    login_date: {
       type: DataTypes.DATE,
       validate: {
         isDate: true,
       },
     },
-    active: {
-      type: DataTypes.BOOLEAN,
+    logout_date: {
+      type: DataTypes.DATE,
+      validate: {
+        isDate: true,
+      },
     },
   }, {
     freezeTableName: true,
     underscored: true,
   });
-  Note.associate = function (models) {
-    Note.belongsTo(models.user, {
+  User_log.associate = function (models) {
+    User_log.belongsTo(models.user, {
       onDelete: "RESTRICT",
     })
   };
-  return Note;
+  return User_log;
 };

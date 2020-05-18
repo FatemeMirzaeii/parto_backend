@@ -1,24 +1,6 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
-
-class Pregnancy extends Model {}
-
-Pregnancy.init(
-  {
-    id: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "user",
-        key: "id",
-      },
-      onDelete: "RESTRICT",
-    },
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Pregnancy = sequelize.define('pregnancy', {
     abortion: {
       type: DataTypes.BOOLEAN,
     },
@@ -28,12 +10,14 @@ Pregnancy.init(
         isDate: true,
       },
     },
-  },
-  {
-    sequelize,
+  }, {
     freezeTableName: true,
     underscored: true,
-  }
-);
-
-module.exports = Pregnancy;
+  });
+  Pregnancy.associate = function (models) {
+    Pregnancy.belongsTo(models.user, {
+      onDelete: "RESTRICT",
+    })
+  };
+  return Pregnancy;
+};

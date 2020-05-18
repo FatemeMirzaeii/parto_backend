@@ -1,10 +1,10 @@
 require("express-async-errors");
+require("./models/index");
 const express = require("express");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
-require("./config/database");
 
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");

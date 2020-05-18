@@ -1,33 +1,14 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
-
-class Help extends Model {}
-
-Help.init(
-  {
-    id: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      validate: {
-        isInt: true,
-      },
-    },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-      },
-    },
-    content: {
-      type: DataTypes.STRING,
-    },
-  },
-  {
-    sequelize,
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Help = sequelize.define('help', {
+    title: DataTypes.STRING,
+    content: DataTypes.STRING
+  }, {
     freezeTableName: true,
     underscored: true,
-  }
-);
-module.exports = Help;
+  });
+  Help.associate = function(models) {
+    // associations can be defined here
+  };
+  return Help;
+};
