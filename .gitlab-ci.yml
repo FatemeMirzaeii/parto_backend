@@ -15,4 +15,4 @@ running_parto:
     - echo $NODE_ENV
     - npm install
     - killall node || echo "No other instnaces is running."
-    - node app.js
+    - node app.js &
