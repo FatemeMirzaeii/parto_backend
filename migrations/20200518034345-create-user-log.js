@@ -14,9 +14,9 @@ module.exports = {
           model: "user",
           key: "id",
         },
-        onDelete:"RESTRICT"
+        onDelete: "RESTRICT"
       },
-      IP: {
+      i_p: {
         type: Sequelize.STRING
       },
       version: {

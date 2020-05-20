@@ -1,5 +1,5 @@
 const express = require("express");
-const { user, user_log } = require("../models");
+const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
@@ -13,13 +13,12 @@ router.post("/signIn", async (req, res) => {
   const pass = await bcrypt.compare(req.body.password, usr.password);
   if (!pass) return res.status(400).json({ message: "رمز نامعتبر" });
   const token = usr.generateAuthToken();
-  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
-  await user_log.create({
-    user_id: usr.id,
-    IP: req.header("x-forwarded-for"),
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
+  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
 });
 
 //todo: incomplete

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User_log = sequelize.define('user_log', {
-    IP: {
+    i_p: {
       type: DataTypes.STRING,
       validate: {
         isIP: true,
@@ -24,8 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     freezeTableName: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    underscored: true,
   });
   User_log.associate = function (models) {
     User_log.belongsTo(models.user, {
