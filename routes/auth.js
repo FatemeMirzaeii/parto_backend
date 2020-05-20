@@ -15,7 +15,7 @@ router.post("/signIn", async (req, res) => {
   const token = usr.generateAuthToken();
   res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
   await user_log.create({
-    IP: req.connection.remoteAddress,
+    IP: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
