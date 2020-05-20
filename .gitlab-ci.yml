@@ -15,6 +15,6 @@ running_parto:
     - echo $NODE_ENV
     - killall node || echo "No other instnaces is running."
     - npm install
-    - npx sequelize-cli db:create
+    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npm start

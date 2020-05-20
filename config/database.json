@@ -4,23 +4,20 @@
     "username": "root",
     "password": "12345",
     "host": "localhost",
-    "dialect": "mysql",
-    "charset": "utf8mb4_persian_ci"
+    "dialect": "mysql"
   },
   "test": {
     "database": "parto",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
-    "dialect": "mysql",
-    "charset": "utf8mb4_persian_ci"
+    "dialect": "mysql"
   },
   "production": {
     "database": "Parto",
     "username": "",
     "password": "",
     "host": "",
-    "dialect": "mysql",
-    "charset": "utf8mb4_persian_ci"
+    "dialect": "mysql"
   }
 }
