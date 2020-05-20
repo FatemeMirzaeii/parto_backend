@@ -22,6 +22,18 @@ module.exports = {
       avg_period_length: {
         type: Sequelize.INTEGER
       },
+      avg_sleeping_hour: {
+        type: Sequelize.INTEGER
+      },
+      height: {
+        type: Sequelize.INTEGER
+      },
+      weight: {
+        type: Sequelize.INTEGER
+      },
+      pregnant: {
+        type: Sequelize.BOOLEAN
+      },
       pregnancy_try: {
         type: Sequelize.BOOLEAN
       },

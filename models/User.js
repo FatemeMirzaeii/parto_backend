@@ -46,6 +46,9 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
   User.associate = function (models) {
+    User.belongsTo(models.role, {
+      onDelete: "RESTRICT",
+    });
     User.belongsToMany(models.category, {
       through: "user_favorite_category",
     })

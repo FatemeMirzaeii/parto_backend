@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    seen_count: {
+      type: DataTypes.INTEGER
+    }
   }, {
     freezeTableName: true,
     underscored: true,

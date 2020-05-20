@@ -21,6 +21,9 @@ module.exports = {
           key: "id",
         },
       },
+      seen_count: {
+        type: Sequelize.INTEGER
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

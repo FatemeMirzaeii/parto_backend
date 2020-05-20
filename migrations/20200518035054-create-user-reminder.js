@@ -16,6 +16,19 @@ module.exports = {
         },
         onDelete: "RESTRICT",
       },
+      title: {
+        type: Sequelize.STRING
+      },
+      type: {
+        type: Sequelize.ENUM(
+          "روزانه",
+          "هفتگی",
+          "ماهانه",
+        )
+      },
+      hour: {
+        type: Sequelize.TIME
+      },
       weekday: {
         type: Sequelize.ENUM(
           "شنبه",
@@ -27,8 +40,8 @@ module.exports = {
           "جمعه"
         )
       },
-      hour: {
-        type: Sequelize.TIME
+      day_in_month: {
+        type: Sequelize.INTEGER
       },
       active: {
         type: Sequelize.BOOLEAN

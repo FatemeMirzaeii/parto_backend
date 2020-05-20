@@ -3,6 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const User_profile = sequelize.define('user_profile', {
     avg_cycle_length: DataTypes.INTEGER,
     avg_period_length: DataTypes.INTEGER,
+    avg_sleeping_hour: DataTypes.INTEGER,
+    height: DataTypes.INTEGER,
+    weight: DataTypes.INTEGER,
+    pregnant: DataTypes.BOOLEAN,
     pregnancy_try: DataTypes.BOOLEAN,
     use_lock: DataTypes.BOOLEAN
   }, {

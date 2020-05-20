@@ -1,34 +1,29 @@
 'use strict';
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('user', {
+    return queryInterface.createTable('user_favorite_articles', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      email: {
-        unique: true,
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      role_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "role",
+          model: "user",
           key: "id",
         },
         onDelete: "RESTRICT",
       },
-      active: {
-        type: Sequelize.BOOLEAN
+      article_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "article",
+          key: "id",
+        },
+        onDelete: "RESTRICT",
       },
       created_at: {
         allowNull: false,
@@ -41,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('user');
+    return queryInterface.dropTable('user_favorite_articles');
   }
 };
