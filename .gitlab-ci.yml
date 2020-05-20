@@ -13,6 +13,8 @@ running_parto:
   script: 
     - echo "Running Parto..."
     - echo $NODE_ENV
-    - npm install
     - killall node || echo "No other instnaces is running."
-    - nohup node app.js &
+    - npm install
+    - npx sequelize-cli db:create
+    - npx sequelize-cli db:migrate
+    - npm start
