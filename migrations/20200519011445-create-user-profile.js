@@ -16,6 +16,9 @@ module.exports = {
         },
         onDelete: "RESTRICT",
       },
+      birthdate: {
+        type: Sequelize.DATE
+      },
       avg_cycle_length: {
         type: Sequelize.INTEGER
       },
@@ -23,6 +26,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       avg_sleeping_hour: {
+        type: Sequelize.INTEGER
+      },
+      pms_length: {
         type: Sequelize.INTEGER
       },
       height: {

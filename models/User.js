@@ -18,15 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     //   type: DataTypes.STRING,
     //   unique: true,
     // },
-    password: {
-      type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-        notEmpty: {
-          msg: "لطفا رمز خود را وارد کنید.",
-        },
-      },
-    },
     email: {
       type: DataTypes.STRING,
       unique: true,
@@ -36,6 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         max: 255,
         notNull: true,
         isEmail: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      validate: {
+        max: 1024,
+        notEmpty: {
+          msg: "لطفا رمز خود را وارد کنید.",
+        },
       },
     },
     active: {

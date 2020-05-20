@@ -1,9 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User_profile = sequelize.define('user_profile', {
+    birthdate: {
+      type: DataTypes.DATE
+    },
     avg_cycle_length: DataTypes.INTEGER,
     avg_period_length: DataTypes.INTEGER,
     avg_sleeping_hour: DataTypes.INTEGER,
+    pms_length: DataTypes.INTEGER,
     height: DataTypes.INTEGER,
     weight: DataTypes.INTEGER,
     pregnant: DataTypes.BOOLEAN,
