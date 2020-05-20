@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     freezeTableName: true,
-    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   User_log.associate = function (models) {
     User_log.belongsTo(models.user, {
