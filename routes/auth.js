@@ -2,16 +2,17 @@ const express = require("express");
 const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const translate = require("../config/translate");
 
-router.post("/signIn", async (req, res) => {
+router.post("/signIn/:lang", async (req, res) => {
   const usr = await user.findOne({
     where: {
       email: req.body.email,
     },
   });
-  if (!usr) return res.status(400).json({ message: "اطلاعات وارد شده صحیح نیست." });
+  if (!usr) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   const pass = await bcrypt.compare(req.body.password, usr.password);
-  if (!pass) return res.status(400).json({ message: "رمز نامعتبر" });
+  if (!pass) return res.status(400).json({ message: await translate("WRONGPASSWORD", req.params.lang) });
   const token = usr.generateAuthToken();
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),

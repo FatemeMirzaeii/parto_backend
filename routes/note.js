@@ -2,15 +2,16 @@ const express = require("express");
 const auth = require("../middleware/auth");
 const { note } = require("../models");
 const router = express.Router();
+const translate = require("../config/translate");
 
-router.get("/:userId/:date", auth, async (req, res) => {
+router.get("/:lang/:userId/:date", auth, async (req, res) => {
   const nt = await note.findAll({
     where: {
       user_id: req.params.userId,
       note_date: req.params.date,
     },
   });
-  if (nt.length == 0) return res.status(204).json({ message: "برای امروز چیزی ثبت نکرده بودی :)" });
+  if (nt.length == 0) return res.status(404).json({ message: await translate("NONOTES", req.params.lang) });
   res.status(200).json({ data: { content: nt.content } });
 });
 

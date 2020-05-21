@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Translation_text.associate = function (models) {
     Translation_text.belongsTo(models.language, {
+      foreignKey: "language_id",
       onDelete: "RESTRICT",
     });
     Translation_text.belongsTo(models.translation_key, {
