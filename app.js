@@ -34,4 +34,5 @@ app.get("/", (req, res) => {
   res.send("Hello from Parto!!!");
 });
 
-app.listen(2218, () => logger.info("Listening on port 2218..."));
+const server=app.listen(2218, () => logger.info("Listening on port 2218..."));
+module.exports=server;
