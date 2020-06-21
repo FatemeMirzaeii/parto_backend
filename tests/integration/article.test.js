@@ -17,7 +17,7 @@ describe('article', () => {
         let art={title:"titleTest",content:"contentTest"};
         newArticle= await article.create(art);
         let cat=await category.findAll({where: { id: 1 } });
-        let setCat=await newArticle.addcategory(newCat);
+        let setCat=await newArticle.setcategory(newCat);
        // newArticle= await article.create(art);
         articleId=newArticle.id;
     })
