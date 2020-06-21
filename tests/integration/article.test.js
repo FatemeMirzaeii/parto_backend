@@ -59,7 +59,7 @@ describe('article', () => {
         it('should be return 200 and article content if article id is exist in database',async () => {
             TempToken=token;
             tempArticleId=articleId;
-            const result=await exec();  
+            const result=await exec(); 
             expect(result.status).toBe(200);
             expect(JSON.stringify(result.body)).toBe('{"data":{"content":"contentTest"}}');
         });
@@ -99,8 +99,6 @@ describe('article', () => {
         const exec=()=>{
             //update article and put category id in it
            const req=request(server).get('/article/getArticlesList/'+categoryId);
-           console.log(req.header);
-           console.log(req.url);  
            return req;
         }
 

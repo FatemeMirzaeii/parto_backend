@@ -7,7 +7,6 @@ describe('cycle',()=>{
     let User;
     beforeAll(async()=>{
         User =await user.create({name:"zahra", email:"zzdand7755@gmail.com"});
-        
     })
 
     beforeEach(()=>{
