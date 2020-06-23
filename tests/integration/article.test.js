@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { article, user ,category} = require("../../models");
+const { article, user } = require("../../models");
 
 describe('article', () => {
     let server;
@@ -9,17 +9,15 @@ describe('article', () => {
     let token;
     let User;
     let newCat;
-    let categoryId
+    let categoryId=2;
     beforeAll(async()=>{
         User =await user.create({name:"zahra", email:"zzdand7755@gmail.com"});
         token = User.generateAuthToken();
-       // nawCat=await category.create({id: 2,title:"categoryTitle"});
-        //await newCat.createcategory({parent_category_id:1});
         let art={title:"titleTest",content:"contentTest"};
         newArticle= await article.create(art);
-        //newArticle.setcategory(newCat);
-        //console.log((await newArticle.getcategory()).id);
+        newCat=await newArticle.createCategory({id: 2,title:"categoryTitle"});
         articleId=newArticle.id;
+       
     })
     beforeEach(async() => { 
         server=require('../../app');
@@ -30,9 +28,8 @@ describe('article', () => {
     })
     afterAll(async () => {
         await newArticle.destroy();
-        await User.destroy();
         await newCat.destroy();
-               
+        await User.destroy();
     });
 
     describe('/article/getArticleContent/:lang/:articleId', () => {
@@ -103,13 +100,11 @@ describe('article', () => {
         }
 
 
-        // it('should be return 200 and article that have same category id in database',async () => {
-        //     const result=await exec();  
-        //     console.log(result.status+" "+result.body+"   "+result);  
-        //     expect(result.status).toBe(200);
-        //     console.log(result.body);
-        //     expect(JSON.stringify(result.body)).toBe('{"data":{"articles":"contentTest"}}');
-        // });
+        it('should be return 200 and article that have same category id in database',async () => {
+            const result=await exec();  
+            expect(result.status).toBe(200);
+            expect(result.body.data.articles[0].content).toBe("contentTest");
+        });
     });
 
 

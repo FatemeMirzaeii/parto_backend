@@ -12,7 +12,7 @@ router.get("/:lang/:userId/:date", auth, async (req, res) => {
     },
   });
   if (nt.length == 0) return res.status(404).json({ message: await translate("NONOTES", req.params.lang) });
-  res.status(200).json({ data: { content: nt.content } });
+  return res.status(200).json({ data: { content: nt.content } });
 });
 
 router.post("/", auth, async (req, res) => {

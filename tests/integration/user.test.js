@@ -17,8 +17,6 @@ describe("/user/signUp/:lang", () => {
     })
     afterEach(async()=>{
        await server.close();
-       
-        
     })
     it('return 400 if email address exist ',async()=>{
         User =await user.create({name:"zahra", email:"zzand7755@gmail.com"});
@@ -37,9 +35,7 @@ describe("/user/signUp/:lang", () => {
               id:result.body.data.id
             }
         });
-        // console.log(User);
-        // expect(User.password).toBe(hash);
-        // console.log(User);
+        
     })
     
 })
