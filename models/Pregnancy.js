@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
     },
     due_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY ,
       validate: {
         isDate: true,
       },

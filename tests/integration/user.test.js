@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 describe("/user/signUp/:lang", () => {
     let server;
     let email='zzand7755@gmail.com';
-    let User
+    let User;
 
     const exec=()=>{
          const res= request(server).post('/user/signUp/fa').send({"name":"zahra","email":`${email}`,"password":"11111111"});

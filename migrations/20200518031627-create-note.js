@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       note_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY 
       },
       user_id: {
         type: Sequelize.INTEGER,

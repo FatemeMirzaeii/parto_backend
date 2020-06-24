@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     note_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY ,
       validate: {
         isDate: true,
       },

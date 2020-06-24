@@ -11,8 +11,8 @@ describe('note',()=>{
     let Note;
 
     beforeAll(async()=>{
-        Note = await note.create({title:"note title",content:"note content",note_date: new Date(Date.UTC(2018, 0, 1))});
-        User =await Note.createUser({name:"zahra", email:"bazzdand7755@gmail.com"});
+        Note = await note.create({title:"note title",content:"note content",note_date: new Date(Date.UTC(2018, 4, 15,10,2,5))});
+        User =await Note.createUser({name:"zahra", email:"wbazzdand7755@gmail.com"});
         token = User.generateAuthToken();
         console.log(token);
         UserId= User.dataValues.id;

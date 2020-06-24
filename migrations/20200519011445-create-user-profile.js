@@ -17,7 +17,7 @@ module.exports = {
         onDelete: "RESTRICT",
       },
       birthdate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY 
       },
       avg_cycle_length: {
         type: Sequelize.INTEGER

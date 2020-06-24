@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const User_tracking_option = sequelize.define('user_tracking_option', {
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY ,
       validate: {
         isDate: true,
       },

@@ -18,7 +18,7 @@ module.exports = {
       },
 
       due_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY 
       },
       abortion: {
         type: Sequelize.BOOLEAN

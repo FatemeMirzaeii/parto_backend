@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const User_profile = sequelize.define('user_profile', {
     birthdate: {
-      type: DataTypes.DATE
+      type: DataTypes.DATEONLY 
     },
     avg_cycle_length: DataTypes.INTEGER,
     avg_period_length: DataTypes.INTEGER,

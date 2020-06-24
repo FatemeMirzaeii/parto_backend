@@ -7,7 +7,7 @@ const {
 const translate = require("../config/translate");
 const router = express();
 
-router.get("/getCategories/", auth, async (req, res) => {
+router.get("/getCategories", auth, async (req, res) => {
   const categories = await health_tracking_category.findAll();
   res.status(200).json({ data: categories });
 });
