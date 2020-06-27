@@ -11,7 +11,7 @@ describe('article', () => {
     let newCat;
     let categoryId=2;
     beforeAll(async()=>{
-        User =await user.create({name:"zahra", email:"zzdand7755@gmail.com"});
+        User =await user.create({name:"zahra", email:"art_zzdand7755@gmail.com"});
         token = User.generateAuthToken();
         let art={title:"titleTest",content:"contentTest"};
         newArticle= await article.create(art);

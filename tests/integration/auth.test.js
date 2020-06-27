@@ -6,7 +6,7 @@ let server;
 describe('auth',()=>{
 
     let User;
-    let email="mzzand7755@gmail.com";
+    let email="auth_zzand7755@gmail.com";
     let password="11111111";
     let User_log;
     
@@ -53,7 +53,7 @@ describe('auth',()=>{
 
         });
         it('return 200 if every thing be ok and send token and id for user',async()=>{
-            email='mzzand7755@gmail.com';
+            email='auth_zzand7755@gmail.com';
             password='11111111';
             const result=await exec();
             expect(result.status).toBe(200);

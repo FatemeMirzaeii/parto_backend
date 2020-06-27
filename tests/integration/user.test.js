@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 describe("/user/signUp/:lang", () => {
     let server;
-    let email='zzand7755@gmail.com';
+    let email='user_zzand7755@gmail.com';
     let User;
 
     const exec=()=>{
@@ -19,7 +19,7 @@ describe("/user/signUp/:lang", () => {
        await server.close();
     })
     it('return 400 if email address exist ',async()=>{
-        User =await user.create({name:"zahra", email:"zzand7755@gmail.com"});
+        User =await user.create({name:"zahra", email:"user_zzand7755@gmail.com"});
         const result=await exec();
         await expect(result.status).toBe(400);
         await User.destroy();

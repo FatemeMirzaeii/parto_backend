@@ -19,32 +19,32 @@ describe('cycle',()=>{
         
     })
 
-    describe("/cycle/deleteCycle/:cycleId",()=>{
+    // describe("/cycle/deleteCycle/:cycleId",()=>{
 
-    })
-    describe("/cycle/getCyclePeriodDays/:cycleId",()=>{
+    // })
+    // describe("/cycle/getCyclePeriodDays/:cycleId",()=>{
 
-    })
-    describe("/cycle/getCycleFertilityDays/:cycleId",()=>{
+    // })
+    // describe("/cycle/getCycleFertilityDays/:cycleId",()=>{
 
-    })
-    describe("/cycle/addPeriodDay",()=>{
+    // })
+    // describe("/cycle/addPeriodDay",()=>{
 
-    })
-    describe("/cycle/deletePeriodDay/:cycleId/:date",()=>{
+    // })
+    // describe("/cycle/deletePeriodDay/:cycleId/:date",()=>{
 
-    })
-    describe("/cycle/getCyclesHistory/:userId",()=>{
+    // })
+    // describe("/cycle/getCyclesHistory/:userId",()=>{
 
-    })
-    describe("/cycle/getCycleAnalysis/:userId",()=>{
+    // })
+    // describe("/cycle/getCycleAnalysis/:userId",()=>{
 
-    })
-    describe("/cycle/getCycleForecast/:userId",()=>{
+    // })
+    // describe("/cycle/getCycleForecast/:userId",()=>{
 
-    })
-    describe("/cycle/getCycleIdFromDate/:userId/:date",()=>{
+    // })
+    // describe("/cycle/getCycleIdFromDate/:userId/:date",()=>{
 
-    })
+    // })
 
 })

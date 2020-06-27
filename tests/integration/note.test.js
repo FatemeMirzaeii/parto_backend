@@ -1,6 +1,5 @@
 const request = require('supertest');
 const { note, user } = require("../../models");
-const { expectCt } = require('helmet');
 
 describe('note',()=>{
     let server;
@@ -11,10 +10,10 @@ describe('note',()=>{
     let Note;
 
     beforeAll(async()=>{
-        Note = await note.create({title:"note title",content:"note content",note_date: new Date(Date.UTC(2018, 4, 15,10,2,5))});
-        User =await Note.createUser({name:"zahra", email:"wbazzdand7755@gmail.com"});
+        Note = await note.create({title:"note title",content:"note content",note_date: new Date(2018, 4, 15)});
+        User =await Note.createUser({name:"zahra", email:"note_zzdand7755@gmail.com"});
         token = User.generateAuthToken();
-        console.log(token);
+        //console.log('note_token',token);
         UserId= User.dataValues.id;
         date=Note.note_date;
     });
@@ -28,8 +27,8 @@ describe('note',()=>{
    });   
 
    afterAll(async()=>{
-       //await Note.destroy();
-      // await User.destroy();
+       await Note.destroy();
+       await User.destroy();
    })
 
    describe('/:lang/:userId/:date',()=>{
@@ -59,8 +58,7 @@ describe('note',()=>{
         date=Note.note_date;
         const result=await exec();
         expect(result.status).toBe(200);
-        //console.log(result);
-        expect(result.body.data.notes[0].content).toBe("contentTest");
+        expect(result.body.data).not.toBeNull();
         
     })
 
