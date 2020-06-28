@@ -1,6 +1,7 @@
 require("express-async-errors");
 require("./models/index");
 const express = require("express");
+const path = require("path");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
@@ -30,9 +31,21 @@ app.use("/user", user);
 app.use("/auth", auth);
 app.use(error);
 
+app.use(
+  express.static(
+    `/home/gitlab-runner/builds/Y3CZXGep/0/Fattahi/parto_web_v2/build`
+  )
+);
+
 app.get("/", (req, res) => {
-  res.send("Hello from Parto!!!");
+  res.sendFile(
+    path.join(
+      `/home/gitlab-runner/builds/Y3CZXGep/0/Fattahi/parto_web_v2/`,
+      "build",
+      "index.html"
+    )
+  );
 });
 
-const server=app.listen(2218, () => logger.info("Listening on port 2218..."));
-module.exports=server;
+const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
+module.exports = server;
