@@ -3,9 +3,14 @@ const { expectCt } = require('helmet');
 
 describe('send or handle internal error',()=>{
     it('should return status 500 that show internal error',()=>{
-        // const err={status:500,message:"Internal Server Error"};
-        // const getError=error(err,req,res,next);
-        // expect(getError.status).toBe(err.status);
+        let res = {};
+        res.status = jest.fn().mockReturnValue(res);
+        res.json = jest.fn().mockReturnValue(res);
+        const next=jest.fn();
+        const req= {body:jest.fn()};
+        const err={status:500,message:"Internal Server Error"};
+        error(err,req,res,next);
+        expect(req.status).toBe(err.status);
 
     });
 });

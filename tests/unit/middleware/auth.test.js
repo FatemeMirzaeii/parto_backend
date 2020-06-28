@@ -6,22 +6,19 @@ const secret = fs.readFileSync("../private.key", "utf8");
 
 describe("user.generateAuthToken", () => {
   it("should return a valid JWT", async() => {
-    // const User =await user.create({name:"zahra", email:"zazzand55za@gmail.com"});
-    // const token = User.generateAuthToken();
-    // const decoded = await jwt.verify(token, secret);
-    // console.log(decoded);
-    // //const decoded = await jwt.verify(token, secret);
-    // console.log(User.id);
-      
-    // const req = {
-    //   header: jest.fn().mockReturnValue("")
-    // };
-    // const res = {};
-    // const next = jest.fn();
+    const User =await user.create({name:"zahra", email:"midle_auth@gmail.com"});
+    const token = User.generateAuthToken();
+
+    const req = {
+      header: jest.fn().mockReturnValue(token)
+    };
+    const res = {};
+    const next = jest.fn();
     
-    // await auth(req, res, next);
-    // console.log(req.user);
-    // expect(req.user).toMatchObject(decoded);
-    // user.destroy();
+    await auth(req, res, next);
+    const decoded = await jwt.verify(token, secret);
+    
+    expect(req.user).toMatchObject(decoded);
+    await User.destroy();
   });
 });

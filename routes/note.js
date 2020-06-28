@@ -11,7 +11,6 @@ router.get("/:lang/:userId/:date", auth, async (req, res) => {
       note_date: req.params.date,
     },
   });
-  console.log(nt);
   if (nt.length == 0) return res.status(404).json({ message: await translate("NONOTES", req.params.lang) });
   return res.status(200).json({ data: { content: nt.content } });
 });
