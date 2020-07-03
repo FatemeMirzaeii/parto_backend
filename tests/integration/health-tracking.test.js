@@ -101,12 +101,13 @@ describe('health_tracking',()=>{
     describe('/deleteCategory/:lang/:id',()=>{
         let tempId;
         let delet_User;
-        const TempToken = User.generateAuthToken();
+        let TempToken;
         const exec=()=>{
             return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', TempToken);
         };
         beforeAll(async()=>{
             delet_User =await user.create({name:"zahra", email:"helth_delete7755@gmail.com"});
+            TempToken=delet_User.generateAuthToken();
         })
         it('return 404 if id is not exist ',async()=>{
             tempId=delet_User.id+5;
@@ -139,10 +140,10 @@ describe('health_tracking',()=>{
 
     // });
     describe('/getUserInfo/:userId/:date',()=>{
-        let tempId;
+        let tempId=User.id;
         TempToken=token;
         const exec=()=>{
-            return request(server).get('/healthTracking/getUserInfo/'+User.id+'/'+date)
+            return request(server).get('/healthTracking/getUserInfo/'+tempId+'/'+date)
                 .set('x-auth-token', TempToken);
         };
         
