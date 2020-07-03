@@ -9,12 +9,17 @@ describe('health_tracking',()=>{
     let User;
     let htc;
     let id;
+    let userId;
     let hto;
+    let delet_cat_id;
     const date=new Date(2016, 5, 5)
    
     beforeAll(async()=>{
         User =await user.create({name:"zahra", email:"helth_zzdand7755@gmail.com"});
+        userId=User.id;
         token = User.generateAuthToken();
+        const delet_category =await health_tracking_category.create({title:"delet helth tracking option title"});
+        delet_cat_id=delet_category.id;
         hto=await health_tracking_option.create({title:"helth tracking option title"});
         htc=await hto.createHealth_tracking_category({title:"category title"});
         id=htc.id;
@@ -25,13 +30,14 @@ describe('health_tracking',()=>{
       
    })
    afterEach(async()=>{
-      await server.close();
+      server.close();
    });   
 
    afterAll(async()=>{
        await User.destroy();
        await hto.destroy();
        await htc.destroy();
+       server.destroy();
    })
 
    describe('/getCategories',()=>{
@@ -43,7 +49,7 @@ describe('health_tracking',()=>{
             TempToken=token;
             const result= await exec();
             expect(result.status).toBe(200);
-            expect(result.body.data[0].title).toBe('category title');
+            expect(result.body.data[0].title).not.toBeNull();
         });
    });
 
@@ -99,24 +105,19 @@ describe('health_tracking',()=>{
     });
 
     describe('/deleteCategory/:lang/:id',()=>{
-        let tempId;
-        let delet_User;
-        let TempToken;
+        
         const exec=()=>{
-            return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', TempToken);
+            return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', token);
         };
-        beforeAll(async()=>{
-            delet_User =await user.create({name:"zahra", email:"helth_delete7755@gmail.com"});
-            TempToken=delet_User.generateAuthToken();
-        })
+        
         it('return 404 if id is not exist ',async()=>{
-            tempId=delet_User.id+5;
+            tempId=5+delet_cat_id;
             const result=await exec();
             expect(result.status).toBe(404);
         });
         it('return 200 if id was exist and delte succesfuly',async()=>{
-            
-            tempId=delet_User.id;
+            tempId=delet_cat_id;
+            console.log("delet_User_id"+tempId);
             const result=await exec();
             expect(result.status).toBe(200);
         });
@@ -140,7 +141,7 @@ describe('health_tracking',()=>{
 
     // });
     describe('/getUserInfo/:userId/:date',()=>{
-        let tempId=User.id;
+        let tempId=userId;
         TempToken=token;
         const exec=()=>{
             return request(server).get('/healthTracking/getUserInfo/'+tempId+'/'+date)

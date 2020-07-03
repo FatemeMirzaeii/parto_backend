@@ -16,7 +16,7 @@ describe("/user/signUp/:lang", () => {
        
     })
     afterEach(async()=>{
-       await server.close();
+       server.close();
     })
     it('return 400 if email address exist ',async()=>{
         User =await user.create({name:"zahra", email:"user_zzand7755@gmail.com"});

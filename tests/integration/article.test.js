@@ -24,12 +24,13 @@ describe('article', () => {
        
     })
     afterEach(async()=>{
-        await server.close();
+        server.close();
     })
     afterAll(async () => {
         await newArticle.destroy();
         await newCat.destroy();
         await User.destroy();
+        server.destroy();
     });
 
     describe('/article/getArticleContent/:lang/:articleId', () => {

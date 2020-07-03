@@ -24,11 +24,12 @@ describe('auth',()=>{
         server= require('../../app');
     })
     afterEach(async()=>{
-        await server.close();
+        server.close();
     })
     afterAll(async()=>{
         await User_log.destroy();
         await User.destroy();
+        server.destroy();
     })
     
     describe("/signIn/:lang",()=>{

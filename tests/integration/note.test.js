@@ -23,12 +23,13 @@ describe('note',()=>{
       
    })
    afterEach(async()=>{
-      await server.close();
+       server.close();
    });   
 
    afterAll(async()=>{
        await Note.destroy();
        await User.destroy();
+       server.destroy();
    })
 
    describe('/:lang/:userId/:date',()=>{
