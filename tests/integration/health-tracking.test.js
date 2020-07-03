@@ -15,7 +15,6 @@ describe('health_tracking',()=>{
     beforeAll(async()=>{
         User =await user.create({name:"zahra", email:"helth_zzdand7755@gmail.com"});
         token = User.generateAuthToken();
-        console.log(token);
         hto=await health_tracking_option.create({title:"helth tracking option title"});
         htc=await hto.createHealth_tracking_category({title:"category title"});
         id=htc.id;
@@ -101,18 +100,22 @@ describe('health_tracking',()=>{
 
     describe('/deleteCategory/:lang/:id',()=>{
         let tempId;
-        let de_User =await user.create({name:"zahra", email:"helth_delete7755@gmail.com"});
+        let delet_User;
         const TempToken = User.generateAuthToken();
         const exec=()=>{
             return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', TempToken);
         };
+        beforeAll(async()=>{
+            delet_User =await user.create({name:"zahra", email:"helth_delete7755@gmail.com"});
+        })
         it('return 404 if id is not exist ',async()=>{
-            tempId=de_User+5;
+            tempId=delet_User.id+5;
             const result=await exec();
             expect(result.status).toBe(404);
         });
         it('return 200 if id was exist and delte succesfuly',async()=>{
-            tempId=de_User;
+            
+            tempId=delet_User.id;
             const result=await exec();
             expect(result.status).toBe(200);
         });
