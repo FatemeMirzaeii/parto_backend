@@ -1,8 +1,9 @@
 image: node:latest
 stages:
+    - test
     - run
     - build
-    - test
+   
 cache:
   paths:
     - node_modules/
