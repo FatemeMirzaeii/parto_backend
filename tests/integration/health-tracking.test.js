@@ -35,7 +35,7 @@ describe('health_tracking',()=>{
        await htc.destroy();
    })
 
-   describe('/getCategories',async()=>{
+   describe('/getCategories',()=>{
         const exec=()=>{
             return request(server).get('/healthTracking/getCategories').set('x-auth-token', TempToken);
         }
@@ -48,7 +48,7 @@ describe('health_tracking',()=>{
         });
    });
 
-   describe('/addCategory/:lang',async()=>{
+   describe('/addCategory/:lang',()=>{
         let title;
         const exec=()=>{
             return request(server).post('/healthTracking/addCategory/fa')
@@ -77,7 +77,7 @@ describe('health_tracking',()=>{
             
         });
    });
-   describe('editCategory/:lang/:id',async()=>{
+   describe('editCategory/:lang/:id',()=>{
         let tempId;
         let title='edit category title';
         TempToken=token;
@@ -99,7 +99,7 @@ describe('health_tracking',()=>{
         });
     });
 
-    describe('/deleteCategory/:lang/:id',async()=>{
+    describe('/deleteCategory/:lang/:id',()=>{
         let tempId;
         let de_User =await user.create({name:"zahra", email:"helth_delete7755@gmail.com"});
         const TempToken = User.generateAuthToken();
@@ -123,7 +123,7 @@ describe('health_tracking',()=>{
     //     TempToken=token;
     //     const exec=()=>{
     //         return request(server).post('/healthTracking/setUserInfo')
-    //             .send( {"date": date,"user_id":User.id ,"health_tracking_option_id": hto})
+    //             .send( {"date": date,"user_id":User.id ,"health_tracking_option_id": [hto]})
     //             .set('x-auth-token', TempToken);
     //     };
         
@@ -135,7 +135,7 @@ describe('health_tracking',()=>{
     //     });
 
     // });
-    describe('/getUserInfo/:userId/:date',async()=>{
+    describe('/getUserInfo/:userId/:date',()=>{
         let tempId;
         TempToken=token;
         const exec=()=>{
