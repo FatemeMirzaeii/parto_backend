@@ -1,4 +1,5 @@
 const request = require('supertest');
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const { user ,user_log} = require("../../models");
 const bcrypt = require("bcrypt");
 let server;
@@ -29,7 +30,7 @@ describe('auth',()=>{
     afterAll(async()=>{
         await User_log.destroy();
         await User.destroy();
-        server.destroy();
+        
     })
     
     describe("/signIn/:lang",()=>{

@@ -1,4 +1,5 @@
 const request = require('supertest');
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const { user } = require("../../models");
 const bcrypt = require("bcrypt");
 
@@ -16,12 +17,12 @@ describe("/user/signUp/:lang", () => {
        
     })
     afterEach(async()=>{
-       server.close();
+        server.close();
     })
     it('return 400 if email address exist ',async()=>{
         User =await user.create({name:"zahra", email:"user_zzand7755@gmail.com"});
         const result=await exec();
-        await expect(result.status).toBe(400);
+        expect(result.status).toBe(400);
         await User.destroy();
     })
 

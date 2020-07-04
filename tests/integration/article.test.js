@@ -1,4 +1,5 @@
 const request = require('supertest');
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const { article, user } = require("../../models");
 
 describe('article', () => {
@@ -23,14 +24,14 @@ describe('article', () => {
         server=require('../../app');
        
     })
-    afterEach(async()=>{
-        server.close();
+    afterEach(()=>{
+         server.close();
     })
     afterAll(async () => {
         await newArticle.destroy();
         await newCat.destroy();
         await User.destroy();
-        server.destroy();
+        
     });
 
     describe('/article/getArticleContent/:lang/:articleId', () => {

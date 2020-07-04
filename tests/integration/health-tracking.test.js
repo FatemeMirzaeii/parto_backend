@@ -1,4 +1,5 @@
 const request = require('supertest');
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const { user,health_tracking_category,
     user_tracking_option,health_tracking_option } = require("../../models");
 
@@ -30,14 +31,14 @@ describe('health_tracking',()=>{
       
    })
    afterEach(async()=>{
-      server.close();
+        server.close();
    });   
 
    afterAll(async()=>{
        await User.destroy();
        await hto.destroy();
        await htc.destroy();
-       server.destroy();
+       
    })
 
    describe('/getCategories',()=>{

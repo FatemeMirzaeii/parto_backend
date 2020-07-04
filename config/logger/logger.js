@@ -1,7 +1,7 @@
 const winston = require("winston");
 const mysql_transport = require("./mysql-transport");
 
-winston.configure({
+winston. configure({
   transports: [
     new winston.transports.File({
       filename: "error.log",
