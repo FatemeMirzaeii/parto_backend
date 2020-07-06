@@ -35,5 +35,18 @@ running_parto:
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - npm run
+building_parto:
+  stage: build
+  variables:
+   NODE_ENV: "test"
+  script: 
+    - echo "Running Parto..."
+    - echo $NODE_ENV
+    - killall node || echo "No other instnaces is running."
+    - npm install
+    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
+    - npx sequelize-cli db:migrate
+    - npx sequelize-cli db:seed:all
+    - npm test 
        
     
