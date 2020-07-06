@@ -1,7 +1,8 @@
 image: node:latest
 stages:
-    - test
+    
     - run
+    - test
     - build
    
 cache:
@@ -34,6 +35,6 @@ running_parto:
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
-    - npm start
+    - npm run
        
     
