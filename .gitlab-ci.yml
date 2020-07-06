@@ -1,6 +1,5 @@
 image: node:latest
 stages:
-    
     - run
     - test
     - build
