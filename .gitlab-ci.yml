@@ -1,8 +1,8 @@
 image: node:latest
 stages:
-    - run
-    - test
     - build
+    - test
+    - deploy
    
 cache:
   paths:
@@ -22,8 +22,8 @@ testing_parto:
         - npx sequelize-cli db:seed:all
         - npm test
         - echo "testing succsecfull"
-running_parto:
-  stage: run
+building_parto:
+  stage: build
   variables:
      NODE_ENV: "test"
   
@@ -35,23 +35,9 @@ running_parto:
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
-    - npm run
-building_parto:
-  stage: build
-  variables:
-   NODE_ENV: "test"
- environment:
-    name: test
-    url: https://api.partobanoo.com/
+    - npm run build
     
-  script: 
-    - echo "Running Parto..."
-    - echo $NODE_ENV
-    - killall node || echo "No other instnaces is running."
-    - npm install
-    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
-    - npx sequelize-cli db:migrate
-    - npx sequelize-cli db:seed:all
-    - npm run 
+    
+
        
     
