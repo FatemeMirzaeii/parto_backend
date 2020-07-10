@@ -4,7 +4,10 @@ const { article, category } = require("../models");
 const translate = require("../config/translate");
 const router = express();
 
-router.get("/getArticleContent/:lang/:articleId", auth, async (req, res) => {
+router.get("/getArticleContent/:lang/articleId",auth, async (req, res) => {
+  // if(res.params.permition=='true'){
+  //   auth(req,res,next)
+  // }
   const art = await article.findByPk(req.params.articleId);
   if (!art) return res.status(404).json({ message: await translate("ARTICLENOTFOUND", req.params.lang) });
   res.status(200).json({ data: { content: art.content } });
