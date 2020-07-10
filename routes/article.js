@@ -4,7 +4,7 @@ const { article, category } = require("../models");
 const translate = require("../config/translate");
 const router = express();
 
-router.get("/getArticleContent/:lang/articleId",auth, async (req, res) => {
+router.get("/getArticleContent/:lang/:articleId",auth, async (req, res) => {
   // if(res.params.permition=='true'){
   //   auth(req,res,next)
   // }
