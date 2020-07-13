@@ -41,7 +41,8 @@ deploy_staging_parto:
 
 deploy_prod_parto:
   stage: deploy
-  NODE_ENV: "production"
+  variables:
+     NODE_ENV: "production"
   script:
     - echo "Deploy to production server ..."
     - npm install
