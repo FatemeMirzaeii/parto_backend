@@ -32,7 +32,7 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - pm2 start app.js
-    - echo"deploy_staging succesfull"
+    - echo "deploy_staging succesfull"
   environment:
     name: staging
     url: https://api.partobanoo.com
