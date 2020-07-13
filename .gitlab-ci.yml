@@ -1,14 +1,15 @@
 image: node:latest
+
+before_script:
+    - pm2 stop app.js
+
 stages:
-    
-    - build
     - test
     - deploy
-   
+
 cache:
   paths:
     - node_modules/
-    
 
 testing_parto:
     stage: test
@@ -23,21 +24,38 @@ testing_parto:
         - npx sequelize-cli db:seed:all
         - npm test
         - echo "testing succsecfull"
-building_parto:
-  stage: build
+
+deploy_staging_parto:
+  stage: deploy
   variables:
-     NODE_ENV: "test"
-  
-  script: 
-    - echo "Running Parto..."
-    - echo $NODE_ENV
-    - killall node || echo "No other instnaces is running."
+      NODE_ENV: "test"
+  script:
+    - echo "Deploy to staging server ..."
+    - pm2 start app.js
+    - echo"deploy_staging succesfull"
+  environment:
+    name: staging
+    url: https://api.partobanoo.com
+  only:
+    - master
+
+deploy_prod_parto:
+  stage: deploy
+  NODE_ENV: "production"
+  script:
+    - echo "Deploy to production server ..."
     - npm install
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
-    - pm2 stop app.js
     - pm2 start app.js
+    - echo "Deploy to production server Succdsfull"
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+  only:
+    - master
     
     
     
