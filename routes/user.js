@@ -58,4 +58,5 @@ router.post("/signUp/:lang", async (req, res) => {
   res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
 });
 
+//
 module.exports = router;
