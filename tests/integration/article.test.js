@@ -49,7 +49,7 @@ describe('article', () => {
 
         it('should be return 404 if article id is not exist in database', async() => {
             TempToken=token;
-            tempArticleId=1;
+            tempArticleId=articleId-1;
             const result=await exec();    
             expect(result.status).toBe(404);
 
@@ -78,7 +78,7 @@ describe('article', () => {
         });
         it('should be return 404 if article id is not exist in database', async() => {
             TempToken=token;
-            tempArticleId=1;
+            tempArticleId=articleId-1;
             const result=await exec();    
             expect(result.status).toBe(404);
 
