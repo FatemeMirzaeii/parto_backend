@@ -2,6 +2,7 @@ image: node:latest
 
 before_script:
     - pm2 stop app.js
+    - npx sequelize db:drop  
 
 stages:
     - test
