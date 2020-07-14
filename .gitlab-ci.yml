@@ -29,19 +29,22 @@ deploy_staging_parto:
   stage: deploy
   variables:
       NODE_ENV: "test"
-  script:
-    - echo "Deploy to staging server ..."
-    - pm2 start app.js
-    - echo"deploy_staging succesfull"
   environment:
     name: staging
     url: https://api.partobanoo.com
+    
+  script:
+    - echo "Deploy to staging server ..."
+    - pm2 start app.js
+    - echo "deploy_staging succesfull"
+  
   only:
     - master
 
 deploy_prod_parto:
   stage: deploy
-  NODE_ENV: "production"
+  variables:
+     NODE_ENV: "production"
   script:
     - echo "Deploy to production server ..."
     - npm install
