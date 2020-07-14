@@ -2,7 +2,7 @@ image: node:latest
 
 before_script:
     - pm2 stop app.js
-    - npx sequelize db:drop  
+    - npx sequelize db:drop --charset utf8mb4 --collate utf8mb4_persian_ci  
 
 stages:
     - test
