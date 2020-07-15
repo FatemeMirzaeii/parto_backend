@@ -2,7 +2,7 @@ require("express-async-errors");
 require("./models/index");
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerDocument = require('./swagger.yaml');
 
 const express = require("express");
 const path = require("path");
@@ -22,35 +22,6 @@ const auth = require("./routes/auth");
 
 const app = express();
 
-const swaggerDefinition = {
-  info: {
-    title: 'Parto Swagger API',
-    version: '1.0.0',
-    description: 'Endpoints to test parto app api',
-  },
-  servers: ["https://api.partobanoo.com"],
-  basePath: '/',
-  securityDefinitions: {
-    bearerAuth: {
-      type: 'apiKey',
-      name: 'Authorization',
-      scheme: 'bearer',
-      in: 'header',
-    },
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ['./routes/*.js'],
-};
-
-const swaggerSpec = swaggerJSDoc(options);
-
-// app.get('/swagger.json', (req, res) => {
-//   res.setHeader('Content-Type', 'application/json');
-//   res.send(swaggerSpec);
-// });
 
 app.use(helmet());
 app.use(nodeadmin(app));
@@ -63,7 +34,7 @@ app.use("/healthTracking", healthTracking);
 app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(error);
 
 app.use(
