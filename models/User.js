@@ -3,25 +3,25 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
 
-// /**
-//  * @swagger
-//  * definitions:
-//  *   User:
-//  *     type: object
-//  *     properties:
-//  *       name:
-//  *         type: string
-//  *       email:
-//  *         type: string
-//  *       username:
-//  *         type: string
-//  *       password:
-//  *         type: string
-//  *       active:
-//  *          type:boolean
-//  *       required:
-//  *         - email        
-//  */
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     type: object
+ *     properties:
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *       active:
+ *          type:boolean
+ *       required:
+ *         - email        
+ */
 
 
 module.exports = (sequelize, DataTypes) => {
