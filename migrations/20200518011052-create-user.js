@@ -30,6 +30,12 @@ module.exports = {
       active: {
         type: Sequelize.BOOLEAN
       },
+      uuid:{
+        type:Sequelize.UUID
+      },
+      forgetPasswordDate:{
+        type:DataTypes.DATE 
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

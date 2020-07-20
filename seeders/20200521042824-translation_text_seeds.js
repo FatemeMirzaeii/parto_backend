@@ -23,6 +23,10 @@ module.exports = {
       { language_id: 2, key_id: 9, text: "You don't have permission", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 10, text: "مجوز نامعتبر", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 10, text: "Invalid token", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 11, text: "زمان مجاز تمام شده است", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 11, text: "Time over", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 12, text: "اطلاعات نامعتبر", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 12, text: "Invalid id", created_at: new Date(), updated_at: new Date() },
     ], {});
   },
 

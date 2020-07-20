@@ -47,6 +47,12 @@ module.exports = (sequelize, DataTypes) => {
       active: {
         type: DataTypes.BOOLEAN,
       },
+      uuid:{
+        type:DataTypes.UUID,
+      },
+      forgetPasswordDate:{
+        type:DataTypes.DATE ,
+      },
     },
     {
       freezeTableName: true,

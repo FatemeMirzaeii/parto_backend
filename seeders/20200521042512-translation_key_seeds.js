@@ -13,6 +13,8 @@ module.exports = {
       { key: 'EMAILEXISTS', created_at: new Date(), updated_at: new Date() },
       { key: 'NOPERMISSION', created_at: new Date(), updated_at: new Date() },
       { key: 'INVALIDTOKEN', created_at: new Date(), updated_at: new Date() },
+      { key: 'TIMEOVER', created_at: new Date(), updated_at: new Date() },
+      { key: 'INVALIDID', created_at: new Date(), updated_at: new Date() },
     ], {});
   },
   down: (queryInterface, Sequelize) => {
