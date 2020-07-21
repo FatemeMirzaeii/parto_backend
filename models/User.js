@@ -50,9 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       uuid:{
         type:DataTypes.UUID,
       },
-      forgetPasswordDate:{
-        type:DataTypes.DATE ,
-      },
+      
     },
     {
       freezeTableName: true,

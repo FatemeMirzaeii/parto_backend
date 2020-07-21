@@ -15,6 +15,7 @@ module.exports = {
       { key: 'INVALIDTOKEN', created_at: new Date(), updated_at: new Date() },
       { key: 'TIMEOVER', created_at: new Date(), updated_at: new Date() },
       { key: 'INVALIDID', created_at: new Date(), updated_at: new Date() },
+      { key: 'SERVERERROR', created_at: new Date(), updated_at: new Date() },
     ], {});
   },
   down: (queryInterface, Sequelize) => {

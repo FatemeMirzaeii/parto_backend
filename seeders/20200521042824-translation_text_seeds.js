@@ -27,6 +27,8 @@ module.exports = {
       { language_id: 2, key_id: 11, text: "Time over", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 12, text: "اطلاعات نامعتبر", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 12, text: "Invalid id", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 13, text: "مشکلی سمت سرور رخ داد لطفا دوباره امتحان کنید", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 13, text: "Server error occurred. Please try again", created_at: new Date(), updated_at: new Date() },
     ], {});
   },
 

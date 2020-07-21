@@ -33,9 +33,6 @@ module.exports = {
       uuid:{
         type:Sequelize.UUID
       },
-      forgetPasswordDate:{
-        type:DataTypes.DATE 
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

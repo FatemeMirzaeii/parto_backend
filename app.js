@@ -19,6 +19,7 @@ const healthTracking = require("./routes/health-tracking");
 const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
+const contactUs=require("./routes/contactUs");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/healthTracking", healthTracking);
 app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
+app.use("/contactUs", contactUs);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(error);
 
