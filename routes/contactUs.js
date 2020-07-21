@@ -44,7 +44,7 @@ router.post('/Email', (req, res) => {
     }
     console.log("send  email");
     transporter.sendMail(mail, async(err, data) => {
-      if (err) return res.status(501).json({message: await translate("SERVERERROR", "fa")});
+      if (err) return res.status(500).json({message: await translate("SERVERERROR", "fa")});
       else return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
     })
   })

@@ -17,8 +17,9 @@ router.post("/signUp/:lang", async (req, res) => {
     email: req.body.email,
     password: hash,
   });
+  console.log(usr);
   const token = usr.generateAuthToken();
-  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
+  return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
 });
 
 //
