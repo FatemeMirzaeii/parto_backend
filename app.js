@@ -20,6 +20,8 @@ const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs=require("./routes/contactUs");
+var cors = require("cors");
+
 
 const app = express();
 
@@ -67,6 +69,8 @@ app.use("/auth", auth);
 app.use("/contactUs", contactUs);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(error);
+app.use(cors());
+
 
 app.use(
   express.static(
