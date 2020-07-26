@@ -78,7 +78,7 @@ app.use(
   )
 );
 
-app.get("/", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(
     path.join(
       `/home/gitlab-runner/builds/Y3CZXGep/0/Fattahi/parto_web_v2/`,
