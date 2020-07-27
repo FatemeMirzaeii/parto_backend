@@ -39,7 +39,7 @@ app.use("/contactUs", contactUs);
 app.use(error);
 app.use(cors());
 
-app.use('/api-docs', function(req, res, next){
+app.use('/api-doc', function(req, res, next){
   swaggerDocument.host = req.get('https://api.partobanoo.com');
   req.swaggerDoc = swaggerDocument;
   next();

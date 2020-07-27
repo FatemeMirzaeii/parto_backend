@@ -28,59 +28,6 @@
       "http"
     ],
     "paths": {
-      "/signUp/:lange": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "summary": "add new user ",
-          "description": "",
-          "operationId": "add user",
-          "consumes": [
-            "application/json",
-            "application/xml"
-          ],
-          "produces": [
-            "application/xml",
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "description": "user object add to database",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "A list of users",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Error"
-                  }
-                }
-              },
-              "headers": {
-                "x-auth-token": {
-                  "description": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTUwNzEyODB9.EQqa1U6E9EwxusBZL_oLGvbC_YAvK1c8oIr0wChAwIk"
-                }
-              }
-            }
-          },
-          "security": [
-            {
-              "petstore_auth": [
-                "write:pets",
-                "read:pets"
-              ]
-            }
-          ]
-        },
         "put": {
           "tags": [
             "pet"
