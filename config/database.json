@@ -1,10 +1,11 @@
 {
   "development": {
-    "database": "parto",
-    "username": "administrator",
-    "password": "P@rto2020",
+    "database": "parto2",
+    "username": "root",
+    "password": "12345",
     "host": "localhost",
     "dialect": "mysql"
+
   },
   "test": {
     "database": "parto",

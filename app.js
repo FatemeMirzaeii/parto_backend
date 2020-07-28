@@ -18,6 +18,7 @@ const note = require("./routes/note");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs=require("./routes/contactUs");
+const survey=require("./routes/survey");
 var cors = require("cors");
 
 
@@ -36,6 +37,7 @@ app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
 app.use("/contactUs", contactUs);
+app.use("/survay",survey)
 app.use(error);
 app.use(cors());
 
