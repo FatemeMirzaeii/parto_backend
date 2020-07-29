@@ -20,17 +20,25 @@ router.post("/surveyQuestion/:lang",auth, async (req, res) => {
         userId:usr.id
       },
   })
-  res.status(200).json({answers:answers , userAnswers:userAnswers.answers ,userDescription:userAnswers.description});
+  userAnswer="";
+  userDescription="";
+  if(userAnswers){
+    userAnswer=userAnswers.answers;
+   userDescription=userAnswers.description;
+  }
+  res.status(200).json({answers:answers , userAnswers:userAnswer ,userDescription:userDescription});
 
 });
 
-router.post("/userSurveyAnswer/:lang",auth, async (req, res) => {
+router.put("/userSurveyAnswer/:lang",auth, async (req, res) => {
     const usr = await user.findOne({
       where: {
         email: req.body.email,
       },
     });
     if (!usr) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
+    if (!req.body.rate) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
+    
     usr.update({rate:req.body.rate});
     const userAnswers= await user_answer_survey.findOne({
         where:{
