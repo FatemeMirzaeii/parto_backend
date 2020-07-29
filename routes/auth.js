@@ -76,7 +76,7 @@ router.post("/changePassword/:lang", async(req, res) => {
   if (!usr) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
  
   const pass = await bcrypt.compare(req.body.password, usr.password);
-  if (!pass) return res.status(400).json({ message: await translate("WRONGPASSWORD", req.params.lang) });
+  if (!pass) return res.status(400).json({  message: await translate("INVALIDENTRY", req.params.lang) });
   
   await usr.update({ password:await bcrypt.hash(req.body.newPassword, 10) });
 

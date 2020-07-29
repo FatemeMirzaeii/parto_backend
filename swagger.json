@@ -29,9 +29,228 @@
     {
       "name": "survay",
       "description": "Operations about user"
+    },
+    {
+      "name": "contactUs"
     }
   ],
   "paths": {
+    "/contactUs/Email": {
+      "post": {
+        "summary": "send email to parto manager .",
+        "tags": [
+          "contactUs"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "send email successful"
+          },
+          "502": {
+            "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/auth/emailForgetPassword/{lang}": {
+      "post": {
+        "summary": "Returns survey question.",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "send email successful"
+          },
+          "502": {
+            "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/auth/forgotPassword/{lang}": {
+      "post": {
+        "summary": "Returns survey question.",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "send email successful"
+          },
+          "400": {
+            "description": "envalid input"
+          }
+        }
+      }
+    },
+    "/auth/changePassword/{lang}": {
+      "post": {
+        "summary": "Returns survey question.",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "periviuse password"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "description": "new password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "send email successful"
+          },
+          "400": {
+            "description": "envalid input"
+          }
+        }
+      }
+    },
+    "/auth/sendVerificationCode": {
+      "post": {
+        "summary": "Returns survey question.",
+        "tags": [
+          "user"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "send email successful"
+          },
+          "400": {
+            "description": "envalid input"
+          },
+          "502": {
+            "description": "server error to send email"
+          }
+        }
+      }
+    },
     "/survay/surveyQuestion/{lang}": {
       "post": {
         "summary": "Returns survey question.",
@@ -116,7 +335,7 @@
             }
           },
           "400": {
-            "description": "envalid email address"
+            "description": "envalid input"
           }
         }
       }

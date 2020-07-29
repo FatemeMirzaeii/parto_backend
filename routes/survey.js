@@ -38,8 +38,12 @@ router.put("/userSurveyAnswer/:lang",auth, async (req, res) => {
     });
     if (!usr) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
     if (!req.body.rate) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
-    
     usr.update({rate:req.body.rate});
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: req.body.version,
+      login_date: Date.now(),
+    });
     const userAnswers= await user_answer_survey.findOne({
         where:{
           userId:usr.id

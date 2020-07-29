@@ -13,7 +13,7 @@ router.post('/Email', async(req, res) => {
     let content = `نام کاربر: ${name} \n ایمیل: ${email}\n عنوان: ${title} \n متن پیام: ${message} `;
     let subject="ایمیل ارسال شده از طرف کاربر با عنوان:"+req.body.title ;
     let result=false;
-    result=await sEmail(creds.USER,'zzand7755@gmail.com',content,subject);
+    result=await sEmail(creds.USER,'info@partobanoo.com',content,subject);
     
     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
     else return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
