@@ -1,9 +1,6 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const {
-  health_tracking_option,
-  health_tracking_category,
-  user_tracking_option } = require("../models");
+const {  health_tracking_category,  user_tracking_option } = require("../models");
 const translate = require("../config/translate");
 const router = express();
 
@@ -50,7 +47,7 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 });
 
-router.post("/setUserInfo", auth, async (req, res) => {
+router.post("/setUserInfo:lang", auth, async (req, res) => {
   //todo: should check if an option doesnt exists anymore, then remove it.
   req.body.options.forEach(async (option) => {
     await user_tracking_option.create({
@@ -59,7 +56,7 @@ router.post("/setUserInfo", auth, async (req, res) => {
       health_tracking_option_id: option
     });
   });
-  res.status(200);
+  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });;
 });
 
 router.get("/getUserInfo/:userId/:date", auth, async (req, res) => {

@@ -32,6 +32,10 @@
     },
     {
       "name": "contactUs"
+    },
+    {
+      "name": "healthTracking",
+      "description": "user health tracking"
     }
   ],
   "paths": {
@@ -75,7 +79,89 @@
         }
       }
     },
-    "/auth/emailForgetPassword/{lang}": {
+    "/user/signUp/{lang}": {
+      "post": {
+        "summary": "sign up new user with email.",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-auth-token": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "string",
+                      "description": "an authorization header"
+                    }
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "user id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "email exist"
+          }
+        }
+      }
+    },
+    "/user/emailForgetPassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
         "tags": [
@@ -120,7 +206,7 @@
         }
       }
     },
-    "/auth/forgotPassword/{lang}": {
+    "/user/forgotPassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
         "tags": [
@@ -165,7 +251,7 @@
         }
       }
     },
-    "/auth/changePassword/{lang}": {
+    "/user/changePassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
         "tags": [
@@ -247,6 +333,94 @@
           },
           "502": {
             "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/note/{lang}/{userId}/{date}": {
+      "get": {
+        "summary": "return note content.",
+        "tags": [
+          "note"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "string",
+                          "description": "note content"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "note is not exist"
           }
         }
       }
@@ -453,6 +627,589 @@
           },
           "400": {
             "description": "nok"
+          }
+        }
+      }
+    },
+    "/article/getArticleContent/{lang}/{articleId}": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "article id"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get article content with id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "article content",
+                      "properties": {
+                        "content": {
+                          "type": "string",
+                          "description": "article content"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "article not found"
+          }
+        }
+      }
+    },
+    "/article/getArticleTitle/{lang}/{articleId}": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "article id"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get article title with id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "article title",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "article title"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "article not found"
+          }
+        }
+      }
+    },
+    "/article/getArticlesList/{categoryId}": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get list of articles with category id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "articles list",
+                      "properties": {
+                        "articles": {
+                          "type": "string",
+                          "description": "articles list in speshal category and type articles is array"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthTracking/getCategories": {
+      "get": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get list of categories",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "description": "list of categories"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthTracking/addCategory/{lang}": {
+      "post": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "update category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "list of categories",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "category id"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "category title"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "category exist"
+          }
+        }
+      }
+    },
+    "/healthTracking/editCategory/{lang}/{id}": {
+      "put": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "id"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "add new category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "syccessful"
+          },
+          "404": {
+            "description": "any category is not exist wuth this id"
+          }
+        }
+      }
+    },
+    "/healthTracking/deleteCategory/{lang}/{id}": {
+      "delete": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "id"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "delete category",
+        "responses": {
+          "200": {
+            "description": "syccessful"
+          },
+          "404": {
+            "description": "any category is not exist wuth this id"
+          }
+        }
+      }
+    },
+    "/healthTracking/setUserInfo:{lang}": {
+      "post": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "set user healthi tracking information",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "integer"
+                  },
+                  "date": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful"
+          }
+        }
+      }
+    },
+    "/healthTracking/getUserInfo/{userId}/{date}": {
+      "get": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "date"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get information about user health tracking",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "list of categories",
+                      "properties": {
+                        "options": {
+                          "type": "string",
+                          "description": "category id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
