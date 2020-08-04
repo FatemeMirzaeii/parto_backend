@@ -33,8 +33,8 @@ module.exports = {
       uuid:{
         type:Sequelize.UUID
       },
-      rate:{
-        type:Sequelize.INTEGER
+      imei: {
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,

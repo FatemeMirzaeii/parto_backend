@@ -2,67 +2,158 @@ const express = require("express");
 const { user , survey_answer , user_answer_survey} = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
-const auth = require("../middleware/auth");
+const jwt = require("jsonwebtoken");
+var fs = require("fs");
+const secret = fs.readFileSync("../private.key", "utf8");
 
-
-router.post("/surveyQuestion/:lang",auth, async (req, res) => {
-  const usr = await user.findOne({
-    where: {
-      email: req.body.email,
-    },
-  });
-  if (!usr) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
+function aithentication (token){
+  if (!token)   return "401";
+  var decoded = jwt.decode(token, {complete: true});
+  if(decoded!=null){
+    jwt.verify(token, secret);
+    return "200";
+  }
+  return "400";
+};
+  
+router.post("/surveyQuestion/:lang", async (req) => {
   let answers= await survey_answer.findAll({
     attributes: ['id', 'answer']
   });
-  const userAnswers= await user_answer_survey.findOne({
+  let userAnswers;
+  if(req.body.userId>=0){
+    
+    if(aithentication( req.header("x-auth-token"))=="200"){
+      userAnswers= await user_answer_survey.findOne({
+        where:{
+          userId:req.body.userId
+        },
+      })
+    }
+    else if (aithentication( req.header("x-auth-token"))=="401"){
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+    }
+    else {
+      return  res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+    }
+   
+  }
+  else{
+   userAnswers= await user_answer_survey.findOne({
       where:{
-        userId:usr.id
+        IMEI:req.body.IMEi
       },
-  })
+   })
+  }
   userAnswer="";
   userDescription="";
   if(userAnswers){
     userAnswer=userAnswers.answers;
-   userDescription=userAnswers.description;
+    userDescription=userAnswers.description;
   }
   res.status(200).json({answers:answers , userAnswers:userAnswer ,userDescription:userDescription});
 
 });
 
-router.put("/userSurveyAnswer/:lang",auth, async (req, res) => {
-    const usr = await user.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
-    if (!usr) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
-    if (!req.body.rate) return res.status(400).json({ message: await translate("INVALIDID", req.params.lang) });
-    usr.update({rate:req.body.rate});
-    await usr.createUser_log({
-      i_p: req.header("x-forwarded-for"),
-      version: req.body.version,
-      login_date: Date.now(),
-    });
-    const userAnswers= await user_answer_survey.findOne({
+router.put("/userSurveyAnswer/:lang", async (req, res) => {
+    
+  if (!req.body.rate || !req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  
+  let userAnswers;
+  if(req.body.userId>=0){
+    
+    if(aithentication( req.header("x-auth-token"))=="200"){
+      userAnswers= await user_answer_survey.findOne({
         where:{
-          userId:usr.id
+          userId:req.body.userId
         },
-    })
-    if(userAnswers) {
-        userAnswers.update({
-            answers:req.body.answers , 
-            description:req.body.description
-        });
+      })
+    }
+    else if (aithentication( req.header("x-auth-token"))=="401"){
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+    }
+    else {
+      return  res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+    }
+
+  }
+  else{
+   userAnswers= await user_answer_survey.findOne({
+      where:{
+        IMEI:req.body.IMEi
+      },
+   })
+  }
+  
+  if(userAnswers!=null ) {
+    if(req.body.userId>=0){
+      const usr = await user.findOne({
+        where: {
+          id: req.body.userId,
+        },
+      });
+      if (!usr) return res.status(400).json({ message: await translate("INVALIDID",req.params.lang) });
+      
+      if(userAnswers.IMEI!=req.body.IMEi){
+        userAnswers.update({IMEI:req.body.IMEi});
+        usr.update({imei:req.body.IMEi})
+      }
+            
+      await usr.createUser_log({
+        i_p: req.header("x-forwarded-for"),
+        version: req.body.version,
+        login_date: Date.now(),
+      });
+
+      userAnswers.update({
+          userId:req.body.userId,
+          answers:req.body.answers , 
+          description:req.body.description,
+          rate:req.body.rate
+      });
     }
     else{
-        user_answer_survey.create({
-            userId:usr.id,
-            answers:req.body.answers ,
-            description:req.body.description
-        })
+      userAnswers.update({
+        answers:req.body.answers , 
+        description:req.body.description,
+        rate:req.body.rate
+     });
     }
-    res.status(200).json({message: await translate("SUCCESSFUL", req.params.lang)});
+  }
+  else{
+    if(req.body.userId>=0){
+      const usr = await user.findOne({
+        where: {
+          id: req.body.userId,
+        },
+      });
+      if (!usr) return res.status(400).json({ message: await translate("INVALIDID",req.params.lang) });
+      
+      await usr.createUser_log({
+        i_p: req.header("x-forwarded-for"),
+        version: req.body.version,
+        login_date: Date.now(),
+      });
+      
+      user_answer_survey.create({
+        userId:usr.id,
+        IMEI:req.body.IMEi,
+        answers:req.body.answers ,
+        description:req.body.description,
+        rate:req.body.rate
+     })
+
+    }
+    else{
+      user_answer_survey.create({
+          IMEI:req.body.IMEi,
+          answers:req.body.answers ,
+          description:req.body.description,
+          rate:req.body.rate
+      })
+    }
+  }
+  return res.status(200).json({message: await translate("SUCCESSFUL",req.params.lang )});
   
-  });
+});
 module.exports = router;

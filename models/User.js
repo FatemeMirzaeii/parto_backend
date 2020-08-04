@@ -50,8 +50,8 @@ module.exports = (sequelize, DataTypes) => {
       uuid:{
         type:DataTypes.UUID,
       },
-      rate:{
-        type:DataTypes.INTEGER,
+      imei: {
+        type:DataTypes.STRING,
       }
     },
     {

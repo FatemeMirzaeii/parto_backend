@@ -22,6 +22,13 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      rate: {
+        type: Sequelize.INTEGER
+      },
+      IMEI: {
+        primaryKey: true,
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
