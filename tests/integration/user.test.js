@@ -7,9 +7,10 @@ describe("/user/signUp/:lang", () => {
     let server;
     let email='user_zzand7755@gmail.com';
     let User;
+    let imei='12345678901234';
 
     const exec=()=>{
-         const res= request(server).post('/user/signUp/fa').send({"name":"zahra","email":`${email}`,"password":"11111111"});
+         const res= request(server).post('/user/signUp/fa').send({"name":"zahra","email":`${email}`,"password":"11111111",imei:`${imei}`});
          return res;
     }
     beforeEach(()=>{
@@ -20,10 +21,16 @@ describe("/user/signUp/:lang", () => {
         server.close();
     })
     it('return 400 if email address exist ',async()=>{
-        User =await user.create({name:"zahra", email:"user_zzand7755@gmail.com"});
+        User =await user.create({name:"zahra", email:"user_zzand7755@gmail.com" , imei:"12312312345678"});
         const result=await exec();
         expect(result.status).toBe(400);
         await User.destroy();
+    })
+    it('return 400 if imei is not exist ',async()=>{
+        imei='';
+        const result=await exec();
+        expect(result.status).toBe(400);
+        
     })
 
     it('return 200 if email address not exist and creat new user and send token to user',async()=>{
