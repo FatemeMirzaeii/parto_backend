@@ -114,6 +114,9 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "imei": {
+                    "type": "string"
                   }
                 }
               }
@@ -156,7 +159,7 @@
             }
           },
           "400": {
-            "description": "email exist"
+            "description": "email exist / invalid input"
           }
         }
       }
@@ -444,6 +447,18 @@
                 }
               }
             }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
           }
         ],
         "requestBody": {
@@ -451,9 +466,15 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "IMEi"
+                ],
                 "properties": {
                   "IMEi": {
                     "type": "string"
+                  },
+                  "userId": {
+                    "type": "integer"
                   }
                 }
               }
@@ -520,14 +541,29 @@
                 }
               }
             }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "IMEi",
+                  "rate"
+                ],
                 "properties": {
                   "userId": {
                     "type": "integer"
@@ -554,7 +590,10 @@
             "description": "successful"
           },
           "400": {
-            "description": "envalid input /invalid id"
+            "description": "envalid input /invalid id / inavlid token"
+          },
+          "401": {
+            "description": "no permition"
           }
         }
       }

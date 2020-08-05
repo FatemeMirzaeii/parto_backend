@@ -16,13 +16,12 @@ function aithentication (token){
   return "400";
 };
   
-router.post("/surveyQuestion/:lang", async (req) => {
+router.post("/surveyQuestion/:lang", async (req,res) => {
   let answers= await survey_answer.findAll({
     attributes: ['id', 'answer']
   });
   let userAnswers;
-  if(req.body.userId>=0){
-    
+  if(req.body.userId!=null){
     if(aithentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
         where:{
@@ -47,7 +46,7 @@ router.post("/surveyQuestion/:lang", async (req) => {
   }
   userAnswer="";
   userDescription="";
-  if(userAnswers){
+  if(userAnswers!=null){
     userAnswer=userAnswers.answers;
     userDescription=userAnswers.description;
   }
@@ -60,7 +59,7 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
   if (!req.body.rate || !req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   
   let userAnswers;
-  if(req.body.userId>=0){
+  if(req.body.userId!=null){
     
     if(aithentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
