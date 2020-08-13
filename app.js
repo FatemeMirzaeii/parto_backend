@@ -23,7 +23,7 @@ const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 var cors = require("cors");
 
-const app = connect();
+const app = express();
 
 app.use(helmet());
 app.use(nodeadmin(app));
