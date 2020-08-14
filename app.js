@@ -55,16 +55,16 @@ app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
 app.get("/*", (req, res) => {
   app.use(
-    vhost("partobanoo.com", function () {
+    vhost("api.partobanoo.com", function () {
       res.sendFile("index.html", {
-        root: "../../Fattahi/deploy/production/build",
+        root: "../../Fattahi/deploy/staging/build",
       });
     })
   );
   app.use(
-    vhost("api.partobanoo.com", function () {
+    vhost("partobanoo.com", function () {
       res.sendFile("index.html", {
-        root: "../../Fattahi/deploy/staging/build",
+        root: "../../Fattahi/deploy/production/build",
       });
     })
   );
