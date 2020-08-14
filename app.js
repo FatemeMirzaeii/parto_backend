@@ -51,25 +51,21 @@ app.use(
   swaggerUi.setup()
 );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
-app.get("/*", (req, res) => {
-  app.use(
-    vhost("partobanoo.com", function () {
-      res.sendFile("index.html", {
-        root: "../../Fattahi/deploy/production/build",
-      });
-    })
-  );
-});
+app.use(
+  vhost("partobanoo.com", function (req, res) {
+    res.sendFile("index.html", {
+      root: "../../Fattahi/deploy/production/build",
+    });
+  })
+);
 app.use(express.static(`../../Fattahi/deploy/staging/build`));
-app.get("/*", (req, res) => {
-  app.use(
-    vhost("api.partobanoo.com", function () {
-      res.sendFile("index.html", {
-        root: "../../Fattahi/deploy/staging/build",
-      });
-    })
-  );
-});
+app.use(
+  vhost("api.partobanoo.com", function (req, res) {
+    res.sendFile("index.html", {
+      root: "../../Fattahi/deploy/staging/build",
+    });
+  })
+);
 
 // app.get("/*", (req, res) => {
 //   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
