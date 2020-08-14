@@ -49,20 +49,24 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup()
 );
-app.use(express.static(`../../Fattahi/deploy/production/build`));
+// app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
+// app.get("/*", (req, res) => {
+//   app.use(
+//     vhost("partobanoo.com", function () {
+//       res.sendFile(`../../Fattahi/deploy/production/build/index.html`);
+//     })
+//   );
+//   app.use(
+//     vhost("api.partobanoo.com", function () {
+//       res.sendFile(`../../Fattahi/deploy/staging/build/index.html`);
+//     })
+//   );
+// });
+
 app.get("/*", (req, res) => {
-  app.use(
-    vhost("partobanoo.com", function () {
-      res.sendFile(`../../Fattahi/deploy/production/build/index.html`);
-    })
-  );
-  app.use(
-    vhost("api.partobanoo.com", function () {
-      res.sendFile(`../../Fattahi/deploy/staging/build/index.html`);
-    })
-  );
+  res.sendFile(`../../Fattahi/deploy/staging/build/index.html`);
 });
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
