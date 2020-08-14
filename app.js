@@ -52,8 +52,8 @@ app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
 app.get("/*", (req, res) => {
+  console.log("request path", req.path, req);
   if (req.path.indexOf("api" !== -1)) {
-    console.log(req.path);
     res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
   } else
     res.sendFile("index.html", {
