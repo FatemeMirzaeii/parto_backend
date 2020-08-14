@@ -51,10 +51,7 @@ app.use(
   swaggerUi.setup()
 );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
-app.use(
-  "/staging",
-  express.static(`../../Fattahi/deploy/staging/build/index.html`)
-);
+app.use(express.static(`../../Fattahi/deploy/staging/build`));
 // app.use(
 //   vhost("partobanoo.com", function (req, res) {
 //     res.sendFile("index.html", {
@@ -70,9 +67,12 @@ app.use(
 //   })
 // );
 
-// app.get("/*", (req, res) => {
-//   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
-// });
+app.get("/*", (req, res) => {
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
+});
+app.get("/staging", (req, res) => {
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
+});
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
 module.exports = server;
