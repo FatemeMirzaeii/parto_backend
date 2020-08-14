@@ -49,7 +49,7 @@ app.use(
   swaggerUi.setup()
 );
 app.use("/", express.static(`../../Fattahi/deploy/production/build`));
-app.use("staging", express.static(`../../Fattahi/deploy/staging/build`));
+app.use("/staging", express.static(`../../Fattahi/deploy/staging/build`));
 
 // app.get("/*", (req, res) => {
 //   console.log("request path", req.path, req);
