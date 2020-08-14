@@ -51,7 +51,10 @@ app.use(
   swaggerUi.setup()
 );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
-app.use("/staging", express.static(`../../Fattahi/deploy/staging/build`));
+app.use(
+  "/staging",
+  express.static(`../../Fattahi/deploy/staging/build/index.html`)
+);
 // app.use(
 //   vhost("partobanoo.com", function (req, res) {
 //     res.sendFile("index.html", {
