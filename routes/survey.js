@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 var fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
 
-function aithentication (token){
+function authentication (token){
   if (!token)   return "401";
   var decoded = jwt.decode(token, {complete: true});
   if(decoded!=null){
@@ -22,14 +22,14 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
   });
   let userAnswers;
   if(req.body.userId!=null){
-    if(aithentication( req.header("x-auth-token"))=="200"){
+    if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
         where:{
           userId:req.body.userId
         },
       })
     }
-    else if (aithentication( req.header("x-auth-token"))=="401"){
+    else if (authentication( req.header("x-auth-token"))=="401"){
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     else {
@@ -38,11 +38,14 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
    
   }
   else{
-   userAnswers= await user_answer_survey.findOne({
-      where:{
-        IMEI:req.body.IMEi
-      },
-   })
+    if (!req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    else{
+      userAnswers= await user_answer_survey.findOne({
+          where:{
+            IMEI:req.body.IMEi
+          },
+      })
+    }
   }
   userAnswer="";
   userDescription="";
@@ -61,14 +64,14 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
   let userAnswers;
   if(req.body.userId!=null){
     
-    if(aithentication( req.header("x-auth-token"))=="200"){
+    if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
         where:{
           userId:req.body.userId
         },
       })
     }
-    else if (aithentication( req.header("x-auth-token"))=="401"){
+    else if (authentication( req.header("x-auth-token"))=="401"){
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     else {

@@ -12,7 +12,7 @@ router.post("/signUp/:lang", async (req, res) => {
       email: req.body.email,
     },
   });
-  if (exists) return res.status(400).json({ message: await translate("EMAILEXISTS", req.params.lang) });
+  if (exists) return res.status(400).json({ message: await translate("EXISTS", req.params.lang) });
   if(!req.body.imei) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   
   const hash = await bcrypt.hash(req.body.password, 10);
