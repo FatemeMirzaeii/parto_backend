@@ -48,11 +48,13 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup()
 );
-app.use(express.static(`../../Fattahi/deploy/production/build`));
+app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
 app.get("/*", (req, res) => {
-  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
-module.exports = server;
+const dServer = developmentServer.listen(2216, () =>
+  logger.info("Listening on port 2216 in development mode...")
+);
+module.exports = dServer;
