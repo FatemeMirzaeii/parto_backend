@@ -1339,7 +1339,7 @@
         }
       }
     },
-    "/interview/InterviewInformation/{lang}": {
+    "/interview/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -1384,7 +1384,7 @@
                     "type": "object",
                     "description": "user profile information",
                     "properties": {
-                      "user_id": {
+                      "userId": {
                         "type": "integer"
                       },
                       "birthdate": {
@@ -1419,6 +1419,19 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "userId": 2,
+                  "birthdate": "1377-05-05",
+                  "avg_cycle_length": 25,
+                  "avg_period_length": 7,
+                  "avg_sleeping_hour": 8,
+                  "pms_length": 3,
+                  "height": 158,
+                  "weight": 70,
+                  "pregnant": 0,
+                  "pregnancy_try": 0,
+                  "use_lock": 0
                 }
               }
             }
@@ -1426,10 +1439,28 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile id",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "invalid intery"
+            "description": "information not found (user id isn't exist )/ user profile information exist."
           }
         }
       }
