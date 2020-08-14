@@ -4,6 +4,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const express = require("express");
 const vhost = require("vhost");
+const path = require("path");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
@@ -66,7 +67,9 @@ app.use(express.static(`../../Fattahi/deploy/staging/build`));
 // });
 
 app.get("/*", (req, res) => {
-  res.sendFile(`../../Fattahi/deploy/staging/build/index.html`);
+  res.sendFile(
+    path.join(`../../Fattahi/deploy/staging/`, "build", "index.html")
+  );
 });
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
