@@ -51,7 +51,7 @@ app.use(
   swaggerUi.setup()
 );
 // app.use(express.static(`../../Fattahi/deploy/production/build`));
-app.use(express.static(`../../Fattahi/deploy/staging/build`));
+//app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
 // app.get("/*", (req, res) => {
 //   app.use(
