@@ -35,9 +35,17 @@ deploy_staging_parto:
     url: https://api.partobanoo.com
 
   script:
-    - echo "Deploy to staging server ..."
-    - pm2 start app.js
-    - echo "deploy_staging succesfull"
+     - pm2 stop app.js
+     - echo "testing Parto..."
+     - echo $NODE_ENV
+     - npm install
+     - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
+     - npx sequelize-cli db:migrate
+     - npx sequelize-cli db:seed:all
+     - echo "Deploy to staging server ..."
+     - pm2 start app.js
+     - echo "deploy_staging succesfull"
 
   only:
     - master
