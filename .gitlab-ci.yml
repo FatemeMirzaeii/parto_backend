@@ -15,7 +15,7 @@ cache:
    variables:
      NODE_ENV: "test"
    script:
-     - pm2 stop all 
+     - pm2 stop app.js 
      - echo "testing Parto..."
      - echo $NODE_ENV
      - npm install
