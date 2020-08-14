@@ -50,7 +50,10 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup()
 );
-app.use(express.static(`../../Fattahi/deploy/production/build`));
+app.configure("website", function () {
+  app.use(express.static(`../../Fattahi/deploy/production/build`));
+  app.use(express.static(`../../Fattahi/deploy/staging/build`));
+});
 // app.use(
 //   vhost("partobanoo.com", function (req, res) {
 //     res.sendFile("index.html", {
@@ -58,7 +61,6 @@ app.use(express.static(`../../Fattahi/deploy/production/build`));
 //     });
 //   })
 // );
-app.use(express.static(`../../Fattahi/deploy/staging/build`));
 // app.use(
 //   vhost("api.partobanoo.com", function (req, res) {
 //     res.sendFile("index.html", {
