@@ -16,7 +16,6 @@ testing_parto:
     NODE_ENV: "test"
   script:
     - pm2 stop app.js
-    - pm2 stop developmentApp.js
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
@@ -38,7 +37,6 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - pm2 start app.js
-    - pm2 start developmentApp.js
     - echo "deploy_staging succesfull"
 
   only:
@@ -55,7 +53,6 @@ deploy_prod_parto:
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - pm2 start app.js
-    - pm2 start developmentApp.js
     - echo "Deploy to production server Succdsfull"
   environment:
     name: production

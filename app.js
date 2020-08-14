@@ -21,7 +21,7 @@ const survey = require("./routes/survey");
 var cors = require("cors");
 
 const app = express();
-const developmentServer = express();
+
 app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json());
@@ -49,9 +49,16 @@ app.use(
   swaggerUi.setup()
 );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
+app.use(express.static(`../../Fattahi/deploy/staging/build`));
 
 app.get("/*", (req, res) => {
-  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
+  if (req.path.indexOf("api" !== -1)) {
+    console.log(req.path);
+    res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
+  } else
+    res.sendFile("index.html", {
+      root: "../../Fattahi/deploy/production/build",
+    });
 });
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));

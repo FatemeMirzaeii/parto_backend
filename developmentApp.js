@@ -21,7 +21,7 @@ const survey = require("./routes/survey");
 var cors = require("cors");
 
 const app = express();
-const developmentServer = express();
+
 app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json());
@@ -54,7 +54,7 @@ app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-const dServer = developmentServer.listen(2216, () =>
+const server = app.listen(2216, () =>
   logger.info("Listening on port 2216 in development mode...")
 );
-module.exports = dServer;
+module.exports = server;
