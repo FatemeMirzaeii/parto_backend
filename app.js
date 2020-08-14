@@ -3,8 +3,6 @@ require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const express = require("express");
-const vhost = require("vhost");
-//const path = require("path");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
@@ -52,29 +50,15 @@ app.use(
   swaggerUi.setup()
 );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
-developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
-// app.use(
-//   vhost("partobanoo.com", function (req, res) {
-//     res.sendFile("index.html", {
-//       root: "../../Fattahi/deploy/production/build",
-//     });
-//   })
-// );
-// app.use(
-//   vhost("api.partobanoo.com", function (req, res) {
-//     res.sendFile("index.html", {
-//       root: "../../Fattahi/deploy/staging/build",
-//     });
-//   })
-// );
-
 app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
 });
+
+developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
 developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
-
 developmentApp.listen(2216, () => logger.info("Listening on port 2216..."));
+
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
 module.exports = server;
