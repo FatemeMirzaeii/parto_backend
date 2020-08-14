@@ -10,12 +10,13 @@ module.exports = {
       { key: 'NOSUCHCATEGORY', created_at: new Date(), updated_at: new Date() },
       { key: 'SUCCESSFUL', created_at: new Date(), updated_at: new Date() },
       { key: 'NONOTES', created_at: new Date(), updated_at: new Date() },
-      { key: 'EMAILEXISTS', created_at: new Date(), updated_at: new Date() },
+      { key: 'EXISTS', created_at: new Date(), updated_at: new Date() },
       { key: 'NOPERMISSION', created_at: new Date(), updated_at: new Date() },
       { key: 'INVALIDTOKEN', created_at: new Date(), updated_at: new Date() },
       { key: 'TIMEOVER', created_at: new Date(), updated_at: new Date() },
       { key: 'INVALIDID', created_at: new Date(), updated_at: new Date() },
       { key: 'SERVERERROR', created_at: new Date(), updated_at: new Date() },
+      { key: 'INFORMATIONNOTFOUND', created_at: new Date(), updated_at: new Date() },
     ], {});
   },
   down: (queryInterface, Sequelize) => {

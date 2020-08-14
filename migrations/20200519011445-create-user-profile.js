@@ -13,11 +13,15 @@ module.exports = {
         references: {
           model: "user",
           key: "id",
+          as:"user_id"
         },
         onDelete: "RESTRICT",
       },
       birthdate: {
-        type: Sequelize.DATEONLY 
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
+        }
       },
       avg_cycle_length: {
         type: Sequelize.INTEGER

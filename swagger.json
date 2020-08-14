@@ -36,6 +36,10 @@
     {
       "name": "healthTracking",
       "description": "user health tracking"
+    },
+    {
+      "name": "interview",
+      "description": "user extera information"
     }
   ],
   "paths": {
@@ -114,6 +118,9 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "imei": {
+                    "type": "string"
                   }
                 }
               }
@@ -156,7 +163,7 @@
             }
           },
           "400": {
-            "description": "email exist"
+            "description": "email exist / invalid input"
           }
         }
       }
@@ -444,6 +451,18 @@
                 }
               }
             }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
           }
         ],
         "requestBody": {
@@ -451,9 +470,15 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "IMEi"
+                ],
                 "properties": {
                   "IMEi": {
                     "type": "string"
+                  },
+                  "userId": {
+                    "type": "integer"
                   }
                 }
               }
@@ -520,14 +545,29 @@
                 }
               }
             }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "IMEi",
+                  "rate"
+                ],
                 "properties": {
                   "userId": {
                     "type": "integer"
@@ -554,7 +594,10 @@
             "description": "successful"
           },
           "400": {
-            "description": "envalid input /invalid id"
+            "description": "envalid input /invalid id / inavlid token"
+          },
+          "401": {
+            "description": "no permition"
           }
         }
       }
@@ -1187,6 +1230,206 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/interview/InterviewInformation/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "interview"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "send user peofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "user_id": {
+                          "type": "integer"
+                        },
+                        "birthdate": {
+                          "type": "string"
+                        },
+                        "avg_cycle_length": {
+                          "type": "integer"
+                        },
+                        "avg_period_length": {
+                          "type": "integer"
+                        },
+                        "avg_sleeping_hour": {
+                          "type": "integer"
+                        },
+                        "pms_length": {
+                          "type": "integer"
+                        },
+                        "height": {
+                          "type": "integer"
+                        },
+                        "weight": {
+                          "type": "integer"
+                        },
+                        "pregnant": {
+                          "type": "integer"
+                        },
+                        "pregnancy_try": {
+                          "type": "integer"
+                        },
+                        "use_lock": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
+    "/interview/InterviewInformation/{lang}": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save user peofile information in data base",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "description": "user profile information",
+                    "properties": {
+                      "user_id": {
+                        "type": "integer"
+                      },
+                      "birthdate": {
+                        "type": "string"
+                      },
+                      "avg_cycle_length": {
+                        "type": "integer"
+                      },
+                      "avg_period_length": {
+                        "type": "integer"
+                      },
+                      "avg_sleeping_hour": {
+                        "type": "integer"
+                      },
+                      "pms_length": {
+                        "type": "integer"
+                      },
+                      "height": {
+                        "type": "integer"
+                      },
+                      "weight": {
+                        "type": "integer"
+                      },
+                      "pregnant": {
+                        "type": "integer"
+                      },
+                      "pregnancy_try": {
+                        "type": "integer"
+                      },
+                      "use_lock": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid intery"
           }
         }
       }
