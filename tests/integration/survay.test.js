@@ -40,13 +40,13 @@ describe('survay', () => {
          }
         it('return 400 if token is not valid ',async()=>{
             TempToken=token+'ea';
-            const result=await execWithUserId();
+            let result=await execWithUserId();
             expect(result.status).toBe(400);
             
         })
         it('return 401 if token is not exist  ',async()=>{
             TempToken='';
-            const result=await execWithUserId();
+            let result=await execWithUserId();
             expect(result.status).toBe(400);
             
         })
@@ -108,7 +108,7 @@ describe('survay', () => {
 
         it('return 400 if imei is null',async()=>{
             IMEi='';
-            const result=await execWidutUserId();
+            let result=await execWidutUserId();
             expect(result.status).toBe(400);
             TempToken=token;
             result=await execWithUserId();
@@ -117,7 +117,7 @@ describe('survay', () => {
         it('return 400 if imei is null',async()=>{
             IMEi=IMEi;
             rate='';
-            const result=await execWidutUserId();
+            let result=await execWidutUserId();
             expect(result.status).toBe(400);
             TempToken=token;
             result=await execWithUserId();
