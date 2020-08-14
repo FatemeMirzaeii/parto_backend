@@ -16,6 +16,7 @@ testing_parto:
     NODE_ENV: "test"
   script:
     - pm2 stop app.js
+    - killall node || echo "No other instnaces is running."
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
