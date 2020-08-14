@@ -35,7 +35,6 @@ deploy_staging_parto:
     url: https://api.partobanoo.com
 
   script:
-     - pm2 stop app.js
      
      - echo "Deploy to staging server ..."
      - pm2 start app.js
