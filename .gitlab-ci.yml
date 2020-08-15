@@ -15,8 +15,8 @@ testing_parto:
   variables:
     NODE_ENV: "test"
   script:
-    - NODE_PORT=2216 pm2 stop -I 0 app.js
-    - NODE_PORT=2218 pm2 stop -I 0 app.js
+    - NODE_PORT=2216 pm2 stop app.js
+    - NODE_PORT=2218 pm2 stop app.js
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
