@@ -48,6 +48,25 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup()
 );
+
+app.use(
+  '/rest/api/**',
+  createProxyMiddleware({
+    target: 'https://ketab.partobanoo.com',
+    changeOrigin: true,
+    secure:false,
+  })
+);
+
+
+app.use(
+  '/download/attachment/**',
+  createProxyMiddleware({
+    target: 'https://ketab.partobanoo.com',
+    changeOrigin: true,
+    secure:false,
+  })
+);
 app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
