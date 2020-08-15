@@ -39,8 +39,8 @@ describe('survay', () => {
             .send({"IMEi":`${IMEi}`});
          }
         it('return 400 if token is not valid ',async()=>{
-            TempToken=token+"ea";
-            console.log(TempToken);
+            TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
+            console.log("TempToken",TempToken);
             let result=await execWithUserId();
             expect(result.status).toBe(400);
             
@@ -85,7 +85,7 @@ describe('survay', () => {
            
          }
         it('return 400 if token is not valid ',async()=>{
-            TempToken=token+'ea';
+            TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
             const result=await execWithUserId();
             expect(result.status).toBe(400);
             
