@@ -47,7 +47,7 @@ describe('survay', () => {
         it('return 401 if token is not exist  ',async()=>{
             TempToken='';
             let result=await execWithUserId();
-            expect(result.status).toBe(400);
+            expect(result.status).toBe(401);
             
         })
     
@@ -74,7 +74,7 @@ describe('survay', () => {
         let IMEi=IMEI;
         let rate=5;
         const execWithUserId=()=>{
-           return request(server).post('/survay/userSurveyAnswer/fa')
+           return request(server).put('/survay/userSurveyAnswer/fa')
            .send({"userId":`${userId}`,"IMEi":`${IMEi}`,"rate":`${rate}`,"answers":"1,3","description":"test"})
            .set('x-auth-token', TempToken);
         }
@@ -92,7 +92,7 @@ describe('survay', () => {
         it('return 401 if token is not exist  ',async()=>{
             TempToken='';
             const result=await execWithUserId();
-            expect(result.status).toBe(400);
+            expect(result.status).toBe(401);
             
         })
     
