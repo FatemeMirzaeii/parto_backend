@@ -1,0 +1,14 @@
+{
+    "apps": [
+      {
+        "name": "app-port2218",
+        "script": "./app.js",
+        "node_args": "--max_old_space_size=8192"
+      },
+      {
+        "name": "app-port2216",
+        "script": "./development.js",
+        "node_args": "--max_old_space_size=8192"
+      }
+    ]
+  }

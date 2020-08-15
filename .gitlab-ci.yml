@@ -10,22 +10,21 @@ cache:
   paths:
     - node_modules/
 
-# testing_parto:
-#   stage: test
-#   variables:
-#     NODE_ENV: "test"
-#   script:
-#     - NODE_PORT=2216 pm2 stop app.js
-#     - NODE_PORT=2218 pm2 stop app.js
-#     - echo "testing Parto..."
-#     - echo $NODE_ENV
-#     - npm install
-#     - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
-#     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
-#     - npx sequelize-cli db:migrate
-#     - npx sequelize-cli db:seed:all
-#     - npm test
-#     - echo "testing succsecfull"
+testing_parto:
+  stage: test
+  variables:
+    NODE_ENV: "test"
+  script:
+    - pm2 stop pm2-manage.json
+    - echo "testing Parto..."
+    - echo $NODE_ENV
+    - npm install
+    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
+    - npx sequelize-cli db:migrate
+    - npx sequelize-cli db:seed:all
+    - npm test
+    - echo "testing succsecfull"
 
 deploy_staging_parto:
   stage: deploy
@@ -36,16 +35,8 @@ deploy_staging_parto:
     url: https://api.partobanoo.com
 
   script:
-     - pm2 stop app.js
-     - echo "testing Parto..."
-     - echo $NODE_ENV
-     - npm install
-     - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
-     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
-     - npx sequelize-cli db:migrate
-     - npx sequelize-cli db:seed:all
      - echo "Deploy to staging server ..."
-     - pm2 start app.js
+     - pm2 start pm2-manage.json
      - echo "deploy_staging succesfull"
 
   only:

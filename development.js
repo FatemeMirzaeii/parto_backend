@@ -1,0 +1,16 @@
+require("express-async-errors");
+require("./models/index");
+
+const express = require("express");
+
+const logger = require("./config/logger/logger");
+
+
+
+developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
+developmentApp.get("/*", (req, res) => {
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
+});
+developmentApp.listen(2216, () => logger.info("Listening on port 2216..."));
+
+
