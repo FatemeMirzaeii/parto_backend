@@ -2,7 +2,7 @@
   "name": "parto_backend",
   "version": "2.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "pm2-manage.json",
   "scripts": {
     "start": "node app.js",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
