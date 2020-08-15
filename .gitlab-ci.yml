@@ -16,7 +16,7 @@ testing_parto:
     NODE_ENV: "test"
   script:
     - pm2 stop pm2-manage.json
-    - pm2 stop pm2.json --only app-port2218
+    - pm2 stop pm2-manage.json --only app-port2218
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
