@@ -18,6 +18,7 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
+const { createProxyMiddleware } = require('http-proxy-middleware');
 var cors = require("cors");
 
 const app = express();
