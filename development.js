@@ -5,7 +5,7 @@ const express = require("express");
 
 const logger = require("./config/logger/logger");
 
-
+const developmentApp = express();
 
 developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
 developmentApp.get("/*", (req, res) => {
