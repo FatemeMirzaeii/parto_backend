@@ -15,17 +15,17 @@ testing_parto:
   variables:
     NODE_ENV: "test"
   script:
-    - NODE_PORT=2216 pm2 stop app.js
-    - NODE_PORT=2218 pm2 stop app.js
-    - echo "testing Parto..."
-    - echo $NODE_ENV
-    - npm install
-    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
-    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
-    - npx sequelize-cli db:migrate
-    - npx sequelize-cli db:seed:all
-    - npm test
-    - echo "testing succsecfull"
+    # - NODE_PORT=2216 pm2 stop app.js
+    # - NODE_PORT=2218 pm2 stop app.js
+    # - echo "testing Parto..."
+    # - echo $NODE_ENV
+    # - npm install
+    # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+    # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
+    # - npx sequelize-cli db:migrate
+    # - npx sequelize-cli db:seed:all
+    # - npm test
+    # - echo "testing succsecfull"
 
 deploy_staging_parto:
   stage: deploy
