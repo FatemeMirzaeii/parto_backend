@@ -5,7 +5,6 @@ const creds = require("../config/email");
 const sEmail = require("../middleware/sendEmail");
 
 router.post("/Email", async (req, res) => {
-  res.send("start", res);
   let name = req.body.name;
   let email = req.body.email;
   let message = req.body.message;
@@ -14,12 +13,7 @@ router.post("/Email", async (req, res) => {
   let subject = "ایمیل ارسال شده از طرف کاربر با عنوان:" + req.body.title;
   let result = false;
   result = await sEmail(creds.USER, "info@partobanoo.com", content, subject);
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.send("resssss", res);
+
   if (result == "ERROR")
     return res
       .status(502)
