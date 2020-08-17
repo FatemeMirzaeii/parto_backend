@@ -3,6 +3,8 @@ require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const express = require("express");
+const cors = require("cors");
+
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
@@ -19,9 +21,9 @@ const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 // const { createProxyMiddleware } = require("http-proxy-middleware");
-var cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 app.use(helmet());
 app.use(nodeadmin(app));
@@ -37,15 +39,14 @@ app.use("/auth", auth);
 app.use("/contactUs", contactUs);
 app.use("/survay", survey);
 app.use(error);
-app.use(cors());
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 app.use(
   "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
   function (req, res, next) {
