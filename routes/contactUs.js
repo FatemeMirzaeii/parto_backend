@@ -5,8 +5,7 @@ const creds = require("../config/email");
 const sEmail = require("../middleware/sendEmail");
 
 router.post("/Email", async (req, res) => {
-  console.log("start", res);
-
+  res.send("start", res);
   let name = req.body.name;
   let email = req.body.email;
   let message = req.body.message;
@@ -20,7 +19,7 @@ router.post("/Email", async (req, res) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  console.log("resssss", res);
+  res.send("resssss", res);
   if (result == "ERROR")
     return res
       .status(502)
