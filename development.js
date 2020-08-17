@@ -2,10 +2,12 @@ require("express-async-errors");
 require("./models/index");
 
 const express = require("express");
+const cors = require("cors");
 // const { createProxyMiddleware } = require("http-proxy-middleware");
 const logger = require("./config/logger/logger");
 
 const developmentApp = express();
+developmentApp.use(cors());
 
 // developmentApp.use(
 //     '/rest/api/**',
