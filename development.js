@@ -8,14 +8,14 @@ const logger = require("./config/logger/logger");
 
 const developmentApp = express();
 developmentApp.use(cors());
-developmentApp.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// developmentApp.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 // developmentApp.use(
 //     '/rest/api/**',
 //     createProxyMiddleware({
