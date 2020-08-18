@@ -20,7 +20,6 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
-// const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 app.use(cors());
@@ -39,14 +38,7 @@ app.use("/auth", auth);
 app.use("/contactUs", contactUs);
 app.use("/survay", survey);
 app.use(error);
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+
 app.use(
   "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
   function (req, res, next) {
@@ -58,23 +50,6 @@ app.use(
   swaggerUi.setup()
 );
 
-// app.use(
-//   '/rest/api/**',
-//   createProxyMiddleware({
-//     target: 'https://ketab.partobanoo.com',
-//     changeOrigin: true,
-//     secure:false,
-//   })
-// );
-
-// app.use(
-//   '/download/attachment/**',
-//   createProxyMiddleware({
-//     target: 'https://ketab.partobanoo.com',
-//     changeOrigin: true,
-//     secure:false,
-//   })
-// );
 app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
