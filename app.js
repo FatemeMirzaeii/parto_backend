@@ -3,6 +3,8 @@ require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const express = require("express");
+const cors = require("cors");
+
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
@@ -18,10 +20,9 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
-const { createProxyMiddleware } = require('http-proxy-middleware');
-var cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 app.use(helmet());
 app.use(nodeadmin(app));
@@ -37,7 +38,6 @@ app.use("/auth", auth);
 app.use("/contactUs", contactUs);
 app.use("/survay", survey);
 app.use(error);
-app.use(cors());
 
 app.use(
   "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
@@ -50,24 +50,6 @@ app.use(
   swaggerUi.setup()
 );
 
-app.use(
-  '/rest/api/**',
-  createProxyMiddleware({
-    target: 'https://ketab.partobanoo.com',
-    changeOrigin: true,
-    secure:false,
-  })
-);
-
-
-app.use(
-  '/download/attachment/**',
-  createProxyMiddleware({
-    target: 'https://ketab.partobanoo.com',
-    changeOrigin: true,
-    secure:false,
-  })
-);
 app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
