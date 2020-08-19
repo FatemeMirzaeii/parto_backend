@@ -19,20 +19,22 @@ router.post("/:lang",auth, async(req, res) => {
   
   if (exist!=null) return res.status(400).json({ message: await translate("EXISTS", req.params.lang) });
   
-  const u_profile = await user_profile.create({
+  const uProfile = await user_profile.create({
     birthdate:new Date(req.body.birthdate),
-    avg_cycle_length:req.body.avg_cycle_length,
-    avg_period_length:req.body.avg_period_length,
-    avg_sleeping_hour:req.body.avg_sleeping_hour,
-    pms_length:req.body.pms_length,
+    avg_cycle_length:req.body.avgCycleLength,
+    avg_period_length:req.body.avgPeriodLength,
+    avg_sleeping_hour:req.body.avgSleepingHour,
+    pms_length:req.body.pmsLength,
     height:req.body.height,
     weight:req.body.weight,
     pregnant:req.body.pregnant,
-    pregnancy_try:req.body.pregnancy_try,
-    use_lock:req.body.use_lock
+    pregnancy_try:req.body.pregnancyTry,
+    use_lock:req.body.useLock,
+    zygosis_date:req.body.zygosisDate
+
   });
-  await u_profile.setUser(usr);
-  res.status(200).json({data:{id:u_profile.id}});
+  await uProfile.setUser(usr);
+  res.status(200).json({data:{id:uProfile.id}});
 });
 
 module.exports = router;

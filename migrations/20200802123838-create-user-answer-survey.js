@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       IMEI: {
-        primaryKey: true,
+        primaryKey: false,
         type: Sequelize.STRING
       },
       createdAt: {

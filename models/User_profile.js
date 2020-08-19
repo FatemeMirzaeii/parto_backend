@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     weight: DataTypes.INTEGER,
     pregnant: DataTypes.BOOLEAN,
     pregnancy_try: DataTypes.BOOLEAN,
-    use_lock: DataTypes.BOOLEAN
+    use_lock: DataTypes.BOOLEAN,
+    zygosis_date: DataTypes.DATEONLY 
+
   }, {
     freezeTableName: true,
     underscored: true,

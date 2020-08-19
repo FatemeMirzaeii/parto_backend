@@ -23,6 +23,9 @@ module.exports = {
           return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
         }
       },
+      zygosis_date: {
+        type: Sequelize.DATEONLY
+      },
       avg_cycle_length: {
         type: Sequelize.INTEGER
       },

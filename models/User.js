@@ -16,24 +16,18 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      phone:{
+        type: DataTypes.STRING,
+      },
       // username: {
       //   type: DataTypes.STRING,
       //   unique: true,
       // },
       email: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          min: 5,
-          max: 255,
-          notNull: {
-            msg: "لطفا ایمیل خود را وارد کنید.",
-          },
-          isEmail: {
-            msg: "ایمیل معتبر نیست.",
-          },
-        },
+        unique: false,
+        allowNull: true,
+        
       },
       password: {
         type: DataTypes.STRING,
