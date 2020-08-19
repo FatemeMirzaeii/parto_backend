@@ -41,14 +41,27 @@ describe('auth',()=>{
             return res;
         }
 
-        it('return 200 if every thing be ok and send token and id for user',async()=>{
-            email='auth_zzand7755@gmail.com';
-            password='11111111';
-            const result=await exec();
-            expect(result.status).toBe(200);
-            expect(result.body.data.id).toBe(User.id);
-            User_log=await user_log.findOne({where: {user_id:User.id}});
-        })
+        // it('return 400 if email is not exist or invalid',async()=>{
+        //     email='bbzand@gmail.com';
+        //     const result=await exec();
+        //     expect(result.status).toBe(400);
+                    
+        // });
+
+        // it('return 400 if password is not correct',async()=>{
+        //     password='zzbb111';
+        //     const result=await exec();
+        //     expect(result.status).toBe(400);
+
+        // });
+        // it('return 200 if every thing be ok and send token and id for user',async()=>{
+        //     email='auth_zzand7755@gmail.com';
+        //     password='11111111';
+        //     const result=await exec();
+        //     expect(result.status).toBe(200);
+        //     expect(result.body.data.id).toBe(User.id);
+        //     User_log=await user_log.findOne({where: {user_id:User.id}});
+        // })
 
     })
     describe("/forgotPassword",()=>{
