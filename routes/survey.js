@@ -21,7 +21,7 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
     attributes: ['id', 'answer']
   });
   let userAnswers;
-  if(req.body.userId!=null || req.body.userId!=""){
+  if(req.body.userId!=null  && req.body.userId!=0){
     if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
         where:{
@@ -38,7 +38,9 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
    
   }
   else{
-    if (!req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    const regex = RegExp(/^\d{15}$/g);
+    let check=regex.test(req.body.IMEi);
+    if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     else{
       userAnswers= await user_answer_survey.findOne({
           where:{
@@ -62,7 +64,7 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
   if (!req.body.rate ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   
   let userAnswers;
-  if(req.body.userId!=null || req.body.userId!=""){
+  if(req.body.userId!=null && req.body.userId!=0){
     
     if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
@@ -80,7 +82,9 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
 
   }
   else{
-    if (!req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    const regex = RegExp(/^\d{15}$/g);
+    let check=regex.test(req.body.IMEi);
+    if (!check)  return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     else{
       userAnswers= await user_answer_survey.findOne({
           where:{
@@ -91,7 +95,7 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
   }
   
   if(userAnswers!=null ) {
-    if(req.body.userId>=0){
+    if(req.body.userId>0){
       const usr = await user.findOne({
         where: {
           id: req.body.userId,
@@ -126,7 +130,7 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
     }
   }
   else{
-    if(req.body.userId>=0){
+    if(req.body.userId>0){
       const usr = await user.findOne({
         where: {
           id: req.body.userId,

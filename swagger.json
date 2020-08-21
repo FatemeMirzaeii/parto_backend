@@ -19,15 +19,23 @@
       "description": "Everything about users"
     },
     {
+      "name": "survay",
+      "description": "Operations about user"
+    },
+    {
       "name": "article",
       "description": "Access to article"
     },
     {
-      "name": "note",
-      "description": "Operations about user"
+      "name": "interview",
+      "description": "user extera information"
     },
     {
-      "name": "survay",
+      "name": "profile",
+      "description": "user profile"
+    },
+    {
+      "name": "note",
       "description": "Operations about user"
     },
     {
@@ -36,10 +44,6 @@
     {
       "name": "healthTracking",
       "description": "user health tracking"
-    },
-    {
-      "name": "interview",
-      "description": "user extera information"
     }
   ],
   "paths": {
@@ -515,9 +519,6 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "IMEi"
-                ],
                 "properties": {
                   "IMEi": {
                     "type": "string"
@@ -610,7 +611,6 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "IMEi",
                   "rate"
                 ],
                 "properties": {
@@ -1300,10 +1300,10 @@
         }
       }
     },
-    "/interview/InterviewInformation/{userId}/{lang}": {
+    "/profile/{userId}/{lang}": {
       "get": {
         "tags": [
-          "interview"
+          "profile"
         ],
         "parameters": [
           {
@@ -1391,6 +1391,9 @@
                         },
                         "use_lock": {
                           "type": "integer"
+                        },
+                        "zygosisDate": {
+                          "type": "string"
                         }
                       }
                     }
@@ -1456,16 +1459,16 @@
                       "birthdate": {
                         "type": "string"
                       },
-                      "avg_cycle_length": {
+                      "avgCycleLength": {
                         "type": "integer"
                       },
-                      "avg_period_length": {
+                      "avgPeriodLength": {
                         "type": "integer"
                       },
-                      "avg_sleeping_hour": {
+                      "avgSleepingHour": {
                         "type": "integer"
                       },
-                      "pms_length": {
+                      "pmsLength": {
                         "type": "integer"
                       },
                       "height": {
@@ -1477,11 +1480,14 @@
                       "pregnant": {
                         "type": "integer"
                       },
-                      "pregnancy_try": {
+                      "pregnancyTry": {
                         "type": "integer"
                       },
-                      "use_lock": {
+                      "useLock": {
                         "type": "integer"
+                      },
+                      "zygosisDate": {
+                        "type": "string"
                       }
                     }
                   }
@@ -1489,15 +1495,16 @@
                 "example": {
                   "userId": 2,
                   "birthdate": "1377-05-05",
-                  "avg_cycle_length": 25,
-                  "avg_period_length": 7,
-                  "avg_sleeping_hour": 8,
-                  "pms_length": 3,
+                  "avgCycleLength": 25,
+                  "avgPeriodLength": 7,
+                  "avgSleepingHour": 8,
+                  "pmsLength": 3,
                   "height": 158,
                   "weight": 70,
                   "pregnant": 0,
-                  "pregnancy_try": 0,
-                  "use_lock": 0
+                  "pregnancyTry": 0,
+                  "useLock": 0,
+                  "zygosisDate": "1399-06-01"
                 }
               }
             }

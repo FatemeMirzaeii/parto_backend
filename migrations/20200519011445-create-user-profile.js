@@ -24,7 +24,10 @@ module.exports = {
         }
       },
       zygosis_date: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        get: function() {
+          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
+        }
       },
       avg_cycle_length: {
         type: Sequelize.INTEGER
