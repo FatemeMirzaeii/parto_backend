@@ -24,18 +24,15 @@ async function  sendEmail (from ,to,message,subject){
     });
 
 
-    let mail = {
+    let mailOptions= {
         from: from,
         to: to,  
         subject: subject ,
         text: message
     }
     
-    await transporter.sendMail(mail, async(err, data) => {
-        console.log("send email");
-        if (err) return "ERROR";
-        else return "SUCSSECFUL"+data;
-    })
+    let info=await transporter.sendMail(mailOptions);
+    return("info  "+info+"   info.response  "+info.response)
 
 };
 

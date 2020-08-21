@@ -21,7 +21,7 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
     attributes: ['id', 'answer']
   });
   let userAnswers;
-  if(req.body.userId!=null){
+  if(req.body.userId!=null || req.body.userId!=""){
     if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
         where:{
@@ -59,10 +59,10 @@ router.post("/surveyQuestion/:lang", async (req,res) => {
 
 router.put("/userSurveyAnswer/:lang", async (req, res) => {
     
-  if (!req.body.rate || !req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (!req.body.rate ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   
   let userAnswers;
-  if(req.body.userId!=null){
+  if(req.body.userId!=null || req.body.userId!=""){
     
     if(authentication( req.header("x-auth-token"))=="200"){
       userAnswers= await user_answer_survey.findOne({
@@ -80,11 +80,14 @@ router.put("/userSurveyAnswer/:lang", async (req, res) => {
 
   }
   else{
-   userAnswers= await user_answer_survey.findOne({
-      where:{
-        IMEI:req.body.IMEi
-      },
-   })
+    if (!req.body.IMEi ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    else{
+      userAnswers= await user_answer_survey.findOne({
+          where:{
+            IMEI:req.body.IMEi
+          },
+      })
+    }
   }
   
   if(userAnswers!=null ) {

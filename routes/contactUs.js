@@ -3,6 +3,7 @@ const router = express.Router();
 const translate = require("../config/translate");
 const creds = require("../config/email");
 const sEmail = require("../middleware/sendEmail");
+const { Console } = require("console");
 
 router.post("/Email", async (req, res) => {
   let name = req.body.name;
@@ -11,9 +12,9 @@ router.post("/Email", async (req, res) => {
   let title = req.body.title;
   let content = `نام کاربر: ${name} \n ایمیل: ${email}\n عنوان: ${title} \n متن پیام: ${message} `;
   let subject = "ایمیل ارسال شده از طرف کاربر با عنوان:" + req.body.title;
-  let result = false;
+  let result ;
   result = await sEmail(creds.USER, "info@partobanoo.com", content, subject);
-
+  console.log(result);
   if (result == "ERROR")
     return res
       .status(502)
