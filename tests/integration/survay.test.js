@@ -1,5 +1,5 @@
 const request = require('supertest');
-const {  user , survey_answer , user_answer_survey } = require("../models");
+const {  user , survey_answer , user_answer_survey } = require("../../models");
 
 describe('survay', () => {
     let server;
@@ -15,7 +15,7 @@ describe('survay', () => {
         IMEI=User.imei;     
     })
     beforeEach(async() => { 
-        server=require('../app');
+        server=require('../../app');
        
     })
     afterEach(()=>{
