@@ -5,8 +5,8 @@
   "main": "pm2-manage.json",
   "scripts": {
     "build": "npx next build",
-    "prod": "NODE_ENV=production node pwa.js",
-    "start": "node pwa.js",
+    "prod": "NODE_ENV=production node app.js",
+    "start": "node app.js",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
   "repository": {
