@@ -4,8 +4,7 @@ require("./models/index");
 const express = require("express");
 const logger = require("./config/logger/logger");
 
-const next = require('next')
-const pwa = next({})
+const  pwa = express();
 
 pwa.use(express.static(`../../Fattahi/parto-pwa`));
 pwa.get("/*", (req, res) => {
