@@ -7,8 +7,8 @@ const logger = require("./config/logger/logger");
 const next = require('next')
 const pwa = next({})
 
-pwa.use(express.static(`../../Fattahi/parto_PWA`));
+pwa.use(express.static(`../../Fattahi/parto-pwa`));
 pwa.get("/*", (req, res) => {
-  res.sendFile("index.html", { root: "../../Fattahi/parto_PWA" });
+  res.sendFile("index.html", { root: "../../Fattahi/parto-pwa" });
 });
 pwa.listen(3925, () => logger.info("Listening on port 3925..."));
