@@ -1402,8 +1402,8 @@
               }
             }
           },
-          "400": {
-            "description": "invalid intery"
+          "404": {
+            "description": "user not found"
           }
         }
       }

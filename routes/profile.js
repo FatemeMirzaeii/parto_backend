@@ -10,7 +10,7 @@ router.get("/:userId/:lang",auth, async(req, res) => {
         user_id: req.params.userId,
       },
     });
-    if(uProfile==null) return res.status(400).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    if(uProfile==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     res.status(200).json({data:uProfile});
   });
 

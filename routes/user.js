@@ -28,8 +28,9 @@ router.post("/signUp/:lang", async (req, res) => {
       },
     });
   }
-
-  if (existsPhone || existsEmail) return res.status(400).json({ message: await translate("EXISTS", req.params.lang) });
+  console.log("existsEmail",existsEmail,"existsPhone",existsPhone);
+  console.log(existsPhone!=null || existsEmail!=null);
+  if (existsPhone!=null || existsEmail!=null) return res.status(400).json({ message: await translate("EXISTS", req.params.lang) });
   
   if(req.body.imei!="") {
     const regex = RegExp(/^\d{15}$/g);

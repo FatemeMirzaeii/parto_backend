@@ -11,11 +11,11 @@ describe('auth',()=>{
     let email="auth_zzand7755@gmail.com";
     let phone="09199698086";
     let password="11111111";
-    let User_log;
-    
+    let newUser;
+        
     beforeAll(async()=>{
         const hash = await bcrypt.hash(password, 10);
-        await user.create({
+        newUser=await user.create({
           name: "zahra",
           email: email,
           phone: phone,
@@ -32,9 +32,7 @@ describe('auth',()=>{
         server.close();
     })
     afterAll(async()=>{
-        await User_log.destroy();
-        await UserEmail.destroy();
-        await UserPhone.destroy();
+        await newUser.destroy();
         
     })
     
@@ -87,7 +85,9 @@ describe('auth',()=>{
             const result=await execEmail();
             expect(result.status).toBe(200);
             expect(result.body.data.id).toBe(UserEmail.id);
-            User_log=await user_log.findOne({where: {user_id:UserEmail.id}});
+            User_log=await user_log.findOne({where: {user_id:newUser.id}});
+            User_log.destroy();
+            
         })
         it('return 200 if every thing be ok and send token and id for user',async()=>{
             email='';
@@ -96,7 +96,8 @@ describe('auth',()=>{
             const result=await execPhone();
             expect(result.status).toBe(200);
             expect(result.body.data.id).toBe(UserPhone.id);
-            User_log=await user_log.findOne({where: {user_id:UserPhone.id}});
+            User_log=await user_log.findOne({where: {user_id:newUser.id}});
+            User_log.destroy();
         })
     });
 

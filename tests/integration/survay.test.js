@@ -1,5 +1,5 @@
 const request = require('supertest');
-const {  user , survey_answer , user_answer_survey } = require("../../models");
+const {  user , user_log ,user_answer_survey} = require("../../models");
 
 describe('survay', () => {
     let server;
@@ -22,7 +22,11 @@ describe('survay', () => {
          server.close();
     })
     afterAll(async () => {
-       await User.destroy();   
+        let User_log=await user_log.findOne({where: {user_id:UserID}});
+        let userAnswerSurvey= await user_answer_survey.findOne({where:{userId:UserID}})
+        await userAnswerSurvey.destroy();
+        await User_log.destroy(); 
+        await User.destroy();   
     });
 
     describe('/survay/surveyQuestion/:lang', () => {
