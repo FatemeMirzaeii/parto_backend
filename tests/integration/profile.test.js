@@ -22,7 +22,7 @@ describe('profile', () => {
             pregnant:false,
             pregnancy_try:false,
             use_lock:false,
-            zygosis_date:"0000-00-00"
+            zygosis_date:"1300-01-01"
         });
         await uProfile.setUser(newUser);
     })
