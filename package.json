@@ -5,7 +5,7 @@
   "main": "pm2-manage.json",
   "scripts": {
     "start": "NODE_ENV=production node app.js",
-    "dev": "node app.js",
+    "dev": "next",
     "build": "next build",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
