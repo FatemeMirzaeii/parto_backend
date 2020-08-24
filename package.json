@@ -2,9 +2,9 @@
   "name": "parto_backend",
   "version": "2.0.0",
   "description": "",
-  "main": "pm2-manage.json",
+  "main": "pwa.js",
   "scripts": {
-    "dev": "node pwa.js",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3925",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
