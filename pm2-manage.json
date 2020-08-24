@@ -11,7 +11,7 @@
         "node_args": "--max_old_space_size=8192"
       },
       {
-        "name": "portPWA2214",
+        "name": "portPWA3925",
         "script": "./pwa.js",
         "node_args": "--max_old_space_size=8192"
       }

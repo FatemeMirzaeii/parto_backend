@@ -4,9 +4,9 @@
   "description": "",
   "main": "pm2-manage.json",
   "scripts": {
+    "dev": "node pwa.js",
     "build": "next build",
-    "prod": "NODE_ENV=production node pwa.js",
-    "start": "node pwa.js",
+    "start": "next start -p 3925",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
   "repository": {
