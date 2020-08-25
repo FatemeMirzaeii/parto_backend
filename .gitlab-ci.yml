@@ -40,6 +40,7 @@ deploy_staging_parto:
   script:
      - echo "Deploy to staging server ..."
      - pm2 start pm2-manage.json
+     - npm run serve
      - echo "deploy_staging succesfull"
 
   only:
