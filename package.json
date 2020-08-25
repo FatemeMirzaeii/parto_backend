@@ -2,7 +2,7 @@
   "name": "parto_backend",
   "version": "2.0.0",
   "description": "",
-  "main": "pwa.js",
+  "main": "pm2-manage.json",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

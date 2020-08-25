@@ -47,7 +47,7 @@ router.post("/signUp/:lang", async (req, res) => {
     imei:req.body.imei,
   });
   const token = usr.generateAuthToken();
-  return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id } });
+  return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id , userName:usr.name} });
 });
 
 router.post("/linkForgetPassword/:lang",async(req,res)=>{
@@ -107,7 +107,7 @@ router.post("/linkForgetPassword/:lang",async(req,res)=>{
     const text='please click on the linke https://api.partobanoo.com/auth/forgetPassword/'+ usr.uuid+'/'+req.params.lang;
     const result=sendEmail('parto@partobanoo.com',req.body.email,text,subject);
     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
-    else return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", req.params.lang) },link:text });
   }
 });
 
