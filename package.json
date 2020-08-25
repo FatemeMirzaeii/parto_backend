@@ -7,6 +7,7 @@
     "dev": "node pwa.js",
     "build": "next build",
     "start": "next start -p 3925",
+    "export": "next export",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
   "repository": {
