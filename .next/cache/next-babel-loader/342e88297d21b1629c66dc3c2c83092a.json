@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var SET_USERID = \"SET_USERID\"; //Action Creator\n\nexport var SetUserId = function SetUserId(userId) {\n  return function (dispatch) {\n    return dispatch({\n      type: SET_USERID,\n      payload: {\n        userId: userId\n      }\n    });\n  };\n};","map":null,"metadata":{},"sourceType":"module"}

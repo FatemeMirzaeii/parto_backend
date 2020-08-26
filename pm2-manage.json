@@ -9,11 +9,6 @@
         "name": "app-port2216",
         "script": "./development.js",
         "node_args": "--max_old_space_size=8192"
-      },
-      {
-        "name": "portPWA3925",
-        "script": "./pwa.js",
-        "node_args": "--max_old_space_size=8192"
       }
     ]
   }
