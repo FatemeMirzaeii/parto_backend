@@ -1,18 +1,13 @@
+require("express-async-errors");
+require("./models/index");
 
 const express = require("express");
 const logger = require("./config/logger/logger");
-const next = require('next');
-const dev = process.env.NODE_ENV!=='production'
-const pwa = next({dev});
 
-const handle = app.getRequestHandler();
+const developmentApp = express();
 
-const pwa = express();
-
-pwa.use(express.static(`../../Fattahi/parto-pwa`));
-pwa.get("/*", (req, res) => {
+developmentApp.use(express.static(`../../Fattahi/parto-pwa`));
+developmentApp.get("/*", (req, res) => {
   res.sendFile("pages/index.js", { root: "../../Fattahi/parto-pwa" });
 });
-pwa.listen(3925, () => logger.info("Listening on port 3925..."));
-
-
+developmentApp.listen(3925, () => logger.info("Listening on port 3925..."));
