@@ -41,7 +41,8 @@ deploy_staging_parto:
      - echo "Deploy to staging server ..."
      - pm2 start pm2-manage.json
      - npm run build
-     - npm run dev
+     #- npm run dev
+     #- pm2 start npm --name "pwa" -- start
      - echo "deploy_staging succesfull"
 
   only:
