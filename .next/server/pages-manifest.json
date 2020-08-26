@@ -1,0 +1,19 @@
+{
+  "/_app": "pages/_app.js",
+  "/": "pages/index.html",
+  "/interview/birth": "pages/interview/birth.html",
+  "/interview/cycle-length": "pages/interview/cycle-length.html",
+  "/interview/last-period": "pages/interview/last-period.html",
+  "/interview/period-length": "pages/interview/period-length.html",
+  "/interview/welcome": "pages/interview/welcome.html",
+  "/main/main-page": "pages/main/main-page.html",
+  "/signup/authentication": "pages/signup/authentication.html",
+  "/signup/change-pass": "pages/signup/change-pass.html",
+  "/signup/forget-pass": "pages/signup/forget-pass.html",
+  "/signup/pass-changed": "pages/signup/pass-changed.html",
+  "/signup/signup": "pages/signup/signup.html",
+  "/signup/successful": "pages/signup/successful.html",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/404": "pages/404.html"
+}

@@ -12,7 +12,8 @@ pwa.prepare().then(() => {
     
     server.use(express.static(`../../Fattahi/parto-pwa`));
     server.get('*', (req, res) => {
-      res.sendFile("/", { root: "../../Fattahi/parto-pwa" });
+      //res.sendFile("pages/index.html", { root: "../../Fattahi//parto-pwa" });
+      return handle(req, res);
     });
     server.listen(3925, () => logger.info("Listening on port 3925..."));
 });
