@@ -4,9 +4,9 @@
   "description": "",
   "main": "pm2-manage.json",
   "scripts": {
-    "dev": "node index.js",
+    "dev": "next dev -p 3925",
     "build": "next build",
-    "start": "next start -p 3925",
+    "start": "next start",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
   "repository": {

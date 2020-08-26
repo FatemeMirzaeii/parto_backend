@@ -12,8 +12,9 @@
       },
       {
         "name": "pwa3925",
-        "script": "./pages/index.js",
+        "script": "./pwa.js",
         "node_args": "--max_old_space_size=8192"
+        
       }
     ]
   }
