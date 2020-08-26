@@ -4,7 +4,7 @@
   "description": "",
   "main": "pm2-manage.json",
   "scripts": {
-    "dev": "next dev -p 3925",
+    "dev": "node pwa.js",
     "build": "next build",
     "start": "next start",
     "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
