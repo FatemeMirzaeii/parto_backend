@@ -7,13 +7,12 @@ const pwa = next({dev});
 
 const handle = app.getRequestHandler();
 
-pwa.prepare().then(() => {
-    const server = express();
-    
-    server.use(express.static(`../../Fattahi/parto-pwa`));
-    server.get('*', (req, res) => {
-      res.sendFile("pages/index.js", { root: "../../Fattahi/parto-pwa" });
-    });
-    server.listen(3925, () => logger.info("Listening on port 3925..."));
+const developmentApp = express();
+
+developmentApp.use(express.static(`../../Fattahi/parto-pwa`));
+developmentApp.get("/*", (req, res) => {
+  res.sendFile("pages/index.js", { root: "../../Fattahi/parto-pwa" });
 });
+developmentApp.listen(3925, () => logger.info("Listening on port 3925..."));
+
 
