@@ -1,7 +1,7 @@
 image: node:latest
 
 before_script:
-  - pm2 stop pm2-manage.json
+  - pm2 stop all
 
 stages:
   - test
@@ -16,9 +16,9 @@ testing_parto:
   variables:
     NODE_ENV: "test"
   script:
-    - pm2 stop pm2-manage.json
-    - pm2 stop pm2-manage.json --only app-port2218
-    - pm2 stop all
+    # - pm2 stop pm2-manage.json
+    # - pm2 stop pm2-manage.json --only app-port2218
+    # - pm2 stop all
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
@@ -41,7 +41,7 @@ deploy_staging_parto:
      - echo "Deploy to staging server ..."
      - pm2 start pm2-manage.json
      - npm run build
-     - pm2 start index.js
+     #  - pm2 start index.js
      #- npm run dev
      #- pm2 start npm --name "pwa" -- start
      - echo "deploy_staging succesfull"
