@@ -1,1 +1,0 @@
-{"ast":null,"code":"export var SET_TOKEN = \"SET_TOKEN\"; //Action Creator\n\nexport var SetToken = function SetToken(tokenId) {\n  return function (dispatch) {\n    return dispatch({\n      type: SET_TOKEN,\n      payload: {\n        tokenId: tokenId\n      }\n    });\n  };\n};","map":null,"metadata":{},"sourceType":"module"}

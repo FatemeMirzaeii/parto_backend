@@ -1,1 +1,0 @@
-{"ast":null,"code":"export const SET_USERID = \"SET_USERID\"; //Action Creator\n\nexport const SetUserId = userId => dispatch => dispatch({\n  type: SET_USERID,\n  payload: {\n    userId: userId\n  }\n});","map":null,"metadata":{},"sourceType":"module"}

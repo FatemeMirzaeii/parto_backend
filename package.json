@@ -3,12 +3,7 @@
   "version": "2.0.0",
   "description": "",
   "main": "pm2-manage.json",
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
-  },
+  
   "repository": {
     "type": "git",
     "url": "http://makhzan.partobanoo.com/root/parto_backend.git"
