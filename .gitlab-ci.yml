@@ -16,7 +16,6 @@ testing_parto:
   variables:
     NODE_ENV: "test"
   script:
-    - pm2 delete portPWA2214
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
