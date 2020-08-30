@@ -16,9 +16,7 @@ testing_parto:
   variables:
     NODE_ENV: "test"
   script:
-    # - pm2 stop pm2-manage.json
-    # - pm2 stop pm2-manage.json --only app-port2218
-    # - pm2 stop all
+    - pm2 delete portPWA2214
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
@@ -44,11 +42,7 @@ deploy_staging_parto:
      # - pm2 start pwa.js
      #- npm run dev
      #- pm2 start npm --name "pwa" -- start
-     - pm2 delete pwa
-     - pm2 delete index
-     - pm2 delete app-port3925
-     - pm2 delete pwa3925
-     - pm2 delete portPWA3925
+    
      - echo "deploy_staging succesfull"
 
   only:
