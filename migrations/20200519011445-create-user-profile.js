@@ -23,12 +23,6 @@ module.exports = {
           return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
         }
       },
-      zygosis_date: {
-        type: Sequelize.DATEONLY,
-        get: function() {
-          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
-        }
-      },
       avg_cycle_length: {
         type: Sequelize.INTEGER
       },
@@ -56,6 +50,12 @@ module.exports = {
       use_lock: {
         type: Sequelize.BOOLEAN
       },
+      last_period_date:{
+        type: Sequelize.DATEONLY,
+        get: function() {
+          return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
+        }
+      } ,
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

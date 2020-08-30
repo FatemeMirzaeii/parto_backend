@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const User_log = sequelize.define('user_log', {
+  const UserLog = sequelize.define('user_log', {
     i_p: {
       type: DataTypes.STRING,
       validate: {
@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     underscored: true,
   });
-  User_log.associate = function (models) {
-    User_log.belongsTo(models.user, {
+  UserLog.associate = function (models) {
+    UserLog.belongsTo(models.user, {
       onDelete: "RESTRICT",
     })
   };
-  return User_log;
+  return UserLog;
 };

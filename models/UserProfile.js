@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const User_profile = sequelize.define('user_profile', {
+  const UserProfile = sequelize.define('user_profile', {
     birthdate: {
       type: DataTypes.DATEONLY 
     },
@@ -13,16 +13,16 @@ module.exports = (sequelize, DataTypes) => {
     pregnant: DataTypes.BOOLEAN,
     pregnancy_try: DataTypes.BOOLEAN,
     use_lock: DataTypes.BOOLEAN,
-    zygosis_date: DataTypes.DATEONLY 
+    last_period_date:DataTypes.DATEONLY 
 
   }, {
     freezeTableName: true,
     underscored: true,
   });
-  User_profile.associate = function (models) {
-    User_profile.belongsTo(models.user, {
+  UserProfile.associate = function (models) {
+    UserProfile.belongsTo(models.user, {
       onDelete: "RESTRICT",
     })
   };
-  return User_profile;
+  return UserProfile;
 };
