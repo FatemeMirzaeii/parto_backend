@@ -1,7 +1,7 @@
 image: node:latest
 
 before_script:
-  - pm2 stop all
+   - pm2 stop pm2-manage.json
 
 stages:
   - test
