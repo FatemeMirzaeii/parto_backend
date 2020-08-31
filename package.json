@@ -4,6 +4,11 @@
   "description": "",
   "main": "pm2-manage.json",
   
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
+  },
+
   "repository": {
     "type": "git",
     "url": "http://makhzan.partobanoo.com/root/parto_backend.git"

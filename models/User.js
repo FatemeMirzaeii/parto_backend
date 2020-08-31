@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        validate: {
-          max: 128,
-          notEmpty: {
-            msg: "لطفا نام خود را وارد کنید.",
-          },
-        },
+        // validate: {
+        //   max: 128,
+        //   notEmpty: {
+        //     msg: "لطفا نام خود را وارد کنید.",
+        //   },
+        // },
       },
       phone:{
         type: DataTypes.STRING,

@@ -16,7 +16,9 @@ module.exports = {
         },
         onDelete: "RESTRICT",
       },
-
+      several_weeks: {
+        type: Sequelize.INTEGER
+      },
       due_date: {
         type: Sequelize.DATEONLY ,
         get: function() {

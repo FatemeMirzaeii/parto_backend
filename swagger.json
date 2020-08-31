@@ -89,7 +89,7 @@
     },
     "/user/signUp/{lang}": {
       "post": {
-        "summary": "sign up new user with email.",
+        "summary": "sign up new user with phone.",
         "tags": [
           "user"
         ],
@@ -113,17 +113,14 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "phone"
+                ],
                 "properties": {
-                  "email": {
-                    "type": "string"
-                  },
                   "phone": {
                     "type": "string"
                   },
                   "name": {
-                    "type": "string"
-                  },
-                  "password": {
                     "type": "string"
                   },
                   "imei": {
@@ -140,11 +137,11 @@
             "headers": {
               "x-auth-token": {
                 "required": true,
+                "description": "token set to response header",
                 "content": {
                   "application/json": {
                     "schema": {
-                      "type": "string",
-                      "description": "an authorization header"
+                      "type": "string"
                     }
                   }
                 }
@@ -170,14 +167,17 @@
             }
           },
           "400": {
-            "description": "email exist / phone exist / invalid input"
+            "description": "invalid input"
+          },
+          "409": {
+            "description": "phone exist"
           }
         }
       }
     },
     "/user/linkForgetPassword/{lang}": {
       "post": {
-        "summary": "Returns survey question.",
+        "summary": "Returns link for forget pasword.",
         "tags": [
           "user"
         ],
@@ -202,9 +202,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string"
-                  },
                   "phone": {
                     "type": "string"
                   }
@@ -215,10 +212,10 @@
         },
         "responses": {
           "200": {
-            "description": "send email/sms successful"
+            "description": "send sms successful"
           },
           "400": {
-            "description": "invalid input (phone number/email)"
+            "description": "invalid input (phone number)"
           },
           "418": {
             "description": "Your account credit is not enough"
@@ -347,9 +344,6 @@
                 "properties": {
                   "phone": {
                     "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
                   }
                 }
               }
@@ -389,6 +383,74 @@
           },
           "502": {
             "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/auth/signIn/{lang}": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Creates a new user.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "user id"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "description": "user id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "phone exist / invalid input"
           }
         }
       }
@@ -643,76 +705,6 @@
           },
           "401": {
             "description": "no permition"
-          }
-        }
-      }
-    },
-    "/auth/signIn/{lang}": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "Creates a new user.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "phone": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "user id"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "email exist / phone exist / invalid input"
           }
         }
       }
@@ -1408,7 +1400,7 @@
         }
       }
     },
-    "/interview/{lang}": {
+    "/interview/ordinarUser/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -1441,7 +1433,7 @@
             }
           }
         ],
-        "summary": "save user peofile information in data base",
+        "summary": "save ordinar User peofile information in data base",
         "requestBody": {
           "required": true,
           "content": {
@@ -1465,28 +1457,7 @@
                       "avgPeriodLength": {
                         "type": "integer"
                       },
-                      "avgSleepingHour": {
-                        "type": "integer"
-                      },
-                      "pmsLength": {
-                        "type": "integer"
-                      },
-                      "height": {
-                        "type": "integer"
-                      },
-                      "weight": {
-                        "type": "integer"
-                      },
-                      "pregnant": {
-                        "type": "integer"
-                      },
-                      "pregnancyTry": {
-                        "type": "integer"
-                      },
-                      "useLock": {
-                        "type": "integer"
-                      },
-                      "zygosisDate": {
+                      "lastPeriodDate": {
                         "type": "string"
                       }
                     }
@@ -1497,14 +1468,7 @@
                   "birthdate": "1377-05-05",
                   "avgCycleLength": 25,
                   "avgPeriodLength": 7,
-                  "avgSleepingHour": 8,
-                  "pmsLength": 3,
-                  "height": 158,
-                  "weight": 70,
-                  "pregnant": 0,
-                  "pregnancyTry": 0,
-                  "useLock": 0,
-                  "zygosisDate": "1399-06-01"
+                  "lastPeriodDate": "2020-05-05"
                 }
               }
             }
@@ -1512,28 +1476,114 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid intery."
+          },
+          "404": {
+            "description": "information not found (user id isn't exist )"
+          },
+          "409": {
+            "description": "user profile information exist."
+          }
+        }
+      }
+    },
+    "/interview/pregnentUser/{lang}": {
+      "post": {
+        "tags": [
+          "interview"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "user profile id",
-                      "properties": {
-                        "id": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                  "type": "string",
+                  "description": "language"
                 }
               }
             }
           },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save pregnant User peofile information in data base",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "description": "user profile information",
+                    "required": [
+                      "userId",
+                      "severalWeeks"
+                    ],
+                    "properties": {
+                      "userId": {
+                        "type": "integer"
+                      },
+                      "birthdate": {
+                        "type": "string"
+                      },
+                      "severalWeeks": {
+                        "type": "integer"
+                      },
+                      "lastPeriodDate": {
+                        "type": "string"
+                      },
+                      "zygosisDate": {
+                        "type": "string"
+                      },
+                      "dueDate": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "userId": 2,
+                  "birthdate": "1377-05-05",
+                  "severalWeeks": 3,
+                  "lastPeriodDate": "2020-05-05",
+                  "zygosisDate": "2020-05-05",
+                  "dueDate": "2020-05-05"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
           "400": {
-            "description": "information not found (user id isn't exist )/ user profile information exist."
+            "description": "invalid intery."
+          },
+          "404": {
+            "description": "information not found (user id isn't exist )"
+          },
+          "409": {
+            "description": "user profile information exist."
           }
         }
       }
