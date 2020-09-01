@@ -16,7 +16,7 @@ module.exports = {
         },
         onDelete: "RESTRICT",
       },
-      several_weeks: {
+      pregnancy_week: {
         type: Sequelize.INTEGER
       },
       due_date: {

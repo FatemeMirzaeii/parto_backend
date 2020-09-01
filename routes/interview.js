@@ -56,7 +56,7 @@ router.post("/pregnentUser/:lang",auth, async(req, res) => {
   
   let uProfile;
   let preg;
-  if(req.body.severalWeeks!=null){
+  if(req.body.pregnancyWeek!=null){
     uProfile = await user_profile.create({
       birthdate:new Date(req.body.birthdate),
       pregnant:1
@@ -64,7 +64,7 @@ router.post("/pregnentUser/:lang",auth, async(req, res) => {
     });
     await uProfile.setUser(usr);
     preg=await pregnancy.create({
-      several_weeks:req.body.severalWeeks
+      pregnancy_week:req.body.pregnancyWeek
     });
     await preg.setUser(usr);
   }
@@ -82,21 +82,21 @@ router.post("/pregnentUser/:lang",auth, async(req, res) => {
       });
       await uProfile.setUser(usr);
       preg=await pregnancy.create({
-        several_weeks:req.body.severalWeeks
+        pregnancy_week:req.body.pregnancyWeek
       });
       await preg.setUser(usr);
     }
     else if(req.body.dueDate!=null ){
       preg=await pregnancy.create({
         due_date:new Date(req.body.dueDate),
-        several_weeks:req.body.severalWeeks
+        pregnancy_week:req.body.pregnancyWeek
       });
       await preg.setUser(usr);
     }
     else if(req.body.zygosisDate!=null){
       preg=await pregnancy.create({
         zygosis_date:new Date(req.body.zygosisDate),
-        several_weeks:req.body.severalWeeks
+        pregnancy_week:req.body.pregnancyWeek
       });
       await preg.setUser(usr);
     }

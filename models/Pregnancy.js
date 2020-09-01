@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Pregnancy = sequelize.define('pregnancy', {
-    several_weeks: DataTypes.INTEGER,
+    pregnancy_week: DataTypes.INTEGER,
     abortion: {
       type: DataTypes.BOOLEAN,
     },

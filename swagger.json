@@ -1536,7 +1536,7 @@
                     "description": "user profile information",
                     "required": [
                       "userId",
-                      "severalWeeks"
+                      "pregnancyWeek"
                     ],
                     "properties": {
                       "userId": {
@@ -1545,7 +1545,7 @@
                       "birthdate": {
                         "type": "string"
                       },
-                      "severalWeeks": {
+                      "pregnancyWeek": {
                         "type": "integer"
                       },
                       "lastPeriodDate": {
@@ -1563,7 +1563,7 @@
                 "example": {
                   "userId": 2,
                   "birthdate": "1377-05-05",
-                  "severalWeeks": 3,
+                  "pregnancyWeek": 3,
                   "lastPeriodDate": "2020-05-05",
                   "zygosisDate": "2020-05-05",
                   "dueDate": "2020-05-05"
