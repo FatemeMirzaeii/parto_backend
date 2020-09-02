@@ -9,6 +9,16 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
+    has_multiple_choice : {
+      type: DataTypes.BOOLEAN,
+    },
+    color:{
+      type: DataTypes.STRING  
+    },
+    icon:{
+      type: DataTypes.STRING
+    }
+
   }, {
     freezeTableName: true,
     underscored: true,

@@ -9,6 +9,7 @@ const Kavenegar = require('kavenegar');
 
 
 router.post("/signIn/:lang", async (req, res) => {
+  console.log("request headers",req.headers);
   let usr ;
   if(req.body.phone==""){
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });

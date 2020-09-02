@@ -56,6 +56,9 @@ module.exports = {
           return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
         }
       } ,
+      blood_type:{
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

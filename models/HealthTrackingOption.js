@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    icon:{
+      type: DataTypes.STRING
+    }
   }, {
     freezeTableName: true,
     underscored: true,

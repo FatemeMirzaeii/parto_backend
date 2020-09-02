@@ -8,7 +8,7 @@ const sendEmail=require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
 
 router.post("/signUp/:lang", async (req, res) => {
-  if(req.body.phone=="" ){
+    if(req.body.phone=="" ){
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   let existsPhone;

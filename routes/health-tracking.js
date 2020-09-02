@@ -1,6 +1,6 @@
 const express = require("express");
 const auth = require("../middleware/auth");
-const {  health_tracking_category,  user_tracking_option } = require("../models");
+const {  health_tracking_category,  user_tracking_option , health_tracking_option} = require("../models");
 const translate = require("../config/translate");
 const router = express();
 
@@ -47,27 +47,88 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 });
 
-router.post("/setUserInfo:lang", auth, async (req, res) => {
-  //todo: should check if an option doesnt exists anymore, then remove it.
-  req.body.options.forEach(async (option) => {
-    await user_tracking_option.create({
-      date: req.body.date,
-      user_id: req.body.userId,
-      health_tracking_option_id: option
-    });
+router.get("/userInf/:userId/:date",auth,async(req,res)=>{
+  let data,userOption=[];
+  let i,j,option;
+  let category = await health_tracking_category.findAll({
+    attributes: ['id', 'title','has_multiple_choice','color','icon']
   });
-  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });;
+  for (i = 0; i < category.length; i++) {
+    let temp={};
+    temp.id=category[i].id;
+    temp.title=category[i].title;
+    temp.hasMultioleChoise=category[i].has_multiple_choice;
+    temp.color=category[i].color;
+    temp.icon=category[i].icon;
+    option=(await health_tracking_option.findAll({
+      attributes: ['id', 'title','icon'],
+      where:{
+        category_id:category[i].id
+      }
+    }))
+    let optionList=[];
+    
+    if(option.length>0){
+      for(j=0 ;j<option.length;j++){
+        let optionsTemp={};
+        userOption[j]=await user_tracking_option.findAll({
+          attributes: ['id', 'tracking_option_id'],
+          where:{
+            user_id: req.params.userId,
+            tracking_option_id: option[j].id,
+            date: req.params.date
+          }
+        })
+        
+        optionsTemp.id=option[j].id;
+        optionsTemp.title=option[j].title;
+        optionsTemp.icon=option[j].icon;
+        optionsTemp.slected=userOption[j];
+        optionList.push(optionsTemp);
+       
+      }
+    }
+    temp.options=optionList;
+    data.push(temp);
+  }
+  
+  return res.status(200).json({ data:data });
 });
 
-router.get("/getUserInfo/:userId/:date", auth, async (req, res) => {
-  const options = await user_tracking_option.findAll({
+router.post("/userInf",auth,async(req,res)=>{
+  const exist=(await health_tracking_option.findOne({
+    where:{
+      id:req.body.trackingOptionId
+    }
+  }))
+  if(!exist) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+
+  let usr = await user.findOne({
     where: {
-      user_id: req.params.userId,
-      date: req.params.date,
+      phone: req.body.phone,
     },
-  })
-  res.status(200).json({ data: { options: options } });
-}
-);
+  });
+  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+   
+  let userOption,existData;
+  for(i=0;i<req.body.trackingOptionId.length;i++){  
+    existData=await user_tracking_option.findOne({
+      where:{
+        user_id: req.body.userId,
+        tracking_option_id: trackingOptionId[i],
+        date: req.body.date
+      }
+    })
+    if (existData!=null) return res.status(409).json({ message: await translate("EXISTS", "fa") });
+  
+    userOption= await user_tracking_option.create({
+      tracking_option_id:req.body.trackingOptionId[i],
+      date:req.body.date
+    });
+    await userOption.setUser(usr);
+  }
+  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  
+});
 
 module.exports = router;
