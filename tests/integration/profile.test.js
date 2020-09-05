@@ -121,11 +121,11 @@ describe('profile', () => {
                 "pmsLength": 3,
                 "height": 155,
                 "weight": 75,
-                "pregnant": 0,
-                "pregnancyTry": 0,
-                "useLock": 0,
-                "lastPeriodDate": "string",
-                "bloodType": "string"
+                "pregnant": false,
+                "pregnancyTry": false,
+                "useLock": false,
+                "lastPeriodDate": "2020-07=01",
+                "bloodType": "A+"
               }
             )
            .set('x-auth-token', tempToken);
