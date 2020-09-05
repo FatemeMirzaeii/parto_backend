@@ -1,5 +1,4 @@
 const request = require('supertest');
-require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const { user,health_tracking_category,
     user_tracking_option,health_tracking_option } = require("../../models");
 
@@ -19,9 +18,9 @@ describe('health_tracking',()=>{
         User =await user.create({name:"zahra", email:"helth_zzdand7755@gmail.com"});
         userId=User.id;
         token = User.generateAuthToken();
-        const delet_category =await health_tracking_category.create({title:"delet helth tracking option title"});
+        const delet_category =await health_tracking_category.create({title:"delet health tracking option title"});
         delet_cat_id=delet_category.id;
-        hto=await health_tracking_option.create({title:"helth tracking option title"});
+        hto=await health_tracking_option.create({title:"haelth tracking option title"});
         htc=await hto.createHealth_tracking_category({title:"category title"});
         id=htc.id;
     });
@@ -104,7 +103,6 @@ describe('health_tracking',()=>{
             
         });
     });
-
     describe('/deleteCategory/:lang/:id',()=>{
         
         const exec=()=>{
@@ -125,36 +123,54 @@ describe('health_tracking',()=>{
 
     });
 
-    // describe('/setUserInfo',async()=>{
-    //     TempToken=token;
-    //     const exec=()=>{
-    //         return request(server).post('/healthTracking/setUserInfo')
-    //             .send( {"date": date,"user_id":User.id ,"health_tracking_option_id": [hto]})
-    //             .set('x-auth-token', TempToken);
-    //     };
-        
-    //     it('return 200 and send option to user',async()=>{
-    //         const result=await exec();
-    //         console.log("setToken",TempToken);
-    //         expect(result.status).toBe(200);
-    //         expect(result.body.data).not.toBeNull();
-    //     });
-
-    // });
-    describe('/getUserInfo/:userId/:date',()=>{
-        let tempId=userId;
+    describe('/healthTracking/userInfo/{lang}',()=>{
+        let tempUserId=userId;
         TempToken=token;
         const exec=()=>{
-            return request(server).get('/healthTracking/getUserInfo/'+tempId+'/'+date)
+            return request(server).post('/healthTracking/userInfo/fa')
+                .send({'userId':`${tempUserId}`,'date':'2020-07-05',
+                    'select': [
+                        {   'categoryId': 1,
+                            'trackingOptionId': 1,
+                            'hasMultioleChoise': 0
+                        }
+                        ]})
                 .set('x-auth-token', TempToken);
         };
         
         it('return 200 and send option to user',async()=>{
+            tempUserId=userId;
             const result=await exec();
             expect(result.status).toBe(200);
-            expect(result.body.data).not.toBeNull();
+        });
+        it('return 400 where user id is not exist',async()=>{
+            tempUserId=userId+100;
+            const result=await exec();
+            expect(result.status).toBe(400);
         });
 
     });
 
+    describe('/userInfo/:userId/:date/:lang',async()=>{
+        TempToken=token;
+        let tempUserId=userId;
+        const exec=()=>{
+            return request(server).get('/healthTracking/userInfo/'+tempUserId+'/2020-07-05/fa')
+            .set('x-auth-token', TempToken);
+        };
+        
+        it('return 200 and send option to user',async()=>{
+            tempUserId=userId;
+            let result=await exec();
+            expect(result.status).toBe(200);
+        });
+        it('return 400 where user id is not exist',async()=>{
+            tempUserId=userId+100;
+            let result=await exec();
+            expect(result.status).toBe(400);
+        });
+
+    });
+
+    
 })

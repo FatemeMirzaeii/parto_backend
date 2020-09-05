@@ -1,6 +1,7 @@
 const express = require("express");
+const checkDate = require("../middleware/checkDate");
 const auth = require("../middleware/auth");
-const {  health_tracking_category,  user_tracking_option , health_tracking_option} = require("../models");
+const { user, health_tracking_category,  user_tracking_option , health_tracking_option} = require("../models");
 const translate = require("../config/translate");
 const router = express();
 
@@ -47,8 +48,16 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 });
 
-router.get("/userInf/:userId/:date",auth,async(req,res)=>{
-  let data,userOption=[];
+router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
+  let usr = await user.findOne({
+    where: {
+      id: req.params.userId,
+    },
+  });
+  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+   
+  let data=[];
+  let userOption=[];
   let i,j,option;
   let category = await health_tracking_category.findAll({
     attributes: ['id', 'title','has_multiple_choice','color','icon']
@@ -79,7 +88,7 @@ router.get("/userInf/:userId/:date",auth,async(req,res)=>{
             date: req.params.date
           }
         })
-        
+        if(userOption[j]==null) userOption[j]=[];
         optionsTemp.id=option[j].id;
         optionsTemp.title=option[j].title;
         optionsTemp.icon=option[j].icon;
@@ -95,40 +104,62 @@ router.get("/userInf/:userId/:date",auth,async(req,res)=>{
   return res.status(200).json({ data:data });
 });
 
-router.post("/userInf",auth,async(req,res)=>{
-  const exist=(await health_tracking_option.findOne({
-    where:{
-      id:req.body.trackingOptionId
-    }
-  }))
-  if(!exist) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-
+router.post("/userInfo/:lang",auth,checkDate,async(req,res)=>{
+   
   let usr = await user.findOne({
     where: {
-      phone: req.body.phone,
+      id: req.body.userId,
     },
   });
-  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
-  let userOption,existData;
-  for(i=0;i<req.body.trackingOptionId.length;i++){  
-    existData=await user_tracking_option.findOne({
-      where:{
-        user_id: req.body.userId,
-        tracking_option_id: trackingOptionId[i],
-        date: req.body.date
+  let userOption,existDate;
+  for(i=0;i<req.body.select.length;i++){  
+    if(req.body.select[i].hasMultioleChoise==0){
+      existDate=await user_tracking_option.findOne({
+        where:{
+          user_id: req.body.userId,
+          date: req.body.date
+        }
+      })
+      if (existDate!=null) {
+        //find options in category
+        let category = await health_tracking_option.findAll({
+          attributes: ['id'],
+          where:{
+            category_id:req.body.select[i].categoryId
+          }
+        });
+        //find all for that option in helthTracing 
+        for(option in category){
+          existOption=await user_tracking_option.findOne({
+            where:{
+              user_id: req.body.userId,
+              date: req.body.date,
+              tracking_option_id:option
+            }
+          })
+          //delete it
+          if(existOption){
+            await user_tracking_option.destroy({
+              where:{
+                user_id: req.body.userId,
+                date: req.body.date,
+                tracking_option_id:option
+              }
+            })
+          }
+        }
+        
       }
-    })
-    if (existData!=null) return res.status(409).json({ message: await translate("EXISTS", "fa") });
-  
+    }
     userOption= await user_tracking_option.create({
-      tracking_option_id:req.body.trackingOptionId[i],
+      tracking_option_id:req.body.select[i].trackingOptionId,
       date:req.body.date
     });
     await userOption.setUser(usr);
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
-  
+  return res.status(200).json({ message: await translate("SUCCESSFUL",  req.params.lang) });
 });
 
 module.exports = router;

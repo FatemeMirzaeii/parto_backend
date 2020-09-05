@@ -31,6 +31,9 @@ module.exports = {
       { language_id: 2, key_id: 13, text: "Server error occurred. Please try again", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 14, text: "اطلاعاتی یافت نشد", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 14, text: "information not found ", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 15, text: "تاریخ وارد شده نادرست است", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 15, text: " invalid date", created_at: new Date(), updated_at: new Date() },
+      
      
     ], {});
   },

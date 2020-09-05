@@ -22,7 +22,7 @@ describe('profile', () => {
             pregnant:false,
             pregnancy_try:false,
             use_lock:false,
-            zygosis_date:"1300-01-01"
+            last_period_date:"1300-01-01"
         });
         await uProfile.setUser(newUser);
     })
@@ -39,20 +39,12 @@ describe('profile', () => {
         
     });
 
-    describe('/profile/:userId/:lang', () => {
+    describe('/profile/getProfile/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec=()=>{
-           return request(server).get('/profile/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+           return request(server).get('/profile/getProfile/'+tempUserId+'/fa').set('x-auth-token', tempToken);
         }
-
-        it('should be return 401 if authentication get faild',async()=>{
-            tempToken="";
-            tempUserId=userId;
-            const result=await exec();
-            expect(result.status).toBe(401);
-                    
-        });
 
         it('should be return 404 if user id is not exist in database', async() => {
             tempToken=token;
@@ -70,5 +62,172 @@ describe('profile', () => {
             
         });
     });
+    describe('/profile/getPeriodInfo/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).get('/profile/getPeriodInfo/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+        }
+
+        it('should be return 404 if user id is not exist in database', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(404);
+
+        });
+
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+    describe('/profile/getGeneralInfo/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).get('/profile/getGeneralInfo/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+        }
+
+        it('should be return 404 if user id is not exist in database', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(404);
+
+        });
+
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+    describe('/profile/editProfile/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).put('/profile/editProfile/'+tempUserId+'/fa')
+           .send({
+                "birthdate": "1377-05-08",
+                "cycleLength": 30,
+                "periodLength": 8,
+                "sleepingHour": 9,
+                "pmsLength": 3,
+                "height": 155,
+                "weight": 75,
+                "pregnant": 0,
+                "pregnancyTry": 0,
+                "useLock": 0,
+                "lastPeriodDate": "string",
+                "bloodType": "string"
+              }
+            )
+           .set('x-auth-token', tempToken);
+        }
+        it('should be return 400 if user id invalid', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(400);
+
+        });
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+    describe('/profile/editPeriodInfo/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).put('/profile/editPeriodInfo/'+tempUserId+'/fa')
+           .send({
+                "cycleLength": 30,
+                "periodLength": 8,
+                "pmsLength": 3,
+                "pregnant": 0,
+                "pregnancyTry": 0,
+                "lastPeriodDate": "2020-07-05"
+            })
+           .set('x-auth-token', tempToken);
+        }
+        it('should be return 400 if user id invalid', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(400);
+
+        });
+
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+    describe('/profile/editGeneralInfo/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).put('/profile/editGeneralInfo/'+tempUserId+'/fa')
+           .send({
+                "birthdate": "1377-05-08",
+                "sleepingHour": 9,
+                "height": 155,
+                "weight": 75,
+                "useLock": 0,
+                "bloodType": "A+"
+            })
+           .set('x-auth-token', tempToken);
+        }
+        it('should be return 400 if user id invalid', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(400);
+
+        });
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+
+    describe('/profile/deleteProfile/:userId/:lang', () => {
+        let tempToken;
+        let tempUserId;
+        const exec=()=>{
+           return request(server).delete('/profile/deleteProfile/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+        }
+        it('should be return 404 if user id not found', async() => {
+            tempToken=token;
+            tempUserId=userId+100;
+            const result=await exec();    
+            expect(result.status).toBe(404);
+
+        });
+        it('should be return 200 and article content if article id is exist in database',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+            
+        });
+    });
+
 
 });
