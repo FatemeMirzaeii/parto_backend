@@ -14,7 +14,7 @@ const translate = require("../config/translate");
     else if(req.params.date==undefined){  
         reqDate= req.body.date.split("-");
     }
-    console.log(nowYear, " ", nowMonth, " ",nowDay);
+    //console.log(nowYear, " ", nowMonth, " ",nowDay);
     if(nowYear<reqDate[0]){
         return res.status(400).json({ message: await translate("INVALIDDATE", req.params.lang) });
     }

@@ -64,8 +64,8 @@ module.exports = (sequelize, DataTypes) => {
       through: "user_favorite_category",
     });
   };
-  User.prototype.generateAuthToken = () => {
-    return jwt.sign({ _id: this.id }, secret);
+  User.prototype.generateAuthToken = function(){
+    return jwt.sign({ _id:this.id , _phone:this.phone }, secret);
   };
   return User;
 };
