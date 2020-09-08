@@ -68,19 +68,19 @@ describe('health_tracking',()=>{
             expect(result.status).toBe(400);
         });
 
-        it('return 200 and add new category and send id and title ',async()=>{
-            TempToken=token;
-            title='new category title';
-            const result= await exec();
-            expect(result.status).toBe(200);
-            expect(result.body.data.title).toBe('new category title');
-            await health_tracking_category.destroy({
-                where: {
-                  id: result.body.data.id
-                }
-            });
+        // it('return 200 and add new category and send id and title ',async()=>{
+        //     TempToken=token;
+        //     title='new category title';
+        //     const result= await exec();
+        //     expect(result.status).toBe(200);
+        //     expect(result.body.data.title).toBe('new category title');
+        //     await health_tracking_category.destroy({
+        //         where: {
+        //           id: result.body.data.id
+        //         }
+        //     });
             
-        });
+        // });
    });
    describe('editCategory/:lang/:id',()=>{
         let tempId;

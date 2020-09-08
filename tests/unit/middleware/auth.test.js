@@ -11,7 +11,8 @@ describe("user.generateAuthToken", () => {
     const token = User.generateAuthToken();
 
     const req = {
-      header: jest.fn().mockReturnValue(token)
+      header: jest.fn().mockReturnValue(token),
+      params:jest.fn().mockReturnValue(User.id)
     };
     const res = {};
     const next = jest.fn();
@@ -20,6 +21,7 @@ describe("user.generateAuthToken", () => {
     const decoded = await jwt.verify(token, secret);
     
     expect(req.user).toMatchObject(decoded);
+    
     await User.destroy();
   });
 });
