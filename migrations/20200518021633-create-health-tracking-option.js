@@ -20,7 +20,7 @@ module.exports = {
         onDelete: "RESTRICT",
       },
       icon:{
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       created_at: {
         allowNull: false,

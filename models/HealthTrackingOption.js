@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     icon:{
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     }
   }, {
     freezeTableName: true,

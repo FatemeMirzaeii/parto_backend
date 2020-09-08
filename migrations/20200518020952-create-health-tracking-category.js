@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING  
       },
       icon:{
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       created_at: {
         allowNull: false,
