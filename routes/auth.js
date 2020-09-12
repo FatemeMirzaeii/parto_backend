@@ -9,7 +9,6 @@ const Kavenegar = require('kavenegar');
 
 
 router.post("/signIn/:lang", async (req, res) => {
-  console.log("request headers",req.headers);
   let usr ;
   if(req.body.phone==""){
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -44,6 +43,63 @@ router.post("/signIn/:lang", async (req, res) => {
   });
   res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 });
+
+router.post("/logIn/:lang",async(req,res)=>{
+  let usr ;
+  if(req.body.phone==""){
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  if(req.body.phone!=""){
+    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    let check=regex.test(req.body.phone); 
+    
+    if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+    
+    usr = await user.findOne({
+      where: {
+        phone: req.body.phone,
+      },
+    });
+  }
+  // else{
+  //   usr = await user.findOne({
+  //     where: {
+  //       email: req.body.email,
+  //     },
+  //   });
+  // }
+  let token;
+  if (usr==null){
+    if(req.body.imei!=null && req.body.imei!="") {
+      const regex = RegExp(/^\d{15}$/g);
+      let check=regex.test(req.body.imei); 
+      if (!check)  return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    
+      usr = await user.create({
+        name: req.body.name,
+        phone: req.body.phone,
+        //email: req.body.email,
+        //password: hash,
+        imei:req.body.imei,
+      });
+    }
+    else{
+      usr = await user.create({
+        name: req.body.name,
+        phone: req.body.phone
+      });
+    }
+  }
+  token = usr.generateAuthToken();
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
+    version: req.body.version,
+    login_date: Date.now(),
+  });
+
+  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+
+})
 
 router.post("/verifyCode", async(req, res) => {
   let code= Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);

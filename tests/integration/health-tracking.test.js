@@ -5,7 +5,6 @@ const { user,health_tracking_category,
 describe('health_tracking',()=>{
     let server;
     let token;
-    let TempToken;
     let User;
     let htc;
     let id;
@@ -16,13 +15,13 @@ describe('health_tracking',()=>{
    
     beforeAll(async()=>{
         User =await user.create({name:"zahra", email:"helth_zzdand7755@gmail.com"});
-        userId=User.id;
         token = User.generateAuthToken();
-        const delet_category =await health_tracking_category.create({title:"delet health tracking option title"});
-        delet_cat_id=delet_category.id;
-        hto=await health_tracking_option.create({title:"haelth tracking option title"});
-        htc=await hto.createHealth_tracking_category({title:"category title"});
-        id=htc.id;
+        userId= User.dataValues.id;
+        //const delet_category =await health_tracking_category.create({title:"delet health tracking option title"});
+        //delet_cat_id=delet_category.id;
+        //hto=await health_tracking_option.create({title:"haelth tracking option title"});
+        //htc=await hto.createHealth_tracking_category({title:"category title"});
+        //id=htc.id;
     });
 
     beforeEach(()=>{
@@ -35,112 +34,116 @@ describe('health_tracking',()=>{
 
    afterAll(async()=>{
        await User.destroy();
-       await hto.destroy();
-       await htc.destroy();
+       //await hto.destroy();
+       //await htc.destroy();
        
    })
 
-   describe('/getCategories',()=>{
-        const exec=()=>{
-            return request(server).get('/healthTracking/getCategories').set('x-auth-token', TempToken);
-        }
+//    describe('/getCategories',()=>{
+//         const exec=()=>{
+//             return request(server).get('/healthTracking/getCategories').set('x-auth-token', TempToken);
+//         }
         
-        it('return 200 and all categoryis',async()=>{
-            TempToken=token;
-            const result= await exec();
-            expect(result.status).toBe(200);
-            expect(result.body.data[0].title).not.toBeNull();
-        });
-   });
+//         it('return 200 and all categoryis',async()=>{
+//             TempToken=token;
+//             const result= await exec();
+//             expect(result.status).toBe(200);
+//             expect(result.body.data[0].title).not.toBeNull();
+//         });
+//    });
 
-   describe('/addCategory/:lang',()=>{
-        let title;
-        const exec=()=>{
-            return request(server).post('/healthTracking/addCategory/fa')
-            .send({"title":`${title}`})
-            .set('x-auth-token', TempToken);
-        };
+//    describe('/addCategory/:lang',()=>{
+//         let title;
+//         const exec=()=>{
+//             return request(server).post('/healthTracking/addCategory/fa')
+//             .send({"title":`${title}`})
+//             .set('x-auth-token', TempToken);
+//         };
         
-        it('return 400 if title be exist ',async()=>{
-            TempToken=token;
-            title='category title';
-            const result= await exec();
-            expect(result.status).toBe(400);
-        });
+//         it('return 400 if title be exist ',async()=>{
+//             TempToken=token;
+//             title='category title';
+//             const result= await exec();
+//             expect(result.status).toBe(400);
+//         });
 
-        // it('return 200 and add new category and send id and title ',async()=>{
-        //     TempToken=token;
-        //     title='new category title';
-        //     const result= await exec();
-        //     expect(result.status).toBe(200);
-        //     expect(result.body.data.title).toBe('new category title');
-        //     await health_tracking_category.destroy({
-        //         where: {
-        //           id: result.body.data.id
-        //         }
-        //     });
+//         // it('return 200 and add new category and send id and title ',async()=>{
+//         //     TempToken=token;
+//         //     title='new category title';
+//         //     const result= await exec();
+//         //     expect(result.status).toBe(200);
+//         //     expect(result.body.data.title).toBe('new category title');
+//         //     await health_tracking_category.destroy({
+//         //         where: {
+//         //           id: result.body.data.id
+//         //         }
+//         //     });
             
-        // });
-   });
-   describe('editCategory/:lang/:id',()=>{
-        let tempId;
-        let title='edit category title';
-        TempToken=token;
-        const exec=()=>{
-            return request(server).put('/healthTracking/editCategory/fa/'+ tempId)
-            .send({"title":`${title}`})
-            .set('x-auth-token', TempToken);
-        };
-        it('return 404 if id is not exist ',async()=>{
-            tempId=id+5;
-            const result=await exec();
-            expect(result.status).toBe(404);
-        });
-        it('return 200 if id was exist and update title succesfuly',async()=>{
-            tempId=id;
-            const result=await exec();
-            expect(result.status).toBe(200);
+//         // });
+//    });
+//    describe('editCategory/:lang/:id',()=>{
+//         let tempId;
+//         let title='edit category title';
+//         TempToken=token;
+//         const exec=()=>{
+//             return request(server).put('/healthTracking/editCategory/fa/'+ tempId)
+//             .send({"title":`${title}`})
+//             .set('x-auth-token', TempToken);
+//         };
+//         it('return 404 if id is not exist ',async()=>{
+//             tempId=id+5;
+//             const result=await exec();
+//             expect(result.status).toBe(404);
+//         });
+//         it('return 200 if id was exist and update title succesfuly',async()=>{
+//             tempId=id;
+//             const result=await exec();
+//             expect(result.status).toBe(200);
             
-        });
-    });
-    describe('/deleteCategory/:lang/:id',()=>{
+//         });
+//     });
+//     describe('/deleteCategory/:lang/:id',()=>{
         
-        const exec=()=>{
-            return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', token);
-        };
+//         const exec=()=>{
+//             return request(server).delete('/healthTracking/deleteCategory/fa/'+ tempId).set('x-auth-token', token);
+//         };
         
-        it('return 404 if id is not exist ',async()=>{
-            tempId=5+delet_cat_id;
-            const result=await exec();
-            expect(result.status).toBe(404);
-        });
-        it('return 200 if id was exist and delte succesfuly',async()=>{
-            tempId=delet_cat_id;
-            console.log("delet_User_id"+tempId);
-            const result=await exec();
-            expect(result.status).toBe(200);
-        });
+//         it('return 404 if id is not exist ',async()=>{
+//             tempId=5+delet_cat_id;
+//             const result=await exec();
+//             expect(result.status).toBe(404);
+//         });
+//         it('return 200 if id was exist and delte succesfuly',async()=>{
+//             tempId=delet_cat_id;
+//             console.log("delet_User_id"+tempId);
+//             const result=await exec();
+//             expect(result.status).toBe(200);
+//         });
 
-    });
+//     });
 
     describe('/healthTracking/userInfo/{lang}',()=>{
         let tempUserId=userId;
-        TempToken=token;
         const exec=()=>{
-            return request(server).post('/healthTracking/userInfo/fa')
-                .send({'userId':`${tempUserId}`,'date':'2020-07-05',
-                    'select': [
-                        {   'categoryId': 1,
-                            'trackingOptionId': 1,
-                            'hasMultioleChoise': 0
-                        }
-                        ]})
-                .set('x-auth-token', TempToken);
+            return request(server).post('/healthTracking/userInfo/'+tempUserId+'/fa')
+                .send({"date":"2020-05-05",
+                    "selected":[
+                        {   "categoryId": 1,
+                            "trackingOptionId": 1,
+                            "hasMultipleChoise": 0
+                        }],
+                    "deleted": [
+                            {   "categoryId": 1,
+                                "trackingOptionId": 1,
+                                "hasMultipleChoise": 0
+                            }]
+                        })
+                .set('x-auth-token', token);
         };
         
         it('return 200 and send option to user',async()=>{
             tempUserId=userId;
-            const result=await exec();
+            let result=await exec();
             expect(result.status).toBe(200);
         });
         it('return 400 where user id is not exist',async()=>{
@@ -152,11 +155,11 @@ describe('health_tracking',()=>{
     });
 
     describe('/userInfo/:userId/:date/:lang',async()=>{
-        TempToken=token;
+        console.log("token",token)
         let tempUserId=userId;
         const exec=()=>{
             return request(server).get('/healthTracking/userInfo/'+tempUserId+'/2020-07-05/fa')
-            .set('x-auth-token', TempToken);
+            .set('x-auth-token', token);
         };
         
         it('return 200 and send option to user',async()=>{

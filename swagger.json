@@ -23,16 +23,20 @@
       "description": "Operations about user"
     },
     {
-      "name": "article",
-      "description": "Access to article"
-    },
-    {
       "name": "interview",
       "description": "user extera information"
     },
     {
       "name": "profile",
       "description": "user profile"
+    },
+    {
+      "name": "pregnancy",
+      "description": "user pregnant informayion"
+    },
+    {
+      "name": "cycle",
+      "description": "calender and period cycle info"
     },
     {
       "name": "note",
@@ -83,6 +87,92 @@
           },
           "502": {
             "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/auth/logIn/{lang}": {
+      "post": {
+        "summary": "login(sign in / sign up) user with phone.",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "imei is not requier and can be not in body",
+                "required": [
+                  "phone"
+                ],
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "imei": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-auth-token": {
+                "required": true,
+                "description": "token set to response header",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "user id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid input"
           }
         }
       }
@@ -702,254 +792,11 @@
           },
           "400": {
             "description": "envalid input /invalid id / inavlid token"
-          },
-          "401": {
-            "description": "no permition"
           }
         }
       }
     },
-    "/article/getArticleContent/{lang}/{articleId}": {
-      "get": {
-        "tags": [
-          "article"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "articleId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "article id"
-                }
-              }
-            }
-          },
-          {
-            "in": "header",
-            "name": "x-auth-token",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "get article content with id",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "article content",
-                      "properties": {
-                        "content": {
-                          "type": "string",
-                          "description": "article content"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "article not found"
-          }
-        }
-      }
-    },
-    "/article/getArticleTitle/{lang}/{articleId}": {
-      "get": {
-        "tags": [
-          "article"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "articleId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "article id"
-                }
-              }
-            }
-          },
-          {
-            "in": "header",
-            "name": "x-auth-token",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "get article title with id",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "article title",
-                      "properties": {
-                        "title": {
-                          "type": "string",
-                          "description": "article title"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "article not found"
-          }
-        }
-      }
-    },
-    "/article/getArticlesList/{categoryId}": {
-      "get": {
-        "tags": [
-          "article"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "categoryId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "get list of articles with category id",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "articles list",
-                      "properties": {
-                        "articles": {
-                          "type": "string",
-                          "description": "articles list in speshal category and type articles is array"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/healthTracking/getCategories": {
-      "get": {
-        "tags": [
-          "healthTracking"
-        ],
-        "parameters": [
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "get list of categories",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "string",
-                      "description": "list of categories"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/healthTracking/addCategory/{lang}": {
+    "/healthTracking/userInfo/{userId}/{lang}": {
       "post": {
         "tags": [
           "healthTracking"
@@ -969,212 +816,14 @@
             }
           },
           {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "update category",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "list of categories",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "category id"
-                        },
-                        "title": {
-                          "type": "string",
-                          "description": "category title"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "category exist"
-          }
-        }
-      }
-    },
-    "/healthTracking/editCategory/{lang}/{id}": {
-      "put": {
-        "tags": [
-          "healthTracking"
-        ],
-        "parameters": [
-          {
             "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
                   "type": "integer",
-                  "description": "id"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "add new category",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "syccessful"
-          },
-          "404": {
-            "description": "any category is not exist wuth this id"
-          }
-        }
-      }
-    },
-    "/healthTracking/deleteCategory/{lang}/{id}": {
-      "delete": {
-        "tags": [
-          "healthTracking"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "id"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "delete category",
-        "responses": {
-          "200": {
-            "description": "syccessful"
-          },
-          "404": {
-            "description": "any category is not exist wuth this id"
-          }
-        }
-      }
-    },
-    "/healthTracking/userInfo/{lang}": {
-      "post": {
-        "tags": [
-          "healthTracking"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
+                  "description": "user id"
                 }
               }
             }
@@ -1201,13 +850,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "userId": {
-                    "type": "integer"
-                  },
                   "date": {
                     "type": "string"
                   },
-                  "select": {
+                  "deleted": {
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -1218,7 +864,24 @@
                         "trackingOptionId": {
                           "type": "integer"
                         },
-                        "hasMultioleChoise": {
+                        "hasMultipleChoise": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "selected": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "categoryId": {
+                          "type": "integer"
+                        },
+                        "trackingOptionId": {
+                          "type": "integer"
+                        },
+                        "hasMultipleChoise": {
                           "type": "integer"
                         }
                       }
@@ -1226,18 +889,29 @@
                   }
                 },
                 "example": {
-                  "userId": 1,
                   "date": "2020-06-06",
-                  "select": [
+                  "deleted": [
+                    {
+                      "categoryId": 2,
+                      "trackingOptionId": 10,
+                      "hasMultipleChoise": 0
+                    },
+                    {
+                      "categoryId": 2,
+                      "trackingOptionId": 5,
+                      "hasMultipleChoise": 1
+                    }
+                  ],
+                  "selected": [
                     {
                       "categoryId": 1,
                       "trackingOptionId": 10,
-                      "hasMultioleChoise": 0
+                      "hasMultipleChoise": 0
                     },
                     {
                       "categoryId": 2,
                       "trackingOptionId": 11,
-                      "hasMultioleChoise": 1
+                      "hasMultipleChoise": 1
                     }
                   ]
                 }
@@ -1379,7 +1053,7 @@
         }
       }
     },
-    "/profile/getprofile/{userId}/{lang}": {
+    "/profile/getProfile/{userId}/{lang}": {
       "get": {
         "tags": [
           "profile"
@@ -1730,9 +1404,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "userId": {
-                    "type": "integer"
-                  },
                   "birthdate": {
                     "type": "string"
                   },
@@ -2015,7 +1686,382 @@
         }
       }
     },
-    "/interview/ordinarUser/{lang}": {
+    "/profile/pregnancyMode/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "send user peofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "pregnant": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user not found"
+          }
+        }
+      }
+    },
+    "/profile/getUserStatus/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "send user peofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "pregnant": {
+                          "type": "integer"
+                        },
+                        "pregnancy_try": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user not found"
+          }
+        }
+      }
+    },
+    "/profile/lockStatus/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "send user peofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "use lock info",
+                      "properties": {
+                        "use_lock": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user not found"
+          }
+        }
+      }
+    },
+    "/profile/updateUserStatus/{userId}/{lang}": {
+      "put": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user peofile information to user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pregnant": {
+                    "type": "integer"
+                  },
+                  "pregnancyTry": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
+    "/profile/setLock/{userId}/{lang}": {
+      "put": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user peofile information to user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "isLock": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
+    "/interview/ordinarUser/{userId}/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -2030,6 +2076,19 @@
                 "schema": {
                   "type": "string",
                   "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
                 }
               }
             }
@@ -2060,9 +2119,6 @@
                     "type": "object",
                     "description": "user profile information",
                     "properties": {
-                      "userId": {
-                        "type": "integer"
-                      },
                       "birthdate": {
                         "type": "string"
                       },
@@ -2079,7 +2135,6 @@
                   }
                 },
                 "example": {
-                  "userId": 2,
                   "birthdate": "1377-05-05",
                   "avgCycleLength": 25,
                   "avgPeriodLength": 7,
@@ -2105,7 +2160,7 @@
         }
       }
     },
-    "/interview/pregnentUser/{lang}": {
+    "/interview/pregnantUser/{userId}/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -2120,6 +2175,19 @@
                 "schema": {
                   "type": "string",
                   "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
                 }
               }
             }
@@ -2150,23 +2218,16 @@
                     "type": "object",
                     "description": "user profile information",
                     "required": [
-                      "userId",
-                      "pregnancyWeek"
+                      "lastPeriodDate"
                     ],
                     "properties": {
-                      "userId": {
-                        "type": "integer"
-                      },
                       "birthdate": {
                         "type": "string"
-                      },
-                      "pregnancyWeek": {
-                        "type": "integer"
                       },
                       "lastPeriodDate": {
                         "type": "string"
                       },
-                      "zygosisDate": {
+                      "conceptionDate": {
                         "type": "string"
                       },
                       "dueDate": {
@@ -2176,12 +2237,10 @@
                   }
                 },
                 "example": {
-                  "userId": 2,
                   "birthdate": "1377-05-05",
-                  "pregnancyWeek": 3,
                   "lastPeriodDate": "2020-05-05",
-                  "zygosisDate": "2020-05-05",
-                  "dueDate": "2020-05-05"
+                  "conceptionDate": "2020-05-05",
+                  "dueDate": "2021-05-05"
                 }
               }
             }
@@ -2196,9 +2255,539 @@
           },
           "404": {
             "description": "information not found (user id isn't exist )"
+          }
+        }
+      }
+    },
+    "/pregnancy/getPregnancyData/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user pregnancy info",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "due_date": {
+                          "type": "string"
+                        },
+                        "abortion": {
+                          "type": "integer"
+                        },
+                        "conception_date": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user information not found"
+          }
+        }
+      }
+    },
+    "/pregnancy/savePregnancyData/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save user pregnancy info",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dueDate": {
+                    "type": "string"
+                  },
+                  "abortion": {
+                    "type": "integer"
+                  },
+                  "conceptionDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information"
+          },
+          "404": {
+            "description": "information not found"
           },
           "409": {
-            "description": "user profile information exist."
+            "description": "contradiction between information"
+          }
+        }
+      }
+    },
+    "/pregnancy/setPregnancyEnd/{userId}/{dueDate}/{lang}": {
+      "post": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "dueDate",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save user pregnancy info",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information"
+          },
+          "404": {
+            "description": "information not found"
+          },
+          "409": {
+            "description": "contradiction between information"
+          }
+        }
+      }
+    },
+    "/cycle/getLastPeriodDate/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "cycle"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user pregnancy info",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "last_period_date": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user information not found"
+          }
+        }
+      }
+    },
+    "/cycle/getUserAllPeriodDays/{userId}/{lang}": {
+      "get": {
+        "tags": [
+          "cycle"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get all bleeding day",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      "2020-07-09",
+                      "2020-07-10",
+                      "2020-07-11",
+                      "2020-07-12"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user information not found"
+          }
+        }
+      }
+    },
+    "/cycle/editLastPeriodDate/{userId}/{lastPeriodDate}/{lang}": {
+      "put": {
+        "tags": [
+          "cycle"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lastPeriodDate",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "last Period Date"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user peofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information"
+          }
+        }
+      }
+    },
+    "/cycle/setBleedingDays/{userId}/{lang}": {
+      "put": {
+        "tags": [
+          "cycle"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user peofile information to user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "deleteDate": [
+                    "2020-07-09",
+                    "2020-07-10"
+                  ],
+                  "addDate": [
+                    "2020-07-11",
+                    "2020-07-12"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information entery"
           }
         }
       }

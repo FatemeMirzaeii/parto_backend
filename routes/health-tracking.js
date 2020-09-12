@@ -104,21 +104,30 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
   return res.status(200).json({ data:data });
 });
 
-router.post("/userInfo/:lang",auth,checkDate,async(req,res)=>{
+router.post("/userInfo/:userId/:lang",auth,checkDate,async(req,res)=>{
    
   let usr = await user.findOne({
     where: {
-      id: req.body.userId,
+      id: req.params.userId,
     },
   });
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   let userOption,existDate;
-  for(i=0;i<req.body.select.length;i++){  
-    if(req.body.select[i].hasMultioleChoise==0){
+  for(i=0;i<req.body.deleted.length;i++){
+    await user_tracking_option.destroy({
+      where:{
+        user_id: req.params.userId,
+        date: req.body.date,
+        tracking_option_id:req.body.deleted[i].trackingOptionId
+      }
+    })
+  } 
+  for(i=0;i<req.body.selected.length;i++){  
+    if(req.body.selected[i].hasMultipleChoise==0){
       existDate=await user_tracking_option.findOne({
         where:{
-          user_id: req.body.userId,
+          user_id: req.params.userId,
           date: req.body.date
         }
       })
@@ -127,14 +136,14 @@ router.post("/userInfo/:lang",auth,checkDate,async(req,res)=>{
         let category = await health_tracking_option.findAll({
           attributes: ['id'],
           where:{
-            category_id:req.body.select[i].categoryId
+            category_id:req.body.selected[i].categoryId
           }
         });
         //find all for that option in helthTracing 
         for(option in category){
           existOption=await user_tracking_option.findOne({
             where:{
-              user_id: req.body.userId,
+              user_id: req.params.userId,
               date: req.body.date,
               tracking_option_id:option
             }
@@ -143,7 +152,7 @@ router.post("/userInfo/:lang",auth,checkDate,async(req,res)=>{
           if(existOption){
             await user_tracking_option.destroy({
               where:{
-                user_id: req.body.userId,
+                user_id: req.params.userId,
                 date: req.body.date,
                 tracking_option_id:option
               }
@@ -154,7 +163,7 @@ router.post("/userInfo/:lang",auth,checkDate,async(req,res)=>{
       }
     }
     userOption= await user_tracking_option.create({
-      tracking_option_id:req.body.select[i].trackingOptionId,
+      tracking_option_id:req.body.selected[i].trackingOptionId,
       date:req.body.date
     });
     await userOption.setUser(usr);

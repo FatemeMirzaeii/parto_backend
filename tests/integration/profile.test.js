@@ -46,14 +46,6 @@ describe('profile', () => {
            return request(server).get('/profile/getProfile/'+tempUserId+'/fa').set('x-auth-token', tempToken);
         }
 
-        it('should be return 404 if user id is not exist in database', async() => {
-            tempToken=token;
-            tempUserId=userId+100;
-            const result=await exec();    
-            expect(result.status).toBe(404);
-
-        });
-
         it('should be return 200 and article content if article id is exist in database',async () => {
             tempToken=token;
             tempUserId=userId;
@@ -68,15 +60,7 @@ describe('profile', () => {
         const exec=()=>{
            return request(server).get('/profile/getPeriodInfo/'+tempUserId+'/fa').set('x-auth-token', tempToken);
         }
-
-        it('should be return 404 if user id is not exist in database', async() => {
-            tempToken=token;
-            tempUserId=userId+100;
-            const result=await exec();    
-            expect(result.status).toBe(404);
-
-        });
-
+        
         it('should be return 200 and article content if article id is exist in database',async () => {
             tempToken=token;
             tempUserId=userId;
@@ -92,14 +76,7 @@ describe('profile', () => {
            return request(server).get('/profile/getGeneralInfo/'+tempUserId+'/fa').set('x-auth-token', tempToken);
         }
 
-        it('should be return 404 if user id is not exist in database', async() => {
-            tempToken=token;
-            tempUserId=userId+100;
-            const result=await exec();    
-            expect(result.status).toBe(404);
-
-        });
-
+        
         it('should be return 200 and article content if article id is exist in database',async () => {
             tempToken=token;
             tempUserId=userId;
@@ -130,13 +107,7 @@ describe('profile', () => {
             )
            .set('x-auth-token', tempToken);
         }
-        it('should be return 400 if user id invalid', async() => {
-            tempToken=token;
-            tempUserId=userId+100;
-            const result=await exec();    
-            expect(result.status).toBe(400);
-
-        });
+        
         it('should be return 200 and article content if article id is exist in database',async () => {
             tempToken=token;
             tempUserId=userId;
@@ -213,13 +184,7 @@ describe('profile', () => {
         const exec=()=>{
            return request(server).delete('/profile/deleteProfile/'+tempUserId+'/fa').set('x-auth-token', tempToken);
         }
-        it('should be return 404 if user id not found', async() => {
-            tempToken=token;
-            tempUserId=userId+100;
-            const result=await exec();    
-            expect(result.status).toBe(404);
-
-        });
+        
         it('should be return 200 and article content if article id is exist in database',async () => {
             tempToken=token;
             tempUserId=userId;

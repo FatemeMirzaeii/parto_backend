@@ -18,6 +18,7 @@ module.exports = {
       { key: 'SERVERERROR', created_at: new Date(), updated_at: new Date() },//500
       { key: 'INFORMATIONNOTFOUND', created_at: new Date(), updated_at: new Date() },//404
       { key: 'INVALIDDATE', created_at: new Date(), updated_at: new Date() },//400
+      { key: 'CONTRADICTION', created_at: new Date(), updated_at: new Date() },//409
       
     ], {});
   },

@@ -25,7 +25,7 @@ module.exports = {
           return moment.utc(this.getDataValue('due_date')).format('YYYY-MM-DD');
         }
       },
-      zygosis_date:{
+      conception_date:{
         type: Sequelize.DATEONLY ,
         get: function() {
           return moment.utc(this.getDataValue('zygosis_date')).format('YYYY-MM-DD');

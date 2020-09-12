@@ -37,20 +37,28 @@ router.post("/signUp/:lang", async (req, res) => {
   // console.log(existsPhone!=null || existsEmail!=null);
   if (existsPhone!=null ) return res.status(409).json({ message: await translate("EXISTS", req.params.lang) });
   
+  let usr;
   if(req.body.imei!="") {
     const regex = RegExp(/^\d{15}$/g);
     let check=regex.test(req.body.imei); 
     if (!check)  return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+   
+    //const hash = await bcrypt.hash(req.body.password, 10);
+    usr = await user.create({
+      name: req.body.name,
+      phone: req.body.phone,
+      //email: req.body.email,
+      //password: hash,
+      imei:req.body.imei,
+    });
   }
-  
-  //const hash = await bcrypt.hash(req.body.password, 10);
-  const usr = await user.create({
-    name: req.body.name,
-    phone: req.body.phone,
-    //email: req.body.email,
-    //password: hash,
-    imei:req.body.imei,
-  });
+  else{
+    usr = await user.create({
+      name: req.body.name,
+      phone: req.body.phone
+    });
+
+  }
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,

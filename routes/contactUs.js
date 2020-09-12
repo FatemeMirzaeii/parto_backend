@@ -3,7 +3,7 @@ const router = express.Router();
 const translate = require("../config/translate");
 const creds = require("../config/email");
 const sEmail = require("../middleware/sendEmail");
-const { Console } = require("console");
+
 
 router.post("/Email", async (req, res) => {
   let name = req.body.name;
