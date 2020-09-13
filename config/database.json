@@ -8,17 +8,17 @@
 
   },
   "test": {
-    "database": "parto",
+    "database": "partoTest",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
-    "database": "Parto",
-    "username": "",
-    "password": "",
-    "host": "",
+    "database": "parto",
+    "username": "administrator",
+    "password": "P@rto2020",
+    "host": "localhost",
     "dialect": "mysql"
   }
 }
