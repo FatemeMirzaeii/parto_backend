@@ -8,9 +8,9 @@
 
   },
   "test": {
-    "database": "partoTest",
+    "database": "parto_Test",
     "username": "administrator",
-    "password": "bvP@rto2020",
+    "password": "P@rto2020",
     "host": "localhost",
     "dialect": "mysql"
   },
