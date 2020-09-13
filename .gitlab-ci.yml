@@ -19,17 +19,20 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
-    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+    #- npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - npm test
     - echo "testing succsecfull"
+  only:
+    - test
 
 deploy_staging_parto:
   stage: deploy
   variables:
     NODE_ENV: "test"
+    NODE_PORT: 2216
   environment:
     name: staging
     url: https://api.partobanoo.com
@@ -37,31 +40,27 @@ deploy_staging_parto:
   script:
      - echo "Deploy to staging server ..."
      - pm2 start pm2-manage.json
-     # - npm run build
-     # - pm2 start pwa.js
-     #- npm run dev
-     #- pm2 start npm --name "pwa" -- start
-    
      - echo "deploy_staging succesfull"
 
   only:
-    - master
+    - test
 
 deploy_prod_parto:
   stage: deploy
   variables:
     NODE_ENV: "production"
+    NODE_PORT: 2218
   script:
     - echo "Deploy to production server ..."
     - npm install
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
-    - pm2 start app.js
+    - pm2 start pm2-manage.json
     - echo "Deploy to production server Succdsfull"
   environment:
     name: production
-    url: https://example.com
+    url: https://api.partobanoo.com
   when: manual
   only:
     - master
