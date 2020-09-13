@@ -66,7 +66,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
     let temp={};
     temp.id=category[i].id;
     temp.title=category[i].title;
-    temp.hasMultioleChoise=category[i].has_multiple_choice;
+    temp.hasMultipleChoise=category[i].has_multiple_choice;
     temp.color=category[i].color;
     temp.icon=category[i].icon;
     option=(await health_tracking_option.findAll({
@@ -92,7 +92,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
         optionsTemp.id=option[j].id;
         optionsTemp.title=option[j].title;
         optionsTemp.icon=option[j].icon;
-        optionsTemp.slected=userOption[j];
+        optionsTemp.selected=userOption[j];
         optionList.push(optionsTemp);
        
       }
