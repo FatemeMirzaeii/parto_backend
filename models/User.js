@@ -3,39 +3,21 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
 
-/**
- * @swagger
- * definitions:
- *   User:
- *     type: object
- *     properties:
- *       name:
- *         type: string
- *       email:
- *         type: string
- *       username:
- *         type: string
- *       password:
- *         type: string
- *       active:
- *          type:boolean
- *       required:
- *         - email        
- */
-
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "user",
     {
       name: {
         type: DataTypes.STRING,
-        validate: {
-          max: 128,
-          notEmpty: {
-            msg: "لطفا نام خود را وارد کنید.",
-          },
-        },
+        // validate: {
+        //   max: 128,
+        //   notEmpty: {
+        //     msg: "لطفا نام خود را وارد کنید.",
+        //   },
+        // },
+      },
+      phone:{
+        type: DataTypes.STRING,
       },
       // username: {
       //   type: DataTypes.STRING,
@@ -43,18 +25,9 @@ module.exports = (sequelize, DataTypes) => {
       // },
       email: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          min: 5,
-          max: 255,
-          notNull: {
-            msg: "لطفا ایمیل خود را وارد کنید.",
-          },
-          isEmail: {
-            msg: "ایمیل معتبر نیست.",
-          },
-        },
+        unique: false,
+        allowNull: true,
+        
       },
       password: {
         type: DataTypes.STRING,
@@ -68,6 +41,12 @@ module.exports = (sequelize, DataTypes) => {
       active: {
         type: DataTypes.BOOLEAN,
       },
+      uuid:{
+        type:DataTypes.UUID,
+      },
+      imei: {
+        type:DataTypes.STRING,
+      }
     },
     {
       freezeTableName: true,
@@ -85,8 +64,8 @@ module.exports = (sequelize, DataTypes) => {
       through: "user_favorite_category",
     });
   };
-  User.prototype.generateAuthToken = () => {
-    return jwt.sign({ _id: this.id }, secret);
+  User.prototype.generateAuthToken = function(){
+    return jwt.sign({ _id:this.id , _phone:this.phone }, secret);
   };
   return User;
 };

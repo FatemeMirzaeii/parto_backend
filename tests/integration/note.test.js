@@ -7,7 +7,7 @@ describe('note',()=>{
     let token;
     let User;
     let UserId;
-    let date;
+    let Ndate;
     let Note;
 
     beforeAll(async()=>{
@@ -16,7 +16,7 @@ describe('note',()=>{
         token = User.generateAuthToken();
         //console.log('note_token',token);
         UserId= User.dataValues.id;
-        date=Note.note_date;
+        Ndate=Note.note_date;
     });
 
     beforeEach(()=>{
@@ -34,30 +34,34 @@ describe('note',()=>{
    })
 
    describe('/:lang/:userId/:date',()=>{
-
+        let tempUserId=UserId;
+        let date=Ndate;
         const exec=()=>{
-            const res= request(server).get('/note/fa/'+UserId+"/"+date).set('x-auth-token', token);;
+            const res= request(server).get('/note/fa/'+tempUserId+"/"+date).set('x-auth-token', token);
             return res;
         }
-        it('return 400 if data is not correct or is not exist',async()=>{
+        it('return 404 if date is not correct or is not exist',async()=>{
+            tempUserId=UserId;
             date="2020-01-01";
             const result=await exec();
             expect(result.status).toBe(404);
         })
         it('return 400 if user id is not correct or is not exist',async()=>{
-            UserId=1;
+            tempUserId=1;
+            date=Ndate;
             const result=await exec();
-            expect(result.status).toBe(404);
+            expect(result.status).toBe(400);
         })
         it('return 400 if user id and date are not correct or are not exist',async()=>{
-            UserId=1;
+            tempUserId=1;
+            date=Ndate;
             date="2020-01-01";
             const result=await exec();
-            expect(result.status).toBe(404);
+            expect(result.status).toBe(400);
         })
         it('return 200 if user id and date are exist and send content to user',async()=>{
-            UserId= User.dataValues.id;
-            date=Note.note_date;
+            tempUserId= UserId;
+            date=Ndate;
             const result=await exec();
             expect(result.status).toBe(200);
             expect(result.body.data).not.toBeNull();

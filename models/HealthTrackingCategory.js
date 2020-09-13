@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Health_tracking_category = sequelize.define('health_tracking_category', {
+  const HealthTrackingCategory = sequelize.define('health_tracking_category', {
     title: {
       type: DataTypes.STRING,
       validate: {
@@ -9,12 +9,22 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
+    has_multiple_choice : {
+      type: DataTypes.BOOLEAN,
+    },
+    color:{
+      type: DataTypes.STRING  
+    },
+    icon:{
+      type: DataTypes.TEXT
+    }
+
   }, {
     freezeTableName: true,
     underscored: true,
   });
-  Health_tracking_category.associate = function (models) {
+  HealthTrackingCategory.associate = function (models) {
     // associations can be defined here
   };
-  return Health_tracking_category;
+  return HealthTrackingCategory;
 };

@@ -1,9 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Pregnancy = sequelize.define('pregnancy', {
+    pregnancy_week: DataTypes.INTEGER,
     abortion: {
       type: DataTypes.BOOLEAN,
     },
+    conception_date: DataTypes.DATEONLY ,
     due_date: {
       type: DataTypes.DATEONLY ,
       validate: {

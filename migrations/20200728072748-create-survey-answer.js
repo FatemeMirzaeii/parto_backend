@@ -1,38 +1,27 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('health_tracking_option', {
+    return queryInterface.createTable('survey_answers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING
-      },
-      category_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "health_tracking_category",
-          key: "id",
-        },
-        onDelete: "RESTRICT",
-      },
-      icon:{
+      answer: {
         type: Sequelize.TEXT
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('health_tracking_option');
+    return queryInterface.dropTable('survey_answers');
   }
 };

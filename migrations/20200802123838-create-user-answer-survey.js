@@ -1,57 +1,45 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('user', {
+    return queryInterface.createTable('user_answer_surveys', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      answers: {
         type: Sequelize.STRING
       },
-      email: {
-        unique: false,
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      phone: {
-        unique: false,
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      role_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "role",
+          model: "user",
           key: "id",
         },
         onDelete: "RESTRICT",
       },
-      active: {
-        type: Sequelize.BOOLEAN
+      description: {
+        type: Sequelize.TEXT
       },
-      uuid:{
-        type:Sequelize.UUID
+      rate: {
+        type: Sequelize.INTEGER
       },
-      imei: {
+      IMEI: {
+        primaryKey: false,
         type: Sequelize.STRING
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('user');
+    return queryInterface.dropTable('user_answer_surveys');
   }
 };

@@ -11,6 +11,15 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      has_multiple_choice : {
+        type: Sequelize.BOOLEAN
+      },
+      color:{
+        type: Sequelize.STRING  
+      },
+      icon:{
+        type: Sequelize.TEXT
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

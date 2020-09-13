@@ -17,12 +17,26 @@ module.exports = {
       { language_id: 2, key_id: 6, text: "Successful", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 7, text: "برای امروز چیزی ثبت نکرده بودی :)", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 7, text: "You don'thave any note for today", created_at: new Date(), updated_at: new Date() },
-      { language_id: 1, key_id: 8, text: "شما قبلا ثبت نام کرده اید.", created_at: new Date(), updated_at: new Date() },
-      { language_id: 2, key_id: 8, text: "Email Exists.", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 8, text: "اطلاعات شما قبلا ثبت شده است", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 8, text: "information Exists.", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 9, text: "شما مجوز دسترسی ندارید.", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 9, text: "You don't have permission", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 10, text: "مجوز نامعتبر", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 10, text: "Invalid token", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 11, text: "زمان مجاز تمام شده است", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 11, text: "Time over", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 12, text: " اطلاعات نامعتبراست", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 12, text: "Invalid id", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 13, text: "مشکلی سمت سرور رخ داد لطفا دوباره امتحان کنید", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 13, text: "Server error occurred. Please try again", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 14, text: "اطلاعاتی یافت نشد", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 14, text: "information not found ", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 15, text: "تاریخ وارد شده نادرست است", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 15, text: " invalid date", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 16, text: "بین اطلاعات وارد شده و اطلاعات موجود تناقض وجود دارد", created_at: new Date(), updated_at: new Date() },
+      { language_id: 2, key_id: 16, text: "discrepancy between the information entered and available", created_at: new Date(), updated_at: new Date() },
+     
+     
     ], {});
   },
 

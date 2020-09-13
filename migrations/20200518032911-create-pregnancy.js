@@ -16,9 +16,20 @@ module.exports = {
         },
         onDelete: "RESTRICT",
       },
-
+      pregnancy_week: {
+        type: Sequelize.INTEGER
+      },
       due_date: {
-        type: Sequelize.DATEONLY 
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('due_date')).format('YYYY-MM-DD');
+        }
+      },
+      conception_date:{
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('zygosis_date')).format('YYYY-MM-DD');
+        }
       },
       abortion: {
         type: Sequelize.BOOLEAN

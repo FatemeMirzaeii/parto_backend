@@ -6,19 +6,23 @@ let server;
 
 describe('auth',()=>{
 
-    let User;
+    let UserEmail;
+    let UserPhone;
     let email="auth_zzand7755@gmail.com";
+    let phone="09199698086";
     let password="11111111";
-    let User_log;
-    
+    let newUser;
+        
     beforeAll(async()=>{
         const hash = await bcrypt.hash(password, 10);
-        await user.create({
+        newUser=await user.create({
           name: "zahra",
-          email: email,
-          password: hash
+          //email: email,
+          phone: phone
+          //password: hash
         });
-        User= await user.findOne({ where: {email: email} });
+        //UserEmail= await user.findOne({ where: {email: email} });
+        UserPhone=await user.findOne({ where: {phone: phone} });
         
     });
     beforeEach(async()=>{
@@ -28,49 +32,76 @@ describe('auth',()=>{
         server.close();
     })
     afterAll(async()=>{
-        await User_log.destroy();
-        await User.destroy();
+        await newUser.destroy();
         
     })
     
     describe("/signIn/:lang",()=>{
         
-        const exec=()=>{
-           const res= request(server).post('/auth/signIn/fa')
-            .send({"name":"zahra","email":`${email}`,"password":`${password}`});
-            return res;
-        }
+        // const execEmail=()=>{
+        //    const res= request(server).post('/auth/signIn/fa')
+        //     .send({"name":"zahra","email":`${email}`,"phone":"","password":`${password}`});
+        //     return res;
+        // }
+        const execPhone=()=>{
+            const res= request(server).post('/auth/signIn/fa')
+             .send({"name":"zahra","phone":`${phone}`});
+             return res;
+         }
 
-        it('return 400 if email is not exist or invalid',async()=>{
-            email='bbzand@gmail.com';
-            const result=await exec();
+        // it('return 400 if email is not exist or invalid',async()=>{
+        //     email='bbzand@gmail.com';
+        //     phone='';
+        //     const result=await execEmail();
+        //     expect(result.status).toBe(400);
+        // });
+
+        it('return 400 if phone is not exist or invalid',async()=>{
+            phone='09028884422';
+            email="";
+            const result=await execPhone();
             expect(result.status).toBe(400);
                     
         });
 
-        it('return 400 if password is not correct',async()=>{
-            password='zzbb111';
-            const result=await exec();
-            expect(result.status).toBe(400);
+        // it('return 400 if password is not correct',async()=>{
+        //     email='auth_zzand7755@gmail.com';
+        //     password='zzbb111';
+        //     const result=await execEmail();
+        //     expect(result.status).toBe(400);
+            
+        // });
 
-        });
+        // it('return 400 if password is not correct',async()=>{
+        //     phone='09199698086';
+        //     password='zzbb111';
+        //     const result=await execPhone();
+        //     expect(result.status).toBe(400);
+        // });
+
+        // it('return 200 if every thing be ok and send token and id for user',async()=>{
+        //     email=UserEmail.email;
+        //     password='11111111';
+        //     const result=await execEmail();
+        //     expect(result.status).toBe(200);
+        //     expect(result.body.data.id).toBe(UserEmail.id);
+        //     User_log=await user_log.findOne({where: {user_id:newUser.id}});
+        //     User_log.destroy();
+            
+        // })
         it('return 200 if every thing be ok and send token and id for user',async()=>{
-            email='auth_zzand7755@gmail.com';
-            password='11111111';
-            const result=await exec();
+            //email='';
+            phone=UserPhone.phone;
+            //password='11111111';
+            const result=await execPhone();
             expect(result.status).toBe(200);
-            expect(result.body.data.id).toBe(User.id);
-            User_log=await user_log.findOne({where: {user_id:User.id}});
+            expect(result.body.data.id).toBe(UserPhone.id);
+            let User_log=await user_log.findOne({where: {user_id:newUser.id}});
+            User_log.destroy();
         })
+    });
 
-    })
-    describe("/forgotPassword",()=>{
-
-    })
-    describe("/changePassword",()=>{
-
-    })
-    describe("/sendVerificationCode",()=>{
+    describe("/verifyCode",()=>{
 
     })
     
