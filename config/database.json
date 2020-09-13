@@ -8,7 +8,7 @@
 
   },
   "test": {
-    "database": "partoTest",
+    "database": "parto_Test",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
