@@ -56,7 +56,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
   for (let i=0 ; i<uPeriodDate.length ; i++) {
     dateList.push(uPeriodDate[i].date);
   };
-  res.status(200).json({date:dateList});
+  res.status(200).json({data:{date:dateList}});
 });
 
 router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {

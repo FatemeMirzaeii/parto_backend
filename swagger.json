@@ -2130,6 +2130,9 @@
                       },
                       "lastPeriodDate": {
                         "type": "string"
+                      },
+                      "pregnancyTry": {
+                        "type": "integer"
                       }
                     }
                   }
@@ -2138,7 +2141,8 @@
                   "birthdate": "1377-05-05",
                   "avgCycleLength": 25,
                   "avgPeriodLength": 7,
-                  "lastPeriodDate": "2020-05-05"
+                  "lastPeriodDate": "2020-05-05",
+                  "pregnancyTry" : "0"
                 }
               }
             }
@@ -2629,12 +2633,14 @@
               "application/json": {
                 "schema": {
                   "example": {
-                    "data": [
+                    "data":{
+                    "date": [
                       "2020-07-09",
                       "2020-07-10",
                       "2020-07-11",
                       "2020-07-12"
                     ]
+                    }
                   }
                 }
               }
