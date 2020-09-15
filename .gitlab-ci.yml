@@ -60,7 +60,9 @@ deploy_prod_parto:
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - PORT=2218
-    - pm2 start pm2-manage.json
+    - pm2 delete app-port2216
+    - pm2 delete app-port2218
+    - pm2 start app.js
     - echo "Deploy to production server Succdsfull"
   environment:
     name: production
