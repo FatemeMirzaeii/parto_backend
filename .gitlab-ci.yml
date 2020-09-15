@@ -35,12 +35,12 @@ deploy_staging_parto:
     NODE_PORT: 2216
   environment:
     name: staging
-    url: https://api.partobanoo.com
+    url: https://dev.partobanoo.com
 
   script:
      - echo "Deploy to staging server ..."
      - PORT=2216
-     - pm2 start development.js
+     - pm2 start development.js -f
      - echo "deploy_staging succesfull"
 
   only:
