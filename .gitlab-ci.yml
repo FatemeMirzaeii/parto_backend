@@ -32,7 +32,7 @@ deploy_staging_parto:
   stage: deploy
   variables:
     NODE_ENV: "test"
-    #NODE_PORT: 2216
+    NODE_PORT: 2216
   environment:
     name: staging
     url: https://api.partobanoo.com

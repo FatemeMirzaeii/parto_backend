@@ -53,6 +53,7 @@ app.use(
   swaggerUi.setup()
 );
 console.log(process.env.NODE_PORT);
+
 app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
