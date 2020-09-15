@@ -32,13 +32,14 @@ deploy_staging_parto:
   stage: deploy
   variables:
     NODE_ENV: "test"
-    NODE_PORT: 2216
+    #NODE_PORT: 2216
   environment:
     name: staging
     url: https://api.partobanoo.com
 
   script:
      - echo "Deploy to staging server ..."
+     - PORT=2216
      - pm2 start pm2-manage.json
      - echo "deploy_staging succesfull"
 
@@ -56,6 +57,7 @@ deploy_prod_parto:
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
+    - PORT=2218
     - pm2 start pm2-manage.json
     - echo "Deploy to production server Succdsfull"
   environment:
