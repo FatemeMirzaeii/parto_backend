@@ -25,6 +25,8 @@ testing_parto:
     - npx sequelize-cli db:seed:all
     - npm test
     - echo "testing succsecfull"
+  only:
+    - test
 
 deploy_staging_parto:
   stage: deploy
@@ -45,7 +47,7 @@ deploy_staging_parto:
      - echo "deploy_staging succesfull"
 
   only:
-    - master
+    - test
 
 deploy_prod_parto:
   stage: deploy
