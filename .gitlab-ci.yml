@@ -60,6 +60,7 @@ deploy_prod_parto:
     - PORT=2218
     - pm2 start pm2-manage.json
     - echo "Deploy to production server Succdsfull"
+    
   environment:
     name: production
     url: https://api.partobanoo.com
