@@ -27,7 +27,7 @@ describe('profile', () => {
         await uProfile.setUser(newUser);
     })
     beforeEach(async() => { 
-        server=require('../../app');
+        server=require('../../development');
        
     })
     afterEach(()=>{

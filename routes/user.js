@@ -3,9 +3,6 @@ const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const translate = require("../config/translate");
-const { uuid } = require('uuidv4');
-const sendEmail=require("../middleware/sendEmail");
-const Kavenegar = require('kavenegar');
 
 router.post("/signUp/:lang", async (req, res) => {
     if(req.body.phone=="" ){

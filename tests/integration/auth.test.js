@@ -26,7 +26,7 @@ describe('auth',()=>{
         
     });
     beforeEach(async()=>{
-        server= require('../../app');
+        server= require('../../development');
     })
     afterEach(async()=>{
         server.close();
