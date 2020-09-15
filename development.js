@@ -4,12 +4,10 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const express = require("express");
 const cors = require("cors");
-
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
-
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -24,8 +22,8 @@ const profile=require("./routes/profile");
 
 
 const developmentApp = express();
-developmentApp.use(cors());
 
+developmentApp.use(cors());
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
