@@ -1,7 +1,7 @@
 image: node:latest
 
 before_script:
-   - pm2 stop pm2-manage.json
+   #- pm2 stop pm2-manage.json
 
 stages:
   - test
@@ -40,7 +40,7 @@ deploy_staging_parto:
   script:
      - echo "Deploy to staging server ..."
      - PORT=2216
-     - pm2 start development.js -f
+     - pm2 restart development.js
      - echo "deploy_staging succesfull"
 
   only:
