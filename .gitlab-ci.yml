@@ -23,7 +23,7 @@ testing_parto:
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
-    # - pm2 stop development.js
+    - pm2 stop development.js
     - npm test
     - echo "testing succsecfull"
   only:
@@ -41,7 +41,7 @@ deploy_staging_parto:
   script:
      - echo "Deploy to staging server ..."
      - PORT=2216
-     - pm2 start development.js
+     - pm2 restart development.js
      - echo "deploy_staging succesfull"
 
   only:
@@ -60,9 +60,7 @@ deploy_prod_parto:
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - PORT=2218
-    - pm2 delete app-port2216
-    - pm2 delete app-port2218
-    - pm2 start app.js
+    - pm2 restart app.js
     - echo "Deploy to production server Succdsfull"
   environment:
     name: production
