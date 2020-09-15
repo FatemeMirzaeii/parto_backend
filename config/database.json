@@ -10,7 +10,7 @@
   "test": {
     "database": "parto_Test",
     "username": "administrator",
-    "password": "P@rto2020",
+    "password": "tP@rto2020",
     "host": "localhost",
     "dialect": "mysql"
   },
