@@ -40,7 +40,7 @@ deploy_staging_parto:
   script:
      - echo "Deploy to staging server ..."
      - PORT=2216
-     - pm2 start development.js -f
+     - pm2 restart development.js -f
      - echo "deploy_staging succesfull"
 
   only:
