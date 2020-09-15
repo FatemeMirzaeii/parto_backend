@@ -57,8 +57,7 @@ developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-const developmentApp = developmentApp.listen(2216, () => logger.info("Listening on port 2218..."));
-module.exports = developmentApp;
+const developmentServer = developmentApp.listen(2216, () => logger.info("Listening on port 2218..."));
+module.exports = developmentServer;
 
-const developmentApp = express();
 

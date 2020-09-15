@@ -15,7 +15,7 @@ describe('survay', () => {
         IMEI=User.imei;     
     })
     beforeEach(async() => { 
-        server=require('./../development');
+        server=require('./../../development');
        
     })
     afterEach(()=>{

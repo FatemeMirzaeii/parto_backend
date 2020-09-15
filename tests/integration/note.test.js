@@ -20,7 +20,7 @@ describe('note',()=>{
     });
 
     beforeEach(()=>{
-       server=require('./../development');
+       server=require('../../development');
       
    })
    afterEach(async()=>{
