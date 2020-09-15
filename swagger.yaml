@@ -5,7 +5,7 @@ info: {
     version: '1.0.0',
     description: 'Endpoints to test parto app api',
 },
-host: "https://dev.partobanoo.com"
+host: "https://api.partobanoo.com"
 basePath: '/'
 securityDefinitions: {
     bearerAuth: {
