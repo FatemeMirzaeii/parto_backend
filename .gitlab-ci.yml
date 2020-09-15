@@ -19,13 +19,13 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
-    #- npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - pm2 stop development.js
     - npm test
-    - echo "testing succsecfull"
+    - echo "testing succsecfull  "
   only:
     - test
 
@@ -40,6 +40,9 @@ deploy_staging_parto:
 
   script:
      - echo "Deploy to staging server ..."
+     - pm2 delete app-port2216
+     - pm2 delete app-port2218
+     - pm2 delete development
      - PORT=2216
      - pm2 restart development.js
      - echo "deploy_staging succesfull"
@@ -55,6 +58,7 @@ deploy_prod_parto:
   script:
     - echo "Deploy to production server ..."
     - npm install
+    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
