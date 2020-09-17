@@ -25,7 +25,11 @@ module.exports = {
         <path class="st1" d="M287.8,226.7c-32.3,38.2-50.3,62.5-43.3,89.4c8.5,32.9,74.4,31.9,79.1-2.3c1.6-11.6-3.8-25.4-13.7-37.6
           C295.2,258.2,282.7,249,287.8,226.7L287.8,226.7z"/>
       </g>
+<<<<<<< HEAD
       </svg>` , created_at: new Date(), updated_at: new Date() },
+=======
+      </svg>`, created_at: new Date(), updated_at: new Date() },
+>>>>>>> test
       { title: 'متوسط',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
@@ -82,7 +86,11 @@ module.exports = {
         C225.7,111.6,225.8,112,227.5,110.6L227.5,110.6z"/>
       <path class="st1" d="M243.6,107.7c4.2-3.6,8.5-2.6,11.1-2.9c6.8-0.6,3.6-6.6-3.8-6c-7.4,0.5-13.6,4.5-16.3,11.5
         c-2.2,5.6,0,6.6,1.5,8.5C241.4,114,238.4,112.1,243.6,107.7L243.6,107.7z"/>
+<<<<<<< HEAD
       </svg>` , created_at: new Date(), updated_at: new Date() },
+=======
+      </svg>`, created_at: new Date(), updated_at: new Date() },
+>>>>>>> test
       { title: 'حساس شدن سینه ها',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
@@ -142,7 +150,7 @@ module.exports = {
       <path class="st1" d="M392.4,374.9c0,5.7-3.7,8.6-5.3,10.8c-4.1,5.8,2.7,7.4,7.4,1.1c4.6-6.2,5.7-13.8,2-20.8
         c-2.9-5.5-5.3-4.5-7.8-4.6C388.8,368.8,392.4,367.8,392.4,374.9L392.4,374.9z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'گرفتگی عظلات',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      { title: 'گرفتگی عضلات',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
