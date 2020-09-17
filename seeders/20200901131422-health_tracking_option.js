@@ -86,11 +86,7 @@ module.exports = {
         C225.7,111.6,225.8,112,227.5,110.6L227.5,110.6z"/>
       <path class="st1" d="M243.6,107.7c4.2-3.6,8.5-2.6,11.1-2.9c6.8-0.6,3.6-6.6-3.8-6c-7.4,0.5-13.6,4.5-16.3,11.5
         c-2.2,5.6,0,6.6,1.5,8.5C241.4,114,238.4,112.1,243.6,107.7L243.6,107.7z"/>
-<<<<<<< HEAD
       </svg>` , created_at: new Date(), updated_at: new Date() },
-=======
-      </svg>`, created_at: new Date(), updated_at: new Date() },
->>>>>>> test
       { title: 'حساس شدن سینه ها',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
