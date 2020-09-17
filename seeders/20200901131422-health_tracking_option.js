@@ -25,11 +25,7 @@ module.exports = {
         <path class="st1" d="M287.8,226.7c-32.3,38.2-50.3,62.5-43.3,89.4c8.5,32.9,74.4,31.9,79.1-2.3c1.6-11.6-3.8-25.4-13.7-37.6
           C295.2,258.2,282.7,249,287.8,226.7L287.8,226.7z"/>
       </g>
-<<<<<<< HEAD
       </svg>` , created_at: new Date(), updated_at: new Date() },
-=======
-      </svg>`, created_at: new Date(), updated_at: new Date() },
->>>>>>> test
       { title: 'متوسط',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
