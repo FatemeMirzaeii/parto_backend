@@ -8,7 +8,7 @@ describe('profile', () => {
     let token;
     let uProfile;
     beforeAll(async()=>{
-        newUser =await user.create({name:"zahra", email:"art_zzdand7755@gmail.com"});
+        newUser =await user.create({name:"zahra", email:"profile_zzdand7755@gmail.com",phone:"09125454211"});
         token = newUser.generateAuthToken();
         userId=newUser.id;
         uProfile = await user_profile.create({

@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone:{
         type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          notEmpty: {
+            msg: "لطفا شماره تلفن خود را وارد کنید.",
+          },
+        },
       },
       // username: {
       //   type: DataTypes.STRING,

@@ -3,9 +3,8 @@ const router = express.Router();
 const { Op } = require("sequelize");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
-const { user, user_tracking_option } = require("../models");
-const checkDateWithDateOnly=require("../middleware/checkDateWithDateOnly");
-
+const { user, user_tracking_option ,user_profile} = require("../models");
+const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 
 router.get("/getLastPeriodDate/:userId/:lang",auth, async(req, res) => {
   
@@ -49,7 +48,8 @@ router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
       }
     }
   })
-  if(uPeriodDate.length==0) {
+  console.log("date")
+  if(uPeriodDate==null||uPeriodDate.length==0) {
     return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   }
   let dateList=[];
@@ -99,7 +99,6 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           await addOption.setUser(usr);
         }
       }
-      else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     });
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL",  req.params.lang) });
