@@ -34,13 +34,13 @@ describe('cycle', () => {
          server.close();
     })
     afterAll(async () => {
-        await user_tracking_option.destroy({
-            where:{
-                user_id: userId
-            }
-        })
-        await uProfile.destroy();
-        await usr.destroy();
+        // await user_tracking_option.destroy({
+        //     where:{
+        //         user_id: userId
+        //     }
+        // })
+        // await uProfile.destroy();
+        // await usr.destroy();
     });
 
     describe('/getLastPeriodDate/:userId/:lang', () => {
@@ -102,6 +102,7 @@ describe('cycle', () => {
         it('return 200 if every things ok',async () => {
             tempToken=token;
             tempUserId=userId;
+            //console.log("us",tempUserId);
             const result=await exec(); 
             expect(result.status).toBe(200);
         });

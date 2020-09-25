@@ -39,16 +39,18 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang",auth, async(req, 
 });
 
 router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
+  //console.log("uPeriod", req.params.userId);
+  
   let uPeriodDate=await user_tracking_option.findAll({
     attributes: ['date'],
     where:{
-      user_id: req.params.userId,
-      tracking_option_id: {
+      user_id:req.params.userId ,
+      tracking_option_id : {
         [Op.or]: [1, 2,3,4]
       }
     }
   })
-  console.log("date")
+  //console.log("dateP",uPeriodDate);
   if(uPeriodDate==null||uPeriodDate.length==0) {
     return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   }
@@ -75,7 +77,6 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
   }
   //check addDate wasn't in db then add
   if(req.body.addDate.length>0){
-    
     req.body.addDate.forEach(async element2 => {
       if(checkDateWithDateOnly(element2)){
         const exist=await user_tracking_option.findOne({
@@ -88,16 +89,13 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           }
         })
         if(exist==null){
-          let usr = await user.findOne({
-            where: {
-              id: req.params.userId,
-            },
-          });
+          let usr = await user.findByPk(req.params.userId);
           let addOption=await user_tracking_option.create({
             date: element2,
             tracking_option_id:3
           })
-          addOption.setUser(usr);
+          await addOption.setUser(usr);
+          //console.log("userId",await addOption.user_id);
         }
       }
     });
