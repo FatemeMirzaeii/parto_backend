@@ -88,16 +88,16 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           }
         })
         if(exist==null){
-          const usr = await user.findOne({
+          let usr = await user.findOne({
             where: {
               id: req.params.userId,
             },
           });
-          const addOption=await user_tracking_option.create({
+          let addOption=await user_tracking_option.create({
             date: element2,
             tracking_option_id:3
           })
-          await addOption.setUser(usr);
+          addOption.setUser(usr);
         }
       }
     });
