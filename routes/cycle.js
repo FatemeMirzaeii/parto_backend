@@ -75,11 +75,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
   }
   //check addDate wasn't in db then add
   if(req.body.addDate.length>0){
-    const usr = await user.findOne({
-      where: {
-        id: req.params.userId,
-      },
-    });
+    
     req.body.addDate.forEach(async element2 => {
       if(checkDateWithDateOnly(element2)){
         const exist=await user_tracking_option.findOne({
@@ -92,6 +88,11 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           }
         })
         if(exist==null){
+          const usr = await user.findOne({
+            where: {
+              id: req.params.userId,
+            },
+          });
           const addOption=await user_tracking_option.create({
             date: element2,
             tracking_option_id:3
