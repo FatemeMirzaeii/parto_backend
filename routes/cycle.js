@@ -29,7 +29,7 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang",auth, async(req, 
   if(uPeriod==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   await user_profile.update(
     {
-     last_period_date:req.params.lastPeriodDate
+     last_period_date:new Date(req.params.lastPeriodDate)
     },{
     where: {
       user_id: req.params.userId
@@ -68,7 +68,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       await user_tracking_option.destroy({
         where:{
           user_id: req.params.userId,
-          date: element,
+          date:new Date(element1),
           tracking_option_id:{
             [Op.or]: [1,2,3,4]
           }
@@ -83,7 +83,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         const exist=await user_tracking_option.findOne({
           where:{
             user_id: req.params.userId,
-            date: element2,
+            date:new Date(element2),
             tracking_option_id:{
               [Op.or]: [1,2,3,4]
             }
@@ -92,7 +92,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         if(exist==null){
           let usr = await user.findByPk(req.params.userId);
           let addOption=await user_tracking_option.create({
-            date: element2,
+            date: new Date(element2),
             tracking_option_id:3
           })
           await addOption.setUser(usr);
@@ -101,7 +101,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       }
     });
   }
-  return res.status(200).json({ message: req.body.addDate.length });
+  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
 module.exports = router;

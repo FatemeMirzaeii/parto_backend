@@ -11,11 +11,7 @@ function check(birthdate,cycleLength,periodLength,periodDate){
   return true;
 }
 router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
-  const usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   const exist = await user_profile.findOne({
     where: {
@@ -32,7 +28,7 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
     birthdate:new Date(req.body.birthdate),
     avg_cycle_length:req.body.avgCycleLength,
     avg_period_length:req.body.avgPeriodLength,
-    last_periodDate:req.body.lastPeriodDate,
+    last_periodDate:new Date(req.body.lastPeriodDate),
     pregnant:0,
     pregnancy_try: req.body.pregnancyTry
 
@@ -42,11 +38,7 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
 });
 
 router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
-  const usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   const exist = await user_profile.findOne({
     where: {
@@ -67,7 +59,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
   if(req.body.birthdate!=null){
     uProfile = await user_profile.create({
       birthdate:new Date(req.body.birthdate),
-      last_period_date:req.body.lastPeriodDate,
+      last_periodDate:new Date(req.body.lastPeriodDate),
       pregnant:1,
       pregnancy_try: 0
 

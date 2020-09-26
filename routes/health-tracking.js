@@ -49,11 +49,7 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
 });
 
 router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
-  let usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   let data=[];
@@ -106,11 +102,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
 
 router.post("/userInfo/:userId/:lang",auth,checkDate,async(req,res)=>{
    
-  let usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   let userOption,existDate;

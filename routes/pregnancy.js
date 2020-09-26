@@ -88,11 +88,7 @@ router.post("/setPregnancyEnd/:userId/:dueDate/:lang", auth, async(req, res) => 
     let uPregnant=await pregnancy.create({
       due_date:req.params.dueDate
     })
-    let usr = await user.findOne({
-      where: {
-        id: req.params.userId,
-      },
-    });
+    let usr = await user.findByPk(req.params.userId);
     uPregnant.setUser(usr);
   }
   else{

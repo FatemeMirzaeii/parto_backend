@@ -40,16 +40,12 @@ router.get("/getGeneralInfo/:userId/:lang",auth, async(req, res) => {
 });
 
 router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
-  let usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   await user_profile.update(
     {
-      birthdate:req.body.birthdate,
+      birthdate:new Date(req.body.birthdate),
       height:req.body.height,
       weight:req.body.weight,
       avg_sleeping_hour:req.body.sleepingHour,
@@ -60,7 +56,7 @@ router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
       pms_length:req.body.pmsLength,
       pregnant:req.body.pregnant,
       pregnancy_try:req.body.pregnancyTry,
-      last_period_date:req.body.lastPeriodDate
+      last_period_date:new Date(req.body.lastPeriodDate)
     },{
     where: {
       user_id: req.params.userId
@@ -70,11 +66,7 @@ router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
 });
 
 router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
-  let usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   await user_profile.update(
@@ -84,7 +76,7 @@ router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
       pms_length:req.body.pmsLength,
       pregnant:req.body.pregnant,
       pregnancy_try:req.body.pregnancyTry,
-      last_period_date:req.body.lastPeriodDate
+      last_period_date:new Date(req.body.lastPeriodDate)
     },{
     where: {
       user_id: req.params.userId
@@ -95,16 +87,12 @@ router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
 });
 
 router.put("/editGeneralInfo/:userId/:lang",auth, async(req, res) => {
-  let usr = await user.findOne({
-    where: {
-      id: req.params.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   await user_profile.update(
     {
-      birthdate:req.body.birthdate,
+      birthdate:new Date(req.body.birthdate),
       height:req.body.height,
       weight:req.body.weight,
       avg_sleeping_hour:req.body.sleepingHour,
@@ -136,16 +124,12 @@ router.delete("/deleteProfile/:userId/:lang",auth, async(req, res) => {
 });
 
 router.post("/addProfile/:lang",auth, async(req, res) => {
-  let usr = await user.findOne({
-    where: {
-      id: req.body.userId,
-    },
-  });
+  let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
    
   let userProf=await user_profile.create(
     {
-      birthdate:req.body.birthdate,
+      birthdate:new Date(req.body.birthdate),
       height:req.body.height,
       weight:req.body.weight,
       avg_sleeping_hour:req.body.sleepingHour,
@@ -156,7 +140,7 @@ router.post("/addProfile/:lang",auth, async(req, res) => {
       pms_length:req.body.pmsLength,
       pregnant:req.body.pregnant,
       pregnancy_try:req.body.pregnancyTry,
-      last_period_date:req.body.lastPeriodDate
+      last_period_date:new Date(body.lastPeriodDate)
     
   });
   userProf.setUser(usr);
