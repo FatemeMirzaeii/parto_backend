@@ -100,7 +100,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       }
     });
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL",  req.params.lang) });
+  return res.status(200).json({ message: req.body.addDate.length });
 });
 
 module.exports = router;
