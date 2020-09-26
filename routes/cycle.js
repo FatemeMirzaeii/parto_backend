@@ -20,13 +20,13 @@ router.get("/getLastPeriodDate/:userId/:lang",auth, async(req, res) => {
 
 router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang",auth, async(req, res) => {
   
-  const uPeriod = await user_profile.findOne({
+  let uPeriod = await user_profile.findOne({
     where: {
       user_id: req.params.userId,
     },
   });
-  if(uPeriod==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   
+  if(uPeriod==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   await user_profile.update(
     {
      last_period_date:req.params.lastPeriodDate

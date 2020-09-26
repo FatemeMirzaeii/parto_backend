@@ -26,7 +26,10 @@ module.exports = {
         onDelete: "RESTRICT",
       },
       date: {
-        type: Sequelize.DATEONLY 
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
+        }
       },
       created_at: {
         allowNull: false,
