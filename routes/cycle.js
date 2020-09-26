@@ -27,6 +27,10 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang",auth, async(req, 
   });
   
   if(uPeriod==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  if(!checkDateWithDateOnly(req.params.lastPeriodDate)){
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+
   await user_profile.update(
     {
      last_period_date:new Date(req.params.lastPeriodDate)

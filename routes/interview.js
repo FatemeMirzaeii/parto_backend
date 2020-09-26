@@ -28,7 +28,7 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
     birthdate:new Date(req.body.birthdate),
     avg_cycle_length:req.body.avgCycleLength,
     avg_period_length:req.body.avgPeriodLength,
-    last_periodDate:new Date(req.body.lastPeriodDate),
+    last_period_date:new Date(req.body.lastPeriodDate),
     pregnant:0,
     pregnancy_try: req.body.pregnancyTry
 
@@ -59,7 +59,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
   if(req.body.birthdate!=null){
     uProfile = await user_profile.create({
       birthdate:new Date(req.body.birthdate),
-      last_periodDate:new Date(req.body.lastPeriodDate),
+      last_period_date:new Date(req.body.lastPeriodDate),
       pregnant:1,
       pregnancy_try: 0
 
@@ -67,7 +67,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
   }
   else{
     uProfile = await user_profile.create({
-      last_period_date:req.body.lastPeriodDate,
+      last_period_date:new Date(req.body.lastPeriodDate),
       pregnant:1,
       pregnancy_try: 0
 
