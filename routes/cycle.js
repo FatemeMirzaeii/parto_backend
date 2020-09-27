@@ -67,7 +67,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
 });
 
 router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
-  
+  let flag=true;
  //  deleleDate for delete user date
   req.body.deleteDate.forEach(async element => { 
     await  user_tracking_option.destroy({
@@ -80,25 +80,29 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
   }); 
   // addDate for add date user if day aren't in the db
   for(let i=0;i<req.body.addDate.length ;i++){
-    if(await checkDateWithDateOnly(req.body.addDate[i])){
+    if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
       let find= await user_tracking_option.findAll({
+        attributes:["id"],
         where: {
           user_id:req.params.userId,
           date:new Date(req.body.addDate[i]),
           tracking_option_id:{[Op.or]: [1,2,3,4]}
         }
       })
+      console.log(find)
       if(await find!=null && find.length>0){
-        console.log("find");
+        flag=false;
+        console.log("find", find[0].id);
         let dest=await user_tracking_option.destroy({
           where: {
-            user_id:req.params.userId,
-            date:new Date(req.body.addDate[i]),
-            tracking_option_id:{[Op.or]: [1,2,3,4]}
+            id: find[0].id
+            // user_id:req.params.userId,
+            // date:new Date(req.body.addDate[i]),
+            // tracking_option_id:{[Op.or]: [1,2,3,4]}
           }
         })
         console.log("destroy",await dest);
-        if(await dest==1){
+        if(await dest>=1){
           let usr=await user.findByPk(req.params.userId);
           let trackingOption=await health_tracking_option.findByPk(3);
           let addDate=await  user_tracking_option.create({
@@ -106,9 +110,10 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           })
           await addDate.setUser(usr);
           await addDate.setHealth_tracking_option(trackingOption);
+          if(await usr!=null) flag=true;
         }
       }
-      else{
+      else if(await find==null || find.length==0){
         let usr=await user.findByPk(req.params.userId);
         let trackingOption=await health_tracking_option.findByPk(3);
         let addDate=await  user_tracking_option.create({
@@ -116,11 +121,15 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         })
         await addDate.setUser(usr);
         await addDate.setHealth_tracking_option(trackingOption);
+        if(await usr!=null) flag=true;
+        else flag=false;
       }
     }
       
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  if(flag==true){
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
 });
 
 module.exports = router;

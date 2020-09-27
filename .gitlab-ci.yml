@@ -43,6 +43,7 @@ deploy_staging_parto:
      - PORT=2216
      - pm2 restart development.js
      - echo "deploy_staging succesfull"
+     - pm2 logs
 
   only:
     - test
@@ -62,6 +63,7 @@ deploy_prod_parto:
     - PORT=2218
     - pm2 restart app.js
     - echo "Deploy to production server Succdsfull"
+    - pm2 logs
   environment:
     name: production
     url: https://api.partobanoo.com
