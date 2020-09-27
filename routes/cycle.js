@@ -3,7 +3,7 @@ const router = express.Router();
 const { Op } = require("sequelize");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
-const { user, user_tracking_option ,user_profile} = require("../models");
+const { user, user_tracking_option ,user_profile,health_tracking_option} = require("../models");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 
 router.get("/getLastPeriodDate/:userId/:lang",auth, async(req, res) => {
@@ -40,7 +40,7 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang",auth, async(req, 
     }
   });
 
-  res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
 router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
@@ -67,45 +67,60 @@ router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
 });
 
 router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
-  if(req.body.deleteDate.length>0){
-    req.body.deleteDate.forEach(async element => {
-      await user_tracking_option.destroy({
-        where:{
-          user_id: req.params.userId,
-          date:new Date(element1),
-          tracking_option_id:{
-            [Op.or]: [1,2,3,4]
-          }
+  
+ //  deleleDate for delete user date
+  req.body.deleteDate.forEach(async element => { 
+    await  user_tracking_option.destroy({
+      where: {
+        user_id:req.params.userId,
+        date:new Date(element),
+        tracking_option_id:{[Op.or]: [1,2,3,4]}
+      }
+    })
+  }); 
+  // addDate for add date user if day aren't in the db
+  for(let i=0;i<req.body.addDate.length ;i++){
+    if(await checkDateWithDateOnly(req.body.addDate[i])){
+      let find= await user_tracking_option.findAll({
+        where: {
+          user_id:req.params.userId,
+          date:new Date(req.body.addDate[i]),
+          tracking_option_id:{[Op.or]: [1,2,3,4]}
         }
       })
-    });
-  }
-  //check addDate wasn't in db then add
-  if(req.body.addDate.length>0){
-    req.body.addDate.forEach(async element2 => {
-      if(checkDateWithDateOnly(element2)){
-        const exist=await user_tracking_option.findOne({
-          where:{
-            user_id: req.params.userId,
-            date:new Date(element2),
-            tracking_option_id:{
-              [Op.or]: [1,2,3,4]
-            }
+      if(await find!=null && find.length>0){
+        console.log("find");
+        let dest=await user_tracking_option.destroy({
+          where: {
+            user_id:req.params.userId,
+            date:new Date(req.body.addDate[i]),
+            tracking_option_id:{[Op.or]: [1,2,3,4]}
           }
         })
-        if(exist==null){
-          let usr = await user.findByPk(req.params.userId);
-          let addOption=await user_tracking_option.create({
-            date: new Date(element2),
-            tracking_option_id:3
+        console.log("destroy",await dest);
+        if(await dest==1){
+          let usr=await user.findByPk(req.params.userId);
+          let trackingOption=await health_tracking_option.findByPk(3);
+          let addDate=await  user_tracking_option.create({
+            date:new Date(req.body.addDate[i])
           })
-          await addOption.setUser(usr);
-          //console.log("userId",await addOption.user_id);
+          await addDate.setUser(usr);
+          await addDate.setHealth_tracking_option(trackingOption);
         }
       }
-    });
+      else{
+        let usr=await user.findByPk(req.params.userId);
+        let trackingOption=await health_tracking_option.findByPk(3);
+        let addDate=await  user_tracking_option.create({
+          date:new Date(req.body.addDate[i])
+        })
+        await addDate.setUser(usr);
+        await addDate.setHealth_tracking_option(trackingOption);
+      }
+    }
+      
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
 module.exports = router;
