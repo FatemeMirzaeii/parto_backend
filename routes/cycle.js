@@ -56,7 +56,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang",auth, async(req, res) => {
     }
   })
   //console.log("dateP",uPeriodDate);
-  if(uPeriodDate==null||uPeriodDate.length==0) {
+  if(await uPeriodDate==null||await uPeriodDate.length==0) {
     return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   }
   let dateList=[];
