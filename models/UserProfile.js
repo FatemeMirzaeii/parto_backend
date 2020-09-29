@@ -12,9 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     weight: DataTypes.INTEGER,
     pregnant: DataTypes.BOOLEAN,
     pregnancy_try: DataTypes.BOOLEAN,
-    use_lock: DataTypes.BOOLEAN,
+    locked: DataTypes.BOOLEAN,
     last_period_date:DataTypes.DATEONLY ,
-    blood_type:DataTypes.STRING
+    blood_type:DataTypes.STRING,
+    period_prediction: DataTypes.BOOLEAN,
+    ovulation_prediction: DataTypes.BOOLEAN,
+    red_days:DataTypes.BOOLEAN
 
   }, {
     freezeTableName: true,

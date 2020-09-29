@@ -22,7 +22,7 @@ describe('cycle', () => {
             weight:58,
             pregnant:false,
             pregnancy_try:false,
-            use_lock:false,
+            locked:false,
             last_period_date:"2020-01-01"
         });
         await uProfile.setUser(usr);

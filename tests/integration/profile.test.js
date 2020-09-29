@@ -21,8 +21,11 @@ describe('profile', () => {
             weight:58,
             pregnant:false,
             pregnancy_try:false,
-            use_lock:false,
-            last_period_date:"1300-01-01"
+            locked:false,
+            last_period_date:"1300-01-01",
+            ovulation_prediction:false,
+            period_prediction:false,
+            red_days:false
         });
         await uProfile.setUser(newUser);
     })
@@ -100,9 +103,12 @@ describe('profile', () => {
                 "weight": 75,
                 "pregnant": false,
                 "pregnancyTry": false,
-                "useLock": false,
+                "isLock": false,
                 "lastPeriodDate": "2020-07=01",
-                "bloodType": "A+"
+                "bloodType": "A+",
+                "ovulationPred":0,
+                "periodPred":0,
+                "redDays":0
               }
             )
            .set('x-auth-token', tempToken);
@@ -127,7 +133,10 @@ describe('profile', () => {
                 "pmsLength": 3,
                 "pregnant": 0,
                 "pregnancyTry": 0,
-                "lastPeriodDate": "2020-07-05"
+                "lastPeriodDate": "2020-07-05",
+                "ovulationPred":0,
+                "periodPred":0,
+                "redDays":0
             })
            .set('x-auth-token', tempToken);
         }
@@ -157,7 +166,7 @@ describe('profile', () => {
                 "sleepingHour": 9,
                 "height": 155,
                 "weight": 75,
-                "useLock": 0,
+                "isLock": 0,
                 "bloodType": "A+"
             })
            .set('x-auth-token', tempToken);
