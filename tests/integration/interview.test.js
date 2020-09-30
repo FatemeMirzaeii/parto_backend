@@ -1,5 +1,5 @@
 const request = require('supertest');
-const {user , user_profile } = require("../../models");
+const {user , user_profile , pregnancy } = require("../../models");
 
 describe('interview', () => {
     let server;
@@ -20,6 +20,7 @@ describe('interview', () => {
          server.close();
     })
     afterAll(async () => {
+        await pregnancy.destroy({where:{user_id:userId}});
         await usr.destroy();
     });
 

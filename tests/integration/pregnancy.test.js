@@ -1,5 +1,6 @@
 const request = require('supertest');
-const {user ,user_profile } = require("../../models");
+const {user ,user_profile ,pregnancy} = require("../../models");
+const Pregnancy = require('../../models/Pregnancy');
 
 describe('pregnancy', () => {
     let server;
@@ -28,8 +29,9 @@ describe('pregnancy', () => {
         server.close();
     })
     afterAll(async () => {
-        uProfile.destroy();
-        usr.destroy();
+        await pregnancy.destroy({where:{user_id:userId}});
+        await uProfile.destroy();
+        await usr.destroy();
     });
 
     describe('/pregnancy/savePregnancyData/{userId}/{lang}',async () => {
