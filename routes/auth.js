@@ -99,7 +99,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
 
-  res.set('x-auth-token', token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res.set('x-auth-token', token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 

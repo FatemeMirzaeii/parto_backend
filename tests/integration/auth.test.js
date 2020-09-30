@@ -17,7 +17,7 @@ describe('auth',()=>{
         const hash = await bcrypt.hash(password, 10);
         newUser=await user.create({
           name: "zahra",
-          //email: email,
+          email: email,
           phone: phone
           //password: hash
         });
@@ -32,6 +32,8 @@ describe('auth',()=>{
         server.close();
     })
     afterAll(async()=>{
+        let userLog=await user_log.findOne({where: {user_id:UserID}});
+        await userLog.destroy();
         await newUser.destroy();
         
     })
@@ -97,13 +99,34 @@ describe('auth',()=>{
             expect(result.status).toBe(200);
             expect(result.body.data.id).toBe(UserPhone.id);
             let User_log=await user_log.findOne({where: {user_id:newUser.id}});
-            User_log.destroy();
+            await User_log.destroy();
         })
     });
 
     describe("/verifyCode",()=>{
+    })
+
+    describe('/logIn',()=>{
+        let phone;
+        const exec=()=>{
+            return request(server).post('/auth/logIn/fa')
+             .send({"name":"zahra","phone":`${phone}`});
+            
+        }
+
+        it('400',async()=>{
+            phone="";
+            const result=await exec();
+            expect(result.status).toBe(400);
+            
+        });
+
+        it('200',async()=>{
+            phone="09199698086";
+            const result=await exec();
+            expect(result.status).toBe(200);
+            
+        });
 
     })
-    
-
 })

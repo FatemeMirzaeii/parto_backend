@@ -34,13 +34,13 @@ describe('cycle', () => {
          server.close();
     })
     afterAll(async () => {
-        // await user_tracking_option.destroy({
-        //     where:{
-        //         user_id: userId
-        //     }
-        // })
-        // await uProfile.destroy();
-        // await usr.destroy();
+        await user_tracking_option.destroy({
+            where:{
+                user_id: userId
+            }
+        })
+        await uProfile.destroy();
+        await usr.destroy();
     });
 
     describe('/getLastPeriodDate/:userId/:lang', () => {

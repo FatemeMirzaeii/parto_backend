@@ -6,6 +6,12 @@ const translate = require("../config/translate");
 const { user, user_tracking_option ,user_profile,health_tracking_option} = require("../models");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}   
+
 router.get("/getLastPeriodDate/:userId/:lang",auth, async(req, res) => {
   
   const uPeriod = await user_profile.findOne({
@@ -79,50 +85,63 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
     })
   }); 
   // addDate for add date user if day aren't in the db
+  console.log("length",req.body.addDate.length);
+  const usr=await user.findByPk(req.params.userId);
+  const trackingOption=await health_tracking_option.findByPk(3);
   for(let i=0;i<req.body.addDate.length ;i++){
     if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
-      let find= await user_tracking_option.findAll({
-        attributes:["id"],
+      flag=false;
+      let dest= await user_tracking_option.destroy({
         where: {
           user_id:req.params.userId,
           date:new Date(req.body.addDate[i]),
           tracking_option_id:{[Op.or]: [1,2,3,4]}
         }
       })
-      console.log(find)
-      if(await find!=null && find.length>0){
-        flag=false;
-        console.log("find", find[0].id);
-        let dest=await user_tracking_option.destroy({
-          where: {
-            id: find[0].id
-          }
-        })
-        console.log("destroy",await dest);
-        if(await dest>=1){
-          flag=false;
-          let usr=await user.findByPk(req.params.userId);
-          let trackingOption=await health_tracking_option.findByPk(3);
-          let addDate=await  user_tracking_option.create({
-            date:new Date(req.body.addDate[i])
-          })
-          await addDate.setUser(usr);
-          await addDate.setHealth_tracking_option(trackingOption);
-          if(await addDate.tracking_option_id!=null) flag=true;
-        }
-      }
-      else if(await find==null || find.length==0){
-        flag=false;
-        let usr=await user.findByPk(req.params.userId);
-        let trackingOption=await health_tracking_option.findByPk(3);
-        let addDate=await  user_tracking_option.create({
-          date:new Date(req.body.addDate[i])
+      console.log("des",dest);
+      if(await dest>=0){
+        let addDate=await user_tracking_option.create({
+              date:new Date(req.body.addDate[i])
         })
         await addDate.setUser(usr);
         await addDate.setHealth_tracking_option(trackingOption);
-        if(await addDate.tracking_option_id!=null) flag=true;
-        
       }
+      await sleep(1000);
+      flag=true;
+      // console.log(find)
+      // if(await find!=null && find.length>0){
+      //   flag=false;
+      //   console.log("find", find[0].id);
+      //   let dest=await user_tracking_option.destroy({
+      //     where: {
+      //       id: find[0].id
+      //     }
+      //   })
+      //   console.log("destroy",await dest);
+      //   if(await dest>=1){
+      //     flag=false;
+      //     let usr=await user.findByPk(req.params.userId);
+      //     let trackingOption=await health_tracking_option.findByPk(3);
+      //     let addDate=await  user_tracking_option.create({
+      //       date:new Date(req.body.addDate[i])
+      //     })
+      //     await addDate.setUser(usr);
+      //     await addDate.setHealth_tracking_option(trackingOption);
+      //     if(await addDate.tracking_option_id!=null) flag=true;
+      //   }
+      // }
+      // else if(await find==null || find.length==0){
+      //   flag=false;
+      //   let usr=await user.findByPk(req.params.userId);
+      //   let trackingOption=await health_tracking_option.findByPk(3);
+      //   let addDate=await user_tracking_option.create({
+      //     date:new Date(req.body.addDate[i])
+      //   })
+      //   await addDate.setUser(usr);
+      //   await addDate.setHealth_tracking_option(trackingOption);
+      //   if(await addDate.tracking_option_id!=null) flag=true;
+        
+      // }
     }
       
   }

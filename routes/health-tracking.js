@@ -101,10 +101,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
 });
 
 router.post("/userInfo/:userId/:lang",auth,checkDate,async(req,res)=>{
-   
-  let usr = await user.findByPk(req.params.userId);
-  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-   
+  let usr = await user.findByPk(req.params.userId);  
   let userOption,existDate;
   for(i=0;i<req.body.deleted.length;i++){
     await user_tracking_option.destroy({
