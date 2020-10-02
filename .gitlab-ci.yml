@@ -43,6 +43,7 @@ deploy_staging_parto:
      - PORT=2216
      - pm2 restart development.js
      - echo "deploy_staging succesfull"
+     - mysqldump –-user [administrator] –-password=[P@rto2020] --databases parto > partoBackup.sql
     
   only:
     - test
