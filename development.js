@@ -20,7 +20,8 @@ const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile=require("./routes/profile");
 
-
+var exec = require('child_process').exec;
+var child = exec(' mysqldump -u administrator -p[P@rto2020] [parto_Test] > parto_Test_backup.sql');
 const developmentApp = express();
 
 developmentApp.use(cors());
