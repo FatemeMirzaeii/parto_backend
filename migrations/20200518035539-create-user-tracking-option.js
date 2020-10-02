@@ -39,7 +39,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },
+      {
+        indexes: [
+            {
+                unique: true,
+                fields: ['user_id', 'tracking_option_id', 'date']
+            }
+        ]
+      }
+    );
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('user_tracking_option');
