@@ -99,8 +99,9 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         }
       })
       console.log("des",dest);
+      let addDate;
       if(await dest>=0){
-        let addDate=await user_tracking_option.create({
+        addDate=await user_tracking_option.create({
               date:new Date(req.body.addDate[i])
         })
         await addDate.setUser(usr);
