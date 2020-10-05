@@ -106,42 +106,9 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         await addDate.setUser(usr);
         await addDate.setHealth_tracking_option(trackingOption);
       }
-      await sleep(1000);
-      flag=true;
-      // console.log(find)
-      // if(await find!=null && find.length>0){
-      //   flag=false;
-      //   console.log("find", find[0].id);
-      //   let dest=await user_tracking_option.destroy({
-      //     where: {
-      //       id: find[0].id
-      //     }
-      //   })
-      //   console.log("destroy",await dest);
-      //   if(await dest>=1){
-      //     flag=false;
-      //     let usr=await user.findByPk(req.params.userId);
-      //     let trackingOption=await health_tracking_option.findByPk(3);
-      //     let addDate=await  user_tracking_option.create({
-      //       date:new Date(req.body.addDate[i])
-      //     })
-      //     await addDate.setUser(usr);
-      //     await addDate.setHealth_tracking_option(trackingOption);
-      //     if(await addDate.tracking_option_id!=null) flag=true;
-      //   }
-      // }
-      // else if(await find==null || find.length==0){
-      //   flag=false;
-      //   let usr=await user.findByPk(req.params.userId);
-      //   let trackingOption=await health_tracking_option.findByPk(3);
-      //   let addDate=await user_tracking_option.create({
-      //     date:new Date(req.body.addDate[i])
-      //   })
-      //   await addDate.setUser(usr);
-      //   await addDate.setHealth_tracking_option(trackingOption);
-      //   if(await addDate.tracking_option_id!=null) flag=true;
-        
-      // }
+      console.log("add",addDate.user_id);
+      await sleep(1000).then(flag=true);
+      
     }
       
   }
