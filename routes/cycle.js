@@ -97,6 +97,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
     for(let i=0;i<req.body.addDate.length ;i++){
       console.log("i",req.body.addDate[i]);
       if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
+        await sleep(1000);
         lock.acquire(usr,async function(done) {
           
           let dest= await user_tracking_option.destroy({
