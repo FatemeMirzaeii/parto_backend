@@ -94,11 +94,12 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
     const usr=await user.findByPk(req.params.userId);
     const trackingOption=await health_tracking_option.findByPk(3);
     const lock = new AsyncLock();
-    for(let i=0;i<req.body.addDate.length ;i++){
-      console.log("i",req.body.addDate[i]);
-      if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
-        await sleep(1000);
-        lock.acquire(usr,async function(done) {
+    lock.acquire(usr,async function(done) {
+      for(let i=0;i<req.body.addDate.length ;i++){
+        console.log("i",req.body.addDate[i]);
+        if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
+         // await sleep(1000);
+        
           
           let dest= await user_tracking_option.destroy({
             where: {
@@ -118,9 +119,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           // await addDate.setHealth_tracking_option(trackingOption);
           done();
             
-        }, function(err, ret) {
-            console.log(" Freeing lock")
-        }, {});
+        
         // let addDate;
         // let dest= await user_tracking_option.destroy({
         //   where: {
@@ -147,8 +146,11 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         // console.log("add",addDate);
         // await sleep(1000).then(flag=true);
         
+        }
       }
-    }
+    }, function(err, ret) {
+      console.log(" Freeing lock")
+  }, {});
       
   //}
   if(flag==true){
