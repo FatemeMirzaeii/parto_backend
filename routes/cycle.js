@@ -92,10 +92,11 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
     console.log("length",req.body.addDate.length);
     const usr=await user.findByPk(req.params.userId);
     const trackingOption=await health_tracking_option.findByPk(3);
+    const lock = new Lock();
     for(let i=0;i<req.body.addDate.length ;i++){
       console.log("i",req.body.addDate[i]);
       if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
-        flag=false;
+        await lock.acquire();
         let addDate;
         let dest= await user_tracking_option.destroy({
           where: {
@@ -107,9 +108,9 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           addDate=await user_tracking_option.create({
                     date:new Date(req.body.addDate[i])
           })
-          ).then(addDate.setUser(usr)).then(addDate.setHealth_tracking_option(trackingOption))
-          .then(flag=true);
-
+          ).then(addDate.setUser(usr)).then(addDate.setHealth_tracking_option(trackingOption));
+          
+          lock.release();
         // console.log("des",dest);
         // let addDate;
         // if(await dest>=0){
