@@ -10,7 +10,6 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: "user",
           key: "id",
@@ -19,7 +18,6 @@ module.exports = {
         onDelete: "RESTRICT",
       },
       tracking_option_id: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: "health_tracking_option",
@@ -29,7 +27,6 @@ module.exports = {
       },
       date: {
         type: Sequelize.DATEONLY ,
-        allowNull: false,
         get: function() {
           return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
         }
