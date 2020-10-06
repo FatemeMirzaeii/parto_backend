@@ -76,7 +76,8 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
   let flag=true;
  //  deleleDate for delete user date
   req.body.deleteDate.forEach(async element => { 
-    await  user_tracking_option.destroy({
+    console.log(element);
+    await user_tracking_option.destroy({
       where: {
         user_id:req.params.userId,
         date:new Date(element),
@@ -89,6 +90,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
   const usr=await user.findByPk(req.params.userId);
   const trackingOption=await health_tracking_option.findByPk(3);
   for(let i=0;i<req.body.addDate.length ;i++){
+    console.log("i",req.body.addDate[i]);
     if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
       flag=false;
       let dest= await user_tracking_option.destroy({
@@ -107,7 +109,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         await addDate.setUser(usr);
         await addDate.setHealth_tracking_option(trackingOption);
       }
-      console.log("add",addDate.user_id);
+      console.log("add",addDate);
       await sleep(1000).then(flag=true);
       
     }

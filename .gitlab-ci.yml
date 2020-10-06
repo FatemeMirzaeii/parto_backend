@@ -62,6 +62,7 @@ deploy_prod_parto:
     - PORT=2218
     - pm2 restart app.js
     - echo "Deploy to production server Succdsfull"
+    - pm2 logs
     
   environment:
     name: production
