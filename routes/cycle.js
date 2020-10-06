@@ -117,7 +117,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           })
           // await addDate.setUser(usr);
           // await addDate.setHealth_tracking_option(trackingOption);
-          done();
+          
             
         
         // let addDate;
@@ -148,6 +148,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
         
         }
       }
+      done();
     }, function(err, ret) {
       console.log(" Freeing lock")
   }, {});
