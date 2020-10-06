@@ -25,11 +25,21 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
   { 
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
+  let tempBirthdate=req.body.birthdate;
+  if(req.body.birthdate==""){
+    tempBirthdate="0000-00-00"
+  }
+
+  let tempLastPeriod=req.body.lastPeriodDate;
+  if(req.body.lastPeriodDate==""){
+    tempLastPeriod="0000-00-00"
+  }
+
   const uProfile = await user_profile.create({
-    birthdate:new Date(req.body.birthdate),
+    birthdate:new Date(tempBirthdate),
     avg_cycle_length:req.body.avgCycleLength,
     avg_period_length:req.body.avgPeriodLength,
-    last_period_date:new Date(req.body.lastPeriodDate),
+    last_period_date:new Date(tempLastPeriod),
     pregnant:0,
     pregnancy_try: req.body.pregnancyTry
 
@@ -57,7 +67,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
 
   let uProfile;
   let preg;
-  if(req.body.birthdate!=null){
+  if(req.body.birthdate!=null||req.body.birthdate!=""){
     uProfile = await user_profile.create({
       birthdate:new Date(req.body.birthdate),
       last_period_date:new Date(req.body.lastPeriodDate),
