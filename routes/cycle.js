@@ -152,6 +152,26 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
     }, function(err, ret) {
       console.log(" Freeing lock")
   }, {});
+    for(let j=0;j<req.body.addDate.length ;j++){
+      let find= await user_tracking_option.findAll({
+        where: {
+          user_id:req.params.userId,
+          date:new Date(req.body.addDate[j]),
+          tracking_option_id:{[Op.or]: [1,2,3,4]}
+        }
+      })
+      if(await find.length>1){
+        for(let k=0;k<find.length-1 ;k++){
+          await user_tracking_option.destroy({
+            where: {
+              user_id:req.params.userId,
+              date:new Date(req.body.addDate[k]),
+              tracking_option_id:{[Op.or]: [1,2,3,4]}
+            }
+          })
+        }
+      }
+    }
       
   //}
   if(flag==true){
