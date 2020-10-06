@@ -98,7 +98,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       console.log("i",req.body.addDate[i]);
       if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
         lock.acquire(usr,async function(done) {
-          let addDate;
+          
           let dest= await user_tracking_option.destroy({
             where: {
               user_id:req.params.userId,
@@ -106,11 +106,15 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
               tracking_option_id:{[Op.or]: [1,2,3,4]}
             }
           })
-          addDate=await user_tracking_option.create({
+          await user_tracking_option.create({
                     date:new Date(req.body.addDate[i])
+          }).then(function(addUser){
+            return addUser.setUser(usr);
+          }).then(function(addOption){
+            return addOption.setHealth_tracking_option(trackingOption);
           })
-          await addDate.setUser(usr);
-          await addDate.setHealth_tracking_option(trackingOption);
+          // await addDate.setUser(usr);
+          // await addDate.setHealth_tracking_option(trackingOption);
           done();
             
         }, function(err, ret) {
