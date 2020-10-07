@@ -63,9 +63,9 @@ module.exports = {
       last_period_date:{
         type: Sequelize.DATEONLY,
         allowNull: true,
-        // get: function() {
-        //   return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
-        // }
+        get: function() {
+          return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
+        }
       } ,
       blood_type:{
         type: Sequelize.STRING
