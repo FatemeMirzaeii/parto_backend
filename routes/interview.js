@@ -5,10 +5,9 @@ const { user_profile , user ,pregnancy}= require("../models");
 const translate = require("../config/translate");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 
-function check(birthdate,cycleLength,periodLength,periodDate){
+function check(cycleLength,periodLength){
   if(cycleLength<10 ||cycleLength>100) return false;
   else if(periodLength<1 || periodLength>12) return false;
-  else if(checkDateWithDateOnly(periodDate)==false) return false;
   return true;
 }
 router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
@@ -21,12 +20,12 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
   });
   
   if (exist!=null) return res.status(409).json({ message: await translate("EXISTS", req.params.lang) });
-  if(!check(req.body.birthdate,req.body.avgCycleLength,req.body.avgPeriodLength,req.body.lastPeriodDate))
+  if(!check(req.body.avgCycleLength,req.body.avgPeriodLength))
   { 
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   let tempBirthdate=req.body.birthdate;
-  if(req.body.birthdate==""){
+  if(req.body.birthdate==""|| req.body.birthdate==null){
     tempBirthdate="0000-00-00"
   }
 
