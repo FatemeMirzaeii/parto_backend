@@ -26,12 +26,12 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
   }
   let tempBirthdate=req.body.birthdate;
   if(req.body.birthdate==""|| req.body.birthdate==null){
-    tempBirthdate="0000-00-00"
+    tempBirthdate="1111-11-11"
   }
 
   let tempLastPeriod=req.body.lastPeriodDate;
   if(req.body.lastPeriodDate==""){
-    tempLastPeriod="0000-00-00"
+    tempLastPeriod="1111-11-11"
   }
 
   const uProfile = await user_profile.create({

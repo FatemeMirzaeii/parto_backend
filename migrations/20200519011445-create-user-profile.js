@@ -19,6 +19,7 @@ module.exports = {
       },
       birthdate: {
         type: Sequelize.DATEONLY ,
+        allowNull: true,
         get: function() {
           return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
         }
@@ -61,9 +62,10 @@ module.exports = {
       },
       last_period_date:{
         type: Sequelize.DATEONLY,
-        get: function() {
-          return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
-        }
+        allowNull: true,
+        // get: function() {
+        //   return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
+        // }
       } ,
       blood_type:{
         type: Sequelize.STRING
