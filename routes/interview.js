@@ -12,7 +12,7 @@ function check(cycleLength,periodLength){
 }
 router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  //if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   const exist = await user_profile.findOne({
     where: {
       user_id: req.params.userId,
@@ -49,7 +49,7 @@ router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
 
 router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  //if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   const exist = await user_profile.findOne({
     where: {
       user_id:req.params.userId,
