@@ -43,10 +43,20 @@ router.get("/getGeneralInfo/:userId/:lang",auth, async(req, res) => {
 router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
   let userProfil=await user_profile.findOne({ where: {user_id: req.params.userId}});
   if (userProfil==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-   
+  
+  let tempBirthdate=req.body.birthdate;
+  if(req.body.birthdate==""|| req.body.birthdate==null){
+    tempBirthdate="1111-11-11"
+  }
+
+  let tempLastPeriod=req.body.lastPeriodDate;
+  if(req.body.lastPeriodDate==""){
+    tempLastPeriod="1111-11-11"
+  }
+
   await user_profile.update(
     {
-      birthdate:new Date(req.body.birthdate),
+      birthdate:new Date(tempBirthdate),
       height:req.body.height,
       weight:req.body.weight,
       avg_sleeping_hour:req.body.sleepingHour,
@@ -57,7 +67,7 @@ router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
       pms_length:req.body.pmsLength,
       pregnant:req.body.pregnant,
       pregnancy_try:req.body.pregnancyTry,
-      last_period_date:new Date(req.body.lastPeriodDate),
+      last_period_date:new Date(tempLastPeriod),
       ovulation_prediction:req.body.ovulationPred,
       period_prediction:req.body.periodPred,
       red_days:req.body.redDays
@@ -73,7 +83,10 @@ router.put("/editProfile/:userId/:lang",auth, async(req, res) => {
 router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
   let userProfil=await user_profile.findOne({ where: {user_id: req.params.userId}});
   if (userProfil==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-   
+  let tempLastPeriod=req.body.lastPeriodDate;
+  if(req.body.lastPeriodDate==null||req.body.lastPeriodDate==""){
+    tempLastPeriod="1111-11-11";
+  }
   await user_profile.update(
     {
       avg_cycle_length:req.body.cycleLength,
@@ -81,7 +94,7 @@ router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
       pms_length:req.body.pmsLength,
       pregnant:req.body.pregnant,
       pregnancy_try:req.body.pregnancyTry,
-      last_period_date:new Date(req.body.lastPeriodDate),
+      last_period_date:new Date(tempLastPeriod),
       ovulation_prediction:req.body.ovulationPred,
       period_prediction:req.body.periodPred,
       red_days:req.body.redDays
@@ -97,10 +110,15 @@ router.put("/editPeriodInfo/:userId/:lang",auth, async(req, res) => {
 router.put("/editGeneralInfo/:userId/:lang",auth, async(req, res) => {
   let userProfil=await user_profile.findOne({ where: {user_id: req.params.userId}});
   if (userProfil==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-   
+  
+  let tempBirthdate=req.body.birthdate;
+  if(req.body.birthdate==""|| req.body.birthdate==null){
+    tempBirthdate="1111-11-11"
+  }
+
   await user_profile.update(
     {
-      birthdate:new Date(req.body.birthdate),
+      birthdate:new Date(tempBirthdate),
       height:req.body.height,
       weight:req.body.weight,
       avg_sleeping_hour:req.body.sleepingHour,
