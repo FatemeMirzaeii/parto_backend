@@ -32,10 +32,11 @@ router.post("/signIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
-  if (!usr) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   // const pass = await bcrypt.compare(req.body.password, usr.password);
   // if (!pass) return res.status(400).json({ message: await translate("WRONGPASSWORD", req.params.lang) });
-  const token = usr.generateAuthToken();
+  const token = await usr.generateAuthToken();
+  console.log("token",token);
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
@@ -68,7 +69,7 @@ router.post("/logIn/:lang",async(req,res)=>{
   //     },
   //   });
   // }
-  let token;
+  
   if (usr==null){
     if(req.body.imei!=null && req.body.imei!="") {
       const regex = RegExp(/^\d{15}$/g);
@@ -90,14 +91,15 @@ router.post("/logIn/:lang",async(req,res)=>{
       });
     }
   }
-  token = usr.generateAuthToken();
+  const token =await usr.generateAuthToken();
+  console.log("tok",token)
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
 
-  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res.set('x-auth-token', token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 

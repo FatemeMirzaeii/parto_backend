@@ -7,6 +7,11 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "user",
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       name: {
         type: DataTypes.STRING,
         // validate: {
@@ -18,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone:{
         type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          notEmpty: {
+            msg: "لطفا شماره تلفن خود را وارد کنید.",
+          },
+        },
       },
       // username: {
       //   type: DataTypes.STRING,

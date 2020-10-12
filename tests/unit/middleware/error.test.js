@@ -4,7 +4,7 @@ require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 
 describe('send or handle internal error',()=>{
     it('should return status 500 that show internal error',async()=>{
-        server=require('../../../app');
+        server=require('../../../development');
         let res = {};
         res.status = jest.fn().mockReturnValue(res);
         res.json = jest.fn().mockReturnValue(res);

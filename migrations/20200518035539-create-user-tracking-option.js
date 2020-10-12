@@ -13,6 +13,7 @@ module.exports = {
         references: {
           model: "user",
           key: "id",
+          as:"user_id"
         },
         onDelete: "RESTRICT",
       },
@@ -25,7 +26,10 @@ module.exports = {
         onDelete: "RESTRICT",
       },
       date: {
-        type: Sequelize.DATEONLY 
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
+        }
       },
       created_at: {
         allowNull: false,
@@ -35,7 +39,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },
+      {
+        indexes: [
+            {
+                unique: true,
+                fields: ['user_id', 'tracking_option_id', 'date']
+            }
+        ]
+      }
+    );
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('user_tracking_option');

@@ -19,6 +19,7 @@ module.exports = {
       },
       birthdate: {
         type: Sequelize.DATEONLY ,
+        allowNull: true,
         get: function() {
           return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
         }
@@ -47,11 +48,21 @@ module.exports = {
       pregnancy_try: {
         type: Sequelize.BOOLEAN
       },
-      use_lock: {
+      locked: {
+        type: Sequelize.BOOLEAN
+      },
+      period_prediction: {
+        type: Sequelize.BOOLEAN
+      },
+      ovulation_prediction: {
+        type: Sequelize.BOOLEAN
+      },
+      red_days: {
         type: Sequelize.BOOLEAN
       },
       last_period_date:{
         type: Sequelize.DATEONLY,
+        allowNull: true,
         get: function() {
           return moment.utc(this.getDataValue('last_period_date')).format('YYYY-MM-DD');
         }

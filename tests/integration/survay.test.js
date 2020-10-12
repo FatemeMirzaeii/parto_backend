@@ -9,13 +9,13 @@ describe('survay', () => {
     let IMEI;
 
     beforeAll(async()=>{
-        User =await user.create({name:"zahra", email:"survay_zzand7755@gmail.com" ,phone:"", imei:"123456789012345"});
+        User =await user.create({name:"zahra", email:"survay_zzand7755@gmail.com" ,phone:"0912545420", imei:"123456789012345"});
         token = User.generateAuthToken();  
         UserID=User.id;
         IMEI=User.imei;     
     })
     beforeEach(async() => { 
-        server=require('../../app');
+        server=require('./../../development');
        
     })
     afterEach(()=>{

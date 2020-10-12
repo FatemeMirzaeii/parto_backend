@@ -41,16 +41,17 @@ app.use("/survay", survey);
 app.use("/profile", profile);
 app.use(error);
 
-app.use(
-  "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
-  function (req, res, next) {
-    swaggerDocument.host = req.get("https://api.partobanoo.com");
-    req.swaggerDoc = swaggerDocument;
-    next();
-  },
-  swaggerUi.serve,
-  swaggerUi.setup()
-);
+// app.use(
+//   "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
+//   function (req, res, next) {
+//     swaggerDocument.host = req.get("https://api.partobanoo.com");
+//     req.swaggerDoc = swaggerDocument;
+//     next();
+//   },
+//   swaggerUi.serve,
+//   swaggerUi.setup()
+// );
+console.log(process.env.NODE_PORT);
 
 // app.use(express.static(`../../Fattahi/deploy/production/build`));
 // app.get("/*", (req, res) => {

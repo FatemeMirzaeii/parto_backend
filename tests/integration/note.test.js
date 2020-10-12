@@ -12,7 +12,7 @@ describe('note',()=>{
 
     beforeAll(async()=>{
         Note = await note.create({title:"note title",content:"note content",note_date: new Date(2018, 4, 15)});
-        User =await Note.createUser({name:"zahra", email:"note_zzdand7755@gmail.com"});
+        User =await Note.createUser({name:"zahra", email:"note_zzdand7755@gmail.com", phone:"09125454333"});
         token = User.generateAuthToken();
         //console.log('note_token',token);
         UserId= User.dataValues.id;
@@ -20,7 +20,7 @@ describe('note',()=>{
     });
 
     beforeEach(()=>{
-       server=require('../../app');
+       server=require('../../development');
       
    })
    afterEach(async()=>{

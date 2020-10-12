@@ -10,7 +10,10 @@
       "url": "https://api.partobanoo.com"
     },
     {
-      "url": "http://localhost:2218"
+      "url": "http://localhost:2216"
+    },
+    {
+      "url":  "https://dev.partobanoo.com"
     }
   ],
   "tags": [
@@ -1142,7 +1145,7 @@
                         "pregnancy_try": {
                           "type": "integer"
                         },
-                        "use_lock": {
+                        "locked": {
                           "type": "integer"
                         },
                         "last_period_date": {
@@ -1150,6 +1153,15 @@
                         },
                         "blood_type": {
                           "type": "string"
+                        },
+                        "ovulation_prediction":{
+                          "type": "integer"
+                        },
+                        "period_prediction":{
+                        "type": "integer"
+                        },
+                        "red_days":{
+                          "type": "integer"
                         }
                       }
                     }
@@ -1243,6 +1255,15 @@
                         },
                         "last_period_date": {
                           "type": "string"
+                        },
+                        "ovulation_prediction":{
+                          "type": "integer"
+                        },
+                        "period_prediction":{
+                        "type": "integer"
+                        },
+                        "red_days":{
+                          "type": "integer"
                         }
                       }
                     }
@@ -1331,7 +1352,7 @@
                         "weight": {
                           "type": "integer"
                         },
-                        "use_lock": {
+                        "locked": {
                           "type": "integer"
                         },
                         "blood_type": {
@@ -1431,7 +1452,7 @@
                   "pregnancyTry": {
                     "type": "integer"
                   },
-                  "useLock": {
+                  "isLock": {
                     "type": "integer"
                   },
                   "lastPeriodDate": {
@@ -1439,6 +1460,15 @@
                   },
                   "bloodType": {
                     "type": "string"
+                  },
+                  "ovulationPred":{
+                    "type": "integer"
+                  },
+                  "periodPred":{
+                  "type": "integer"
+                  },
+                  "redDays":{
+                    "type": "integer"
                   }
                 }
               }
@@ -1521,7 +1551,7 @@
                   "weight": {
                     "type": "integer"
                   },
-                  "useLock": {
+                  "isLock": {
                     "type": "integer"
                   },
                   "bloodType": {
@@ -1613,6 +1643,15 @@
                   },
                   "lastPeriodDate": {
                     "type": "string"
+                  },
+                  "ovulationPred":{
+                    "type": "integer"
+                  },
+                  "periodPred":{
+                  "type": "integer"
+                  },
+                  "redDays":{
+                    "type": "integer"
                   }
                 }
               }
@@ -1898,7 +1937,7 @@
                       "type": "object",
                       "description": "use lock info",
                       "properties": {
-                        "use_lock": {
+                        "locked": {
                           "type": "integer"
                         }
                       }
