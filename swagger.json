@@ -3,17 +3,17 @@
   "info": {
     "description": "this is paro api.",
     "version": "1.0.0",
-    "title": "Swagger partobanoo"
+    "title": "Swagger parto"
   },
   "servers": [
     {
-      "url": "https://api.partobanoo.com"
+      "url": "https://api.parto.app"
     },
     {
       "url": "http://localhost:2216"
     },
     {
-      "url":  "https://dev.partobanoo.com"
+      "url": "https://dev.parto.app"
     }
   ],
   "tags": [
@@ -57,9 +57,7 @@
     "/contactUs/Email": {
       "post": {
         "summary": "send email to parto manager .",
-        "tags": [
-          "contactUs"
-        ],
+        "tags": ["contactUs"],
         "requestBody": {
           "required": true,
           "content": {
@@ -97,9 +95,7 @@
     "/auth/logIn/{lang}": {
       "post": {
         "summary": "login(sign in / sign up) user with phone.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -121,9 +117,7 @@
               "schema": {
                 "type": "object",
                 "description": "imei is not requier and can be not in body",
-                "required": [
-                  "phone"
-                ],
+                "required": ["phone"],
                 "properties": {
                   "phone": {
                     "type": "string"
@@ -183,9 +177,7 @@
     "/user/signUp/{lang}": {
       "post": {
         "summary": "sign up new user with phone.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -206,9 +198,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "phone"
-                ],
+                "required": ["phone"],
                 "properties": {
                   "phone": {
                     "type": "string"
@@ -271,9 +261,7 @@
     "/user/linkForgetPassword/{lang}": {
       "post": {
         "summary": "Returns link for forget pasword.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -322,9 +310,7 @@
     "/user/setNewPassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -370,9 +356,7 @@
     "/user/changePassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -426,9 +410,7 @@
     "/auth/verifyCode": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -482,9 +464,7 @@
     },
     "/auth/signIn/{lang}": {
       "post": {
-        "tags": [
-          "user"
-        ],
+        "tags": ["user"],
         "parameters": [
           {
             "in": "path",
@@ -551,9 +531,7 @@
     "/note/{lang}/{userId}/{date}": {
       "get": {
         "summary": "return note content.",
-        "tags": [
-          "note"
-        ],
+        "tags": ["note"],
         "parameters": [
           {
             "in": "path",
@@ -639,9 +617,7 @@
     "/survay/surveyQuestion/{lang}": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": [
-          "survay"
-        ],
+        "tags": ["survay"],
         "parameters": [
           {
             "in": "path",
@@ -730,9 +706,7 @@
     "/survay/userSurveyAnswer/{lang}": {
       "put": {
         "summary": "update user survey answers.",
-        "tags": [
-          "survay"
-        ],
+        "tags": ["survay"],
         "parameters": [
           {
             "in": "path",
@@ -765,9 +739,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "rate"
-                ],
+                "required": ["rate"],
                 "properties": {
                   "userId": {
                     "type": "integer"
@@ -801,9 +773,7 @@
     },
     "/healthTracking/userInfo/{userId}/{lang}": {
       "post": {
-        "tags": [
-          "healthTracking"
-        ],
+        "tags": ["healthTracking"],
         "parameters": [
           {
             "in": "path",
@@ -934,9 +904,7 @@
     },
     "/healthTracking/userInfo/{userId}/{date}/{lang}": {
       "get": {
-        "tags": [
-          "healthTracking"
-        ],
+        "tags": ["healthTracking"],
         "parameters": [
           {
             "in": "path",
@@ -1058,9 +1026,7 @@
     },
     "/profile/getProfile/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1154,13 +1120,13 @@
                         "blood_type": {
                           "type": "string"
                         },
-                        "ovulation_prediction":{
+                        "ovulation_prediction": {
                           "type": "integer"
                         },
-                        "period_prediction":{
-                        "type": "integer"
+                        "period_prediction": {
+                          "type": "integer"
                         },
-                        "red_days":{
+                        "red_days": {
                           "type": "integer"
                         }
                       }
@@ -1178,9 +1144,7 @@
     },
     "/profile/getPeriodInfo/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1256,13 +1220,13 @@
                         "last_period_date": {
                           "type": "string"
                         },
-                        "ovulation_prediction":{
+                        "ovulation_prediction": {
                           "type": "integer"
                         },
-                        "period_prediction":{
-                        "type": "integer"
+                        "period_prediction": {
+                          "type": "integer"
                         },
-                        "red_days":{
+                        "red_days": {
                           "type": "integer"
                         }
                       }
@@ -1280,9 +1244,7 @@
     },
     "/profile/getGeneralInfo/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1373,9 +1335,7 @@
     },
     "/profile/editProfile/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1461,13 +1421,13 @@
                   "bloodType": {
                     "type": "string"
                   },
-                  "ovulationPred":{
+                  "ovulationPred": {
                     "type": "integer"
                   },
-                  "periodPred":{
-                  "type": "integer"
+                  "periodPred": {
+                    "type": "integer"
                   },
-                  "redDays":{
+                  "redDays": {
                     "type": "integer"
                   }
                 }
@@ -1487,9 +1447,7 @@
     },
     "/profile/editGeneralInfo/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1574,9 +1532,7 @@
     },
     "/profile/editPeriodInfo/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1644,13 +1600,13 @@
                   "lastPeriodDate": {
                     "type": "string"
                   },
-                  "ovulationPred":{
+                  "ovulationPred": {
                     "type": "integer"
                   },
-                  "periodPred":{
-                  "type": "integer"
+                  "periodPred": {
+                    "type": "integer"
                   },
-                  "redDays":{
+                  "redDays": {
                     "type": "integer"
                   }
                 }
@@ -1670,9 +1626,7 @@
     },
     "/profile/deleteProfile/{userId}/{lang}": {
       "delete": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1727,9 +1681,7 @@
     },
     "/profile/pregnancyMode/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1802,9 +1754,7 @@
     },
     "/profile/getUserStatus/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1880,9 +1830,7 @@
     },
     "/profile/lockStatus/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -1955,9 +1903,7 @@
     },
     "/profile/updateUserStatus/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -2030,9 +1976,7 @@
     },
     "/profile/setLock/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "profile"
-        ],
+        "tags": ["profile"],
         "parameters": [
           {
             "in": "path",
@@ -2102,9 +2046,7 @@
     },
     "/interview/ordinarUser/{userId}/{lang}": {
       "post": {
-        "tags": [
-          "interview"
-        ],
+        "tags": ["interview"],
         "parameters": [
           {
             "in": "path",
@@ -2181,7 +2123,7 @@
                   "avgCycleLength": 25,
                   "avgPeriodLength": 7,
                   "lastPeriodDate": "2020-05-05",
-                  "pregnancyTry" : "0"
+                  "pregnancyTry": "0"
                 }
               }
             }
@@ -2205,9 +2147,7 @@
     },
     "/interview/pregnantUser/{userId}/{lang}": {
       "post": {
-        "tags": [
-          "interview"
-        ],
+        "tags": ["interview"],
         "parameters": [
           {
             "in": "path",
@@ -2260,9 +2200,7 @@
                   "data": {
                     "type": "object",
                     "description": "user profile information",
-                    "required": [
-                      "lastPeriodDate"
-                    ],
+                    "required": ["lastPeriodDate"],
                     "properties": {
                       "birthdate": {
                         "type": "string"
@@ -2304,9 +2242,7 @@
     },
     "/pregnancy/getPregnancyData/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "pregnancy"
-        ],
+        "tags": ["pregnancy"],
         "parameters": [
           {
             "in": "path",
@@ -2385,9 +2321,7 @@
     },
     "/pregnancy/savePregnancyData/{userId}/{lang}": {
       "post": {
-        "tags": [
-          "pregnancy"
-        ],
+        "tags": ["pregnancy"],
         "parameters": [
           {
             "in": "path",
@@ -2469,9 +2403,7 @@
     },
     "/pregnancy/setPregnancyEnd/{userId}/{dueDate}/{lang}": {
       "post": {
-        "tags": [
-          "pregnancy"
-        ],
+        "tags": ["pregnancy"],
         "parameters": [
           {
             "in": "path",
@@ -2545,9 +2477,7 @@
     },
     "/cycle/getLastPeriodDate/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "cycle"
-        ],
+        "tags": ["cycle"],
         "parameters": [
           {
             "in": "path",
@@ -2620,9 +2550,7 @@
     },
     "/cycle/getUserAllPeriodDays/{userId}/{lang}": {
       "get": {
-        "tags": [
-          "cycle"
-        ],
+        "tags": ["cycle"],
         "parameters": [
           {
             "in": "path",
@@ -2672,13 +2600,13 @@
               "application/json": {
                 "schema": {
                   "example": {
-                    "data":{
-                    "date": [
-                      "2020-07-09",
-                      "2020-07-10",
-                      "2020-07-11",
-                      "2020-07-12"
-                    ]
+                    "data": {
+                      "date": [
+                        "2020-07-09",
+                        "2020-07-10",
+                        "2020-07-11",
+                        "2020-07-12"
+                      ]
                     }
                   }
                 }
@@ -2693,9 +2621,7 @@
     },
     "/cycle/editLastPeriodDate/{userId}/{lastPeriodDate}/{lang}": {
       "put": {
-        "tags": [
-          "cycle"
-        ],
+        "tags": ["cycle"],
         "parameters": [
           {
             "in": "path",
@@ -2763,9 +2689,7 @@
     },
     "/cycle/setBleedingDays/{userId}/{lang}": {
       "put": {
-        "tags": [
-          "cycle"
-        ],
+        "tags": ["cycle"],
         "parameters": [
           {
             "in": "path",
@@ -2814,14 +2738,8 @@
             "application/json": {
               "schema": {
                 "example": {
-                  "deleteDate": [
-                    "2020-07-09",
-                    "2020-07-10"
-                  ],
-                  "addDate": [
-                    "2020-07-11",
-                    "2020-07-12"
-                  ]
+                  "deleteDate": ["2020-07-09", "2020-07-10"],
+                  "addDate": ["2020-07-11", "2020-07-12"]
                 }
               }
             }

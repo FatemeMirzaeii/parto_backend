@@ -42,9 +42,9 @@ app.use("/profile", profile);
 app.use(error);
 
 // app.use(
-//   "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
+//   "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
 //   function (req, res, next) {
-//     swaggerDocument.host = req.get("https://api.partobanoo.com");
+//     swaggerDocument.host = req.get("https://api.parto.app");
 //     req.swaggerDoc = swaggerDocument;
 //     next();
 //   },

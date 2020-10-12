@@ -1,7 +1,6 @@
 image: node:latest
 
 before_script:
- 
 
 stages:
   - test
@@ -36,14 +35,14 @@ deploy_staging_parto:
     NODE_PORT: 2216
   environment:
     name: staging
-    url: https://dev.partobanoo.com
+    url: https://dev.parto.app
 
   script:
-     - echo "Deploy to staging server ..."
-     - PORT=2216
-     - pm2 restart development.js
-     - echo "deploy_staging succesfull"
-     
+    - echo "Deploy to staging server ..."
+    - PORT=2216
+    - pm2 restart development.js
+    - echo "deploy_staging succesfull"
+
   only:
     - test
 
@@ -63,10 +62,10 @@ deploy_prod_parto:
     - pm2 restart app.js
     - echo "Deploy to production server Succdsfull"
     # - pm2 logs
-    
+
   environment:
     name: production
-    url: https://api.partobanoo.com
+    url: https://api.parto.app
   when: manual
   only:
     - master

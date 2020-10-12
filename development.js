@@ -18,7 +18,7 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
-const profile=require("./routes/profile");
+const profile = require("./routes/profile");
 
 const developmentApp = express();
 
@@ -40,9 +40,9 @@ developmentApp.use("/profile", profile);
 developmentApp.use(error);
 
 developmentApp.use(
-  "/api-doc", //todo: It is better to change the name to: api.partobanoo.com/docs
+  "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
   function (req, res, next) {
-    swaggerDocument.host = req.get("https://dev.partobanoo.com");
+    swaggerDocument.host = req.get("https://dev.parto.app");
     req.swaggerDoc = swaggerDocument;
     next();
   },
@@ -56,7 +56,7 @@ developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-const developmentServer = developmentApp.listen(2216, () => logger.info("Listening on port 2218..."));
+const developmentServer = developmentApp.listen(2216, () =>
+  logger.info("Listening on port 2218...")
+);
 module.exports = developmentServer;
-
-
