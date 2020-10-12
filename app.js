@@ -20,8 +20,7 @@ const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
-const profile=require("./routes/profile");
-
+const profile = require("./routes/profile");
 
 const app = express();
 app.use(cors());
@@ -53,10 +52,10 @@ app.use(
   swaggerUi.setup()
 );
 
-app.use(express.static(`../../Fattahi/deploy/production/build`));
-app.get("/*", (req, res) => {
-  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
-});
+// app.use(express.static(`../../Fattahi/deploy/production/build`));
+// app.get("/*", (req, res) => {
+//   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
+// });
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
 module.exports = server;
