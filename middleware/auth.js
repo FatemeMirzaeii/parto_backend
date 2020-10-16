@@ -6,11 +6,12 @@ const secret = fs.readFileSync("../private.key", "utf8");
 var cookie = require('cookie');
 
 module.exports = async function (req, res, next) {
+  console.log("okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
   var cookies = cookie.parse(req.headers.cookie || '');
-  const toke = cookies.x-auth-token;
-  console.log("t",toke);
+  const token = cookies.xAuthToken;
+  console.log("xAuthToken",token);
   // const token = req.header("x-auth-token");
-  if (!toke)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+  if (!token)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
   
   let verification=true;
   await jwt.verify(toke, secret, function(err, decoded) {
