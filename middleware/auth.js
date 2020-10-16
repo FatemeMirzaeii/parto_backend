@@ -3,13 +3,16 @@ var fs = require("fs");
 const translate = require("../config/translate");
 const { user } = require("../models");
 const secret = fs.readFileSync("../private.key", "utf8");
+var cookie = require('cookie');
 
 module.exports = async function (req, res, next) {
-  const token = req.header("x-auth-token");
-  if (!token)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+  var cookies = cookie.parse(req.headers.cookie || '');
+  const toke = cookies.x-auth-token;
+  // const token = req.header("x-auth-token");
+  if (!toke)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
   
   let verification=true;
-  await jwt.verify(token, secret, function(err, decoded) {
+  await jwt.verify(toke, secret, function(err, decoded) {
     // err
     console.log("v",verification);
     if(err){
