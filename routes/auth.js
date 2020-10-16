@@ -99,7 +99,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
 
-  return res.header('Set-Cookie', cookie.serialize('xAuthToken', String(token), {httpOnly: false})).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res.cookie('xAuthToken', token, {maxAge: 86_400_000,httpOnly: true}).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 

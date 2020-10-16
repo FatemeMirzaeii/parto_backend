@@ -19,6 +19,7 @@ const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
+const cookieParser = require('cookie-parser')
 
 const developmentApp = express();
 
@@ -38,6 +39,8 @@ developmentApp.use("/contactUs", contactUs);
 developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
 developmentApp.use(error);
+developmentApp.use(cookieParser());
+
 
 developmentApp.use(
   "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
