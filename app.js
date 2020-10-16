@@ -37,20 +37,10 @@ app.use("/note", note);
 app.use("/user", user);
 app.use("/auth", auth);
 app.use("/contactUs", contactUs);
-app.use("/survay", survey);
+app.use("/survey", survey);
 app.use("/profile", profile);
 app.use(error);
 
-// app.use(
-//   "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
-//   function (req, res, next) {
-//     swaggerDocument.host = req.get("https://api.parto.app");
-//     req.swaggerDoc = swaggerDocument;
-//     next();
-//   },
-//   swaggerUi.serve,
-//   swaggerUi.setup()
-// );
 console.log(process.env.NODE_PORT);
 
 // app.use(express.static(`../../Fattahi/deploy/production/build`));

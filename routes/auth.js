@@ -6,7 +6,7 @@ const router = express.Router();
 const translate = require("../config/translate");
 const sendEmail=require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
-
+var cookie = require('cookie');
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr ;
@@ -99,7 +99,11 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
 
-  return res.set('x-auth-token', token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res.setHeader('Set-Cookie', cookie.serialize('x-auth-token', String(token), {
+        httpOnly: true,
+        //maxAge: 60 * 60 * 24 * 7 // 1 week
+      }))
+  .status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 

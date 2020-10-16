@@ -35,7 +35,7 @@ developmentApp.use("/note", note);
 developmentApp.use("/user", user);
 developmentApp.use("/auth", auth);
 developmentApp.use("/contactUs", contactUs);
-developmentApp.use("/survay", survey);
+developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
 developmentApp.use(error);
 

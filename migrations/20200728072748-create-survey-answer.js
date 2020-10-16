@@ -8,8 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      answer: {
+      question:{
         type: Sequelize.TEXT
+      },
+      weakness:{
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
