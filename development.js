@@ -23,6 +23,7 @@ const cookieParser = require('cookie-parser')
 
 const developmentApp = express();
 
+developmentApp.use(cors());
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
@@ -58,10 +59,6 @@ developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-developmentApp.use(cors({
-  origin: 'https://test.parto.app/',
-  credentials: true
-  }));
 const developmentServer = developmentApp.listen(2216, () =>
   logger.info("Listening on port 2218...")
 );
