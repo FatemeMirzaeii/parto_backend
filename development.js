@@ -23,7 +23,6 @@ const cookieParser = require('cookie-parser')
 
 const developmentApp = express();
 
-developmentApp.use(cors());
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
