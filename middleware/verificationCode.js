@@ -8,6 +8,7 @@ module.exports = {
         params: {
             receptor:receptor,
             token:token,
+            token1:"https://www.instagram.com/parto.app/",
             template:template
         }
     })
