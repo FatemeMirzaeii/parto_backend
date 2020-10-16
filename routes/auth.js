@@ -99,7 +99,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
 
-  return res.header('Set-Cookie', cookie.serialize('x-auth-token', String(token), {httpOnly: true})).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res.header('Set-Cookie', cookie.serialize('x-auth-token', String(token), {httpOnly: false})).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 
@@ -118,7 +118,8 @@ router.post("/verifyCode", async(req, res) => {
       api.VerifyLookup({
           receptor: req.body.phone,
           token: code.toString(),
-          template: "verificationCode"
+          template: "verificationCode",
+          token2:"https://www.instagram.com/parto.app/"
       }, 
       async(response, status,message)=> {
               
