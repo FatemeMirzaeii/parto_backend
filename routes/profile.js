@@ -5,7 +5,6 @@ const {user, user_profile }= require("../models");
 const translate = require("../config/translate");
 
 router.get("/getProfile/:userId/:lang",auth, async(req, res) => {
-    console.log("authhhhhhhhhhhhhhhhhhhhhhh");
     const uProfile = await user_profile.findOne({
       where: {
         user_id: req.params.userId,

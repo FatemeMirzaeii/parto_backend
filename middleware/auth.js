@@ -8,6 +8,7 @@ var cookie = require('cookie');
 module.exports = async function (req, res, next) {
   
   var cookies = cookie.parse(req.headers.cookie || '');
+  console.log(cookies);
   const token = cookies.xAuthToken;
   if (!token)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
   
