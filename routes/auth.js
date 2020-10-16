@@ -99,7 +99,10 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
 
-  return res.cookie('xAuthToken', token, {maxAge: 86_400_000,httpOnly: true}).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  return res
+  .cookie('xAuthToken', String(token), {maxAge: 86_400_000,httpOnly: true})
+  .status(200)
+  .json({ data: { id: usr.id ,userName:usr.name} });
 
 })
 
