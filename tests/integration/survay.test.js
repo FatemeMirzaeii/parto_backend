@@ -29,50 +29,50 @@ describe('survay', () => {
         await User.destroy();   
     });
 
-    describe('/survay/surveyQuestion/:lang', () => {
-        let TempToken=token;
-        let userId=UserID;
-        let IMEi="123456789012345";
-        const execWithUserId=()=>{
-           return request(server).post('/survay/surveyQuestion/fa')
-           .send({"userId":`${userId}`})
-           .set('x-auth-token', TempToken);
-        }
-        const execWidutUserId=()=>{
-            return request(server).post('/survay/surveyQuestion/fa')
-            .send({"IMEi":`${IMEi}`});
-         }
-        it('return 400 if token is not valid ',async()=>{
-            TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
-            let result=await execWithUserId();
-            expect(result.status).toBe(400);
+    // describe('/survay/surveyQuestion/:lang', () => {
+    //     let TempToken=token;
+    //     let userId=UserID;
+    //     let IMEi="123456789012345";
+    //     const execWithUserId=()=>{
+    //        return request(server).post('/survay/surveyQuestion/fa')
+    //        .send({"userId":`${userId}`})
+    //        .set('x-auth-token', TempToken);
+    //     }
+    //     const execWidutUserId=()=>{
+    //         return request(server).post('/survay/surveyQuestion/fa')
+    //         .send({"IMEi":`${IMEi}`});
+    //      }
+    //     it('return 400 if token is not valid ',async()=>{
+    //         TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
+    //         let result=await execWithUserId();
+    //         expect(result.status).toBe(400);
             
-        })
-        it('return 401 if token is not exist  ',async()=>{
-            TempToken='';
-            let result=await execWithUserId();
-            expect(result.status).toBe(401);
+    //     })
+    //     it('return 401 if token is not exist  ',async()=>{
+    //         TempToken='';
+    //         let result=await execWithUserId();
+    //         expect(result.status).toBe(401);
             
-        })
+    //     })
     
-        it('return 200 if send survay question and information to user UserId',async()=>{
-            TempToken=token;
-            const result=await execWithUserId();
-            expect(result.status).toBe(200);
-        });
-        it('return 200 if send survay question and information to user with IMEI',async()=>{
-            const result=await execWidutUserId();
-            expect(result.status).toBe(200);
-        });
+    //     it('return 200 if send survay question and information to user UserId',async()=>{
+    //         TempToken=token;
+    //         const result=await execWithUserId();
+    //         expect(result.status).toBe(200);
+    //     });
+    //     it('return 200 if send survay question and information to user with IMEI',async()=>{
+    //         const result=await execWidutUserId();
+    //         expect(result.status).toBe(200);
+    //     });
 
-        it('return 400 if imei is null',async()=>{
-            IMEi='';
-            const result=await execWidutUserId();
-            expect(result.status).toBe(400);
-        });
-    });    
+    //     it('return 400 if imei is null',async()=>{
+    //         IMEi='';
+    //         const result=await execWidutUserId();
+    //         expect(result.status).toBe(400);
+    //     });
+    // });    
 
-    describe('/survay/userSurveyAnswer/:lang', () => {
+    // describe('/survay/userSurveyAnswer/:lang', () => {
         let TempToken=token;
         let userId=UserID;
         let IMEi="123456789012345";
