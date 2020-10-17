@@ -99,8 +99,8 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
   res.clearCookie('token');
-  return res
-  .cookie("token", token)
+  return  res
+  .cookie("token", await token)
   .status(200)
   .json({ data: { id: usr.id ,userName:usr.name} });
 
