@@ -98,7 +98,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     version: req.body.version,
     login_date: Date.now(),
   });
-
+  res.clearCookie('token');
   return res
   .cookie("token", token)
   .status(200)
