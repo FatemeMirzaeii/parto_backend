@@ -25,7 +25,7 @@ const developmentApp = express();
 
 developmentApp.use(cookieParser());
 developmentApp.use(cors({
-  origin:['https://dev.parto.app','https://test.parto.app/'],
+  origin:['https://test.parto.app'],
   credentials:true
 }));
 developmentApp.use(helmet());
