@@ -24,7 +24,10 @@ const cookieParser = require('cookie-parser')
 const developmentApp = express();
 
 developmentApp.use(cookieParser());
-developmentApp.use(cors());
+developmentApp.use(cors({
+  origin:'https://test.parto.app',
+  credentials:true
+}));
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
