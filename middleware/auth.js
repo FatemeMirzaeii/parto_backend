@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
   let verification=true;
   await jwt.verify(token, secret, function(err, decoded) {
     // err
-    console.log("v",verification);
+    //console.log("v",verification);
     if(err){
       verification=false;
       }
@@ -21,7 +21,7 @@ module.exports = async function (req, res, next) {
       } 
       // req.user = decoded;
     }
-    console.log("v",verification);
+    //console.log("v",verification);
   });
   if(verification==false){
     res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });

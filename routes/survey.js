@@ -1,5 +1,5 @@
 const express = require("express");
-const { user , survey_question , user_answer_survey} = require("../models");
+const { user , survey_answers , user_answer_survey} = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const jwt = require("jsonwebtoken");
@@ -19,14 +19,14 @@ function authentication (token){
   
 
 router.get("/question/:lang", async (req,res) => {
-  let posetivQuestion= await survey_question.findAll({
-    attributes: ['id', 'answer'],
+  let posetivQuestion= await survey_answers.findAll({
+    attributes: ['id', 'question'],
     where:{
       weakness:0,
     }
   });
-  let negativeQuestion= await survey_question.findAll({
-    attributes: ['id', 'answer'],
+  let negativeQuestion= await survey_answers.findAll({
+    attributes: ['id', 'question'],
     where:{
       weakness:1,
     }
@@ -36,16 +36,45 @@ router.get("/question/:lang", async (req,res) => {
 
 });
 
-router.post("/answers/:lang", async (req, res,next) => {
-  const lang=req.params.lang ;
-    
-  if (!req.body.rate ) return res.status(400).json({ message: await translate("INVALIDENTRY", lang) });
-  
-  let userAnswers;
-  if(req.body.userId!=null && req.body.userId!=0){
-    auth(req,res,next);
+router.put("/answers/:lang", async (req, res) => {
+  let usr ;
+  if (!req.body.rate|| req.body.rate==0  ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if(req.body.IMEi !=null && req.body.IMEi !=""){
+    //check code
+    console.log("ok");
+    await user_answer_survey.create({
+      IMEI:req.body.IMEi,
+      answers:req.body.answers ,
+      description:req.body.description,
+      rate:req.body.rate
+   })
   }
-  return res.status(200).json({message: await translate("SUCCESSFUL",lang)});
+
+  else if(req.body.userId!=null && req.body.userId!=0){
+    console.log("ok");
+    if (authentication( req.header("x-auth-token"))=="401"){
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+    }
+    else if(authentication( req.header("x-auth-token"))=="400") {
+      return  res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+    }
+    usr = await user.findByPk(req.body.userId);
+    if (usr==null){
+       return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    }
+    let survey=await user_answer_survey.create({
+      answers:req.body.answers ,
+      description:req.body.description,
+      rate:req.body.rate
+   })
+   await survey.setUser(usr);
+
+  }
+  else{
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  
+  return res.status(200).json({message: await translate("SUCCESSFUL",req.params.lang)});
   
 });
 module.exports = router;
