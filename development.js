@@ -23,6 +23,7 @@ const cookieParser = require('cookie-parser')
 
 const developmentApp = express();
 
+developmentApp.use(cookieParser());
 developmentApp.use(cors());
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
@@ -39,8 +40,6 @@ developmentApp.use("/contactUs", contactUs);
 developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
 developmentApp.use(error);
-developmentApp.use(cookieParser());
-
 
 developmentApp.use(
   "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
