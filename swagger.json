@@ -57,7 +57,9 @@
     "/contactUs/Email": {
       "post": {
         "summary": "send email to parto manager .",
-        "tags": ["contactUs"],
+        "tags": [
+          "contactUs"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -95,7 +97,9 @@
     "/auth/logIn/{lang}": {
       "post": {
         "summary": "login(sign in / sign up) user with phone.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -117,7 +121,9 @@
               "schema": {
                 "type": "object",
                 "description": "imei is not requier and can be not in body",
-                "required": ["phone"],
+                "required": [
+                  "phone"
+                ],
                 "properties": {
                   "phone": {
                     "type": "string"
@@ -177,7 +183,9 @@
     "/user/signUp/{lang}": {
       "post": {
         "summary": "sign up new user with phone.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -198,7 +206,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["phone"],
+                "required": [
+                  "phone"
+                ],
                 "properties": {
                   "phone": {
                     "type": "string"
@@ -261,7 +271,9 @@
     "/user/linkForgetPassword/{lang}": {
       "post": {
         "summary": "Returns link for forget pasword.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -310,7 +322,9 @@
     "/user/setNewPassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -356,7 +370,9 @@
     "/user/changePassword/{lang}": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -410,7 +426,9 @@
     "/auth/verifyCode": {
       "post": {
         "summary": "Returns survey question.",
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -464,7 +482,9 @@
     },
     "/auth/signIn/{lang}": {
       "post": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -531,7 +551,9 @@
     "/note/{lang}/{userId}/{date}": {
       "get": {
         "summary": "return note content.",
-        "tags": ["note"],
+        "tags": [
+          "note"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -614,10 +636,12 @@
         }
       }
     },
-    "/survay/surveyQuestion/{lang}": {
-      "post": {
+    "/survey/question/{lang}": {
+      "get": {
         "summary": "Returns survey question.",
-        "tags": ["survay"],
+        "tags": [
+          "survay"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -631,37 +655,8 @@
                 }
               }
             }
-          },
-          {
-            "in": "header",
-            "name": "x-auth-token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "IMEi": {
-                    "type": "string"
-                  },
-                  "userId": {
-                    "type": "integer"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -670,7 +665,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "answers": {
+                    "posetivQuestion": {
                       "type": "object",
                       "description": "list of answer that user can select them.",
                       "properties": {
@@ -678,35 +673,40 @@
                           "type": "integer",
                           "description": "number of answers"
                         },
-                        "answer": {
+                        "question": {
                           "type": "string",
-                          "description": "text for answers"
+                          "description": "text for question"
                         }
                       }
                     },
-                    "userAnswers": {
-                      "type": "string",
-                      "description": "number of answer that user select them befor."
-                    },
-                    "userDescription": {
-                      "type": "string",
-                      "description": "user description about answer."
+                    "negativeQuestion": {
+                      "type": "object",
+                      "description": "list of answer that user can select them.",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "number of answers"
+                        },
+                        "question": {
+                          "type": "string",
+                          "description": "text for question"
+                        }
+                      }
                     }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "envalid input"
           }
         }
       }
     },
-    "/survay/userSurveyAnswer/{lang}": {
+    "/survey/answers/{lang}": {
       "put": {
         "summary": "update user survey answers.",
-        "tags": ["survay"],
+        "tags": [
+          "survay"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -735,11 +735,14 @@
           }
         ],
         "requestBody": {
+          "description": "if user registered use userId and x-auth-token if not just use imei and put userId null or 0 and x-auth-token null.",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["rate"],
+                "required": [
+                  "rate"
+                ],
                 "properties": {
                   "userId": {
                     "type": "integer"
@@ -756,6 +759,13 @@
                   "description": {
                     "type": "string"
                   }
+                },
+                "example": {
+                  "userId": 0,
+                  "IMEi": "asoklJSpoqk229HJBZNNM",
+                  "rate": 4,
+                  "answers": "1,5,2",
+                  "description": "همه چیز خوب و عالی، رنگ ها نامتناسب هستند"
                 }
               }
             }
@@ -766,14 +776,22 @@
             "description": "successful"
           },
           "400": {
-            "description": "envalid input /invalid id / inavlid token"
+            "description": "inavlid token"
+          },
+          "401": {
+            "description": "no permition (user id or token is wrong)"
+          },
+          "404": {
+            "description": "information not found(user id isn't exist)"
           }
         }
       }
     },
     "/healthTracking/userInfo/{userId}/{lang}": {
       "post": {
-        "tags": ["healthTracking"],
+        "tags": [
+          "healthTracking"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -904,7 +922,9 @@
     },
     "/healthTracking/userInfo/{userId}/{date}/{lang}": {
       "get": {
-        "tags": ["healthTracking"],
+        "tags": [
+          "healthTracking"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1026,7 +1046,9 @@
     },
     "/profile/getProfile/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1144,7 +1166,9 @@
     },
     "/profile/getPeriodInfo/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1244,7 +1268,9 @@
     },
     "/profile/getGeneralInfo/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1335,7 +1361,9 @@
     },
     "/profile/editProfile/{userId}/{lang}": {
       "put": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1447,7 +1475,9 @@
     },
     "/profile/editGeneralInfo/{userId}/{lang}": {
       "put": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1532,7 +1562,9 @@
     },
     "/profile/editPeriodInfo/{userId}/{lang}": {
       "put": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1626,7 +1658,9 @@
     },
     "/profile/deleteProfile/{userId}/{lang}": {
       "delete": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1681,7 +1715,9 @@
     },
     "/profile/pregnancyMode/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1754,7 +1790,9 @@
     },
     "/profile/getUserStatus/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1830,7 +1868,9 @@
     },
     "/profile/lockStatus/{userId}/{lang}": {
       "get": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1903,7 +1943,9 @@
     },
     "/profile/updateUserStatus/{userId}/{lang}": {
       "put": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -1976,7 +2018,9 @@
     },
     "/profile/setLock/{userId}/{lang}": {
       "put": {
-        "tags": ["profile"],
+        "tags": [
+          "profile"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2046,7 +2090,9 @@
     },
     "/interview/ordinarUser/{userId}/{lang}": {
       "post": {
-        "tags": ["interview"],
+        "tags": [
+          "interview"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2147,7 +2193,9 @@
     },
     "/interview/pregnantUser/{userId}/{lang}": {
       "post": {
-        "tags": ["interview"],
+        "tags": [
+          "interview"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2200,7 +2248,9 @@
                   "data": {
                     "type": "object",
                     "description": "user profile information",
-                    "required": ["lastPeriodDate"],
+                    "required": [
+                      "lastPeriodDate"
+                    ],
                     "properties": {
                       "birthdate": {
                         "type": "string"
@@ -2242,7 +2292,9 @@
     },
     "/pregnancy/getPregnancyData/{userId}/{lang}": {
       "get": {
-        "tags": ["pregnancy"],
+        "tags": [
+          "pregnancy"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2321,7 +2373,9 @@
     },
     "/pregnancy/savePregnancyData/{userId}/{lang}": {
       "post": {
-        "tags": ["pregnancy"],
+        "tags": [
+          "pregnancy"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2403,7 +2457,9 @@
     },
     "/pregnancy/setPregnancyEnd/{userId}/{dueDate}/{lang}": {
       "post": {
-        "tags": ["pregnancy"],
+        "tags": [
+          "pregnancy"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2477,7 +2533,9 @@
     },
     "/cycle/getLastPeriodDate/{userId}/{lang}": {
       "get": {
-        "tags": ["cycle"],
+        "tags": [
+          "cycle"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2550,7 +2608,9 @@
     },
     "/cycle/getUserAllPeriodDays/{userId}/{lang}": {
       "get": {
-        "tags": ["cycle"],
+        "tags": [
+          "cycle"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2621,7 +2681,9 @@
     },
     "/cycle/editLastPeriodDate/{userId}/{lastPeriodDate}/{lang}": {
       "put": {
-        "tags": ["cycle"],
+        "tags": [
+          "cycle"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2689,7 +2751,9 @@
     },
     "/cycle/setBleedingDays/{userId}/{lang}": {
       "put": {
-        "tags": ["cycle"],
+        "tags": [
+          "cycle"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -2738,8 +2802,14 @@
             "application/json": {
               "schema": {
                 "example": {
-                  "deleteDate": ["2020-07-09", "2020-07-10"],
-                  "addDate": ["2020-07-11", "2020-07-12"]
+                  "deleteDate": [
+                    "2020-07-09",
+                    "2020-07-10"
+                  ],
+                  "addDate": [
+                    "2020-07-11",
+                    "2020-07-12"
+                  ]
                 }
               }
             }

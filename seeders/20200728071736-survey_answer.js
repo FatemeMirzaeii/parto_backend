@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('survey_question', [
+    return queryInterface.bulkInsert('survey_answers', [
       { question: 'کارکردن با پرتو برام راحته',weakness:0, createdAt: new Date(), updatedAt: new Date() },
       { question: ' از پس تشخیص روزهای مهم دوره هام برمیاد',weakness:0, createdAt: new Date(), updatedAt: new Date() },
       { question: 'ظاهر پرتو جذاب و دوست داشتنیه',weakness:0, createdAt: new Date(), updatedAt: new Date() },
@@ -16,6 +16,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('survey_questions', null, {});
+    return queryInterface.bulkDelete('survey_answers', null, {});
   }
 };
