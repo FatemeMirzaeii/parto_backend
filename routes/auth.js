@@ -100,7 +100,7 @@ router.post("/logIn/:lang",async(req,res)=>{
   });
   res.clearCookie('token');
   return  res
-  .cookie("token",token)
+  .cookie("token",await token)
   .status(200)
   .json({ data: { id: usr.id ,userName:usr.name} });
 
