@@ -142,7 +142,7 @@ router.post("/verifyCode", async(req, res) => {
       async(response, status,message)=> {
               
         if (status==418){
-          sendEmail('info@partobanoo.com','parto@partobanoo.com',message,"ارور سامانه پیامکی ");
+          sendEmail('info@parto.app','parto@parto.app',message,"ارور سامانه پیامکی ");
         }
         else if (status==200){
           return res.status(200).json({data:{message:message,code:code}});
