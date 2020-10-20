@@ -19,10 +19,15 @@ const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
+const cookieParser = require('cookie-parser')
 
 const developmentApp = express();
 
-developmentApp.use(cors());
+developmentApp.use(cookieParser());
+developmentApp.use(cors({
+  origin:['https://test.parto.app','http://localhost'],
+  credentials:true
+}));
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());

@@ -1,5 +1,5 @@
 let creds = {
-    USER: 'parto@partobanoo.com', 
+    USER: 'parto@parto.app', 
     PASS: 'Parto2020'
 }
 module.exports = creds;

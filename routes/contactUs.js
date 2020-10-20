@@ -13,7 +13,7 @@ router.post("/Email", async (req, res) => {
   let content = `نام کاربر: ${name} \n ایمیل: ${email}\n عنوان: ${title} \n متن پیام: ${message} `;
   let subject = "ایمیل ارسال شده از طرف کاربر با عنوان:" + req.body.title;
   let result ;
-  result = await sEmail(creds.USER, "info@partobanoo.com", content, subject);
+  result = await sEmail(creds.USER, "info@parto.app", content, subject);
   console.log(result);
   if (result == "ERROR")
     return res

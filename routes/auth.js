@@ -7,6 +7,7 @@ const translate = require("../config/translate");
 const sendEmail=require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
 var cookie = require('cookie');
+const useragent = require('useragent');
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr ;
@@ -47,6 +48,7 @@ router.post("/signIn/:lang", async (req, res) => {
 
 router.post("/logIn/:lang",async(req,res)=>{
   let usr ;
+  
   if(req.body.phone==""){
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
@@ -92,14 +94,31 @@ router.post("/logIn/:lang",async(req,res)=>{
     }
   }
   const token =await usr.generateAuthToken();
-  console.log("tok",token)
+  
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
+  
+  if(useragent.is(req.headers['user-agent']).android==true &&
+      useragent.is(req.headers['user-agent']).firefox == false &&
+      useragent.is(req.headers['user-agent']).chrome == false &&
+      useragent.is(req.headers['user-agent']).ie == false &&
+      useragent.is(req.headers['user-agent']).mozilla == false &&
+      useragent.is(req.headers['user-agent']).opera == false ){
+    
+    res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
-  return res.status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  }
+  else{
+    
+    res.clearCookie('token');
+    return  res
+    .cookie("token", await token,{httpOnly: true , secure: true})
+    .status(200)
+    .json({ data: { id: usr.id ,userName:usr.name} });
+    }
 
 })
 
@@ -118,8 +137,7 @@ router.post("/verifyCode", async(req, res) => {
       api.VerifyLookup({
           receptor: req.body.phone,
           token: code.toString(),
-          template: "verificationCode"
-          
+          template: "verificationCode",
       }, 
       async(response, status,message)=> {
               
@@ -143,7 +161,7 @@ router.post("/verifyCode", async(req, res) => {
   //   else{
   //     const subject='Verification Code for parto application ';
   //     let text =`کد فعالسازی شما : ${code}  `;
-  //     const result=sendEmail('parto@partobanoo.com',req.body.email,text,subject);
+  //     const result=sendEmail('parto@parto.app',req.body.email,text,subject);
   //     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
   //     else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa") , code:code}})
   //   }

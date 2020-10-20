@@ -3,15 +3,31 @@ var fs = require("fs");
 const translate = require("../config/translate");
 const { user } = require("../models");
 const secret = fs.readFileSync("../private.key", "utf8");
+const useragent = require('useragent');
+
 
 module.exports = async function (req, res, next) {
-  const token = req.header("x-auth-token");
+  let token;
+  const patt = /127.0.0.1:/g;
+  
+  if(useragent.is(req.headers['user-agent']).android==true &&
+      useragent.is(req.headers['user-agent']).firefox == false &&
+      useragent.is(req.headers['user-agent']).chrome == false &&
+      useragent.is(req.headers['user-agent']).ie == false &&
+      useragent.is(req.headers['user-agent']).mozilla == false &&
+      useragent.is(req.headers['user-agent']).opera == false || patt.exec(req.headers.host)!==null){
+
+    token=req.header("x-auth-token");
+  }  
+  else{
+    token = req.cookies.token;
+  }
+  console.log("token",token);
   if (!token)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
   
   let verification=true;
-  await jwt.verify(token, secret, function(err, decoded) {
+  jwt.verify(token, secret, function(err, decoded) {
     // err
-    //console.log("v",verification);
     if(err){
       verification=false;
       }
@@ -21,8 +37,9 @@ module.exports = async function (req, res, next) {
       } 
       // req.user = decoded;
     }
-    //console.log("v",verification);
+    
   });
+  
   if(verification==false){
     res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
   } 

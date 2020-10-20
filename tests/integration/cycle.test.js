@@ -47,7 +47,8 @@ describe('cycle', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
-           return request(server).get('/cycle/getLastPeriodDate/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+           return request(server).get('/cycle/getLastPeriodDate/'+tempUserId+'/fa')
+           .set('x-auth-token', tempToken);
         }
         
         it('return 200 if every things be ok',async () => {

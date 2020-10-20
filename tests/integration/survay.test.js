@@ -29,102 +29,76 @@ describe('survay', () => {
         await User.destroy();   
     });
 
-    describe('/survay/surveyQuestion/:lang', () => {
-        let TempToken=token;
-        let userId=UserID;
-        let IMEi="123456789012345";
-        const execWithUserId=()=>{
-           return request(server).post('/survay/surveyQuestion/fa')
-           .send({"userId":`${userId}`})
-           .set('x-auth-token', TempToken);
+    describe('/survey/question/:lang', () => {
+        const exec=()=>{
+           return request(server).get('/survey/question/fa');
+           
         }
-        const execWidutUserId=()=>{
-            return request(server).post('/survay/surveyQuestion/fa')
-            .send({"IMEi":`${IMEi}`});
-         }
-        it('return 400 if token is not valid ',async()=>{
-            TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
-            let result=await execWithUserId();
-            expect(result.status).toBe(400);
-            
-        })
-        it('return 401 if token is not exist  ',async()=>{
-            TempToken='';
-            let result=await execWithUserId();
-            expect(result.status).toBe(401);
-            
-        })
-    
-        it('return 200 if send survay question and information to user UserId',async()=>{
-            TempToken=token;
-            const result=await execWithUserId();
-            expect(result.status).toBe(200);
-        });
-        it('return 200 if send survay question and information to user with IMEI',async()=>{
-            const result=await execWidutUserId();
+       
+        it('return 200',async()=>{
+            const result=await exec();
             expect(result.status).toBe(200);
         });
 
-        it('return 400 if imei is null',async()=>{
-            IMEi='';
-            const result=await execWidutUserId();
-            expect(result.status).toBe(400);
-        });
     });    
 
-    describe('/survay/userSurveyAnswer/:lang', () => {
+    describe('/survey/answers/:lang', () => {
         let TempToken=token;
         let userId=UserID;
         let IMEi="123456789012345";
         let rate=5;
-        const execWithUserId=()=>{
-           return request(server).put('/survay/userSurveyAnswer/fa')
-           .send({"userId":`${userId}`,"rate":`${rate}`,"answers":"1,3","description":"test"})
-           .set('x-auth-token', TempToken);
+        const exec=()=>{
+           return request(server).put('/survey/answers/fa')
+           .send({"userId":`${userId}`,"IMEi":`${IMEi}`,"rate":`${rate}`,"answers":"1,3","description":"test"})
+           .set("x-auth-token", TempToken);
         }
-        const execWidutUserId=()=>{
-            return request(server).post('/survay/surveyQuestion/fa')
-            .send({"IMEi":`${IMEi}`,"rate":`${rate}`,"answers":"1,3","description":"test"});
-           
-         }
-        it('return 400 if token is not valid ',async()=>{
-            TempToken="eaashasdwj.ajhyuishjkdhsjo.swihwuischsjk.dowdsjmcoiwck";
-            const result=await execWithUserId();
+        
+        it('return 400 if rate=0',async()=>{
+            rate=0;
+            TempToken=token;
+            const result=await exec();
             expect(result.status).toBe(400);
             
         })
+        it('return 400 if imei and userId are null',async()=>{
+            rate=5;
+            userId=0;
+            TempToken=token;
+            IMEi="";
+            const result=await exec();
+            expect(result.status).toBe(400);
+            
+        })
+        it('return 200 if imei defind and rate defind',async()=>{
+            IMEi="agsajhsjknxzklkoz";
+            TempToken=token;
+            const result=await exec();
+            expect(result.status).toBe(200);
+        });
+        it('return 200 if userId and token defind and rate defind',async()=>{
+            IMEi="";
+            userId= UserID;
+            TempToken = token;
+            const result=await exec();
+            expect(result.status).toBe(200);
+        });
         it('return 401 if token is not exist  ',async()=>{
+            IMEi="";
+            userId=UserID;
             TempToken='';
-            const result=await execWithUserId();
+            const result=await exec();
             expect(result.status).toBe(401);
             
         })
         it('return 400 if userId is not exist  ',async()=>{
-            TempToken=token;
-            userId=UserID+10;
-            const result=await execWithUserId();
+            IMEi="";
+            userId=UserID;
+            TempToken="asnkjnlkzmx.ahaskjxilkjcmn.ajilkjnxkjszx.sxnkjmnkm";
+            const result=await exec();
             expect(result.status).toBe(400);
             
         })
-    
-        it('return 200 if send survay question and information to user UserId',async()=>{
-            TempToken=token;
-            userId=UserID;
-            const result=await execWithUserId();
-            expect(result.status).toBe(200);
-        });
-        it('return 200 if send survay question and information to user with IMEI',async()=>{
-            const result=await execWidutUserId();
-            expect(result.status).toBe(200);
-        });
-
-        it('return 400 if imei is null',async()=>{
-            IMEi='';
-            let result=await execWidutUserId();
-            expect(result.status).toBe(400);
-            
-        });
-             
+                 
     });    
 
 });
