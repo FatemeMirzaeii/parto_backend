@@ -94,25 +94,25 @@ router.post("/logIn/:lang",async(req,res)=>{
     }
   }
   const token =await usr.generateAuthToken();
-  console.log("tok",token)
+  
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
-  console.log('user-agent',useragent.is(req.headers['user-agent']));
+  
   if(useragent.is(req.headers['user-agent']).android==true &&
       useragent.is(req.headers['user-agent']).firefox == false &&
       useragent.is(req.headers['user-agent']).chrome == false &&
       useragent.is(req.headers['user-agent']).ie == false &&
       useragent.is(req.headers['user-agent']).mozilla == false &&
       useragent.is(req.headers['user-agent']).opera == false ){
-    console.log("okkkkkkkkkkkkkkk");
+    
     res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
   }
   else{
-    console.log("nnnokkkkkkkkkkkkkkk");
+    
     res.clearCookie('token');
     return  res
     .cookie("token", await token,{httpOnly: true , secure: true})

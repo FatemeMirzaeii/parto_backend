@@ -3,18 +3,21 @@ var fs = require("fs");
 const translate = require("../config/translate");
 const { user } = require("../models");
 const secret = fs.readFileSync("../private.key", "utf8");
-var cookie = require('cookie');
+const useragent = require('useragent');
+
 
 module.exports = async function (req, res, next) {
   let token;
+  const patt = /127.0.0.1:/g;
+  
   if(useragent.is(req.headers['user-agent']).android==true &&
       useragent.is(req.headers['user-agent']).firefox == false &&
       useragent.is(req.headers['user-agent']).chrome == false &&
       useragent.is(req.headers['user-agent']).ie == false &&
       useragent.is(req.headers['user-agent']).mozilla == false &&
-      useragent.is(req.headers['user-agent']).opera == false ){
-        
-    token=req.headers.req.header("x-auth-token");
+      useragent.is(req.headers['user-agent']).opera == false || patt.exec(req.headers.host)!==null){
+
+    token=req.header("x-auth-token");
   }  
   else{
     token = req.cookies.token;
