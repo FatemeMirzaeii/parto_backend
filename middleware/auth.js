@@ -7,7 +7,13 @@ var cookie = require('cookie');
 
 module.exports = async function (req, res, next) {
   let token;
-  if(req.headers['user-agent'].match(/Android/)==true){
+  if(useragent.is(req.headers['user-agent']).android==true &&
+      useragent.is(req.headers['user-agent']).firefox == false &&
+      useragent.is(req.headers['user-agent']).chrome == false &&
+      useragent.is(req.headers['user-agent']).ie == false &&
+      useragent.is(req.headers['user-agent']).mozilla == false &&
+      useragent.is(req.headers['user-agent']).opera == false ){
+        
     token=req.headers.req.header("x-auth-token");
   }  
   else{

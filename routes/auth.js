@@ -101,7 +101,12 @@ router.post("/logIn/:lang",async(req,res)=>{
     login_date: Date.now(),
   });
   console.log('user-agent',useragent.is(req.headers['user-agent']));
-  if(useragent.is(req.headers['user-agent']).android==true){
+  if(useragent.is(req.headers['user-agent']).android==true &&
+      useragent.is(req.headers['user-agent']).firefox == false &&
+      useragent.is(req.headers['user-agent']).chrome == false &&
+      useragent.is(req.headers['user-agent']).ie == false &&
+      useragent.is(req.headers['user-agent']).mozilla == false &&
+      useragent.is(req.headers['user-agent']).opera == false ){
     console.log("okkkkkkkkkkkkkkk");
     res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
 
