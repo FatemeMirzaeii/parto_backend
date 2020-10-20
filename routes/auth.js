@@ -161,7 +161,7 @@ router.post("/verifyCode", async(req, res) => {
   //   else{
   //     const subject='Verification Code for parto application ';
   //     let text =`کد فعالسازی شما : ${code}  `;
-  //     const result=sendEmail('parto@partobanoo.com',req.body.email,text,subject);
+  //     const result=sendEmail('parto@parto.app',req.body.email,text,subject);
   //     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
   //     else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa") , code:code}})
   //   }
