@@ -7,6 +7,7 @@ const translate = require("../config/translate");
 const sendEmail=require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
 var cookie = require('cookie');
+const useragent = require('useragent');
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr ;
@@ -47,6 +48,7 @@ router.post("/signIn/:lang", async (req, res) => {
 
 router.post("/logIn/:lang",async(req,res)=>{
   let usr ;
+  
   if(req.body.phone==""){
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
@@ -98,11 +100,20 @@ router.post("/logIn/:lang",async(req,res)=>{
     version: req.body.version,
     login_date: Date.now(),
   });
-  res.clearCookie('token');
-  return  res
-  .cookie("token", await token,{httpOnly: true , secure: true})
-  .status(200)
-  .json({ data: { id: usr.id ,userName:usr.name} });
+  console.log('user-agent',useragent.is(req.headers['user-agent']));
+  if(useragent.is(req.headers['user-agent']).android==true){
+    console.log("okkkkkkkkkkkkkkk");
+    res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+
+  }
+  else{
+    console.log("nnnokkkkkkkkkkkkkkk");
+    res.clearCookie('token');
+    return  res
+    .cookie("token", await token,{httpOnly: true , secure: true})
+    .status(200)
+    .json({ data: { id: usr.id ,userName:usr.name} });
+    }
 
 })
 

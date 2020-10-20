@@ -6,14 +6,19 @@ const secret = fs.readFileSync("../private.key", "utf8");
 var cookie = require('cookie');
 
 module.exports = async function (req, res, next) {
-  const token = req.cookies.token;
+  let token;
+  if(req.headers['user-agent'].match(/Android/)==true){
+    token=req.headers.req.header("x-auth-token");
+  }  
+  else{
+    token = req.cookies.token;
+  }
   console.log("token",token);
   if (!token)   return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
   
   let verification=true;
   jwt.verify(token, secret, function(err, decoded) {
     // err
-    console.log("verification1",verification);
     if(err){
       verification=false;
       }
@@ -23,9 +28,9 @@ module.exports = async function (req, res, next) {
       } 
       // req.user = decoded;
     }
-    console.log("verification2",verification);
+    
   });
-  console.log("verification3",verification);
+  
   if(verification==false){
     res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
   } 
