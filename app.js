@@ -23,7 +23,7 @@ const survey = require("./routes/survey");
 const profile = require("./routes/profile");
 
 const app = express();
-developmentApp.use(cors({
+app.use(cors({
     origin:['https://my.parto.app'],
     credentials:true
   }));
