@@ -28,8 +28,20 @@ module.exports = {
       conception_date:{
         type: Sequelize.DATEONLY ,
         get: function() {
-          return moment.utc(this.getDataValue('zygosis_date')).format('YYYY-MM-DD');
+          return moment.utc(this.getDataValue('conception_date')).format('YYYY-MM-DD');
         }
+      },
+      abortion_date:{
+        type: Sequelize.DATEONLY ,
+        get: function() {
+          return moment.utc(this.getDataValue('abortion_date')).format('YYYY-MM-DD');
+        }
+      },
+      children_number:{
+        type: Sequelize.INTEGER
+      },
+      kick_count: {
+        type: Sequelize.INTEGER
       },
       abortion: {
         type: Sequelize.BOOLEAN
