@@ -17,9 +17,15 @@ module.exports = async function (req, res, next) {
       useragent.is(req.headers['user-agent']).mozilla == false &&
       useragent.is(req.headers['user-agent']).opera == false || patt.exec(req.headers.host)!==null){
 
-    token=req.header("x-auth-token");
+        if(req.header("x-auth-token")==undefined ){
+          return res.status(400).json({ message: "there isn't header x-auth-token in request "});
+        }  
+        token=req.header("x-auth-token");
   }  
   else{
+    if(req.cookies.token==undefined ){
+      return res.status(400).json({ message: "there isn't token in cookie "});
+    }  
     token = req.cookies.token;
   }
   console.log("token",token);
