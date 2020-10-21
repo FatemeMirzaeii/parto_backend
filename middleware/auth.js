@@ -9,7 +9,8 @@ const useragent = require('useragent');
 module.exports = async function (req, res, next) {
   let token;
   const patt = /127.0.0.1:/g;
-  
+  console.log("user-agenttttttttttttttttttt ",req.headers['user-agent']);
+  console.log("cookieeeeeeeeee",req.cookies);
   if(useragent.is(req.headers['user-agent']).android==true &&
       useragent.is(req.headers['user-agent']).firefox == false &&
       useragent.is(req.headers['user-agent']).chrome == false &&
