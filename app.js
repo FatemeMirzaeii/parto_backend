@@ -42,13 +42,12 @@ app.use("/survey", survey);
 app.use("/profile", profile);
 app.use(error);
 
+console.log(process.env.NODE_PORT);
 
-app.use(express.static(`../../Fattahi/deploy/staging/build`));
+app.use(express.static(`../../Fattahi/deploy/production/build`));
 app.get("/*", (req, res) => {
-  res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
 });
 
-const developmentServer = app.listen(2218, () =>
-  logger.info("Listening on port 2218...")
-);
-module.exports = developmentServer;
+const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
+module.exports = server;
