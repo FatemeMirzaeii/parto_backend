@@ -1,7 +1,5 @@
 require("express-async-errors");
 require("./models/index");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
