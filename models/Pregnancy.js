@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
     },
     conception_date: DataTypes.DATEONLY ,
+    abortion_date:DataTypes.DATEONLY,
+    children_number:DataTypes.INTEGER,
+    kick_count: DataTypes.INTEGER,
     due_date: {
       type: DataTypes.DATEONLY ,
       validate: {

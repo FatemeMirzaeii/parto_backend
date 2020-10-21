@@ -1,15 +1,11 @@
 require("express-async-errors");
 require("./models/index");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
 const express = require("express");
 const cors = require("cors");
-
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
-
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const article = require("./routes/article");
@@ -24,12 +20,12 @@ const profile = require("./routes/profile");
 const cookieParser = require('cookie-parser')
 
 const app = express();
+
 app.use(cookieParser());
 app.use(cors({
-    origin:['https://my.parto.app'],
-    credentials:true
-  }));
-
+  origin:['https://my.parto.app'],
+  credentials:true
+}));
 app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json());
@@ -48,10 +44,10 @@ app.use(error);
 
 console.log(process.env.NODE_PORT);
 
-// app.use(express.static(`../../Fattahi/deploy/production/build`));
-// app.get("/*", (req, res) => {
-//   res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
-// });
+app.use(express.static(`../../Fattahi/deploy/production/build`));
+app.get("/*", (req, res) => {
+  res.sendFile("index.html", { root: "../../Fattahi/deploy/production/build" });
+});
 
 const server = app.listen(2218, () => logger.info("Listening on port 2218..."));
 module.exports = server;
