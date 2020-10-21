@@ -61,7 +61,7 @@ deploy_prod_parto:
     - npx sequelize-cli db:seed:all
     - PORT=2218
     - pm2 restart app.js
-    - echo "Deploy to production server Succdsfull"
+    - echo "Deploy to production server Successful"
     - pm2 logs
 
   environment:
