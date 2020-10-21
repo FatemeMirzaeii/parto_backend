@@ -21,8 +21,10 @@ const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
+const cookieParser = require('cookie-parser')
 
 const app = express();
+app.use(cookieParser());
 app.use(cors({
     origin:['https://my.parto.app'],
     credentials:true
