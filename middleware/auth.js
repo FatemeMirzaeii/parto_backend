@@ -21,13 +21,13 @@ module.exports = async function (req, res, next) {
       useragent.is(req.headers['user-agent']).opera == false || patt.exec(req.headers.host)!==null){
 
         if(req.header("x-auth-token")==undefined ){
-          return res.status(400).json({ message: "there isn't header x-auth-token in request "});
+          res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
         }  
         token=req.header("x-auth-token");
   }  
   else{
     if(req.cookies.token==undefined ){
-      return res.status(400).json({ message: "there isn't token in cookie "});
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }  
     token = req.cookies.token;
   }
