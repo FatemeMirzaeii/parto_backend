@@ -94,7 +94,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     }
   }
   const token =await usr.generateAuthToken();
-  
+  console.log("token",token);
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
@@ -115,7 +115,7 @@ router.post("/logIn/:lang",async(req,res)=>{
     
     res.clearCookie('token');
     return  res
-    .cookie("token", await token,{httpOnly: true , secure: true})
+    .cookie("token", await token,{httpOnly: true , secure: true , maxAge:10*365*24*60*60 })
     .status(200)
     .json({ data: { id: usr.id ,userName:usr.name} });
     }
