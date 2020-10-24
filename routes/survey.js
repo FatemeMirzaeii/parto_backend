@@ -4,11 +4,11 @@ const router = express.Router();
 const translate = require("../config/translate");
 const jwt = require("jsonwebtoken");
 var fs = require("fs");
-let auth = require("../middleware/auth");
+const useragent = require('useragent');
 const secret = fs.readFileSync("../private.key", "utf8");
 
 function authentication (req){
-  let token;
+  let token="";
   const patt = /127.0.0.1:/g;
  
   if(useragent.is(req.headers['user-agent']).android==true &&
@@ -17,20 +17,20 @@ function authentication (req){
       useragent.is(req.headers['user-agent']).ie == false &&
       useragent.is(req.headers['user-agent']).mozilla == false &&
       useragent.is(req.headers['user-agent']).opera == false || patt.exec(req.headers.host)!==null){
-
+        
         if(req.header("x-auth-token")==undefined ){
-          res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+          return "401";
         }  
         token=req.header("x-auth-token");
   }  
   else{
     if(req.cookies.token==undefined ){
-      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+      return "401";
     }  
     token = req.cookies.token;
   }
-  console.log("token",token);
-  if (!token)   return "401";
+  console.log("tokenValu",token);
+  if (token=="")   return "401";
   
   let verification=true;
   jwt.verify(token, secret, function(err, decoded) {
@@ -75,8 +75,8 @@ router.get("/question/:lang", async (req,res) => {
 router.put("/answers/:lang", async (req, res) => {
   let usr ;
   if (!req.body.rate|| req.body.rate==0  ) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  
   if(req.body.IMEi !=null && req.body.IMEi !=""){
-    //check code
     await user_answer_survey.create({
       IMEI:req.body.IMEi,
       answers:req.body.answers ,
@@ -86,7 +86,6 @@ router.put("/answers/:lang", async (req, res) => {
   }
 
   else if(req.body.userId!=null && req.body.userId!=0){
-    
     if (authentication(req)=="401"){
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }

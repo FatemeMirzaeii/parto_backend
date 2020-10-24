@@ -32,7 +32,7 @@ describe('auth',()=>{
         server.close();
     })
     afterAll(async()=>{
-        let userLog=await user_log.findOne({where: {user_id:UserID}});
+        let userLog=await user_log.findOne({where: {user_id:UserPhone.id}});
         await userLog.destroy();
         await newUser.destroy();
         
@@ -125,7 +125,6 @@ describe('auth',()=>{
             phone="09199698086";
             const result=await exec();
             expect(result.status).toBe(200);
-            
         });
 
     })
