@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('health_tracking_option', [
-      { title: 'لکه بینی',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:1, title: 'لکه بینی',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -15,7 +15,7 @@ module.exports = {
         C291,266.7,302,277.7,315.6,277.7z"/>
       <path class="st1" d="M303.8,348.3c10.3,0,18.7-8.4,18.7-18.7s-8.4-18.7-18.7-18.7s-18.7,8.4-18.7,18.7S293.5,348.3,303.8,348.3z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'سبک',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:2, title: 'سبک',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -26,7 +26,7 @@ module.exports = {
           C295.2,258.2,282.7,249,287.8,226.7L287.8,226.7z"/>
       </g>
       </svg>` , created_at: new Date(), updated_at: new Date() },
-      { title: 'متوسط',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:3, title: 'متوسط',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -41,7 +41,7 @@ module.exports = {
           C366.9,286.9,349.7,274.2,356.8,243.5L356.8,243.5z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'سنگین',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:4, title: 'سنگین',category_id:1,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -52,7 +52,7 @@ module.exports = {
           C307.9,230.8,282,211.7,292.6,165.3L292.6,165.3z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'سردرد',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:5, title: 'سردرد',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -83,7 +83,7 @@ module.exports = {
       <path class="st1" d="M243.6,107.7c4.2-3.6,8.5-2.6,11.1-2.9c6.8-0.6,3.6-6.6-3.8-6c-7.4,0.5-13.6,4.5-16.3,11.5
         c-2.2,5.6,0,6.6,1.5,8.5C241.4,114,238.4,112.1,243.6,107.7L243.6,107.7z"/>
       </svg>` , created_at: new Date(), updated_at: new Date() },
-      { title: 'حساس شدن سینه ها',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:6, title: 'حساس شدن سینه ها',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -114,7 +114,7 @@ module.exports = {
       <path class="st1" d="M165.7,288.3c0,5.7-3.9,0.2-3.9,14.3c0,4.8,6,6.1,6.6,13c-13.1,2.7-15.6-17.2-10.6-26.1
         c0.4-0.7,1.4-2.4,2.1-3.1c2.9-2.6-1.9-1.3,4.5-2C165.3,285.9,165.7,285.7,165.7,288.3L165.7,288.3z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'تخمک گذاری',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:7, title: 'درد زیر شکم',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -142,7 +142,7 @@ module.exports = {
       <path class="st1" d="M392.4,374.9c0,5.7-3.7,8.6-5.3,10.8c-4.1,5.8,2.7,7.4,7.4,1.1c4.6-6.2,5.7-13.8,2-20.8
         c-2.9-5.5-5.3-4.5-7.8-4.6C388.8,368.8,392.4,367.8,392.4,374.9L392.4,374.9z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'گرفتگی عضلات',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:8, title: 'گرفتگی عضلات',category_id:3,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -162,7 +162,7 @@ module.exports = {
         c3.6-8.6-4.3-6.6-6-14.5c-2-9.2,8.5-11,1.9-17c-3.7,0.5-1.8-2.1-7.1,8.1C152,339.6,158.6,354.9,167.3,355.2L167.3,355.2z
          M388.1,318.2c0,11.5-10.2,6.9-10.4,18.1c17.3-0.4,23-28.6,9.1-29.8C383.8,312.7,388.1,312.9,388.1,318.2L388.1,318.2z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'چسبنده',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:9, title: 'چسبنده',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -172,7 +172,7 @@ module.exports = {
         c-0.9-22.6-4.2-43.1-10.9-60.5c-23.2-60.2-43.6-52.8-36-79c6.1-21.2,13.7-41.5,48.3-41.5c51.9,0,98.7,34.8,78.9,75
         c-5.2,10.5-9.9,17-14.5,21.4c-23.2,22.3-2,36-16.9,38.5c-16.2,2.7-2.2-36.9-23-11.7C291.7,221.4,287,255.9,285,297.1z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'کرمی',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:10, title: 'کرمی',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -185,7 +185,7 @@ module.exports = {
       <path class="st1" d="M199.4,246.5c0,0-49.3,82.6-49.3,109.8c0,27.2,22.1,49.3,49.3,49.3s49.3-22.1,49.3-49.3
         C248.7,329.1,199.4,246.5,199.4,246.5z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'سفید-تخم مرغی',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:11, title: 'سفید-تخم مرغی',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -196,7 +196,7 @@ module.exports = {
         c-41.8,1.3-84.8,16.1-121.9,47c-12.2,10.1-28.9,23.6-29.5,40.5c-0.4,12.6,7.5,22.9,18.9,22.3c18.9-1.1,22.5-24.9,39.9-25.8
         c45-2.5,60,196,5,206.2c-29.8,5.5-40.4-30.6-63.5-9.2C123.1,379.8,124.4,396.9,134.8,409.3z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'غیرمعمول',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:12, title: 'غیرمعمول',category_id:2,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -211,7 +211,7 @@ module.exports = {
       <path class="st1" d="M400.1,179.8c35.8,94-110.7,99.3-62.9-0.6c5.1-10.6,9.5-21.1,13.4-31.7c6.7-18.3,5.4-40.7,29.5-28.9
         C394.8,125.9,387.1,145.8,400.1,179.8z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'شاد و با نشاط',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:13, title: 'شاد و با نشاط',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -232,7 +232,7 @@ module.exports = {
         c0,11.2,6.4,20.4,14.4,20.4c7.9,0,14.4-9.1,14.4-20.4c0-1.7,1.4-3.1,3.1-3.1s3.1,1.4,3.1,3.1C304.4,310.6,295.2,322.5,283.9,322.5z"
         />
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'هیجان زده و عصبی',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:14, title: 'هیجان زده و عصبی',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
@@ -254,7 +254,7 @@ module.exports = {
           c7.2,2.1,10.3-3.1,6.7-5.9c-1.4-1.1-4.6-1-6.5-1.9c-2-1-2.9-2.3-4.9-3.5c-11.9-7.3-19,4.3-25.1,4.5
           C285.6,316,280.6,304.4,267.9,310.9L267.9,310.9z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'غمگین و خسته',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:15, title: 'غمگین و خسته',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -278,7 +278,7 @@ module.exports = {
           C308.2,304.7,306.8,306.1,305.1,306.1L305.1,306.1z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'سندروم پیش از قاعدگی',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:16, title: 'سندروم پیش از قاعدگی',category_id:4,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -317,7 +317,7 @@ module.exports = {
         <path class="st1" d="M270.2,459.3c0,0-10.9,29.1,0,29.1C281.1,488.4,270.2,459.3,270.2,459.3z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: '0 تا 3 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:17, title: '0 تا 3 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -362,7 +362,7 @@ module.exports = {
           />
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: '3 تا 6 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:18, title: '3 تا 6 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -383,7 +383,7 @@ module.exports = {
           C276.2,96.3,270.9,91.9,265.4,94.1L265.4,94.1z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: '6 تا 9 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:19, title: '6 تا 9 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -404,7 +404,7 @@ module.exports = {
         </g>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'بیش از 9 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:20, title: 'بیش از 9 ساعت',category_id:5,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
@@ -466,7 +466,7 @@ module.exports = {
           c9.1-1.2,13.2,2.5,17.6,5.2c0.2,0.1,0.4,0.3,0.6,0.4c6.5,3.6,11.3,7.2,15.1,13.7C456.4,317,455.3,330.4,446.9,341.8z"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'دو',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:21, title: 'دو',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -484,7 +484,7 @@ module.exports = {
         <circle class="st1" cx="417.7" cy="184.9" r="31.9"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'شنا',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:22, title: 'شنا',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -501,7 +501,7 @@ module.exports = {
       <path class="st1" d="M330.2,363.3c-76.1-10.3-134.2-57.5-206.2-3.8c-21.3,15.9-31.2,47.2,13.5,24.3c32.3-16.6,42.3-26.9,79.2-21.2
         c59.3,9.1,123.3,52.1,223.1,17.5c20.2-7,29.7-28-4.8-24.3C400.3,359.6,365.1,368,330.2,363.3z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'باشگاه',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:23, title: 'باشگاه',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -520,7 +520,7 @@ module.exports = {
         l-4.4,12.6l11.4,7.8L211.7,190.3z"/>
       </svg>
       `, created_at: new Date(), updated_at: new Date() },
-      { title: 'نرمش',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:24, title: 'نرمش',category_id:6,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -536,7 +536,7 @@ module.exports = {
         <circle class="st1" cx="196.8" cy="154.4" r="33.3"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'محافظت شده',category_id:7,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:25, title: 'محافظت شده',category_id:7,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -554,7 +554,7 @@ module.exports = {
       <path class="st1" d="M266.8,363.2c5,3.2,23.5,3.5,30.8,1.6c12.8-3.3-8.5-37.5-0.1-48.6c5.7-7.4,9-14.7,1.5-23.7
         c-13.4-16-43.4-1.3-33.3,19.3c3.8,7.7,5.1,1.5,5.9,9.9c0.3,3.4-2,10.9-2.7,14.6l-3.8,20.7C265.1,364.7,264.2,359.9,266.8,363.2z"/>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      { title: 'محافظت نشده',category_id:7,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:26, title: 'محافظت نشده',category_id:7,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">

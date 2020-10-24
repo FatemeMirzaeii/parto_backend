@@ -3,9 +3,9 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('health_tracking_category', [
-      { title: 'خونریزی',has_multiple_choice:0	,color:"#EF719F" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve"><path fill="none" stroke="#F1719D" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845	c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17	S142.349,540.845,283.17,540.845z"/><g>	<path fill="#EF719F" d="M292.582,163.253c-67.26,79.579-104.81,130.191-90.255,186.318c17.784,68.598,154.958,66.55,164.804-4.848	c3.339-24.215-7.852-53.012-28.548-78.343C307.908,228.845,281.966,209.672,292.582,163.253L292.582,163.253z"/></g></svg>
+      { id:1,title: 'خونریزی',has_multiple_choice:0	,color:"#EF719F" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve"><path fill="none" stroke="#F1719D" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845	c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17	S142.349,540.845,283.17,540.845z"/><g>	<path fill="#EF719F" d="M292.582,163.253c-67.26,79.579-104.81,130.191-90.255,186.318c17.784,68.598,154.958,66.55,164.804-4.848	c3.339-24.215-7.852-53.012-28.548-78.343C307.908,228.845,281.966,209.672,292.582,163.253L292.582,163.253z"/></g></svg>
       `, created_at: new Date(), updated_at: new Date() },
-      { title: 'ترشحات',has_multiple_choice:0	,color:"#B6D443" ,icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:2, title: 'ترشحات',has_multiple_choice:0	,color:"#B6D443" ,icon:`<?xml version="1.0" encoding="utf-8"?>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
@@ -18,7 +18,7 @@ module.exports = {
         c-41.8,1.3-84.8,16.1-121.9,47c-12.2,10.1-28.9,23.6-29.5,40.5c-0.4,12.6,7.5,22.9,18.9,22.3c18.9-1.1,22.5-24.9,39.9-25.8
         c45-2.5,60,196,5,206.2c-29.8,5.5-40.4-30.6-63.5-9.2C123.1,379.8,124.4,396.9,134.8,409.3z"/>
       </svg>`, created_at: new Date(), updated_at: new Date()},
-      { title: 'درد',has_multiple_choice:1	,color:"#00B1DC" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      {id:3, title: 'درد',has_multiple_choice:1	,color:"#00B1DC" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
       width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
    <path fill="none" stroke="#00B1DC" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845
      c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17
@@ -54,7 +54,7 @@ module.exports = {
      C194.535,320.334,197.986,324.91,178.203,324.91L178.203,324.91z"/>
    </svg>
    `, created_at: new Date(), updated_at: new Date() },
-      { title: 'حال عمومی',has_multiple_choice:0	,color:"#EF719C" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      {id:4, title: 'حال عمومی',has_multiple_choice:0	,color:"#EF719C" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
       width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
    <path fill="none" stroke="#EF719C" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845
      c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17
@@ -123,7 +123,7 @@ module.exports = {
    </g>
    </svg>
    `, created_at: new Date(), updated_at: new Date() },
-      { title: 'خواب',has_multiple_choice:0	,color:"#B6D442" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      {id:5, title: 'خواب',has_multiple_choice:0	,color:"#B6D442" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
       width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
    <path fill="none" stroke="#B6D442" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845
      c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17
@@ -146,7 +146,7 @@ module.exports = {
    </g>
    </svg>
    `, created_at: new Date(), updated_at: new Date()},
-      { title: 'ورزش',has_multiple_choice:1	,color:"#00AEEF" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      {id:6, title: 'ورزش',has_multiple_choice:1	,color:"#00AEEF" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
       width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
    <path fill="none" stroke="#00B6DF" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845
      c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17
@@ -169,7 +169,7 @@ module.exports = {
    </g>
    </svg>
    `, created_at: new Date(), updated_at: new Date() },
-      { title: 'همسرانگی',has_multiple_choice:0	,color:"#EF719C" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      {id:7, title: 'همسرانگی',has_multiple_choice:0	,color:"#EF719C" ,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
       width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
    <path fill="none" stroke="#EF719C" stroke-width="50" stroke-miterlimit="22.9256" d="M283.17,540.845
      c140.821,0,255.675-114.854,255.675-255.675S423.991,29.495,283.17,29.495S27.495,144.349,27.495,285.17
