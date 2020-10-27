@@ -87,65 +87,28 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       }
     })
   }); 
-  // addDate for add date user if day aren't in the db
-  console.log("del",await deleted);
-  //if(await deleted>=0){
-    console.log("length",req.body.addDate.length);
-    const usr=await user.findByPk(req.params.userId);
-    const trackingOption=await health_tracking_option.findByPk(3);
+  const usr=await user.findByPk(req.params.userId);
+  const trackingOption=await health_tracking_option.findByPk(3);
+  
     const lock = new AsyncLock();
     lock.acquire(usr,async function(done) {
       for(let i=0;i<req.body.addDate.length ;i++){
-        console.log("i",req.body.addDate[i]);
         if( checkDateWithDateOnly(req.body.addDate[i]) && flag==true){
-         // await sleep(1000);
-        
-          
           let dest= await user_tracking_option.destroy({
             where: {
               user_id:req.params.userId,
-              date:new Date(req.body.addDate[i]),
+              date:req.body.addDate[i],
               tracking_option_id:{[Op.or]: [1,2,3,4]}
             }
           })
           await user_tracking_option.create({
-                    date:new Date(req.body.addDate[i])
+                    date:req.body.addDate[i]
           }).then(function(addUser){
             return addUser.setUser(usr);
           }).then(function(addOption){
             return addOption.setHealth_tracking_option(trackingOption);
           })
-          // await addDate.setUser(usr);
-          // await addDate.setHealth_tracking_option(trackingOption);
-          
-            
-        
-        // let addDate;
-        // let dest= await user_tracking_option.destroy({
-        //   where: {
-        //     user_id:req.params.userId,
-        //     date:new Date(req.body.addDate[i]),
-        //     tracking_option_id:{[Op.or]: [1,2,3,4]}
-        //   }
-        // }).then(
-        //   addDate=await user_tracking_option.create({
-        //             date:new Date(req.body.addDate[i])
-        //   })
-        //   ).then(addDate.setUser(usr)).then(addDate.setHealth_tracking_option(trackingOption));
-          
-         
-        // console.log("des",dest);
-        // let addDate;
-        // if(await dest>=0){
-        //   addDate=await user_tracking_option.create({
-        //         date:new Date(req.body.addDate[i])
-        //   }).then(addDate.setUser(usr)).then(addDate.setHealth_tracking_option(trackingOption));
-        //   // await addDate.setUser(usr);
-        //   // await addDate.setHealth_tracking_option(trackingOption);
-        // }
-        // console.log("add",addDate);
-        // await sleep(1000).then(flag=true);
-        
+             
         }
       }
       done();
@@ -156,7 +119,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
       let find= await user_tracking_option.findAll({
         where: {
           user_id:req.params.userId,
-          date:new Date(req.body.addDate[j]),
+          date:req.body.addDate[j],
           tracking_option_id:{[Op.or]: [1,2,3,4]}
         }
       })
@@ -165,7 +128,7 @@ router.put("/setBleedingDays/:userId/:lang",auth, async(req, res) => {
           await user_tracking_option.destroy({
             where: {
               user_id:req.params.userId,
-              date:new Date(req.body.addDate[k]),
+              date:req.body.addDate[k],
               tracking_option_id:{[Op.or]: [1,2,3,4]}
             }
           })
