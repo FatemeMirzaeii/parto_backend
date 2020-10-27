@@ -55,6 +55,7 @@ deploy_prod_parto:
     - PORT=2218
     - pm2 restart app.js
     - echo "Deploy to production server Successful"
+    - npx sequelize db:seed --seed 20201024133503-health_tracking_option.js 
     # - pm2 logs
 
   environment:
