@@ -24,10 +24,24 @@ const cookieParser = require('cookie-parser')
 const developmentApp = express();
 
 developmentApp.use(cookieParser());
-developmentApp.use(cors({
-  origin:['https://test.parto.app'],
+
+const whitelist = ['http://test.parto.app', 'http://127.0.0.1:3925']
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials:true
-}));
+}
+
+developmentApp.use(cors(corsOptions));
+// developmentApp.use(cors({
+//   origin:['https://test.parto.app'],
+//   credentials:true
+// }));
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());

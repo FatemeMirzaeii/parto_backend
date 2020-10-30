@@ -88,9 +88,12 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
   });
   const usr = await user.findByPk(req.params.userId);
   const trackingOption = await health_tracking_option.findByPk(3);
+  console.log("lengthhhhh",req.body.addDate.length)
   req.body.addDate.forEach(async element2 => {
+    console.log("element2",new Date(element2));
+    
     let u=await user_tracking_option.create({
-      date: req.body.addDate[element2]
+      date: new Date(req.body.addDate[element2]),
     });
     await u.setUser(usr);
     await u.setHealth_tracking_option(trackingOption);
