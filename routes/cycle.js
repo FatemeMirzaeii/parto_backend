@@ -95,8 +95,8 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
     let u=await user_tracking_option.create({
       date:element2,
     });
-    // await u.setUser(usr);
-    // await u.setHealth_tracking_option(trackingOption);
+    await u.setUser(usr);
+    await u.setHealth_tracking_option(trackingOption);
    
   });
 
