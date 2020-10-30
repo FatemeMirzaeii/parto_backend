@@ -25,19 +25,21 @@ const developmentApp = express();
 
 developmentApp.use(cookieParser());
 
-const whitelist = ['http://test.parto.app', 'http://127.0.0.1:3925']
-const corsOptions = {
+const whitelist = ['https://test.parto.app', 'http://127.0.0.1:3925']
+developmentApp.use(cors({
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
+    // bypass the requests with no origin (like curl requests, mobile apps, etc )
+    if (!origin) return callback(null, true);
+ 
+    if (whitelist.indexOf(origin) === -1) {
+      var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+      return callback(new Error(msg), false);
     }
+    return callback(null, true);
   },
-  credentials:true
-}
+  credentials :true
+}));
 
-developmentApp.use(cors(corsOptions));
 // developmentApp.use(cors({
 //   origin:['https://test.parto.app'],
 //   credentials:true
