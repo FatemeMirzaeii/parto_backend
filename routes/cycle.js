@@ -51,7 +51,8 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req
 });
 
 router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
-  //console.log("uPeriod", req.params.userId);
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
   let uPeriodDate = await user_tracking_option.findAll({
     attributes: ['date'],
@@ -63,9 +64,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
     }
   })
   //console.log("dateP",uPeriodDate);
-  if (await uPeriodDate == null || await uPeriodDate.length == 0) {
-    return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-  }
+
   let dateList = [];
   for (let i = 0; i < uPeriodDate.length; i++) {
     dateList.push(uPeriodDate[i].date);
@@ -74,6 +73,9 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
 });
 
 router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
   let deleted;
   //  deleleDate for delete user date
   req.body.deleteDate.forEach(async element => {
@@ -86,70 +88,27 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
       }
     })
   });
-  const usr = await user.findByPk(req.params.userId);
+
+  // add user period Date 
   const trackingOption = await health_tracking_option.findByPk(3);
-  console.log("lengthhhhh",req.body.addDate.length)
   req.body.addDate.forEach(async element2 => {
-    console.log("element2",element2);
-    
-    let u=await user_tracking_option.create({
-      date:element2,
-    });
-    await u.setUser(usr);
-    await u.setHealth_tracking_option(trackingOption);
-   
+    if (checkDateWithDateOnly(element2)) {
+      let dest = await user_tracking_option.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: new Date(element2),
+          tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
+        }
+      })
+
+      let u = await user_tracking_option.create({
+        date: new Date(element2),
+      });
+      await u.setUser(usr);
+      await u.setHealth_tracking_option(trackingOption);
+    }
   });
-
-  // const lock = new AsyncLock();
-  // lock.acquire(usr, async function (done) {
-  //   req.body.addDate.forEach(async element2 => {
-  //     if (checkDateWithDateOnly(element2)) {
-  //       let dest = await user_tracking_option.destroy({
-  //         where: {
-  //           user_id: req.params.userId,
-  //           date:element2,
-  //           tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
-  //         }
-  //       })
-        
-  //       await user_tracking_option.create({
-  //         date:element2
-  //       }).then(function (addUser) {
-  //         return addUser.setUser(usr);
-  //       }).then(function (addOption) {
-  //         return addOption.setHealth_tracking_option(trackingOption);
-  //       })
-
-  //     }
-  //   })
-  //   done();
-  // }, function (err, ret) {
-  //   console.log(" Freeing lock")
-  // }, {});
-  // req.body.addDate.forEach(async element3 => {
-  //   let find = await user_tracking_option.findAll({
-  //     where: {
-  //       user_id: req.params.userId,
-  //       date:element3,
-  //       tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
-  //     }
-  //   })
-  //   if (await find.length > 1) {
-  //     for (let k = 0; k < find.length-1 ; k++) {
-  //       await user_tracking_option.destroy({
-  //         where: {
-  //           user_id: req.params.userId,
-  //           date: req.body.addDate[k],
-  //           tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
-  //         }
-  //       })
-  //     }
-  //   }
-  // })
-
-  // //}
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-  
 });
 
-module.exports = router;
+  module.exports = router;
