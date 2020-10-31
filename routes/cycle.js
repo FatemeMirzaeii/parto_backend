@@ -92,23 +92,21 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
   // add user period Date 
   const trackingOption = await health_tracking_option.findByPk(3);
   req.body.addDate.forEach(async element2 => {
-    if (checkDateWithDateOnly(element2)) {
-      let dest = await user_tracking_option.destroy({
-        where: {
-          user_id: req.params.userId,
-          date: new Date(element2),
-          tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
-        }
-      })
-
-      let u = await user_tracking_option.create({
+    let dest = await user_tracking_option.destroy({
+      where: {
+        user_id: req.params.userId,
         date: new Date(element2),
-      });
-      await u.setUser(usr);
-      await u.setHealth_tracking_option(trackingOption);
-    }
+        tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
+      }
+    })
+
+    let u = await user_tracking_option.create({
+      date: new Date(element2),
+    });
+    await u.setUser(usr);
+    await u.setHealth_tracking_option(trackingOption);
   });
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
-  module.exports = router;
+module.exports = router;
