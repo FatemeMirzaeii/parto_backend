@@ -37,7 +37,8 @@ developmentApp.use(cors({
     }
     return callback(null, true);
   },
-  credentials :true
+  credentials :true,
+  exposedHeaders: 'x-auth-token'
 }));
 
 // developmentApp.use(cors({
