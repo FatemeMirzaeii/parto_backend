@@ -122,6 +122,46 @@ router.post("/setPregnancyEnd/:userId/:dueDate/:lang", auth, async (req, res) =>
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
+router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, res) => {
+  const uPregnantProfile = await user_profile.findOne({
+    attributes: ['pregnant'],
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  if (uPregnantProfile == null) {
+    return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  }
+  if (uPregnantProfile.pregnant == 0) {
+    return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
+  }
+  const uExist = await pregnancy.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  if (uExist == null) {
+    let uPregnant = await pregnancy.create({
+      abortion_date: req.params.abortionDate,
+      abortion:1
+    })
+    let usr = await user.findByPk(req.params.userId);
+    uPregnant.setUser(usr);
+  }
+  else {
+    await pregnancy.update({
+      abortion_date: req.params.abortionDate,
+      abortion:uExist.abortion_date+1
+    }, {
+      where: {
+        user_id: req.params.userId,
+      }
+    })
+  }
+
+  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+});
+
 
 
 module.exports = router;
