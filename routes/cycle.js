@@ -63,27 +63,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
       }
     }
   })
-  //console.log("dateP",uPeriodDate);
-
-  let dateListOption1 = [];
-  let dateListOption2 = [];
-  let dateListOption3 = [];
-  let dateListOption4 = [];
-  for (let i = 0; i < uPeriodDate.length; i++) {
-    if(uPeriodDate[i]. tracking_option_id==1){
-      dateListOption1.push(uPeriodDate[i].date);
-    }
-    else if(uPeriodDate[i]. tracking_option_id==2){
-      dateListOption2.push(uPeriodDate[i].date);
-    }
-    else if(uPeriodDate[i]. tracking_option_id==3){
-      dateListOption3.push(uPeriodDate[i].date);
-    } 
-    else {
-      dateListOption4.push(uPeriodDate[i].date);
-    }
-  };
-  res.status(200).json({ data: [{option_id:1, dates:dateListOption1 },{option_id:2, dates:dateListOption2 },{option_id:3, dates:dateListOption3 },{option_id:4, dates:dateListOption4 } ]});
+  res.status(200).json({ data:uPeriodDate});
 });
 
 router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
