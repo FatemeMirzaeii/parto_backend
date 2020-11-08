@@ -37,19 +37,19 @@ describe('pregnancy', () => {
     describe('/pregnancy/savePregnancyData/{userId}/{lang}',async () => {
         let tempUserId;
         let tempToken;
-        let conceptionDate="2020-06-08";
+        let dueDate="2021-06-08";
         const exec=()=>{
             return request(server).post('/pregnancy/savePregnancyData/'+tempUserId+'/fa')
             .send({
-                "dueDate": "2021-03-05",
+                "dueDate": `${dueDate}`,
                 "abortion": 0,
-                "conceptionDate": `${conceptionDate}`
+                "conceptionDate": "2020-06-08"
               }).set('x-auth-token', tempToken);
          }
         it('400',async () => {
             tempUserId=userId;
             tempToken=token;
-            conceptionDate="2022-06-08";
+            dueDate="";
             await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
             let result=await exec(); 
             expect(result.status).toBe(400);
@@ -59,7 +59,7 @@ describe('pregnancy', () => {
             let newUsr =await user.create({name:"zahra", email:"pregnancy_zzdand7755@gmail.com",phone:"09175454211"});
             tempToken = newUsr.generateAuthToken();
             tempUserId= newUsr.id;
-            conceptionDate="2020-06-08";
+            dueDate="2021-06-08";
             let result=await exec(); 
             await newUsr.destroy();
             expect(result.status).toBe(404);
@@ -67,7 +67,7 @@ describe('pregnancy', () => {
         it('409',async () => {
             tempUserId=userId;
             tempToken=token;
-            conceptionDate="2020-06-08";
+            dueDate="2021-06-08";
             await user_profile.update({pregnant:0},{ where: {   user_id: tempUserId } } );
             let result=await exec(); 
             expect(result.status).toBe(409);
@@ -76,7 +76,7 @@ describe('pregnancy', () => {
         it('200',async () => {
             tempUserId=userId;
             tempToken=token;
-            conceptionDate="2020-06-08";
+            dueDate="2021-06-08";
             await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
             let result=await exec(); 
             expect(result.status).toBe(200);

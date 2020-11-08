@@ -4,22 +4,22 @@ const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const translate = require("../config/translate");
-const sendEmail=require("../middleware/sendEmail");
+const sendEmail = require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
 var cookie = require('cookie');
 const useragent = require('useragent');
 
 router.post("/signIn/:lang", async (req, res) => {
-  let usr ;
-  if(req.body.phone==""){
+  let usr;
+  if (req.body.phone == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  if(req.body.phone!=""){
+  if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
-    let check=regex.test(req.body.phone); 
-    
+    let check = regex.test(req.body.phone);
+
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-    
+
     usr = await user.findOne({
       where: {
         phone: req.body.phone,
@@ -33,31 +33,32 @@ router.post("/signIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
-  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   // const pass = await bcrypt.compare(req.body.password, usr.password);
   // if (!pass) return res.status(400).json({ message: await translate("WRONGPASSWORD", req.params.lang) });
   const token = await usr.generateAuthToken();
-  console.log("token",token);
+  console.log("token", token);
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
-  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+  res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
 });
 
-router.post("/logIn/:lang",async(req,res)=>{
-  let usr ;
-  
-  if(req.body.phone==""){
+router.post("/logIn/:lang", async (req, res) => {
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
+  let usr;
+  if (req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  if(req.body.phone!=""){
+  if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
-    let check=regex.test(req.body.phone); 
-    
+    let check = regex.test(req.body.phone);
+
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-    
+
     usr = await user.findOne({
       where: {
         phone: req.body.phone,
@@ -71,92 +72,92 @@ router.post("/logIn/:lang",async(req,res)=>{
   //     },
   //   });
   // }
-  
-  if (usr==null){
-    if(req.body.imei!=null && req.body.imei!="") {
+
+  if (usr == null) {
+    if (req.body.imei != null && req.body.imei != "") {
       const regex = RegExp(/^\d{15}$/g);
-      let check=regex.test(req.body.imei); 
-      if (!check)  return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    
+      let check = regex.test(req.body.imei);
+      if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
       usr = await user.create({
         name: req.body.name,
         phone: req.body.phone,
         //email: req.body.email,
         //password: hash,
-        imei:req.body.imei,
+        imei: req.body.imei,
       });
     }
-    else{
+    else {
       usr = await user.create({
         name: req.body.name,
         phone: req.body.phone
       });
     }
   }
-  const token =await usr.generateAuthToken();
-  console.log("token",token);
+  const token = await usr.generateAuthToken();
+  console.log("token", token);
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
-  
-  if(useragent.is(req.headers['user-agent']).android==true &&
-      useragent.is(req.headers['user-agent']).firefox == false &&
-      useragent.is(req.headers['user-agent']).chrome == false &&
-      useragent.is(req.headers['user-agent']).ie == false &&
-      useragent.is(req.headers['user-agent']).mozilla == false &&
-      useragent.is(req.headers['user-agent']).opera == false ){
-    
-    res.header("x-auth-token", token).status(200).json({ data: { id: usr.id ,userName:usr.name} });
+
+  if (useragent.is(req.headers['user-agent']).android == true &&
+    useragent.is(req.headers['user-agent']).firefox == false &&
+    useragent.is(req.headers['user-agent']).chrome == false &&
+    useragent.is(req.headers['user-agent']).ie == false &&
+    useragent.is(req.headers['user-agent']).mozilla == false &&
+    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
+
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
 
   }
-  else{
-    
+  else {
+
     res.clearCookie('token');
-    return  res
-    .cookie("token", await token,{httpOnly: true , secure: true , maxAge:10*365*24*60*60 })
-    .status(200)
-    .json({ data: { id: usr.id ,userName:usr.name} });
-    }
+    return res
+      .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
+      .status(200)
+      .json({ data: { id: usr.id, userName: usr.name } });
+  }
 
 })
 
-router.post("/verifyCode", async(req, res) => {
-  let code= Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-  if(req.body.phone!=""){
+router.post("/verifyCode", async (req, res) => {
+  let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+  if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
-    let check=regex.test(req.body.phone); 
-    
+    let check = regex.test(req.body.phone);
+
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-    else{
+    else {
       let api = Kavenegar.KavenegarApi({
         apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
       });
-      
+
       api.VerifyLookup({
-          receptor: req.body.phone,
-          token: code.toString(),
-          template: "verificationCode",
-      }, 
-      async(response, status,message)=> {
-              
-        if (status==418){
-          sendEmail('info@parto.app','parto@parto.app',message,"ارور سامانه پیامکی ");
-        }
-        else if (status==200){
-          return res.status(200).json({data:{message:message,code:code}});
-        } 
-        
-        return res.status(status).json({message:message});
-        
-      })
+        receptor: req.body.phone,
+        token: code.toString(),
+        template: "verificationCode",
+      },
+        async (response, status, message) => {
+
+          if (status == 418) {
+            sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
+          }
+          else if (status == 200) {
+            return res.status(200).json({ data: { message: message, code: code } });
+          }
+
+          return res.status(status).json({ message: message });
+
+        })
     }
   }
   // else{
   //   const regex = RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})$/);
   //   let check=regex.test(req.body.email); 
-    
+
   //   if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
   //   else{
   //     const subject='Verification Code for parto application ';

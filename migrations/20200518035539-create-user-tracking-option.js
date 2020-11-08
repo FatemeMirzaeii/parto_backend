@@ -27,8 +27,9 @@ module.exports = {
       },
       date: {
         type: Sequelize.DATEONLY ,
+        allowNull: false,
         get: function() {
-          return moment.utc(this.getDataValue('birthdate')).format('YYYY-MM-DD');
+          return moment.utc(this.getDataValue('date')).format('YYYY-MM-DD');
         }
       },
       created_at: {

@@ -126,14 +126,14 @@ describe('cycle', () => {
             expect(result.status).toBe(200);
         });
 
-        it('return 404 if information not found',async () => {
-            let nUser =await user.create({name:"zahra", email:"newcycle_zzdand7755@gmail.com",phone:"09125454218"});
-            tempToken =nUser.generateAuthToken();
-            tempUserId=nUser.id;
-            let result=await exec(); 
-            await nUser.destroy()
-            expect(result.status).toBe(404);
-        });
+        // it('return 404 if information not found',async () => {
+        //     let nUser =await user.create({name:"zahra", email:"newcycle_zzdand7755@gmail.com",phone:"09125454218"});
+        //     tempToken =nUser.generateAuthToken();
+        //     tempUserId=nUser.id;
+        //     let result=await exec(); 
+        //     await nUser.destroy()
+        //     expect(result.status).toBe(404);
+        // });
         
     });
 
