@@ -73,11 +73,6 @@ developmentApp.use(
 );
 console.log(process.env.NODE_PORT);
 
-developmentApp.use(function(req, res, next) {
-  res.setHeader("Content-Security-Policy", "script-src 'self'");
-  next();
-});
-
 developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
 developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
