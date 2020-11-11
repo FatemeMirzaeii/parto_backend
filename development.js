@@ -25,7 +25,7 @@ const developmentApp = express();
 
 developmentApp.use(cookieParser());
 
-const whitelist = ['https://test.parto.app', 'http://localhost:3925/*','http://localhost:2216']
+const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
 developmentApp.use(cors({
   origin: function (origin, callback) {
     // bypass the requests with no origin (like curl requests, mobile apps, etc )
@@ -72,10 +72,10 @@ developmentApp.use(
   swaggerUi.setup()
 );
 console.log(process.env.NODE_PORT);
-developmentApp.use(function(req, res, next) {
-  res.setHeader("Content-Security-Policy", "script-src 'self'");
-  next();
-});
+// developmentApp.use(function(req, res, next) {
+//   res.setHeader("Content-Security-Policy", "script-src 'self'");
+//   next();
+// });
 
 developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
 developmentApp.get("/*", (req, res) => {
