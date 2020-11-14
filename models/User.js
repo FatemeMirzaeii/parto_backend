@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+
       active: {
         type: DataTypes.BOOLEAN,
       },
@@ -68,6 +69,9 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.role, {
       onDelete: "RESTRICT",
     });
+    User.belongsTo(models.user, {
+      onDelete: "RESTRICT",
+    });
     User.hasMany(models.user_log, {
       onDelete: "RESTRICT",
     });
@@ -75,6 +79,7 @@ module.exports = (sequelize, DataTypes) => {
       through: "user_favorite_category",
     });
   };
+  
   User.prototype.generateAuthToken = function(){
     return jwt.sign({ _id:this.id , _phone:this.phone }, secret);
   };

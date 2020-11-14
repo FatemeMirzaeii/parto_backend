@@ -18,6 +18,7 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
+    - npx sequelize-cli db:migrate
     - pm2 stop development.js
     - npm test
     - echo "testing succsecfull  "
@@ -52,6 +53,7 @@ deploy_prod_parto:
     - echo "Deploy to production server ..."
     - npm install
     - PORT=2218
+    - npx sequelize-cli db:migrate
     - pm2 restart app.js
     - echo "Deploy to production server Successful"
     # - pm2 logs
