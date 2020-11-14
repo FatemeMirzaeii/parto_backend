@@ -12,8 +12,13 @@ module.exports = async function (req, res, next) {
   const patt2 = RegExp('localhost*');
   console.log("user-agent ", req.headers.host);
   console.log("cookie", req.cookies);
-
-  if (useragent.is(req.headers['user-agent']).android == true && useragent.is(req.headers['user-agent']).firefox == false &&
+  if(RegExp('localhost:3925').test(req.headers.host) == true){
+    if (req.cookies.token == undefined) {
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+    }
+    token = req.cookies.token;
+  }
+  else if (useragent.is(req.headers['user-agent']).android == true && useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&

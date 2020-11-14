@@ -8,6 +8,7 @@ const sendEmail = require("../middleware/sendEmail");
 const Kavenegar = require('kavenegar');
 var cookie = require('cookie');
 const useragent = require('useragent');
+const { request } = require("http");
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
@@ -101,13 +102,19 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-
-  if (useragent.is(req.headers['user-agent']).android == true &&
+  if(RegExp('localhost:3925').test(req.headers.host) == true){
+    return res
+      .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
+      .status(200)
+      .json({ data: { id: usr.id, userName: usr.name } });
+  }
+  else if (useragent.is(req.headers['user-agent']).android == true &&
     useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
+    useragent.is(req.headers['user-agent']).opera == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
 
     return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
 
