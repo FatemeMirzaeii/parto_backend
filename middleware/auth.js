@@ -15,6 +15,7 @@ module.exports = async function (req, res, next) {
   console.log("cookieeeeeeeeeeeeeeeeee", req.cookies.token);
   console.log("request.headers['origin']",req.headers['origin']);
   if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
+    console.log("heareeeee");
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }

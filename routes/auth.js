@@ -103,6 +103,8 @@ router.post("/logIn/:lang", async (req, res) => {
     login_date: Date.now(),
   });
   if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
+    res.clearCookie('token');
+    console.log("set cookieeeeeeeeeeeeeeeeee");
     return res
       .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)
