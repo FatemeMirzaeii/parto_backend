@@ -10,8 +10,8 @@ module.exports = async function (req, res, next) {
   let token;
   const patt1 = RegExp('127.0.0.1*');
   const patt2 = RegExp('localhost*');
-  console.log("user-agent ", req.headers.host);
-  console.log("cookie", req.cookies);
+  console.log("hosttttttttttttttttt ", req.headers.host);
+  console.log("cookieeeeeeeeeeeeeeeeee", req.cookies);
   if(RegExp('localhost:3925').test(req.headers.host) == true){
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
