@@ -102,7 +102,7 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  if(RegExp('localhost:3925').test(req.headers.host) == true){
+  if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
     return res
       .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)

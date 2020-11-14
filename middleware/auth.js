@@ -12,7 +12,9 @@ module.exports = async function (req, res, next) {
   const patt2 = RegExp('localhost*');
   console.log("hosttttttttttttttttt ", req.headers.host);
   console.log("cookieeeeeeeeeeeeeeeeee", req.cookies);
-  if(RegExp('localhost:3925').test(req.headers.host) == true){
+  console.log("cookieeeeeeeeeeeeeeeeee", req.cookies.token);
+  console.log("request.headers['origin']",req.headers['origin']);
+  if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
