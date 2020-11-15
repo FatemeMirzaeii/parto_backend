@@ -39,7 +39,8 @@ deploy_staging_parto:
     - PORT=2216
     - pm2 restart development.js
     - echo "deploy_staging succesfull"
-    - pm2 logs
+    # - npx sequelize db:seed --seed 20201024133503-health_tracking_option.js
+    # - pm2 logs
 
   only:
     - test
@@ -56,6 +57,7 @@ deploy_prod_parto:
     - npx sequelize-cli db:migrate
     - pm2 restart app.js
     - echo "Deploy to production server Successful"
+    # - npx sequelize db:seed --seed 20201024133503-health_tracking_option.js
     # - pm2 logs
 
   environment:

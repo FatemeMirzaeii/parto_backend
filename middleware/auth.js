@@ -25,15 +25,15 @@ module.exports = async function (req, res, next) {
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) ==true || patt2.test(req.headers.host) == true) {
-    
+    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
+
     if (req.header("x-auth-token") == undefined) {
       res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.header("x-auth-token");
   }
   else {
-    
+
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }

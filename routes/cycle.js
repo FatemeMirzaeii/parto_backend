@@ -55,7 +55,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
   let uPeriodDate = await user_tracking_option.findAll({
-    attributes: ['date','tracking_option_id'],
+    attributes: ['date', 'tracking_option_id'],
     where: {
       user_id: req.params.userId,
       tracking_option_id: {
@@ -63,7 +63,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
       }
     }
   })
-  res.status(200).json({ data:uPeriodDate});
+  res.status(200).json({ data: uPeriodDate });
 });
 
 router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
