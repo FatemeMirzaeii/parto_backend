@@ -106,9 +106,9 @@ router.post("/logIn/:lang", async (req, res) => {
     res.clearCookie('token');
     console.log("set cookieeeeeeeeeeeeeeeeee");
     return res
-      .cookie("token", token, { httpOnly: true, domain: "", maxAge: 10 * 365 * 24 * 60 * 60 })
+      .cookie("token", token, { httpOnly: true, domain: "NULL", maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name } });
+      .json({ data: { id: usr.id,token:token, userName: usr.name } });
   }
   else if (useragent.is(req.headers['user-agent']).android == true &&
     useragent.is(req.headers['user-agent']).firefox == false &&
