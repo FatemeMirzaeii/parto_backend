@@ -69,9 +69,9 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.role, {
       onDelete: "RESTRICT",
     });
-    User.belongsTo(models.user, {
-      onDelete: "RESTRICT",
-    });
+    // User.belongsTo(models.user, {
+    //   onDelete: "RESTRICT",
+    // });
     User.hasMany(models.user_log, {
       onDelete: "RESTRICT",
     });
