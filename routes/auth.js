@@ -106,7 +106,7 @@ router.post("/logIn/:lang", async (req, res) => {
     res.clearCookie('token');
     console.log("set cookieeeeeeeeeeeeeeeeee");
     return res
-      .cookie("token", await token, { httpOnly: true, maxAge: 10 * 365 * 24 * 60 * 60 })
+      .cookie("token", token, { httpOnly: true, domain: "", maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)
       .json({ data: { id: usr.id, userName: usr.name } });
   }
