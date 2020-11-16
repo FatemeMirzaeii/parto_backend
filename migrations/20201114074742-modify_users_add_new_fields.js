@@ -5,7 +5,7 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(
         'User', // table name
-        'partner', // new field name
+        'partner_id', // new field name
         {
           type: Sequelize.INTEGER,
           allowNull:true,

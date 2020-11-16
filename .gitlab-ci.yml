@@ -20,6 +20,10 @@ testing_parto:
     - npm install
     - npx sequelize-cli db:migrate
     - pm2 stop development.js
+    - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
+    - npx sequelize migration:create --name rename-column-partner-to-partner_id-in-user
+    - npx sequelize-cli db:migrate
+    - npx sequelize-cli db:seed:all
     - npm test
     - echo "testing succsecfull  "
   only:
@@ -56,7 +60,6 @@ deploy_prod_parto:
     - npx sequelize-cli db:migrate
     - pm2 restart app.js
     - echo "Deploy to production server Successful"
-    # - npx sequelize db:seed --seed 20201024133503-health_tracking_option.js
     # - pm2 logs
 
   environment:
