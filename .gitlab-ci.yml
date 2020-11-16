@@ -20,7 +20,7 @@ testing_parto:
     - npm install
     - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
-    - npx sequelize migration:create --name rename-column-partner-to-partner_id-in-user
+    - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
     - npx sequelize-cli db:seed:all
     - npm test
