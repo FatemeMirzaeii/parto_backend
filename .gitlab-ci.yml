@@ -18,7 +18,6 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
-    - npx sequelize-cli db:migrate
     - pm2 stop development.js
     - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     - npx sequelize migration:create --name rename-column-partner-to-partner_id-in-user
