@@ -1,14 +1,12 @@
 
 const express = require("express");
 const { user } = require("../models");
-const bcrypt = require("bcrypt");
 const router = express.Router();
 const translate = require("../config/translate");
 const sendEmail = require("../middleware/sendEmail");
+const auth = require("../middleware/auth");
 const Kavenegar = require('kavenegar');
-var cookie = require('cookie');
 const useragent = require('useragent');
-const { request } = require("http");
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
@@ -102,13 +100,8 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
-    res.clearCookie('token');
-    console.log("set cookieeeeeeeeeeeeeeeeee");
-    return res
-      .cookie("token", token, { httpOnly: true, domain: "NULL", maxAge: 10 * 365 * 24 * 60 * 60 })
-      .status(200)
-      .json({ data: { id: usr.id,token:token, userName: usr.name } });
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name } });
   }
   else if (useragent.is(req.headers['user-agent']).android == true &&
     useragent.is(req.headers['user-agent']).firefox == false &&
@@ -177,6 +170,33 @@ router.post("/verifyCode", async (req, res) => {
   //   }
   // }
 });
+
+router.post("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  let str = req.body.partnerCode;
+  let code = str.substring(3, str.length);
+  let userId = str.substring(3, str.length - 2);
+  let checkSum = str.substring(str.length - 2, str.length);
+
+  if (code % 97 != 1) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang)});
+
+  let usrPartner = await user.findByPk(userId);
+  if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  await usr.setUser(usrPartner);
+
+  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa")});
+})
+
+router.get("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
+  let partnerCode = "PRT" + usr.id + checkSum;
+  return res.status(200).json({ data: { partnerCode: partnerCode } });
+})
 
 
 module.exports = router;

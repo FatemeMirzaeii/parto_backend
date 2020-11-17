@@ -10,22 +10,17 @@ module.exports = async function (req, res, next) {
   let token;
   const patt1 = RegExp('127.0.0.1*');
   const patt2 = RegExp('localhost*');
-  console.log("hosttttttttttttttttt ", req.headers.host);
-  console.log("cookieeeeeeeeeeeeeeeeee", req.cookies);
-  console.log("cookieeeeeeeeeeeeeeeeee", req.cookies.token);
-  console.log("request.headers['origin']",req.headers['origin']);
-  if(RegExp('http://localhost:3925').test(req.headers['origin']) == true){
-    console.log("heareeeee");
-    if (req.cookies.token == undefined) {
-      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
-    }
-    token = req.cookies.token;
-  }
-  else if (useragent.is(req.headers['user-agent']).android == true && useragent.is(req.headers['user-agent']).firefox == false &&
+  // console.log("hosttttttttttttttttt ", req.headers.host);
+  // console.log("cookieeeeeeeeeeeeeeeeee", req.cookies);
+  // console.log("cookieeeeeeeeeeeeeeeeee", req.cookies.token);
+  // console.log("request.headers['origin']",req.headers['origin']);
+
+  if (useragent.is(req.headers['user-agent']).android == true && useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
+    useragent.is(req.headers['user-agent']).opera == false || patt1.test(req.headers.host) == true ||
+    patt2.test(req.headers.host) == true || RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
 
     if (req.header("x-auth-token") == undefined) {
       res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
