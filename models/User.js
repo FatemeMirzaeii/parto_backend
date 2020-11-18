@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         //   },
         // },
       },
-      phone:{
+      phone: {
         type: DataTypes.STRING,
         unique: true,
         validate: {
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: false,
         allowNull: true,
-        
+
       },
       password: {
         type: DataTypes.STRING,
@@ -49,15 +49,18 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-
+      version_type: {
+        type: DataTypes.ENUM('Main', 'Partner', 'Teenager'),
+        defaultValue: 'Main',
+      },
       active: {
         type: DataTypes.BOOLEAN,
       },
-      uuid:{
-        type:DataTypes.UUID,
+      uuid: {
+        type: DataTypes.UUID,
       },
       imei: {
-        type:DataTypes.STRING,
+        type: DataTypes.STRING,
       }
     },
     {
@@ -80,9 +83,9 @@ module.exports = (sequelize, DataTypes) => {
       through: "user_favorite_category",
     });
   };
-  
-  User.prototype.generateAuthToken = function(){
-    return jwt.sign({ _id:this.id , _phone:this.phone }, secret);
+
+  User.prototype.generateAuthToken = function () {
+    return jwt.sign({ _id: this.id, _phone: this.phone }, secret);
   };
   return User;
 };

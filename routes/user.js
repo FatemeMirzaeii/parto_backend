@@ -3,6 +3,7 @@ const { user } = require("../models");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const translate = require("../config/translate");
+const auth = require("../middleware/auth");
 
 router.post("/signUp/:lang", async (req, res) => {
   if (req.body.phone == "") {
@@ -219,8 +220,24 @@ router.post("/changePassword/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  res
+  return res
     .status(200)
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
+
+router.post("/versionType/:userId/:type/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null || req.params.type == "" || req.params.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if(usr.version_type!="Teenager") return res.status(400).json({ message: await translate("NOPERMISSION", req.params.lang) });
+  if (req.params.type != "" && req.params.type != null) {
+    if (req.params.type != "Main") {
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
+  }
+  await usr.update({ version_type: req.params.type });
+  return res
+    .status(200)
+    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+})
+
 module.exports = router;

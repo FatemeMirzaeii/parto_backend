@@ -71,8 +71,13 @@ router.post("/logIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
-
+  if(req.body.type!="" && req.body.type!=null){
+    if(req.body.type!="Main"&& req.body.type!="Partner"&&req.body.type!="Teenager"){
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
+  }
   if (usr == null) {
+     
     if (req.body.imei != null && req.body.imei != "") {
       const regex = RegExp(/^\d{15}$/g);
       let check = regex.test(req.body.imei);
@@ -81,15 +86,17 @@ router.post("/logIn/:lang", async (req, res) => {
       usr = await user.create({
         name: req.body.name,
         phone: req.body.phone,
+        version_type:req.body.type,
         //email: req.body.email,
         //password: hash,
-        imei: req.body.imei,
+        imei: req.body.imei
       });
     }
     else {
       usr = await user.create({
         name: req.body.name,
-        phone: req.body.phone
+        phone: req.body.phone,
+        version_type:req.body.type
       });
     }
   }
@@ -101,7 +108,7 @@ router.post("/logIn/:lang", async (req, res) => {
     login_date: Date.now(),
   });
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
-    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name } });
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name ,type:usr.version_type} });
   }
   else if (useragent.is(req.headers['user-agent']).android == true &&
     useragent.is(req.headers['user-agent']).firefox == false &&
@@ -111,7 +118,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false ||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
 
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type } });
 
   }
   else {
@@ -120,7 +127,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name } });
+      .json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type} });
   }
 
 })
@@ -177,11 +184,13 @@ router.post("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   let str = req.body.partnerCode;
-  let code = str.substring(3, str.length);
-  let userId = str.substring(3, str.length - 2);
-  let checkSum = str.substring(str.length - 2, str.length);
-
-  if (code % 97 != 1) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang)});
+  //let code = str.substring(3, str.length);
+  let userId = parseInt(str.substring(4, str.length - 2))/3;
+  let checkSum =parseInt(str.substring(str.length - 2, str.length))-3;
+  
+  if ((userId.toString()+checkSum.toString()) % 77 != 1 || userId==req.params.userId){
+     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang)});
+  }
 
   let usrPartner = await user.findByPk(userId);
   if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -193,8 +202,8 @@ router.post("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
 router.get("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
-  let partnerCode = "PRT" + usr.id + checkSum;
+  let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
+  let partnerCode = "PRT-" + (usr.id*3) + (checkSum+3);
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
 

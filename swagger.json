@@ -131,9 +131,17 @@
                   "name": {
                     "type": "string"
                   },
+                  "type": {
+                    "type": "string",
+                    "description": "set one of the \"Lady\" or \"Husband\" or \"Teenager\""
+                  },
                   "imei": {
                     "type": "string"
                   }
+                },
+                "example": {
+                  "phone:": "09199698086",
+                  "type": "Lady"
                 }
               }
             }
@@ -166,6 +174,9 @@
                         "id": {
                           "type": "integer",
                           "description": "user id"
+                        },
+                        "type": {
+                          "type": "string"
                         }
                       }
                     }
@@ -544,6 +555,220 @@
           },
           "400": {
             "description": "phone exist / invalid input"
+          }
+        }
+      }
+    },
+    "/user/versionType/{userId}/{type}/{lang}": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user type for example change teenager to lady",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "phone exist / invalid input"
+          }
+        }
+      }
+    },
+    "/auth/partnerVrifyCode/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "use in husband version and set partner to database and check husband code is true or no",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "partnerCode": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid entery when userId is wrong or partnerId(in the code) is wrong or partnerCode mathematically is wrong"
+          }
+        }
+      }
+    },
+    "/auth/partnerVrifyCode/{userId}/{lang} ": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "use in husband version and set partner to database and check husband code is true or no",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "partnerCode": {
+                          "type": "string",
+                          "description": "code that gnerate for partner"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid entery when userId is wrong or partnerId(in the code) is wrong or partnerCode mathematically is wrong"
           }
         }
       }
