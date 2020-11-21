@@ -19,11 +19,18 @@ const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const developmentApp = express();
 
 developmentApp.use(cookieParser());
+developmentApp.use(session({
+  secret: 'keyboard cat', 
+  cookie: { maxAge: 300000 },
+  resave: false,
+  saveUninitialized: false
+}));
 
 const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
 developmentApp.use(cors({

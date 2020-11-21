@@ -50,7 +50,14 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
 
 router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
   let usr = await user.findByPk(req.params.userId);
-  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if(usr.partner_id!=null){
+    usrID=usr.partner_id
+  }
+  else{
+    usrID=usr.user_id
+  }
    
   let data=[];
   let userOption=[];
@@ -79,7 +86,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
         userOption[j]=await user_tracking_option.findAll({
           attributes: ['id', 'tracking_option_id'],
           where:{
-            user_id: req.params.userId,
+            user_id: usrID,
             tracking_option_id: option[j].id,
             date: req.params.date
           }

@@ -72,10 +72,19 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
 });
 
 router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if(usr.partner_id!=null){
+    usrID=usr.partner_id
+  }
+  else{
+    usrID=usr.user_id
+  }
   const userPregnant = await pregnancy.findOne({
     attributes: ['due_date', 'conception_date', 'abortion'],
     where: {
-      user_id: req.params.userId,
+      user_id:usrID,
     },
   });
   if (userPregnant == null) {

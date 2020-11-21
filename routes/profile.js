@@ -161,13 +161,7 @@ router.post("/addProfile/:lang",auth, async(req, res) => {
       avg_sleeping_hour:req.body.sleepingHour,
       blood_type:req.body.bloodType,
       locked:req.body.isLock,
-      avg_cycle_length:req.body.cycleLength,
-      avg_period_length:req.body.periodLength,
-      pms_length:req.body.pmsLength,
-      pregnant:req.body.pregnant,
-      pregnancy_try:req.body.pregnancyTry,
-      last_period_date:new Date(body.lastPeriodDate)
-    
+          
   });
   userProf.setUser(usr);
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
