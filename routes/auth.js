@@ -178,7 +178,7 @@ router.post("/verifyCode", async (req, res) => {
   // }
 });
 
-router.post("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
+router.post("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -199,7 +199,7 @@ router.post("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa")});
 })
 
-router.get("/partnerVrifyCode/:userId/:lang", auth, async (req, res) => {
+router.get("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (78 - ((usr.id * 100) % 77)) % 77;

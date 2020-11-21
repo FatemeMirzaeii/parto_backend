@@ -62,7 +62,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
     let temp={};
     temp.id=category[i].id;
     temp.title=category[i].title;
-    temp.hasMultipleChoise=category[i].has_multiple_choice;
+    temp.hasMultipleChoice=category[i].has_multiple_choice;
     temp.color=category[i].color;
     temp.icon=category[i].icon;
     option=(await health_tracking_option.findAll({
@@ -115,7 +115,7 @@ router.post("/userInfo/:userId/:lang",auth,checkDate,async(req,res)=>{
     })
   } 
   for(i=0;i<req.body.selected.length;i++){  
-    if(req.body.selected[i].hasMultipleChoise==0){
+    if(req.body.selected[i].hasMultipleChoice==0){
       existDate=await user_tracking_option.findOne({
         where:{
           user_id: req.params.userId,
