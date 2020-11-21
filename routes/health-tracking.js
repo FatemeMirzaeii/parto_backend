@@ -56,7 +56,7 @@ router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
     usrID=usr.partner_id
   }
   else{
-    usrID=usr.user_id
+    usrID=usr.id
   }
    
   let data=[];

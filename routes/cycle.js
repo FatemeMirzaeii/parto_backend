@@ -21,7 +21,7 @@ router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
     usrID = usr.partner_id
   }
   else {
-    usrID = usr.user_id
+    usrID = usr.id
   }
   const uPeriod = await user_profile.findOne({
     attributes: ['last_period_date'],
@@ -66,7 +66,7 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
     usrID = usr.partner_id
   }
   else {
-    usrID = usr.user_id
+    usrID = usr.id
   }
   let uPeriodDate = await user_tracking_option.findAll({
     attributes: ['date', 'tracking_option_id'],

@@ -79,7 +79,7 @@ router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
     usrID=usr.partner_id
   }
   else{
-    usrID=usr.user_id
+    usrID=usr.id
   }
   const userPregnant = await pregnancy.findOne({
     attributes: ['due_date', 'conception_date', 'abortion'],
