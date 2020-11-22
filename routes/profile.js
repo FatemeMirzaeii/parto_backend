@@ -16,12 +16,20 @@ router.get("/getProfile/:userId/:lang",auth, async(req, res) => {
 });
 
 router.get("/getPeriodInfo/:userId/:lang",auth, async(req, res) => {
-  
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
   const uProfile = await user_profile.findOne({
     attributes: ['user_id','avg_cycle_length','avg_period_length','pms_length','pregnant',
     'pregnancy_try','last_period_date','ovulation_prediction','period_prediction','red_days'],
     where: {
-      user_id: req.params.userId,
+      user_id:usrID,
     },
   });
   if(uProfile==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
@@ -179,10 +187,19 @@ router.get("/pregnancyMode/:userId/:lang",auth,async(req,res)=>{
 });
 
 router.get("/getUserStatus/:userId/:lang",auth,async(req,res)=>{
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
   const uPregnantProfile = await user_profile.findOne({
     attributes:['pregnant','pregnancy_try'],
     where: {
-      user_id: req.params.userId,
+      user_id:usrID,
     },
   });
   if(uPregnantProfile==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });

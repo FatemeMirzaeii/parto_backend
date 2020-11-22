@@ -183,16 +183,16 @@ router.post("/verifyCode", async (req, res) => {
 router.post("/checkVerifyCode/:lang", async (req, res) => {
   console.log(req.session);
   if (!req.session.code) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if(req.body.code==""||req.body.code==null)  {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res.status(403).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if(req.session.code==req.body.code){
     req.session.destroy();
     return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa")}})
   }
-  else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  else return res.status(405).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 })
 
 router.post("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
