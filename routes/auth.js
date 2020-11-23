@@ -157,7 +157,8 @@ router.post("/verifyCode", async (req, res) => {
           }
           else if (status == 200) {
             req.session.code = code;
-            return res.status(200).json({ data: { message: message} });
+            console.log("session",req.session.code);
+            return res.status(200).json({ data: { message: message} }).end();
           }
 
           return res.status(status).json({ message: message });
