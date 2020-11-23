@@ -25,13 +25,6 @@ const session = require('express-session');
 const developmentApp = express();
 
 developmentApp.use(cookieParser());
-developmentApp.use(session({
-  secret: 'PARcodeTO'
-  // cookie: { maxAge: 300000 },
-  // resave: false,
-  // saveUninitialized: false,
-  // httpOnly:true
-}));
 
 const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
 developmentApp.use(cors({
@@ -47,6 +40,15 @@ developmentApp.use(cors({
   },
   credentials :true,
   exposedHeaders: 'x-auth-token'
+}));
+
+developmentApp.use(session({
+  secret: 'PARcodeTO',
+  cookie: { maxAge: 300000 },
+  resave: false,
+  saveUninitialized: false,
+  httpOnly: true,
+  secure: true
 }));
 
 developmentApp.use(helmet());
