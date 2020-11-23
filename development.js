@@ -26,10 +26,10 @@ const developmentApp = express();
 
 developmentApp.use(cookieParser());
 developmentApp.use(session({
-  secret: 'keyboard cat', 
-  cookie: { maxAge: 300000 },
-  resave: false,
-  saveUninitialized: false
+  secret: 'codeParto', 
+  // cookie: { maxAge: 300000 },
+  // resave: false,
+  // saveUninitialized: false
 }));
 
 const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
