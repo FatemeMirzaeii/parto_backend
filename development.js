@@ -45,10 +45,10 @@ developmentApp.use(cors({
 
 developmentApp.use(session({
   secret: 'PARcodeTO',
-  cookie: { maxAge: 300000 ,secure: true},
-  resave: false,
-  saveUninitialized: false,
-  httpOnly: true
+  // cookie: { maxAge: 300000 ,secure: true},
+  resave: true,
+  saveUninitialized: true
+  // httpOnly: true
 }));
 
 developmentApp.use(helmet());
