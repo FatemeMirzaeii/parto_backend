@@ -43,6 +43,17 @@ developmentApp.use(cors({
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
+
+developmentApp.set('trust proxy', 1);
+developmentApp.use(session({
+  secret: 'PARcodeTO',
+  cookie: { maxAge: 300000 ,httpOnly: true, secure: true},
+  resave: true,
+  saveUninitialized: true
+  // httpOnly: true
+}));
+
+
 developmentApp.use("/cycle", cycle);
 developmentApp.use("/pregnancy", pregnancy);
 developmentApp.use("/article", article);
@@ -55,7 +66,7 @@ developmentApp.use("/contactUs", contactUs);
 developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
 developmentApp.use(error);
-developmentApp.set('trust proxy', 1);
+
 
 developmentApp.use(
   "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
@@ -77,14 +88,6 @@ developmentApp.use(express.static(`../../Fattahi/deploy/staging/build`));
 developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
-
-developmentApp.use(session({
-  secret: 'PARcodeTO',
-  cookie: { maxAge: 300000 ,httpOnly: true, secure: true},
-  resave: true,
-  saveUninitialized: true
-  // httpOnly: true
-}));
 
 
 const developmentServer = developmentApp.listen(2216, () =>
