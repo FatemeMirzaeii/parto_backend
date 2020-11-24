@@ -43,7 +43,7 @@ developmentApp.use(cors({
 }));
 
 developmentApp.use(session({
-  secret: 'keyboard cat',
+  secret: 'Parto',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true }
