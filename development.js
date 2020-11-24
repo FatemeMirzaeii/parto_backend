@@ -41,28 +41,12 @@ developmentApp.use(cors({
   exposedHeaders: 'x-auth-token'
 }));
 developmentApp.set('trust proxy', 1) // trust first proxy
-// developmentApp.use(session({
-//   secret: 'Parto',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { secure: false, httpOnly:false }
-// }))
-var sessionStore = new session.MemoryStore();
-
 developmentApp.use(session({
-  secret: 'secret',
-  store: sessionStore,
+  secret: 'Parto',
   resave: false,
-  saveUninitialized: false,
-  proxy: undefined,
-  cookie: {
-    secure: true,
-    maxAge: 36000000
-  },
-  rolling: true,
-  unset: 'destroy'
-}));
-
+  saveUninitialized: true,
+  cookie: { sameSite: true, secure: true, httpOnly:true }
+}))
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
