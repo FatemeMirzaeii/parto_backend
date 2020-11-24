@@ -183,6 +183,7 @@ router.post("/verifyCode", async (req, res) => {
 
 router.post("/checkVerifyCode/:lang", async (req, res) => {
   console.log(req.session);
+  console.log("code",req.session.code);
   if (!req.session.code) {
     return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }

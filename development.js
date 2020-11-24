@@ -24,6 +24,7 @@ const session = require('express-session');
 
 const developmentApp = express();
 
+developmentApp.set('trust proxy', 1) // trust first proxy
 developmentApp.use(cookieParser());
 const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
 developmentApp.use(cors({
@@ -40,18 +41,16 @@ developmentApp.use(cors({
   credentials :true,
   exposedHeaders: 'x-auth-token'
 }));
-developmentApp.use(helmet());
-developmentApp.use(nodeadmin(developmentApp));
-developmentApp.use(express.json());
-developmentApp.set('trust proxy', 1) // trust first proxy
+
 developmentApp.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true }
 }))
-
-
+developmentApp.use(helmet());
+developmentApp.use(nodeadmin(developmentApp));
+developmentApp.use(express.json());
 developmentApp.use("/cycle", cycle);
 developmentApp.use("/pregnancy", pregnancy);
 developmentApp.use("/article", article);
