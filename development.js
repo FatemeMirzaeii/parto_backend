@@ -24,7 +24,6 @@ const session = require('express-session');
 
 const developmentApp = express();
 
-developmentApp.set('trust proxy', 1) // trust first proxy
 developmentApp.use(cookieParser());
 const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
 developmentApp.use(cors({
@@ -46,7 +45,7 @@ developmentApp.use(session({
   secret: 'Parto',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  cookie: { secure: false, httpOnly:false }
 }))
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
