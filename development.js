@@ -20,8 +20,7 @@ const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
 const cookieParser = require('cookie-parser');
-const session = require('express-session')
-const FileStore = require('session-file-store')(session)
+const session = require('express-session');
 
 const developmentApp = express();
 
@@ -46,13 +45,7 @@ developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
 
 // developmentApp.set('trust proxy', 1);
-developmentApp.use(session({
-  name:'session-id',
-  secret:'123456xxx',
-  saveUninitialized:false,
-  resave:false,
-  store:new FileStore()
-}));
+developmentApp.use(session({ secret:'parto' }));
 
 
 developmentApp.use("/cycle", cycle);
