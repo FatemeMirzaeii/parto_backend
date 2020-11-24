@@ -43,9 +43,13 @@ developmentApp.use(cors({
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
-
-// developmentApp.set('trust proxy', 1);
-developmentApp.use(session({ secret:'parto' }));
+developmentApp.set('trust proxy', 1) // trust first proxy
+developmentApp.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 
 
 developmentApp.use("/cycle", cycle);
