@@ -40,13 +40,13 @@ developmentApp.use(cors({
   credentials :true,
   exposedHeaders: 'x-auth-token'
 }));
-developmentApp.set('trust proxy', 1) // trust first proxy
-developmentApp.use(session({
-  secret: 'Parto',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { sameSite: true, secure: true, httpOnly:true }
-}))
+// developmentApp.set('trust proxy', 1) // trust first proxy
+// developmentApp.use(session({
+//   secret: 'Parto',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { sameSite: true, secure: true, httpOnly:true }
+// }))
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
@@ -65,7 +65,7 @@ developmentApp.use(error);
 
 
 developmentApp.use(
-  "/api-doc", //todo: It is better to change the name to: api.parto.app/docs
+  "/api-doc", //todo: It is better to change the name to: api.pa torto.app/docs
   function (req, res, next) {
     swaggerDocument.host = req.get("https://dev.parto.app");
     req.swaggerDoc = swaggerDocument;
