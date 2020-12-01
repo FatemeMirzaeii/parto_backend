@@ -1,9 +1,10 @@
 const express = require("express");
 const checkDate = require("../middleware/checkDate");
 const auth = require("../middleware/auth");
-const { user, health_tracking_category,  user_tracking_option , health_tracking_option} = require("../models");
+const { user, health_tracking_category, user_tracking_option, health_tracking_option } = require("../models");
 const translate = require("../config/translate");
 const router = express();
+const { Op } = require("sequelize");
 
 router.get("/getCategories", auth, async (req, res) => {
   const categories = await health_tracking_category.findAll();
@@ -48,125 +49,199 @@ router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 });
 
-router.get("/userInfo/:userId/:date/:lang",auth,checkDate,async(req,res)=>{
+router.get("/userInfo/:userId/:date/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
-  if(usr.partner_id!=null){
-    usrID=usr.partner_id
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
   }
-  else{
-    usrID=usr.id
+  else {
+    usrID = usr.id
   }
-   
-  let data=[];
-  let userOption=[];
-  let i,j,option;
+
+  let data = [];
+  let userOption = [];
+  let i, j, option;
   let category = await health_tracking_category.findAll({
-    attributes: ['id', 'title','has_multiple_choice','color','icon']
+    attributes: ['id', 'title', 'has_multiple_choice', 'color', 'icon']
   });
   for (i = 0; i < category.length; i++) {
-    let temp={};
-    temp.id=category[i].id;
-    temp.title=category[i].title;
-    temp.hasMultipleChoice=category[i].has_multiple_choice;
-    temp.color=category[i].color;
-    temp.icon=category[i].icon;
-    option=(await health_tracking_option.findAll({
-      attributes: ['id', 'title','icon'],
-      where:{
-        category_id:category[i].id
+    let temp = {};
+    temp.id = category[i].id;
+    temp.title = category[i].title;
+    temp.hasMultipleChoice = category[i].has_multiple_choice;
+    temp.color = category[i].color;
+    temp.icon = category[i].icon;
+    option = (await health_tracking_option.findAll({
+      attributes: ['id', 'title', 'icon'],
+      where: {
+        category_id: category[i].id
       }
     }))
-    let optionList=[];
-    
-    if(option.length>0){
-      for(j=0 ;j<option.length;j++){
-        let optionsTemp={};
-        userOption[j]=await user_tracking_option.findAll({
+    let optionList = [];
+
+    if (option.length > 0) {
+      for (j = 0; j < option.length; j++) {
+        let optionsTemp = {};
+        userOption[j] = await user_tracking_option.findAll({
           attributes: ['id', 'tracking_option_id'],
-          where:{
+          where: {
             user_id: usrID,
             tracking_option_id: option[j].id,
             date: req.params.date
           }
         })
-        if(userOption[j]==null) userOption[j]=[];
-        optionsTemp.id=option[j].id;
-        optionsTemp.title=option[j].title;
-        optionsTemp.icon=option[j].icon;
-        optionsTemp.selected=userOption[j];
+        if (userOption[j] == null) userOption[j] = [];
+        optionsTemp.id = option[j].id;
+        optionsTemp.title = option[j].title;
+        optionsTemp.icon = option[j].icon;
+        optionsTemp.selected = userOption[j];
         optionList.push(optionsTemp);
-       
+
       }
     }
-    temp.options=optionList;
+    temp.options = optionList;
     data.push(temp);
   }
-  
-  return res.status(200).json({ data:data });
+
+  return res.status(200).json({ data: data });
 });
 
-router.post("/userInfo/:userId/:lang",auth,checkDate,async(req,res)=>{
+router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    
-  let userOption,existDate;
-  for(i=0;i<req.body.deleted.length;i++){
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  let userOption, existDate;
+  for (i = 0; i < req.body.deleted.length; i++) {
     await user_tracking_option.destroy({
-      where:{
+      where: {
         user_id: req.params.userId,
         date: req.body.date,
-        tracking_option_id:req.body.deleted[i].trackingOptionId
+        tracking_option_id: req.body.deleted[i].trackingOptionId
       }
     })
-  } 
-  for(i=0;i<req.body.selected.length;i++){  
-    if(req.body.selected[i].hasMultipleChoice==0){
-      existDate=await user_tracking_option.findOne({
-        where:{
+  }
+  for (i = 0; i < req.body.selected.length; i++) {
+    if (req.body.selected[i].hasMultipleChoice == 0) {
+      existDate = await user_tracking_option.findOne({
+        where: {
           user_id: req.params.userId,
           date: req.body.date
         }
       })
-      if (existDate!=null) {
+      if (existDate != null) {
         //find options in category
         let category = await health_tracking_option.findAll({
           attributes: ['id'],
-          where:{
-            category_id:req.body.selected[i].categoryId
+          where: {
+            category_id: req.body.selected[i].categoryId
           }
         });
         //find all for that option in helthTracing 
-        for(option in category){
-          existOption=await user_tracking_option.findOne({
-            where:{
+        for (option in category) {
+          existOption = await user_tracking_option.findOne({
+            where: {
               user_id: req.params.userId,
               date: req.body.date,
-              tracking_option_id:option
+              tracking_option_id: option
             }
           })
           //delete it
-          if(existOption){
+          if (existOption) {
             await user_tracking_option.destroy({
-              where:{
+              where: {
                 user_id: req.params.userId,
                 date: req.body.date,
-                tracking_option_id:option
+                tracking_option_id: option
               }
             })
           }
         }
-        
+
       }
     }
-    userOption= await user_tracking_option.create({
-      tracking_option_id:req.body.selected[i].trackingOptionId,
-      date:req.body.date
+    userOption = await user_tracking_option.create({
+      tracking_option_id: req.body.selected[i].trackingOptionId,
+      date: req.body.date
     });
     await userOption.setUser(usr);
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL",  req.params.lang) });
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
+
+router.get("/syncUserInfo/:userId/:lastSyncDate/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let myDate= new Date(req.params.lastSyncDate);
+ 
+  let existOption = await user_tracking_option.findAll({
+    attributes: ['date','tracking_option_id'],
+    where: {
+      user_id: req.params.userId,
+      updatedAt: {
+        [Op.gte]:myDate
+      },
+      createdAt: {
+        [Op.gte]:myDate
+      }
+    },
+    orderBy: [['group', 'DESC']],
+  })
+
+  return res.status(200).json({ data: existOption });
+});
+
+router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  let userOption, existDate;
+  for (i = 0; i < req.body.deleted.length; i++) {
+    await user_tracking_option.destroy({
+      where: {
+        user_id: req.params.userId,
+        date: req.body.deleted[i].date,
+        tracking_option_id: req.body.deleted[i].trackingOptionId
+      }
+    })
+  }
+  for (i = 0; i < req.body.selected.length; i++) {
+    if (req.body.selected[i].hasMultipleChoice == 0) {
+      existDate = await user_tracking_option.findOne({
+        where: {
+          user_id: req.params.userId,
+          date: req.body.selected[i].date
+        }
+      })
+      if (existDate != null) {
+        //find options in category
+        let category = await health_tracking_option.findAll({
+          attributes: ['id'],
+          where: {
+            category_id: req.body.selected[i].categoryId
+          }
+        });
+        //find all for that option in helthTracing 
+        for (option in category) {
+          await user_tracking_option.destroy({
+            where: {
+              user_id: req.params.userId,
+              date: req.body.selected[i].date,
+              tracking_option_id: option
+            }
+          })
+        }
+      }
+    }
+    userOption = await user_tracking_option.create({
+      tracking_option_id: req.body.selected[i].trackingOptionId,
+      date: req.body.selected[i].date
+    });
+    await userOption.setUser(usr);
+  }
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+});
+
 
 module.exports = router;

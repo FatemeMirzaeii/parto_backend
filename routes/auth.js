@@ -71,6 +71,7 @@ router.post("/logIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
+  
   if (req.body.type != "" && req.body.type != null) {
     if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
       return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
