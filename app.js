@@ -22,7 +22,7 @@ const cookieParser = require('cookie-parser')
 const app = express();
 
 app.use(cookieParser());
-const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216']
+const whitelist = ['https://my.parto.app', 'http://localhost:3925','http://localhost:2216']
 app.use(cors({
   origin: function (origin, callback) {
     // bypass the requests with no origin (like curl requests, mobile apps, etc )
