@@ -255,7 +255,7 @@ router.put("/setLock/:userId/:lang", auth, async (req, res) => {
   else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 });
 
-router.push("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
+router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if (req.body.lastSyncTime == null || req.body.lastSyncTime == "") {
