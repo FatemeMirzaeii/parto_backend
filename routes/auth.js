@@ -135,6 +135,9 @@ router.post("/logIn/:lang", async (req, res) => {
 
 router.post("/verifyCode", async (req, res) => {
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+  if(req.body.code==null||req.body.code==""){
+    return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+  }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
@@ -209,6 +212,7 @@ router.post("/checkVerifyCode/:lang", async (req, res) => {
   //   return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   // }
   console.log("ok");
+  console.log("code",req.body.code)
   if (req.body.code == "" || req.body.code == null || req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
@@ -217,9 +221,11 @@ router.post("/checkVerifyCode/:lang", async (req, res) => {
       phone: req.body.phone,
     }
   });
+  console.log("user Exist", userExist);
   if (userExist != null) {
 
     if (new Date() - new Date(userExist.createdAt) > (2.5 * 60 * 1000)) {
+      console.log("time expier");
       return res.status(408).json({ data: { message: await translate("TIMEOVER",req.params.lang) } }).end();
     }
     else {
@@ -232,10 +238,10 @@ router.post("/checkVerifyCode/:lang", async (req, res) => {
         });
         return res.status(200).json({ data: { message: await translate("SUCCESSFUL",req.params.lang) } })
       }
-      else return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
   }
-  else return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 })
 
 router.post("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
