@@ -126,7 +126,7 @@ router.post("/logIn/:lang", async (req, res) => {
 
     res.clearCookie('token');
     return res
-      .cookie("token", await token, { httpOnly: true, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
+      .cookie("token", await token, { httpOnly: true, expires:false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 })
       .status(200)
       .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
   }
