@@ -135,9 +135,6 @@ router.post("/logIn/:lang", async (req, res) => {
 
 router.post("/verifyCode", async (req, res) => {
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-  if(req.body.code==null||req.body.code==""){
-    return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-  }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
@@ -182,6 +179,7 @@ router.post("/verifyCode", async (req, res) => {
               phone: req.body.phone,
               code: code
             });
+            console.log("userCode",code)
             return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
           }
 
