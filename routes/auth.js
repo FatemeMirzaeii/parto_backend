@@ -108,6 +108,7 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
+  console.log("req.headers['user-agent']",req.headers['user-agent']);
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
     return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
   }
