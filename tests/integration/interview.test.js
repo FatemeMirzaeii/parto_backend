@@ -24,12 +24,12 @@ describe('interview', () => {
         await usr.destroy();
     });
 
-    describe('/ordinarUser/:userId/:lang',async () => {
+    describe('/ordinaryUser/:userId/:lang',async () => {
         let tempUserId;
         let avgPeriodLength=7;
         let lastPeriodDate="2020-07-07";
         const exec=()=>{
-            return request(server).post('/interview/ordinarUser/'+tempUserId+'/fa')
+            return request(server).post('/interview/ordinaryUser/'+tempUserId+'/fa')
             .send({
                 "birthdate": "1377-05-05",
                 "avgCycleLength": 25,

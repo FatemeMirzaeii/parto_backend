@@ -137,8 +137,8 @@
                   }
                 },
                 "example": {
-                  "phone:":"09199698086",
-                  "type":"Main"
+                  "phone:": "09199698086",
+                  "type": "Main"
                 }
               }
             }
@@ -276,7 +276,7 @@
         }
       }
     },
-    "/user/linkForgetPassword/{lang}": {
+    "/user/linkForgotPassword/{lang}": {
       "post": {
         "summary": "Returns link for forget pasword.",
         "tags": [
@@ -431,7 +431,7 @@
         }
       }
     },
-    "/auth/verifyCode": {
+    "/auth/verificationCode": {
       "post": {
         "summary": "send verification code with sms or email",
         "tags": [
@@ -470,7 +470,7 @@
         }
       }
     },
-    "/auth/checkVerifyCode/{lang}": {
+    "/auth/checkVerificationCode/{lang}": {
       "post": {
         "summary": "check verification code .",
         "tags": [
@@ -658,7 +658,7 @@
         }
       }
     },
-    "/auth/partnerVerifyCode/{userId}/{lang}": {
+    "/auth/partnerVerificationCode/{userId}/{lang}": {
       "post": {
         "tags": [
           "user"
@@ -729,7 +729,7 @@
         }
       }
     },
-    "/auth/partnerVerifyCode/{userId}/{lang} ": {
+    "/auth/partnerVerificationCode/{userId}/{lang} ": {
       "get": {
         "tags": [
           "user"
@@ -1580,7 +1580,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1700,7 +1700,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1802,7 +1802,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1895,7 +1895,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2009,7 +2009,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2096,7 +2096,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2192,7 +2192,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "responses": {
           "200": {
             "description": "OK"
@@ -2249,7 +2249,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -2324,7 +2324,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -2402,7 +2402,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -2477,7 +2477,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2552,7 +2552,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2578,7 +2578,7 @@
         }
       }
     },
-    "/interview/ordinarUser/{userId}/{lang}": {
+    "/interview/ordinaryUser/{userId}/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -2624,7 +2624,7 @@
             }
           }
         ],
-        "summary": "save ordinar User peofile information in data base",
+        "summary": "save ordinary User perofile information in data base",
         "requestBody": {
           "required": true,
           "content": {
@@ -2727,7 +2727,7 @@
             }
           }
         ],
-        "summary": "save pregnant User peofile information in data base",
+        "summary": "save pregnant User perofile information in data base",
         "requestBody": {
           "required": true,
           "content": {
@@ -3228,7 +3228,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "responses": {
           "200": {
             "description": "OK"
@@ -3285,7 +3285,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {

@@ -78,7 +78,7 @@ router.post("/signUp/:lang", async (req, res) => {
     .json({ data: { id: usr.id } });
 });
 
-router.post("/linkForgetPassword/:lang", async (req, res) => {
+router.post("/linkForgotPassword/:lang", async (req, res) => {
   let usr;
   if (req.body.phone == "") {
     if (!usr)

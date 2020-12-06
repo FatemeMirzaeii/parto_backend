@@ -10,7 +10,7 @@ function check(cycleLength,periodLength){
   else if(periodLength<1 || periodLength>12) return false;
   return true;
 }
-router.post("/ordinarUser/:userId/:lang",auth, async(req, res) => {
+router.post("/ordinaryUser/:userId/:lang",auth, async(req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr==null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
   const exist = await user_profile.findOne({

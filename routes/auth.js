@@ -49,13 +49,14 @@ router.post("/logIn/:lang", async (req, res) => {
   const patt1 = RegExp('127.0.0.1*');
   const patt2 = RegExp('localhost*');
   let usr;
+  console.log("phone",req.body.phone)
   if (req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
-
+    console.log("check",check)
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
 
     usr = await user.findOne({
@@ -139,7 +140,7 @@ router.post("/logIn/:lang", async (req, res) => {
 
 })
 
-router.post("/verifyCode", async (req, res) => {
+router.post("/verificationCode", async (req, res) => {
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
@@ -211,7 +212,7 @@ router.post("/verifyCode", async (req, res) => {
   // }
 });
 
-router.post("/checkVerifyCode/:lang", async (req, res) => {
+router.post("/checkVerificationCode/:lang", async (req, res) => {
   // console.log(req.session);
   // console.log("code", req.session.code);
   // if (!req.session.code) {
@@ -250,7 +251,7 @@ router.post("/checkVerifyCode/:lang", async (req, res) => {
   else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 })
 
-router.post("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
+router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -271,7 +272,7 @@ router.post("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 })
 
-router.get("/partnerVerifyCode/:userId/:lang", auth, async (req, res) => {
+router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
