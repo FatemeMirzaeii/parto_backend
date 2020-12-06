@@ -109,7 +109,7 @@ router.post("/logIn/:lang", async (req, res) => {
     login_date: Date.now(),
   });
   console.log("req.headers['user-agent']", req.headers['user-agent']);
-  console.log("user_agent", useragent.is(req.headers['user-agent']).android == true,
+  console.log(
     useragent.is(req.headers['user-agent']).firefox == false,
     useragent.is(req.headers['user-agent']).chrome == false,
     useragent.is(req.headers['user-agent']).ie == false,
@@ -118,8 +118,7 @@ router.post("/logIn/:lang", async (req, res) => {
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
     return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
   }
-  else if (useragent.is(req.headers['user-agent']).android == true &&
-    useragent.is(req.headers['user-agent']).firefox == false &&
+  else if (useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
