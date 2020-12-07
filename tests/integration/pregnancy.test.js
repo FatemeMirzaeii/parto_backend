@@ -34,7 +34,7 @@ describe('pregnancy', () => {
         await usr.destroy();
     });
 
-    describe('/pregnancy/savePregnancyData/{userId}/{lang}',async () => {
+    describe('/pregnancy/savePregnancyData/{userId}/{lang}', () => {
         let tempUserId;
         let tempToken;
         let dueDate="2021-06-08";
@@ -83,7 +83,7 @@ describe('pregnancy', () => {
         });
     });
     
-    describe('/pregnancy/setPregnancyEnd/:userId/:dueDate/:lang', async() => {
+    describe('/pregnancy/setPregnancyEnd/:userId/:dueDate/:lang',() => {
         let tempUserId;
         let tempToken;
         let dueDate="2021-03-05";
@@ -118,7 +118,7 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('/pregnancy/getPregnancyData/:userId/:lang', async() => {
+    describe('/pregnancy/getPregnancyData/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
         

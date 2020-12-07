@@ -7,13 +7,10 @@
   },
   "servers": [
     {
-      "url": "https://api.parto.app"
+      "url": "https://dev.parto.app"
     },
     {
       "url": "http://localhost:2216"
-    },
-    {
-      "url": "https://dev.parto.app"
     }
   ],
   "tags": [
@@ -131,9 +128,17 @@
                   "name": {
                     "type": "string"
                   },
+                  "type": {
+                    "type": "string",
+                    "description": "set one of the \"Main\" or \"Partner\" or \"Teenager\""
+                  },
                   "imei": {
                     "type": "string"
                   }
+                },
+                "example": {
+                  "phone:": "09199698086",
+                  "type": "Main"
                 }
               }
             }
@@ -166,6 +171,9 @@
                         "id": {
                           "type": "integer",
                           "description": "user id"
+                        },
+                        "type": {
+                          "type": "string"
                         }
                       }
                     }
@@ -268,7 +276,7 @@
         }
       }
     },
-    "/user/linkForgetPassword/{lang}": {
+    "/user/linkForgotPassword/{lang}": {
       "post": {
         "summary": "Returns link for forget pasword.",
         "tags": [
@@ -423,9 +431,9 @@
         }
       }
     },
-    "/auth/verifyCode": {
+    "/auth/verificationCode": {
       "post": {
-        "summary": "Returns survey question.",
+        "summary": "send verification code with sms or email",
         "tags": [
           "user"
         ],
@@ -445,37 +453,70 @@
         },
         "responses": {
           "200": {
-            "description": "send sms successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "verify code",
-                      "properties": {
-                        "message": {
-                          "type": "string"
-                        },
-                        "code": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "send sms successful"
           },
           "400": {
             "description": "invalid input (phone number/email)"
           },
+          "409": {
+            "description": "time not end now and information exist"
+          },
           "418": {
-            "description": "Your account credit is not enough"
+            "description": "Your account credit is not enough that is for server"
           },
           "502": {
             "description": "server error to send email"
+          }
+        }
+      }
+    },
+    "/auth/checkVerificationCode/{lang}": {
+      "post": {
+        "summary": "check verification code .",
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "the code is correct"
+          },
+          "400": {
+            "description": "invalid input phone number or code is not correct or code is not exist in DB"
+          },
+          "408": {
+            "description": "time over"
           }
         }
       }
@@ -544,6 +585,220 @@
           },
           "400": {
             "description": "phone exist / invalid input"
+          }
+        }
+      }
+    },
+    "/user/versionType/{userId}/{type}/{lang}": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user type for example change teenager to lady",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "phone exist / invalid input"
+          }
+        }
+      }
+    },
+    "/auth/partnerVerificationCode/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "use in husband version and set partner to database and check husband code is true or no",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "partnerCode": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid entery when userId is wrong or partnerId(in the code) is wrong or partnerCode mathematically is wrong"
+          }
+        }
+      }
+    },
+    "/auth/partnerVerificationCode/{userId}/{lang} ": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "use in husband version and set partner to database and check husband code is true or no",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "partnerCode": {
+                          "type": "string",
+                          "description": "code that gnerate for partner"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid entery when userId is wrong or partnerId(in the code) is wrong or partnerCode mathematically is wrong"
           }
         }
       }
@@ -855,7 +1110,7 @@
                         "trackingOptionId": {
                           "type": "integer"
                         },
-                        "hasMultipleChoise": {
+                        "hasMultipleChoice": {
                           "type": "integer"
                         }
                       }
@@ -872,7 +1127,7 @@
                         "trackingOptionId": {
                           "type": "integer"
                         },
-                        "hasMultipleChoise": {
+                        "hasMultipleChoice": {
                           "type": "integer"
                         }
                       }
@@ -885,24 +1140,24 @@
                     {
                       "categoryId": 2,
                       "trackingOptionId": 10,
-                      "hasMultipleChoise": 0
+                      "hasMultipleChoice": 0
                     },
                     {
                       "categoryId": 2,
                       "trackingOptionId": 5,
-                      "hasMultipleChoise": 1
+                      "hasMultipleChoice": 1
                     }
                   ],
                   "selected": [
                     {
                       "categoryId": 1,
                       "trackingOptionId": 10,
-                      "hasMultipleChoise": 0
+                      "hasMultipleChoice": 0
                     },
                     {
                       "categoryId": 2,
                       "trackingOptionId": 11,
-                      "hasMultipleChoise": 1
+                      "hasMultipleChoice": 1
                     }
                   ]
                 }
@@ -1044,6 +1299,241 @@
         }
       }
     },
+    "/healthTracking/syncUserInfo/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "set user health tracking information",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "deleted": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string"
+                        },
+                        "categoryId": {
+                          "type": "integer"
+                        },
+                        "trackingOptionId": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "selected": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string"
+                        },
+                        "categoryId": {
+                          "type": "integer"
+                        },
+                        "trackingOptionId": {
+                          "type": "integer"
+                        },
+                        "hasMultipleChoice": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "deleted": [
+                    {
+                      "date": "2020-06-06",
+                      "categoryId": 2,
+                      "trackingOptionId": 10
+                    },
+                    {
+                      "date": "2020-06-06",
+                      "categoryId": 2,
+                      "trackingOptionId": 5
+                    }
+                  ],
+                  "selected": [
+                    {
+                      "date": "2020-06-06",
+                      "categoryId": 1,
+                      "trackingOptionId": 10,
+                      "hasMultipleChoice": 0
+                    },
+                    {
+                      "date": "2020-06-06",
+                      "categoryId": 2,
+                      "trackingOptionId": 11,
+                      "hasMultipleChoice": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
+    "/healthTracking/syncUserInfo/{userId}/{lastSyncDate}/{lang}": {
+      "get": {
+        "tags": [
+          "healthTracking"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lastSyncDate",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "date"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get information about user health tracking",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "date": "2020-06-06",
+                        "tracking_option_id": 3
+                      },
+                      {
+                        "date": "2020-06-07",
+                        "tracking_option_id": 8
+                      },
+                      {
+                        "date": "2020-06-07",
+                        "tracking_option_id": 3
+                      },
+                      {
+                        "date": "2020-06-09",
+                        "tracking_option_id": 1
+                      },
+                      {
+                        "date": "2020-06-09",
+                        "tracking_option_id": 8
+                      },
+                      {
+                        "date": "2020-06-07",
+                        "tracking_option_id": 11
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/profile/getProfile/{userId}/{lang}": {
       "get": {
         "tags": [
@@ -1090,7 +1580,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1210,7 +1700,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1312,7 +1802,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1405,7 +1895,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -1519,7 +2009,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -1606,7 +2096,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -1702,7 +2192,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "responses": {
           "200": {
             "description": "OK"
@@ -1759,7 +2249,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1834,7 +2324,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1912,7 +2402,7 @@
             }
           }
         ],
-        "summary": "send user peofile information to user",
+        "summary": "send user perofile information to user",
         "responses": {
           "200": {
             "description": "OK",
@@ -1987,7 +2477,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2062,7 +2552,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {
@@ -2088,7 +2578,7 @@
         }
       }
     },
-    "/interview/ordinarUser/{userId}/{lang}": {
+    "/interview/ordinaryUser/{userId}/{lang}": {
       "post": {
         "tags": [
           "interview"
@@ -2134,7 +2624,7 @@
             }
           }
         ],
-        "summary": "save ordinar User peofile information in data base",
+        "summary": "save ordinary User perofile information in data base",
         "requestBody": {
           "required": true,
           "content": {
@@ -2237,7 +2727,7 @@
             }
           }
         ],
-        "summary": "save pregnant User peofile information in data base",
+        "summary": "save pregnant User perofile information in data base",
         "requestBody": {
           "required": true,
           "content": {
@@ -2531,6 +3021,82 @@
         }
       }
     },
+    "/pregnancy/setAbortionDate/{userId}/{abortionDate}/{lang}": {
+      "post": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "abortionDate",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save user abortion date info",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information"
+          },
+          "404": {
+            "description": "information not found"
+          },
+          "409": {
+            "description": "contradiction between information"
+          }
+        }
+      }
+    },
     "/cycle/getLastPeriodDate/{userId}/{lang}": {
       "get": {
         "tags": [
@@ -2738,7 +3304,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "responses": {
           "200": {
             "description": "OK"
@@ -2795,7 +3361,7 @@
             }
           }
         ],
-        "summary": "edit user peofile information to user",
+        "summary": "edit user perofile information to user",
         "requestBody": {
           "required": true,
           "content": {

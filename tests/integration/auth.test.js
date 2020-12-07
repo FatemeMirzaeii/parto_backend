@@ -103,7 +103,7 @@ describe('auth',()=>{
         // })
     });
 
-    describe("/verifyCode",()=>{
+    describe("/verificationCode",()=>{
     })
 
     describe('/logIn',()=>{
