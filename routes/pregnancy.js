@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const router = express();
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
+const { Op } = require("sequelize");
 
 router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
@@ -38,7 +39,7 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
     })
     await uPregnant.setUser(usr);
 
-    if (req.body.conceptionDate != null && req.body.conceptionDate !="") {
+    if (req.body.conceptionDate != null && req.body.conceptionDate != "") {
       await pregnancy.update({
         conception_date: req.body.conceptionDate
       }, {
@@ -57,7 +58,7 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
         user_id: req.params.userId,
       }
     })
-    if (req.body.conceptionDate != null && req.body.conceptionDate !="") {
+    if (req.body.conceptionDate != null && req.body.conceptionDate != "") {
       await pregnancy.update({
         conception_date: req.body.conceptionDate
       }, {
@@ -75,16 +76,16 @@ router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
-  if(usr.partner_id!=null){
-    usrID=usr.partner_id
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
   }
-  else{
-    usrID=usr.id
+  else {
+    usrID = usr.id
   }
   const userPregnant = await pregnancy.findOne({
     attributes: ['due_date', 'conception_date', 'abortion'],
     where: {
-      user_id:usrID,
+      user_id: usrID,
     },
   });
   if (userPregnant == null) {
@@ -152,7 +153,7 @@ router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, re
   if (uExist == null) {
     let uPregnant = await pregnancy.create({
       abortion_date: req.params.abortionDate,
-      abortion:1
+      abortion: 1
     })
     let usr = await user.findByPk(req.params.userId);
     uPregnant.setUser(usr);
@@ -160,7 +161,7 @@ router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, re
   else {
     await pregnancy.update({
       abortion_date: req.params.abortionDate,
-      abortion:uExist.abortion_date+1
+      abortion: uExist.abortion_date + 1
     }, {
       where: {
         user_id: req.params.userId,
@@ -171,6 +172,73 @@ router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, re
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
+router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let syncTime = new Date(req.params.syncTime);
+
+  let usrProfile = await user_profile.findAll({
+    where: {
+      user_id: req.params.userId,
+      updatedAt: {
+        [Op.gte]: syncTime
+      },
+      createdAt: {
+        [Op.gte]: syncTime
+      }
+    },
+    orderBy: [['group', 'DESC']],
+  })
+
+  return res.status(200).json({ data: usrProfile });
+})
+
+router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  req.body.deleted.forEach(async element => {
+    deleted = await pregnancy.destroy({
+      where: {
+        user_id: req.params.userId,
+        due_date: new Date(element.dueDate)
+      }
+    })
+  });
+  req.body.edited.forEach(async element => {
+    let request = {
+      due_date: element.dueDate,
+      abortion: element.abortion,
+      conception_date: element.conceptionDate || null,
+      pregnancy_week: element.pregnancyWeek,
+      abortion_date: element.abortionDate || null,
+      children_number: element.childrenNumber,
+      kick_count: element.kickCount
+    }
+    await pregnancy.update({
+      request,
+      where: {
+        user_id: req.params.userId,
+        due_date: new Date(element.dueDate)
+      }
+    })
+  });
+  req.body.added.forEach(async element => {
+    let request = {
+      due_date: element.dueDate,
+      abortion: element.abortion,
+      conception_date: element.conceptionDate || null,
+      pregnancy_week: element.pregnancyWeek,
+      abortion_date: element.abortionDate || null,
+      children_number: element.childrenNumber,
+      kick_count: element.kickCount
+    }
+    let userPregnancy = await pregnancy.create(request);
+    await userPregnancy.setUser(usr);
+  });
+
+  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang), data: uProfile });
+
+})
 
 
 module.exports = router;

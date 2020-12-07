@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const checkDate = require("../middleware/checkDateWithDateOnly");
 const { user, user_profile } = require("../models");
 const translate = require("../config/translate");
+const { Op } = require("sequelize");
 
 router.get("/getProfile/:userId/:lang", auth, async (req, res) => {
   console.log("profileeee");
@@ -261,7 +262,7 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
   if (req.body.lastSyncTime == null || req.body.lastSyncTime == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  if (!checkDate(req.body.lastSyncTime)){
+  if (!checkDate(req.body.lastSyncTime)) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   const setLastSyncTime = await user_profile.update({ last_sync_time: req.body.lastSyncTime },
@@ -274,6 +275,65 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
- 
+
 })
+
+router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let syncTime = new Date(req.params.syncTime);
+
+  let usrProfile = await user_profile.findAll({
+    where: {
+      user_id: req.params.userId,
+      updatedAt: {
+        [Op.gte]: syncTime
+      },
+      createdAt: {
+        [Op.gte]: syncTime
+      }
+    },
+    orderBy: [['group', 'DESC']],
+  })
+
+  return res.status(200).json({ data: usrProfile });
+})
+
+router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  let request = {
+    birthdate:req.body.birthdate || null,
+    height: req.body.height,
+    weight: req.body.weight,
+    avg_sleeping_hour: req.body.sleepingHour,
+    blood_type: req.body.bloodType,
+    locked: req.body.isLock,
+    avg_cycle_length: req.body.cycleLength,
+    avg_period_length: req.body.periodLength,
+    pms_length: req.body.pmsLength,
+    pregnant: req.body.pregnant,
+    pregnancy_try: req.body.pregnancyTry,
+    last_period_date: req.body.lastPeriodDate||null,
+    ovulation_prediction: req.body.ovulationPred,
+    period_prediction: req.body.periodPred,
+    red_days: req.body.redDays
+  }
+  if (uProfile != null) {
+    await uProfile.update(request);
+  }
+  else{
+    uProfile = await user_profile.create(request);
+    await uProfile.setUser(usr);
+  }
+ 
+  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang),data:uProfile });
+
+})
+
 module.exports = router;

@@ -170,20 +170,20 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
-router.get("/syncUserInfo/:userId/:lastSyncDate/:lang", auth, async (req, res) => {
+router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let myDate= new Date(req.params.lastSyncDate);
+  let syncTime= new Date(req.params.syncTime);
  
   let existOption = await user_tracking_option.findAll({
     attributes: ['date','tracking_option_id'],
     where: {
       user_id: req.params.userId,
       updatedAt: {
-        [Op.gte]:myDate
+        [Op.gte]:syncTime
       },
       createdAt: {
-        [Op.gte]:myDate
+        [Op.gte]:syncTime
       }
     },
     orderBy: [['group', 'DESC']],
