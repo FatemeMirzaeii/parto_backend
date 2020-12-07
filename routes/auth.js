@@ -49,14 +49,14 @@ router.post("/logIn/:lang", async (req, res) => {
   const patt1 = RegExp('127.0.0.1*');
   const patt2 = RegExp('localhost*');
   let usr;
-  console.log("phone",req.body.phone)
+  console.log("phone", req.body.phone)
   if (req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
-    console.log("check",check)
+    console.log("check", check)
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
 
     usr = await user.findOne({
@@ -125,15 +125,15 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).mozilla == false &&
     useragent.is(req.headers['user-agent']).opera == false ||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
-
+    console.log("set headersssss");
     return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
 
   }
   else {
-
+    console.log("set cookiessssssssss");
     res.clearCookie('token');
     return res
-      .cookie("token", await token, { httpOnly: true, expires:false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60* 1000 })
+      .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
       .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
   }
