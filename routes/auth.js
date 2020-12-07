@@ -131,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
 
   }
   else {
-    console.log("set cokieeeeee")
+    console.log("set cokieeeeee");
     res.clearCookie('token');
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
