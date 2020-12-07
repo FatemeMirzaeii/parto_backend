@@ -123,7 +123,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false ||
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari==false||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
     console.log("set headersssss");
     return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
