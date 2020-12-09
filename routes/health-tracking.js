@@ -173,18 +173,19 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
 router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let syncTime= new Date(req.params.syncTime);
- 
+  let syncTime = new Date(req.params.syncTime);
+
   let existOption = await user_tracking_option.findAll({
-    attributes: ['date','tracking_option_id'],
+    attributes: ['date', 'tracking_option_id'],
     where: {
       user_id: req.params.userId,
       updatedAt: {
-        [Op.gte]:syncTime
-      },
-      createdAt: {
-        [Op.gte]:syncTime
+        [Op.gte]: syncTime
       }
+      // ,
+      // createdAt: {
+      //   [Op.gte]: syncTime
+      // }
     },
     orderBy: [['group', 'DESC']],
   })
@@ -196,50 +197,48 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
-  let userOption, existDate;
-  for (i = 0; i < req.body.deleted.length; i++) {
-    await user_tracking_option.destroy({
-      where: {
-        user_id: req.params.userId,
-        date: req.body.deleted[i].date,
-        tracking_option_id: req.body.deleted[i].trackingOptionId
-      }
-    })
-  }
-  for (i = 0; i < req.body.selected.length; i++) {
-    if (req.body.selected[i].hasMultipleChoice == 0) {
-      existDate = await user_tracking_option.findOne({
+  let userOption, existData;
+  req.body.data.forEach(async element => {
+    if (element.state == 2) {
+      await user_tracking_option.destroy({
         where: {
           user_id: req.params.userId,
-          date: req.body.selected[i].date
+          date: element.date,
+          tracking_option_id: element.trackingOptionId
         }
       })
-      if (existDate != null) {
-        //find options in category
-        let category = await health_tracking_option.findAll({
-          attributes: ['id'],
+    }
+    else if (element.state == 1) {
+      if (element.hasMultipleChoice == 0) {
+        existData = await user_tracking_option.findOne({
           where: {
-            category_id: req.body.selected[i].categoryId
+            user_id: req.params.userId,
+            date: element.date
           }
-        });
-        //find all for that option in helthTracing 
-        for (option in category) {
-          await user_tracking_option.destroy({
-            where: {
-              user_id: req.params.userId,
-              date: req.body.selected[i].date,
-              tracking_option_id: option
-            }
-          })
+        })
+        if (existData != null) {
+          await existData.update({ tracking_option_id: element.trackingOptionId });
+        }
+        else {
+          userOption = await user_tracking_option.create({
+            tracking_option_id: element.trackingOptionId,
+            date: element.date
+          });
+          await userOption.setUser(usr);
         }
       }
+      else {
+        userOption = await user_tracking_option.create({
+          tracking_option_id: element.trackingOptionId,
+          date: element.date
+        });
+        await userOption.setUser(usr);
+      }
     }
-    userOption = await user_tracking_option.create({
-      tracking_option_id: req.body.selected[i].trackingOptionId,
-      date: req.body.selected[i].date
-    });
-    await userOption.setUser(usr);
-  }
+    else {
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
+  })
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 

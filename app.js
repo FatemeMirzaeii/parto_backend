@@ -22,9 +22,20 @@ const cookieParser = require('cookie-parser')
 const app = express();
 
 app.use(cookieParser());
+const whitelist = ['https://my.parto.app', 'http://localhost:3925','http://localhost:2216']
 app.use(cors({
-  origin:['https://my.parto.app'],
-  credentials:true
+  origin: function (origin, callback) {
+    // bypass the requests with no origin (like curl requests, mobile apps, etc )
+    if (!origin) return callback(null, true);
+ 
+    if (whitelist.indexOf(origin) === -1) {
+      var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials :true,
+  exposedHeaders: 'x-auth-token'
 }));
 app.use(helmet());
 app.use(nodeadmin(app));

@@ -288,10 +288,11 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
       updatedAt: {
         [Op.gte]: syncTime
-      },
-      createdAt: {
-        [Op.gte]: syncTime
       }
+      // ,
+      // createdAt: {
+      //   [Op.gte]: syncTime
+      // }
     },
     orderBy: [['group', 'DESC']],
   })
@@ -312,7 +313,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     height: req.body.height,
     weight: req.body.weight,
     avg_sleeping_hour: req.body.sleepingHour,
-    blood_type: req.body.bloodType,
+    blood_type: req.body.bloodType || null,
     locked: req.body.isLock,
     avg_cycle_length: req.body.cycleLength,
     avg_period_length: req.body.periodLength,
@@ -332,7 +333,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     await uProfile.setUser(usr);
   }
  
-  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang),data:uProfile });
+  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 
 })
 
