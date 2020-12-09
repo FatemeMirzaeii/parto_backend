@@ -1353,24 +1353,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "deleted": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "date": {
-                          "type": "string"
-                        },
-                        "categoryId": {
-                          "type": "integer"
-                        },
-                        "trackingOptionId": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  },
-                  "selected": {
+                  "data": {
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -1386,36 +1369,36 @@
                         },
                         "hasMultipleChoice": {
                           "type": "integer"
+                        },
+                        "state": {
+                          "type": "integer"
                         }
                       }
                     }
                   }
                 },
                 "example": {
-                  "deleted": [
-                    {
-                      "date": "2020-06-06",
-                      "categoryId": 2,
-                      "trackingOptionId": 10
-                    },
-                    {
-                      "date": "2020-06-06",
-                      "categoryId": 2,
-                      "trackingOptionId": 5
-                    }
-                  ],
-                  "selected": [
+                  "data": [
                     {
                       "date": "2020-06-06",
                       "categoryId": 1,
-                      "trackingOptionId": 10,
-                      "hasMultipleChoice": 0
+                      "trackingOptionId": 3,
+                      "hasMultipleChoice": 0,
+                      "state": 1
                     },
                     {
                       "date": "2020-06-06",
                       "categoryId": 2,
-                      "trackingOptionId": 11,
-                      "hasMultipleChoice": 1
+                      "trackingOptionId": 6,
+                      "hasMultipleChoice": 1,
+                      "state": 2
+                    },
+                    {
+                      "date": "2020-06-06",
+                      "categoryId": 2,
+                      "trackingOptionId": 6,
+                      "hasMultipleChoice": 1,
+                      "state": 2
                     }
                   ]
                 }
@@ -1433,7 +1416,7 @@
         }
       }
     },
-    "/healthTracking/syncUserInfo/{userId}/{lastSyncDate}/{lang}": {
+    "/healthTracking/syncUserInfo/{userId}/{syncTime}/{lang}": {
       "get": {
         "tags": [
           "healthTracking"
@@ -1454,7 +1437,7 @@
           },
           {
             "in": "path",
-            "name": "lastSyncDate",
+            "name": "syncTime",
             "required": true,
             "content": {
               "application/json": {
@@ -2578,6 +2561,253 @@
         }
       }
     },
+    "/profile/syncProfile/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "sync user profile data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "birthdate": {
+                    "type": "string"
+                  },
+                  "cycleLength": {
+                    "type": "integer"
+                  },
+                  "periodLength": {
+                    "type": "integer"
+                  },
+                  "sleepingHour": {
+                    "type": "integer"
+                  },
+                  "pmsLength": {
+                    "type": "integer"
+                  },
+                  "height": {
+                    "type": "integer"
+                  },
+                  "weight": {
+                    "type": "integer"
+                  },
+                  "pregnant": {
+                    "type": "integer"
+                  },
+                  "pregnancyTry": {
+                    "type": "integer"
+                  },
+                  "isLock": {
+                    "type": "integer"
+                  },
+                  "lastPeriodDate": {
+                    "type": "string"
+                  },
+                  "bloodType": {
+                    "type": "string"
+                  },
+                  "ovulationPred": {
+                    "type": "integer"
+                  },
+                  "periodPred": {
+                    "type": "integer"
+                  },
+                  "redDays": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
+    "/profile/syncProfile/{userId}/{syncTime}/{lang}": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "syncTime",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "sync time"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user perofile information with sync time",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "user profile information",
+                      "properties": {
+                        "user_id": {
+                          "type": "integer"
+                        },
+                        "birthdate": {
+                          "type": "string"
+                        },
+                        "avg_cycle_length": {
+                          "type": "integer"
+                        },
+                        "avg_period_length": {
+                          "type": "integer"
+                        },
+                        "avg_sleeping_hour": {
+                          "type": "integer"
+                        },
+                        "pms_length": {
+                          "type": "integer"
+                        },
+                        "height": {
+                          "type": "integer"
+                        },
+                        "weight": {
+                          "type": "integer"
+                        },
+                        "pregnant": {
+                          "type": "integer"
+                        },
+                        "pregnancy_try": {
+                          "type": "integer"
+                        },
+                        "locked": {
+                          "type": "integer"
+                        },
+                        "last_period_date": {
+                          "type": "string"
+                        },
+                        "blood_type": {
+                          "type": "string"
+                        },
+                        "ovulation_prediction": {
+                          "type": "integer"
+                        },
+                        "period_prediction": {
+                          "type": "integer"
+                        },
+                        "red_days": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid intery"
+          }
+        }
+      }
+    },
     "/interview/ordinaryUser/{userId}/{lang}": {
       "post": {
         "tags": [
@@ -3093,6 +3323,222 @@
           },
           "409": {
             "description": "contradiction between information"
+          }
+        }
+      }
+    },
+    "/pregnancy/syncPregnancyInfo/{userId}/{syncTime}/{lang}": {
+      "get": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "syncTime",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "sync time"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user pregnancy info with sync time",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "dueDate": {
+                            "type": "string"
+                          },
+                          "abortion": {
+                            "type": "integer"
+                          },
+                          "conceptionDate": {
+                            "type": "string"
+                          },
+                          "pregnancyWeek": {
+                            "type": "integer"
+                          },
+                          "abortionDate": {
+                            "type": "string"
+                          },
+                          "childrenNumber": {
+                            "type": "integer"
+                          },
+                          "kickCount": {
+                            "type": "integer"
+                          },
+                          "state": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "user information is not correct"
+          }
+        }
+      }
+    },
+    "/pregnancy/syncPregnancyInfo/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "save user pregnancy info",
+        "requestBody": {
+          "required": true,
+          "description": "state is require and can get 1 active item , 2 deleted item , 3 archived item . all filed exept state isn't require and can be null.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "dueDate": {
+                          "type": "string"
+                        },
+                        "abortion": {
+                          "type": "integer"
+                        },
+                        "conceptionDate": {
+                          "type": "string"
+                        },
+                        "pregnancyWeek": {
+                          "type": "integer"
+                        },
+                        "abortionDate": {
+                          "type": "string"
+                        },
+                        "childrenNumber": {
+                          "type": "integer"
+                        },
+                        "kickCount": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid information"
+          },
+          "404": {
+            "description": "information not found"
           }
         }
       }

@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         isDate: true,
       },
     },
+    state: {
+      type: DataTypes.ENUM('1', '2', '3'),
+      defaultValue:1,
+    }
   }, {
     freezeTableName: true,
     underscored: true,
