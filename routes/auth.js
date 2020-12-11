@@ -117,7 +117,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).mozilla == false,
     useragent.is(req.headers['user-agent']).opera == false,
     useragent.is(req.headers['user-agent']).safari)
-  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true ) {
     return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
   }
   else if (useragent.is(req.headers['user-agent']).firefox == false &&
