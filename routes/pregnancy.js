@@ -223,12 +223,7 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
     }
     
     if (pregnantUser==null) {
-      if (req.body.data[i].state == 2 || req.body.data[i].state == 3) {
-        // console.log("state 404*********")
-        result = 404;
-        break;
-      }
-      else if (req.body.data[i].state == 1) {
+      if (req.body.data[i].state == 1||req.body.data[i].state == 2 ||req.body.data[i].state == 3) {
         pregnantUser = await pregnancy.create(request);
         await pregnantUser.setUser(usr);
       }
@@ -249,9 +244,6 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
 // console.log("heareeeeeee")
 if (result == 400) {
   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-}
-else if (result == 404) {
-  return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
 }
 else { return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); }
 
