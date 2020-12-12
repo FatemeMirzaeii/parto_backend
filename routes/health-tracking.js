@@ -204,12 +204,12 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         where: {
           user_id: req.params.userId,
           date: element.date,
-          tracking_option_id: element.trackingOptionId
+          tracking_option_id: element.tracking_option_id
         }
       })
     }
     else if (element.state == 1) {
-      if (element.hasMultipleChoice == 0) {
+      if (element.has_multiple_choice == 0) {
         existData = await user_tracking_option.findOne({
           where: {
             user_id: req.params.userId,
@@ -217,11 +217,11 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
           }
         })
         if (existData != null) {
-          await existData.update({ tracking_option_id: element.trackingOptionId });
+          await existData.update({ tracking_option_id: element.tracking_option_id });
         }
         else {
           userOption = await user_tracking_option.create({
-            tracking_option_id: element.trackingOptionId,
+            tracking_option_id: element.tracking_option_id,
             date: element.date
           });
           await userOption.setUser(usr);
@@ -229,7 +229,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
       }
       else {
         userOption = await user_tracking_option.create({
-          tracking_option_id: element.trackingOptionId,
+          tracking_option_id: element.tracking_option_id,
           date: element.date
         });
         await userOption.setUser(usr);

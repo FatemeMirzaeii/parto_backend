@@ -198,7 +198,6 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
   let result;
   // console.log("length",req.body.data.length);
   for (i = 0; i < req.body.data.length; i++) {
-    console.log("heareeeeee")
     if (req.body.data[i].state == null || req.body.data[i].state == "") {
       // console.log("state nullll")
       result = 400;
@@ -210,42 +209,38 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
         state: 1
       },
     });
-    
-    let request = {
-      due_date: req.body.data[i].dueDate,
-      abortion: req.body.data[i].abortion,
-      conception_date: req.body.data[i].conceptionDate || null,
-      pregnancy_week: req.body.data[i].pregnancyWeek,
-      abortion_date: req.body.data[i].abortionDate || null,
-      children_number: req.body.data[i].childrenNumber,
-      kick_count: req.body.data[i].kickCount,
-      state: req.body.data[i].state
-    }
-    
-    if (pregnantUser==null) {
-      if (req.body.data[i].state == 1||req.body.data[i].state == 2 ||req.body.data[i].state == 3) {
-        pregnantUser = await pregnancy.create(request);
-        await pregnantUser.setUser(usr);
-      }
-      else {
-        // console.log(req.body.data[i].state == 1)
-        result = 400;
-        break;
-      }
+
+    if (req.body.data[i].due_date == null && req.body.data[i].abortion == null && eq.body.data[i].conception_date == null && req.body.data[i].pregnancy_week == null
+      && req.body.data[i].abortion_date == null && req.body.data[i].children_number == null && req.body.data[i].kick_count == null) {
+      result = 400;
+      break;
     }
     else {
-      if(req.body.data[i].state>3){
-        result = 400;
-        break;
+      if (pregnantUser == null) {
+        if (req.body.data[i].state == 1 || req.body.data[i].state == 2 || req.body.data[i].state == 3) {
+          pregnantUser = await pregnancy.create(req.body.data[i]);
+          await pregnantUser.setUser(usr);
+        }
+        else {
+          // console.log(req.body.data[i].state == 1)
+          result = 400;
+          break;
+        }
       }
-      await pregnantUser.update(request);
+      else {
+        if (req.body.data[i].state > 3) {
+          result = 400;
+          break;
+        }
+        await pregnantUser.update(req.body.data[i]);
+      }
     }
   };
-// console.log("heareeeeeee")
-if (result == 400) {
-  return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-}
-else { return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); }
+  // console.log("heareeeeeee")
+  if (result == 400) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  else { return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); }
 
 })
 

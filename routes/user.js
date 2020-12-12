@@ -225,19 +225,34 @@ router.post("/changePassword/:lang", async (req, res) => {
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
+router.put("/versionType/:userId/:type/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null || req.params.type == "" || req.params.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if(usr.version_type!="Teenager" && req.params.type!="Main") return res.status(400).json({ message: await translate("NOPERMISSION", req.params.lang) });
+  await usr.update({ version_type: req.params.type });
+  return res
+    .status(200)
+    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+})
 router.post("/versionType/:userId/:type/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || req.params.type == "" || req.params.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  // if(usr.version_type!="Teenager") return res.status(400).json({ message: await translate("NOPERMISSION", req.params.lang) });
-  if(req.body.type!="" && req.body.type!=null){
-    if(req.body.type!="Main"&& req.body.type!="Partner"&&req.body.type!="Teenager"){
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
+  if (req.params.type != "Main" && req.params.type != "Partner" && req.params.type != "Teenager") {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   await usr.update({ version_type: req.params.type });
   return res
     .status(200)
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
+
+router.get("/versionType/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  return res
+    .status(200)
+    .json({ data: { type: usr.version_type } });
+})
+
 
 module.exports = router;

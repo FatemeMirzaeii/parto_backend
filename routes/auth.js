@@ -72,12 +72,7 @@ router.post("/logIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
-
-  if (req.body.type != "" && req.body.type != null) {
-    if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
-  }
+  
   if (usr == null) {
 
     if (req.body.imei != null && req.body.imei != "") {
@@ -118,7 +113,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false,
     useragent.is(req.headers['user-agent']).safari)
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true  ) {
-    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name} });
   }
   else if (useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
@@ -127,7 +122,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
     console.log("set headersssss");
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name} });
 
   }
   else {
@@ -136,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+      .json({ data: { id: usr.id, userName: usr.name} });
   }
 })
 

@@ -301,6 +301,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
 })
 
 router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
+  
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let uProfile = await user_profile.findOne({
@@ -308,32 +309,22 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  let request = {
-    birthdate:req.body.birthdate || null,
-    height: req.body.height,
-    weight: req.body.weight,
-    avg_sleeping_hour: req.body.sleepingHour,
-    blood_type: req.body.bloodType || null,
-    locked: req.body.isLock,
-    avg_cycle_length: req.body.cycleLength,
-    avg_period_length: req.body.periodLength,
-    pms_length: req.body.pmsLength,
-    pregnant: req.body.pregnant,
-    pregnancy_try: req.body.pregnancyTry,
-    last_period_date: req.body.lastPeriodDate||null,
-    ovulation_prediction: req.body.ovulationPred,
-    period_prediction: req.body.periodPred,
-    red_days: req.body.redDays
+
+  if (req.body.data.birthdate == null && req.body.data.height == null && req.body.data.weight == null && req.body.data.avg_sleeping_hour == null &&
+    req.body.data.blood_type == null && req.body.data.isLock == null && req.body.data.avg_cycle_length == null && req.body.data.avg_period_length == null &&
+    req.body.data.pms_length == null && req.body.data.pregnant == null && req.body.data.pregnancy_try == null && req.body.data.last_period_date == null &&
+    req.body.data.ovulation_prediction == null && req.body.data.period_prediction == null && req.body.data.red_days == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (uProfile != null) {
-    await uProfile.update(request);
+    await uProfile.update(req.body.data);
   }
-  else{
-    uProfile = await user_profile.create(request);
+  else {
+    uProfile = await user_profile.create(req.body.data);
     await uProfile.setUser(usr);
   }
- 
-  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 
 })
 
