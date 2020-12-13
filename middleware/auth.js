@@ -20,7 +20,8 @@ module.exports = async function (req, res, next) {
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
     useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
-    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || 
+    RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true ||RegExp('http://localhost:3925').test(req.headers['origin']) == true ) {
 
     if (req.header("x-auth-token") == undefined) {
       res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
