@@ -40,7 +40,7 @@ developmentApp.use(cors({
   credentials: true,
   exposedHeaders: 'x-auth-token'
 }));
-developmentApp.set('trust proxy', 1) // trust first proxy
+// developmentApp.set('trust proxy', 1) // trust first proxy
 
 const authenticatedLimiter = rateLimit({
   windowMs: 1000, // 1 second window
