@@ -72,7 +72,7 @@ router.post("/logIn/:lang", async (req, res) => {
   //     },
   //   });
   // }
-  
+
   if (usr == null) {
 
     if (req.body.imei != null && req.body.imei != "") {
@@ -112,8 +112,8 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).mozilla == false,
     useragent.is(req.headers['user-agent']).opera == false,
     useragent.is(req.headers['user-agent']).safari)
-  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true  ) {
-    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name} });
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name } });
   }
   else if (useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
@@ -122,7 +122,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
     console.log("set headersssss");
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name} });
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
 
   }
   else {
@@ -131,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name} });
+      .json({ data: { id: usr.id, userName: usr.name } });
   }
 })
 
@@ -161,35 +161,35 @@ router.post("/verificationCode", async (req, res) => {
           });
         }
       }
-      else {
-        let api = Kavenegar.KavenegarApi({
-          apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
-        });
 
-        api.VerifyLookup({
-          receptor: req.body.phone,
-          token: code.toString(),
-          template: "verificationCode",
-        },
-          async (response, status, message) => {
+      let api = Kavenegar.KavenegarApi({
+        apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
+      });
 
-            if (status == 418) {
-              sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
-            }
-            else if (status == 200) {
+      api.VerifyLookup({
+        receptor: req.body.phone,
+        token: code.toString(),
+        template: "verificationCode",
+      },
+        async (response, status, message) => {
 
-              await verification_code.create({
-                phone: req.body.phone,
-                code: code
-              });
-              console.log("userCode", code)
-              return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
-            }
+          if (status == 418) {
+            sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
+          }
+          else if (status == 200) {
 
-            return res.status(status).json({ message: message });
+            await verification_code.create({
+              phone: req.body.phone,
+              code: code
+            });
+            console.log("userCode", code)
+            return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
+          }
 
-          })
-      }
+          return res.status(status).json({ message: message });
+
+        })
+
     }
   }
   // else{

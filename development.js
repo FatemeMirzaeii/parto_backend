@@ -46,7 +46,7 @@ const authenticatedLimiter = rateLimit({
   windowMs: 1000, // 1 second window
   max: 20, // start blocking after 10 requests
   message:
-    "Too many request from this IP",
+  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
   headers: true,
 });
 
@@ -63,10 +63,10 @@ developmentApp.use("/profile", authenticatedLimiter);
 developmentApp.use("/survey", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
-  windowMs: 2 * 1000, // 2 minet window
-  max: 1, // start blocking after 1 requests
+  windowMs: 2*60 * 1000, // 2 minet window
+  max: 3, // start blocking after 1 requests
   message:
-    "Too many accounts created from this IP",
+  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
   headers: true,
 });
 developmentApp.use("/auth", unauthenticatedLimiter);
