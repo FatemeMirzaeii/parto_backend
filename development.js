@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const nodeadmin = require("nodeadmin");
+const rateLimit = require("express-rate-limit");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
 const cycle = require("./routes/cycle");
@@ -20,33 +21,56 @@ const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const profile = require("./routes/profile");
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
 
 const developmentApp = express();
 
 developmentApp.use(cookieParser());
-const whitelist = ['https://test.parto.app', 'http://localhost:3925','http://localhost:2216','https://dev.parto.app']
+const whitelist = ['https://test.parto.app', 'http://localhost:3925', 'http://localhost:2216', 'https://dev.parto.app']
 developmentApp.use(cors({
   origin: function (origin, callback) {
     // bypass the requests with no origin (like curl requests, mobile apps, etc )
     if (!origin) return callback(null, true);
- 
+
     if (whitelist.indexOf(origin) === -1) {
       var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
       return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  credentials :true,
+  credentials: true,
   exposedHeaders: 'x-auth-token'
 }));
-// developmentApp.set('trust proxy', 1) // trust first proxy
-// developmentApp.use(session({
-//   secret: 'Parto',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { sameSite: true, secure: true, httpOnly:true }
-// }))
+developmentApp.set('trust proxy', 1) // trust first proxy
+
+const authenticatedLimiter = rateLimit({
+  windowMs: 1000, // 1 second window
+  max: 20, // start blocking after 10 requests
+  message:
+    "Too many request from this IP",
+  headers: true,
+});
+
+developmentApp.use("/cycle", authenticatedLimiter);
+developmentApp.use("/pregnancy", authenticatedLimiter);
+developmentApp.use("/article", authenticatedLimiter);
+developmentApp.use("/interview", authenticatedLimiter);
+developmentApp.use("/healthTracking", authenticatedLimiter);
+developmentApp.use("/note", authenticatedLimiter);
+developmentApp.use("/user", authenticatedLimiter);
+developmentApp.use("/auth", authenticatedLimiter);
+developmentApp.use("/contactUs", authenticatedLimiter);
+developmentApp.use("/profile", authenticatedLimiter);
+developmentApp.use("/survey", authenticatedLimiter);
+
+const unauthenticatedLimiter = rateLimit({
+  windowMs: 2 * 1000, // 2 minet window
+  max: 1, // start blocking after 1 requests
+  message:
+    "Too many accounts created from this IP",
+  headers: true,
+});
+developmentApp.use("/auth", unauthenticatedLimiter);
+
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
