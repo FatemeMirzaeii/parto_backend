@@ -148,18 +148,15 @@ router.post("/verificationCode", async (req, res) => {
           phone: req.body.phone,
         }
       });
-      if (userExist != null) {
-
-        if (new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
-          return res.status(409).json({ data: { message: await translate("EXISTS", "fa") } }).end();
-        }
-        else {
-          await verification_code.destroy({
-            where: {
-              phone: req.body.phone,
-            }
-          });
-        }
+      if (userExist != null && new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
+        return res.status(409).json({ data: { message: await translate("EXISTS", "fa") } }).end();
+      }
+      else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
+        await verification_code.destroy({
+          where: {
+            phone: req.body.phone,
+          }
+        });
       }
 
       let api = Kavenegar.KavenegarApi({
@@ -185,11 +182,8 @@ router.post("/verificationCode", async (req, res) => {
             console.log("userCode", code)
             return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
           }
-
           return res.status(status).json({ message: message });
-
         })
-
     }
   }
   // else{
@@ -224,8 +218,10 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     }
   });
   console.log("user Exist", userExist);
-  if (userExist != null) {
-
+  if (userExist == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  else{
     if (new Date() - new Date(userExist.createdAt) > (2.5 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ data: { message: await translate("TIMEOVER", req.params.lang) } }).end();
@@ -243,7 +239,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
   }
-  else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+ 
 })
 
 router.post("/signUp/:lang", async (req, res) => {
