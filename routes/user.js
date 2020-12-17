@@ -26,7 +26,6 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
 
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 })
-
 router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -54,7 +53,6 @@ router.post("/versionType/:userId/:type/:lang", auth, async (req, res) => {
     .status(200)
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
-
 router.get("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });

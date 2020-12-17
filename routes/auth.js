@@ -81,9 +81,9 @@ router.post("/logIn/:lang", async (req, res) => {
       if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
       usr = await user.create({
-        name: req.body.name,
+        name: null,
         phone: req.body.phone,
-        version_type: req.body.type,
+        version_type: null,
         //email: req.body.email,
         //password: hash,
         imei: req.body.imei
@@ -91,9 +91,9 @@ router.post("/logIn/:lang", async (req, res) => {
     }
     else {
       usr = await user.create({
-        name: req.body.name,
+        name: null,
         phone: req.body.phone,
-        version_type: req.body.type
+        version_type:null
       });
     }
   }
@@ -113,7 +113,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false,
     useragent.is(req.headers['user-agent']).safari)
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
-    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name } });
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name ,type:usr.version_type} });
   }
   else if (useragent.is(req.headers['user-agent']).firefox == false &&
     useragent.is(req.headers['user-agent']).chrome == false &&
@@ -122,7 +122,7 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
     patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
     console.log("set headersssss");
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name } });
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type} });
 
   }
   else {
@@ -131,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name } });
+      .json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type} });
   }
 })
 
@@ -224,7 +224,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
   else{
     if (new Date() - new Date(userExist.createdAt) > (2.5 * 60 * 1000)) {
       console.log("time expier");
-      return res.status(408).json({ data: { message: await translate("TIMEOVER", req.params.lang) } }).end();
+      return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
     else {
       console.log(RegExp(userExist.code).test(req.body.code) == true)
@@ -234,7 +234,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
             phone: req.body.phone,
           }
         });
-        return res.status(200).json({ data: { message: await translate("SUCCESSFUL", req.params.lang) } })
+        return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
       }
       else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
