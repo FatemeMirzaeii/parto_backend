@@ -61,7 +61,7 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
     await uExist.update(request);
   }
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
 router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
