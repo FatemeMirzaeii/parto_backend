@@ -114,7 +114,7 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 
-router.post("/setِDueDate/:userId/:dueDate/:lang", auth, async (req, res) => {
+router.post("/setِDueDate/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -133,25 +133,22 @@ router.post("/setِDueDate/:userId/:dueDate/:lang", auth, async (req, res) => {
   });
   if (uExist == null) {
     let uPregnant = await pregnancy.create({
-      due_date: req.params.dueDate
+      due_date: req.body.dueDate,
+      state:1
     })
     let usr = await user.findByPk(req.params.userId);
     uPregnant.setUser(usr);
   }
   else {
-    await pregnancy.update({
-      due_date: req.params.dueDate
-    }, {
-      where: {
-        user_id: req.params.userId,
-      }
+    await uExist.update({
+      due_date: req.body.dueDate
     })
   }
 
   return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
-router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, res) => {
+router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -165,20 +162,23 @@ router.post("/setAbortionDate/:userId/:abortionDate/:lang", auth, async (req, re
   let uExist = await pregnancy.findOne({
     where: {
       user_id: req.params.userId,
+      state:1
     },
   });
   if (uExist == null) {
     let uExist = await pregnancy.create({
-      abortion_date: req.params.abortionDate,
-      abortion: 1
+      abortion_date: req.body.abortionDate,
+      abortion: 1,
+      state:1
     })
     let usr = await user.findByPk(req.params.userId);
     uExist.setUser(usr);
   }
   else {
     await uExist.update({
-      abortion_date: req.params.abortionDate,
-      abortion: uExist.abortion + 1
+      abortion_date: req.body.abortionDate,
+      abortion: uExist.abortion + 1,
+      state:1
     })
   }
 

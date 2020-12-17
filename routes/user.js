@@ -33,22 +33,22 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
-router.put("/versionType/:userId/:type/:lang", auth, async (req, res) => {
+router.put("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.params.type == "" || req.params.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if(usr.version_type!="Teenager" && req.params.type!="Main") return res.status(400).json({ message: await translate("NOPERMISSION", req.params.lang) });
-  await usr.update({ version_type: req.params.type });
+  if (usr == null || req.body.type == "" || req.body.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if(usr.version_type!="Teenager" && req.body.type!="Main") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  await usr.update({ version_type: req.body.type });
   return res
     .status(200)
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
-router.post("/versionType/:userId/:type/:lang", auth, async (req, res) => {
+router.post("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.params.type == "" || req.params.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if (req.params.type != "Main" && req.params.type != "Partner" && req.params.type != "Teenager") {
+  if (usr == null || req.body.type == "" || req.body.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  await usr.update({ version_type: req.params.type });
+  await usr.update({ version_type: req.body.type });
   return res
     .status(200)
     .json({ message: await translate("SUCCESSFUL", req.params.lang) });

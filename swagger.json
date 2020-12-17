@@ -128,17 +128,12 @@
                   "name": {
                     "type": "string"
                   },
-                  "type": {
-                    "type": "string",
-                    "description": "set one of the \"Main\" or \"Partner\" or \"Teenager\""
-                  },
                   "imei": {
                     "type": "string"
                   }
                 },
                 "example": {
-                  "phone:": "09199698086",
-                  "type": "Main"
+                  "phone:": "09199698086"
                 }
               }
             }
@@ -174,6 +169,9 @@
                         },
                         "type": {
                           "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
                         }
                       }
                     }
@@ -184,249 +182,6 @@
           },
           "400": {
             "description": "invalid input"
-          }
-        }
-      }
-    },
-    "/user/signUp/{lang}": {
-      "post": {
-        "summary": "sign up new user with phone.",
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "phone"
-                ],
-                "properties": {
-                  "phone": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "imei": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "x-auth-token": {
-                "required": true,
-                "description": "token set to response header",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "user id"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "invalid input"
-          },
-          "409": {
-            "description": "phone exist"
-          }
-        }
-      }
-    },
-    "/user/linkForgotPassword/{lang}": {
-      "post": {
-        "summary": "Returns link for forget pasword.",
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phone": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "send sms successful"
-          },
-          "400": {
-            "description": "invalid input (phone number)"
-          },
-          "418": {
-            "description": "Your account credit is not enough"
-          },
-          "502": {
-            "description": "server error to send email"
-          }
-        }
-      }
-    },
-    "/user/setNewPassword/{lang}": {
-      "post": {
-        "summary": "Returns survey question.",
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "type": "string"
-                  },
-                  "newPassword": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "send email successful"
-          },
-          "400": {
-            "description": "envalid input"
-          }
-        }
-      }
-    },
-    "/user/changePassword/{lang}": {
-      "post": {
-        "summary": "Returns survey question.",
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "phone": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string",
-                    "description": "periviuse password"
-                  },
-                  "newPassword": {
-                    "type": "string",
-                    "description": "new password"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "send email successful"
-          },
-          "400": {
-            "description": "envalid input"
           }
         }
       }
@@ -521,75 +276,7 @@
         }
       }
     },
-    "/auth/signIn/{lang}": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "Creates a new user.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "phone": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "user id"
-                        },
-                        "userName": {
-                          "type": "string",
-                          "description": "user id"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "phone exist / invalid input"
-          }
-        }
-      }
-    },
-    "/user/versionType/{userId}/{type}/{lang}": {
+    "/user/versionType/{userId}/{lang}": {
       "post": {
         "tags": [
           "user"
@@ -598,19 +285,6 @@
           {
             "in": "path",
             "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "type",
             "required": true,
             "content": {
               "application/json": {
@@ -647,7 +321,21 @@
             }
           }
         ],
-        "summary": "edit user type for example change teenager to lady",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "add user type Main,Partner,Teenager",
         "responses": {
           "200": {
             "description": "OK"
@@ -658,7 +346,151 @@
         }
       }
     },
-    "/auth/partnerVerificationCode/{userId}/{lang}": {
+    "/user/versionType/{userId}/{lang} ": {
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "change type just from teenager to main",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "type is null / type is not Main and user type is not Teenager"
+          }
+        }
+      }
+    },
+    "/user/versionType/{userId}/{lang}  ": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user type",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "send user version type"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "user is not exist"
+          }
+        }
+      }
+    },
+    "/user/partnerVerificationCode/{userId}/{lang}": {
       "post": {
         "tags": [
           "user"
@@ -729,7 +561,7 @@
         }
       }
     },
-    "/auth/partnerVerificationCode/{userId}/{lang} ": {
+    "/user/partnerVerificationCode/{userId}/{lang} ": {
       "get": {
         "tags": [
           "user"
@@ -799,245 +631,6 @@
           },
           "400": {
             "description": "invalid entery when userId is wrong or partnerId(in the code) is wrong or partnerCode mathematically is wrong"
-          }
-        }
-      }
-    },
-    "/note/{lang}/{userId}/{date}": {
-      "get": {
-        "summary": "return note content.",
-        "tags": [
-          "note"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "date",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "content": {
-                          "type": "string",
-                          "description": "note content"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "note is not exist"
-          }
-        }
-      }
-    },
-    "/survey/question/{lang}": {
-      "get": {
-        "summary": "Returns survey question.",
-        "tags": [
-          "survay"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "posetivQuestion": {
-                      "type": "object",
-                      "description": "list of answer that user can select them.",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "number of answers"
-                        },
-                        "question": {
-                          "type": "string",
-                          "description": "text for question"
-                        }
-                      }
-                    },
-                    "negativeQuestion": {
-                      "type": "object",
-                      "description": "list of answer that user can select them.",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "number of answers"
-                        },
-                        "question": {
-                          "type": "string",
-                          "description": "text for question"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/survey/answers/{lang}": {
-      "put": {
-        "summary": "update user survey answers.",
-        "tags": [
-          "survay"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "in": "header",
-            "name": "x-auth-token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "if user registered use userId and x-auth-token if not just use imei and put userId null or 0 and x-auth-token null.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "rate"
-                ],
-                "properties": {
-                  "userId": {
-                    "type": "integer"
-                  },
-                  "IMEi": {
-                    "type": "string"
-                  },
-                  "rate": {
-                    "type": "integer"
-                  },
-                  "answers": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  }
-                },
-                "example": {
-                  "userId": 0,
-                  "IMEi": "asoklJSpoqk229HJBZNNM",
-                  "rate": 4,
-                  "answers": "1,5,2",
-                  "description": "همه چیز خوب و عالی، رنگ ها نامتناسب هستند"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "successful"
-          },
-          "400": {
-            "description": "inavlid token"
-          },
-          "401": {
-            "description": "no permition (user id or token is wrong)"
-          },
-          "404": {
-            "description": "information not found(user id isn't exist)"
           }
         }
       }
@@ -3085,6 +2678,9 @@
               }
             }
           },
+          "400": {
+            "description": "user id is not valid"
+          },
           "404": {
             "description": "user information not found"
           }
@@ -3137,9 +2733,10 @@
             }
           }
         ],
-        "summary": "save user pregnancy info",
+        "summary": "save user pregnancy info in every state that means added or deleted or archived",
         "requestBody": {
           "required": true,
+          "description": "Not all fields in the body are required but sate is required and get valu 1(add),2(deleted),3(archived)",
           "content": {
             "application/json": {
               "schema": {
@@ -3153,6 +2750,21 @@
                   },
                   "conceptionDate": {
                     "type": "string"
+                  },
+                  "pregnancyWeek": {
+                    "type": "integer"
+                  },
+                  "abortionDate": {
+                    "type": "string"
+                  },
+                  "childrenNumber": {
+                    "type": "integer"
+                  },
+                  "kickCount": {
+                    "type": "integer"
+                  },
+                  "state": {
+                    "type": "integer"
                   }
                 }
               }
@@ -3175,7 +2787,7 @@
         }
       }
     },
-    "/pregnancy/setPregnancyEnd/{userId}/{dueDate}/{lang}": {
+    "/pregnancy/endPregnancy/{userId}/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3208,19 +2820,6 @@
             }
           },
           {
-            "in": "path",
-            "name": "dueDate",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
             "name": "x-auth-token",
             "in": "header",
             "required": true,
@@ -3234,24 +2833,51 @@
             }
           }
         ],
-        "summary": "save user pregnancy info",
+        "requestBody": {
+          "required": true,
+          "description": "state is require and state can be 2 or 3 and when state is 3 requier one of dueDate or abortionDate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "dueDate": {
+                          "type": "string"
+                        },
+                        "abortionDate": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "save user pregnancy end",
         "responses": {
           "200": {
             "description": "OK"
           },
           "400": {
-            "description": "invalid information"
+            "description": "invalid information like user id is not exist or state is 3 and dueDate and abortionDate are null"
           },
           "404": {
-            "description": "information not found"
-          },
-          "409": {
-            "description": "contradiction between information"
+            "description": "user have not active pregnancy"
           }
         }
       }
     },
-    "/pregnancy/setAbortionDate/{userId}/{abortionDate}/{lang}": {
+    "/pregnancy/setAbortionDate/{userId}/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3284,19 +2910,6 @@
             }
           },
           {
-            "in": "path",
-            "name": "abortionDate",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
             "name": "x-auth-token",
             "in": "header",
             "required": true,
@@ -3310,19 +2923,100 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "abortionDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "summary": "save user abortion date info",
         "responses": {
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "invalid information"
+          "409": {
+            "description": "contradiction between information hear when pregnant filed in profile is 0 and user is pregnant"
+          }
+        }
+      }
+    },
+    "/pregnancy/setِDueDate/{userId}/{lang}": {
+      "post": {
+        "tags": [
+          "pregnancy"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
           },
-          "404": {
-            "description": "information not found"
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dueDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "save user abortion date info",
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "409": {
-            "description": "contradiction between information"
+            "description": "contradiction between information hear when pregnant filed in profile is 0 and user is pregnant"
           }
         }
       }
