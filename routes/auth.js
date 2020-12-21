@@ -46,8 +46,6 @@ router.post("/signIn/:lang", async (req, res) => {
 });
 
 router.post("/logIn/:lang", async (req, res) => {
-  const patt1 = RegExp('127.0.0.1*');
-  const patt2 = RegExp('localhost*');
   let usr;
   console.log("phone", req.body.phone)
   if (req.body.phone == "" || req.body.phone == null) {
@@ -93,7 +91,7 @@ router.post("/logIn/:lang", async (req, res) => {
       usr = await user.create({
         name: null,
         phone: req.body.phone,
-        version_type:null
+        version_type: null
       });
     }
   }
@@ -104,39 +102,28 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  console.log("req.headers['user-agent']", req.headers['user-agent']);
-  console.log(
-    useragent.is(req.headers['user-agent']).firefox == false,
-    useragent.is(req.headers['user-agent']).chrome == false,
-    useragent.is(req.headers['user-agent']).ie == false,
-    useragent.is(req.headers['user-agent']).mozilla == false,
-    useragent.is(req.headers['user-agent']).opera == false,
-    useragent.is(req.headers['user-agent']).safari)
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
-    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name ,type:usr.version_type} });
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
   }
-  else if (useragent.is(req.headers['user-agent']).firefox == false &&
-    useragent.is(req.headers['user-agent']).chrome == false &&
-    useragent.is(req.headers['user-agent']).ie == false &&
-    useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
-    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
-    console.log("set headersssss");
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type} });
-
-  }
-  else {
+  else if (req.header("app-type") == "pwa") {
     console.log("set cookiessssssssss");
     res.clearCookie('token');
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name ,type:usr.version_type} });
+      .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+  }
+  else {
+    console.log("set headersssss");
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
   }
 })
 
 router.post("/verificationCode", async (req, res) => {
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+  if (req.body.phone == "" || req.body.phone == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
@@ -202,13 +189,6 @@ router.post("/verificationCode", async (req, res) => {
 });
 
 router.post("/checkVerificationCode/:lang", async (req, res) => {
-  // console.log(req.session);
-  // console.log("code", req.session.code);
-  // if (!req.session.code) {
-  //   return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  // }
-  console.log("ok");
-  console.log("code", req.body.code)
   if (req.body.code == "" || req.body.code == null || req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
@@ -221,7 +201,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
   if (userExist == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  else{
+  else {
     if (new Date() - new Date(userExist.createdAt) > (2.5 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
@@ -239,7 +219,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
   }
- 
+
 })
 
 router.post("/signUp/:lang", async (req, res) => {

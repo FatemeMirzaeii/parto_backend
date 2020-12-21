@@ -114,7 +114,7 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 
-router.post("/setِDueDate/:userId/:lang", auth, async (req, res) => {
+router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {

@@ -1,6 +1,5 @@
 const request = require('supertest');
-require('mysql2/node_modules/iconv-lite').encodingExists('foo');
-const { user ,user_log} = require("../../models");
+const { user ,user_log, verification_code} = require("../../models");
 const bcrypt = require("bcrypt");
 let server;
 
@@ -118,7 +117,7 @@ describe('auth',()=>{
             phone="";
             const result=await exec();
             expect(result.status).toBe(400);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            //await new Promise(resolve => setTimeout(resolve, 2000));
             
         });
 
@@ -128,5 +127,77 @@ describe('auth',()=>{
             expect(result.status).toBe(200);
         });
 
+    })
+    describe('/verificationCode',async()=>{
+        let phone;
+        const exec=()=>{
+            return request(server).post('/auth/verificationCode')
+             .send({"phone":`${phone}`});
+        }
+
+        it('400',async()=>{
+            phone="99199698086";
+            const result=await exec();
+            expect(result.status).toBe(400);
+        });
+        
+        it('200',async()=>{
+            phone="09199698086";
+            const result=await exec();
+            expect(result.status).toBe(200);
+        });
+
+        it('409',async()=>{
+            phone="09199698086";
+            const result=await exec();
+            expect(result.status).toBe(409);
+        });
+    })
+
+    describe('/checkVerificationCode',async()=>{
+        let phone;
+        let code;
+       
+        const exec=()=>{
+            return request(server).post('/auth/checkVerificationCode/fa')
+             .send({"phone":`${phone}`,"code":`${code}`});
+        }
+        it('400',async()=>{
+            phone="09199698086";
+            code="9"
+            const result=await exec();
+            expect(result.status).toBe(400);
+        });
+               
+        it('408',async()=>{
+            jest.setTimeout(3*60*1000)
+            await new Promise(res => setTimeout(() => {
+                console.log("Why don't I run?")
+                expect(true).toBe(true)
+                res()
+              }, 2.5*60*1000))
+            phone="09199698086";
+            let userExist = await verification_code.findOne({
+                where: {
+                  phone: "09199698086",
+                }
+              });
+            code=userExist.code;
+            const result=await exec();
+            expect(result.status).toBe(408);
+        });
+        it('200',async()=>{
+            await request(server).post('/auth/verificationCode').send({"phone":`${phone}`});
+            let userExist = await verification_code.findOne({
+                where: {
+                  phone: "09199698086",
+                }
+              });
+            phone="09199698086";
+            code=userExist.code;
+            const result=await exec();
+            expect(result.status).toBe(200);
+           
+        });
     })
 })
