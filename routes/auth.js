@@ -120,6 +120,7 @@ router.post("/logIn/:lang", async (req, res) => {
 })
 
 router.post("/verificationCode", async (req, res) => {
+  let flag = true;
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
   if (req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -136,41 +137,47 @@ router.post("/verificationCode", async (req, res) => {
         }
       });
       if (userExist != null && new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
-        return res.status(409).json({ data: { message: await translate("EXISTS", "fa") } }).end();
+        flag = false;
+        return res.status(409).json({  message: await translate("EXISTS", "fa") });
       }
       else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
+        flag = true;
         await verification_code.destroy({
           where: {
             phone: req.body.phone,
           }
         });
       }
+      if (flag == true) {
+        let api = Kavenegar.KavenegarApi({
+          apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
+        });
 
-      let api = Kavenegar.KavenegarApi({
-        apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
-      });
+        api.VerifyLookup({
+          receptor: req.body.phone,
+          token: code.toString(),
+          template: "verificationCode",
+        },
+          async (response, status, message) => {
 
-      api.VerifyLookup({
-        receptor: req.body.phone,
-        token: code.toString(),
-        template: "verificationCode",
-      },
-        async (response, status, message) => {
+            if (status == 418) {
+              sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
+            }
+            else if (status == 200) {
 
-          if (status == 418) {
-            sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
-          }
-          else if (status == 200) {
-
-            await verification_code.create({
-              phone: req.body.phone,
-              code: code
-            });
-            console.log("userCode", code)
-            return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
-          }
-          return res.status(status).json({ message: message });
-        })
+              await verification_code.create({
+                phone: req.body.phone,
+                code: code
+              });
+              console.log("userCode", code)
+              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") } ).end();
+            }
+            return res.status(status).json({ message: message });
+          })
+      }
+      else {
+        return res.status(409).json({  message: await translate("EXISTS", "fa") });
+      }
     }
   }
   // else{
