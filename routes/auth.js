@@ -205,7 +205,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       phone: req.body.phone,
     }
   });
-  console.log("user Exist", userExist);
+  // console.log("user Exist", userExist);
   if (userExist == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
