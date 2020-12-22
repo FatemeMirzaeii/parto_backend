@@ -11,20 +11,15 @@ module.exports = async function (req, res, next) {
   console.log("app-type",RegExp('pwa').test(req.header("app-type")) == true);
   if (RegExp('pwa').test(req.header("app-type")) == true){
     console.log("read cookie");
-    if (req.cookies.token == undefined) {
+    if (RegExp('undefined').test(req.cookies.token) == true) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.cookies.token;
   }
   else {
     console.log("read x-auth-token");
-    console.log(req.header("x-auth-token"));
-    console.log(req.header("x-auth-token") == undefined);
-    console.log(RegExp('undefined').test(req.header("x-auth-token")) == true);
-    console.log(req.header("x-auth-token") === undefined);
-    console.log(RegExp(undefined).test(req.header("x-auth-token")) == true);
-    console.log(req.header("x-auth-token") == 'undefined');
-    if (req.header("x-auth-token") == undefined) {
+    
+    if (RegExp('undefined').test(req.header("x-auth-token")) == true) {
      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.header("x-auth-token");
