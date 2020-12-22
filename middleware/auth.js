@@ -8,7 +8,7 @@ const useragent = require('useragent');
 
 module.exports = async function (req, res, next) {
   let token;
-   
+  console.log("app-type",req.header("app-type")=="pwa");
   if (req.header("app-type")=="pwa"){
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
