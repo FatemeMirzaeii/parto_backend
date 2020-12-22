@@ -8,14 +8,16 @@ const useragent = require('useragent');
 
 module.exports = async function (req, res, next) {
   let token;
-  console.log("app-type",req.header("app-type")=="pwa");
-  if (req.header("app-type")=="pwa"){
+  console.log("app-type",RegExp('pwa').test(req.header("app-type")) == true);
+  if (RegExp('pwa').test(req.header("app-type")) == true){
+    console.log("read cookie");
     if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.cookies.token;
   }
   else {
+    console.log("read x-auth-token");
     if (req.header("x-auth-token") == undefined) {
       res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
