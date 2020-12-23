@@ -8,6 +8,7 @@ const useragent = require('useragent');
 
 module.exports = async function (req, res, next) {
   let token;
+  console.log("app-type",req.header("app-type"));
   console.log("app-type",RegExp('pwa').test(req.header("app-type")) == true);
   if (RegExp('pwa').test(req.header("app-type")) == true){
     console.log("read cookie");
