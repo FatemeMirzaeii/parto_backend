@@ -1,6 +1,5 @@
 const express = require("express");
 const { user } = require("../models");
-const bcrypt = require("bcrypt");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -28,6 +27,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
 })
 router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
+  console.log("useeeer", usr == null);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
   let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
@@ -36,7 +36,7 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
 router.put("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || req.body.type == "" || req.body.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if(usr.version_type!="Teenager" && req.body.type!="Main") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr.version_type != "Teenager" || req.body.type != "Main") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   await usr.update({ version_type: req.body.type });
   return res
     .status(200)
@@ -44,7 +44,9 @@ router.put("/versionType/:userId/:lang", auth, async (req, res) => {
 })
 router.post("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body.type == "" || req.body.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null || req.body.type == "" || req.body.type == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
   if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }

@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 
 async function  sendEmail (from ,to,message,subject){
     const transport = {
-        host: 'parto.app', 
+        host: 'parto.email', 
         port: 587,
         auth: {
         user: creds.USER,

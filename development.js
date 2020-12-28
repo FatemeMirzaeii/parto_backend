@@ -11,7 +11,6 @@ const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
-const article = require("./routes/article");
 const interview = require("./routes/interview");
 const healthTracking = require("./routes/health-tracking");
 const note = require("./routes/note");
@@ -52,13 +51,11 @@ const authenticatedLimiter = rateLimit({
 
 developmentApp.use("/cycle", authenticatedLimiter);
 developmentApp.use("/pregnancy", authenticatedLimiter);
-developmentApp.use("/article", authenticatedLimiter);
 developmentApp.use("/interview", authenticatedLimiter);
 developmentApp.use("/healthTracking", authenticatedLimiter);
 developmentApp.use("/note", authenticatedLimiter);
 developmentApp.use("/user", authenticatedLimiter);
 developmentApp.use("/auth", authenticatedLimiter);
-developmentApp.use("/contactUs", authenticatedLimiter);
 developmentApp.use("/profile", authenticatedLimiter);
 developmentApp.use("/survey", authenticatedLimiter);
 
@@ -70,13 +67,13 @@ const unauthenticatedLimiter = rateLimit({
   headers: true,
 });
 developmentApp.use("/auth", unauthenticatedLimiter);
+developmentApp.use("/contactUs", unauthenticatedLimiter);
 
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
 developmentApp.use("/cycle", cycle);
 developmentApp.use("/pregnancy", pregnancy);
-developmentApp.use("/article", article);
 developmentApp.use("/interview", interview);
 developmentApp.use("/healthTracking", healthTracking);
 developmentApp.use("/note", note);
