@@ -173,12 +173,31 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
 router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let syncTime = new Date(req.params.syncTime);
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  
+  let syncTime;
+  if (req.params.syncTime == null || req.params.syncTime == "") {
+    syncTime = await pregnancy.findOne({
+      attributes: ['updatedAt'],
+      where: {
+        user_id: usrID
+      }
+    })
+  }
+  else {
+    syncTime = new Date(req.params.syncTime);
+  }
 
   let existOption = await user_tracking_option.findAll({
     attributes: ['date', 'tracking_option_id'],
     where: {
-      user_id: req.params.userId,
+      user_id:usrID,
       updatedAt: {
         [Op.gte]: syncTime
       }
