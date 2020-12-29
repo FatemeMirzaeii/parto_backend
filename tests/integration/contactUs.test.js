@@ -15,6 +15,12 @@ describe('contactUs', () => {
             const result=await exec(); 
             expect(result.status).toBe(200);
             server.close();
+            // jest.setTimeout(2*60*1000)
+            // await new Promise(res => setTimeout(() => {
+            //     console.log("Why don't I run?")
+            //     expect(true).toBe(true)
+            //     res()
+            //   }, 2*60*1000))
         });
 
     });
