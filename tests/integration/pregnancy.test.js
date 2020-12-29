@@ -234,7 +234,7 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('/pregnancy/syncPregnancyInfo/:userId/:lang', () => {
+    describe('post/pregnancy/syncPregnancyInfo/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
         let state=1;
