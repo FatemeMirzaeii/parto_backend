@@ -330,22 +330,22 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     },
   });
 
-  console.log("data", req.body.data);
+  console.log("data", req.body.data[0]);
   if ((req.body.data).length == 0 ) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
-  else if (req.body.data[1].birthdate == null && req.body.data[1].height == null && req.body.data[1].weight == null && req.body.data[1].avg_sleeping_hour == null &&
-    req.body.data[1].blood_type == null && req.body.data[1].isLock == null && req.body.data[1].avg_cycle_length == null && req.body.data[1].avg_period_length == null &&
-    req.body.data[1].pms_length == null && req.body.data[1].pregnant == null && req.body.data[1].pregnancy_try == null && req.body.data[1].last_period_date == null &&
-    req.body.data[1].ovulation_prediction == null && req.body.data[1].period_prediction == null && req.body.data[1].red_days == null) {
+  else if ((req.body.data)[0].birthdate == null && req.body.data[0].height == null && req.body.data[0].weight == null && req.body.data[0].avg_sleeping_hour == null &&
+    req.body.data[0].blood_type == null && req.body.data[0].isLock == null && req.body.data[0].avg_cycle_length == null && req.body.data[0].avg_period_length == null &&
+    req.body.data[0].pms_length == null && req.body.data[0].pregnant == null && req.body.data[0].pregnancy_try == null && req.body.data[0].last_period_date == null &&
+    req.body.data[0].ovulation_prediction == null && req.body.data[0].period_prediction == null && req.body.data[0].red_days == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
     if (uProfile != null) {
-      await uProfile.update(req.body.data[1]);
+      await uProfile.update(req.body.data[0]);
     }
     else {
-      uProfile = await user_profile.create(req.body.data[1]);
+      uProfile = await user_profile.create(req.body.data[0]);
       await uProfile.setUser(usr);
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
