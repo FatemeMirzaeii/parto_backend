@@ -186,7 +186,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       user_id: usrID
     }
   })
-  if(userOption==null) return res.status(200).json({ data: userOption });
+  if(req.params.syncTime == "null"||req.params.syncTime == null) return res.status(200).json({ data: userOption });
   console.log("userOption",userOption);
   let syncTime;
   if (req.params.syncTime == null) {

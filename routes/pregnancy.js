@@ -201,7 +201,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
       user_id: usrID
     }
   })
-  if(userPregnancy==null) return res.status(200).json({ data: userPregnancy });
+  if(req.params.syncTime == "null"||req.params.syncTime == null) return res.status(200).json({ data: userPregnancy });
   console.log("userPregnancy",userPregnancy);
   let syncTime;
   if (req.params.syncTime == null) {
