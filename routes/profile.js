@@ -281,28 +281,28 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
 router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  
-  let usrID=req.params.userId;
+
+  let usrID = req.params.userId;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
   }
-  
-  let userProf=await user_profile.findOne({
+
+  let userProf = await user_profile.findOne({
     where: {
       user_id: usrID
     }
   })
-  if(userProf==null) return res.status(200).json({ data: userProf });
-  console.log("userProfile",userProf);
+  if (userProf == null) return res.status(200).json({ data: userProf });
+  console.log("userProfile", userProf);
   let syncTime;
-  console.log("timeeeeeeeeee",req.params.syncTime);
-  if (req.params.syncTime == "null"||req.params.syncTime == null) {
-    syncTime =userProf.updatedAt;
+  console.log("timeeeeeeeeee", req.params.syncTime);
+  if (req.params.syncTime == "null" || req.params.syncTime == null) {
+    syncTime = userProf.updatedAt;
   }
   else {
     syncTime = new Date(req.params.syncTime);
   }
-  console.log("syncTime",syncTime);
+  console.log("syncTime", syncTime);
   let usrProfile = await user_profile.findAll({
     where: {
       user_id: usrID,
@@ -330,11 +330,15 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     },
   });
 
-  if (req.body.data.birthdate == null && req.body.data.height == null && req.body.data.weight == null && req.body.data.avg_sleeping_hour == null &&
+  console.log("data", req.body.data);
+  if ((req.body.data).length == 0 ) {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
+  else if (req.body.data.birthdate == null && req.body.data.height == null && req.body.data.weight == null && req.body.data.avg_sleeping_hour == null &&
     req.body.data.blood_type == null && req.body.data.isLock == null && req.body.data.avg_cycle_length == null && req.body.data.avg_period_length == null &&
     req.body.data.pms_length == null && req.body.data.pregnant == null && req.body.data.pregnancy_try == null && req.body.data.last_period_date == null &&
     req.body.data.ovulation_prediction == null && req.body.data.period_prediction == null && req.body.data.red_days == null) {
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
     if (uProfile != null) {

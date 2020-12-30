@@ -218,7 +218,9 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  if ((req.body.data).length == 0 ) {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
   let userOption, existData;
   req.body.data.forEach(async element => {
     // if(element.state == null){
@@ -259,6 +261,9 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         });
         await userOption.setUser(usr);
       }
+    }
+    else{
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
     
   })

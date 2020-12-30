@@ -234,6 +234,9 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let result;
   // console.log("length",req.body.data.length);
+  if ((req.body.data).length == 0 ) {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
   for (i = 0; i < req.body.data.length; i++) {
     if (req.body.data[i].state == null || req.body.data[i].state == "") {
       // console.log("state nullll")
@@ -246,10 +249,10 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
         state: 1
       },
     });
-
+    
     if (req.body.data[i].due_date == null && req.body.data[i].abortion == null && eq.body.data[i].conception_date == null && req.body.data[i].pregnancy_week == null
       && req.body.data[i].abortion_date == null && req.body.data[i].children_number == null && req.body.data[i].kick_count == null) {
-      result = 200;
+      result = 400;
       break;
     }
     else {
