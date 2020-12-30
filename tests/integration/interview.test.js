@@ -78,6 +78,7 @@ describe('interview', () => {
     describe('/pregnantUser/:userId/:lang', async() => {
         let tempUserId;
         let lastPeriodDate="2020-07-07";
+        
         const exec=()=>{
             return request(server).post('/interview/pregnantUser/'+tempUserId+'/fa')
             .send({
