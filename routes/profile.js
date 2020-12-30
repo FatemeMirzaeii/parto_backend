@@ -296,12 +296,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   console.log("userProfile",userProf);
   let syncTime;
   if (req.params.syncTime == "null"||req.params.syncTime == null) {
-    syncTime = await user_profile.findOne({
-      attributes: ['updatedAt'],
-      where: {
-        user_id: usrID
-      }
-    })
+    syncTime =userProf.updatedAt;
   }
   else {
     syncTime = new Date(req.params.syncTime);
