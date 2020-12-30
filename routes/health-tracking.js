@@ -181,18 +181,21 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
     usrID = usr.id
   }
   
+  let userOption=await user_tracking_option.findOne({
+    where: {
+      user_id: usrID
+    }
+  })
+  if(userOption==null) return res.status(200).json({ data: userOption });
+  console.log("userOption",userOption);
   let syncTime;
-  if (req.params.syncTime == null || req.params.syncTime == "") {
-    syncTime = await pregnancy.findOne({
-      attributes: ['updatedAt'],
-      where: {
-        user_id: usrID
-      }
-    })
+  if (req.params.syncTime == null) {
+    syncTime =userOption.updatedAt;
   }
   else {
     syncTime = new Date(req.params.syncTime);
   }
+  console.log("syncTime",syncTime);
 
   let existOption = await user_tracking_option.findAll({
     attributes: ['date', 'tracking_option_id'],
@@ -218,7 +221,10 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
 
   let userOption, existData;
   req.body.data.forEach(async element => {
-    if (element.state == 2) {
+    if(element.state ==null){
+      continue;
+    }
+    else if (element.state == 2) {
       await user_tracking_option.destroy({
         where: {
           user_id: req.params.userId,

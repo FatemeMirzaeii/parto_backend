@@ -295,7 +295,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   if(userProf==null) return res.status(200).json({ data: userProf });
   console.log("userProfile",userProf);
   let syncTime;
-  if (req.params.syncTime == "null"||req.params.syncTime == null) {
+  if (req.params.syncTime == null) {
     syncTime =userProf.updatedAt;
   }
   else {
