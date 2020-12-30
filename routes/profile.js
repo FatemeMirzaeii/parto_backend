@@ -293,7 +293,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     }
   })
   if(userProf==null) return res.status(200).json({ data: userProf });
-
+  console.log("userProfile",userProf);
   let syncTime;
   if (req.params.syncTime == "null"||req.params.syncTime == null) {
     syncTime = await user_profile.findOne({
@@ -306,6 +306,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
   }
+  console.log("syncTime",syncTime);
   let usrProfile = await user_profile.findAll({
     where: {
       user_id: usrID,
