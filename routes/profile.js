@@ -291,7 +291,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   }
 
   let syncTime;
-  if (req.params.syncTime == null || req.params.syncTime == "") {
+  if (req.params.syncTime == "null") {
     syncTime = await pregnancy.findOne({
       attributes: ['updatedAt'],
       where: {
@@ -333,17 +333,18 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     req.body.data.blood_type == null && req.body.data.isLock == null && req.body.data.avg_cycle_length == null && req.body.data.avg_period_length == null &&
     req.body.data.pms_length == null && req.body.data.pregnant == null && req.body.data.pregnancy_try == null && req.body.data.last_period_date == null &&
     req.body.data.ovulation_prediction == null && req.body.data.period_prediction == null && req.body.data.red_days == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  if (uProfile != null) {
-    await uProfile.update(req.body.data);
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   else {
-    uProfile = await user_profile.create(req.body.data);
-    await uProfile.setUser(usr);
+    if (uProfile != null) {
+      await uProfile.update(req.body.data);
+    }
+    else {
+      uProfile = await user_profile.create(req.body.data);
+      await uProfile.setUser(usr);
+    }
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
-
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 
 })
 
