@@ -201,10 +201,10 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
       user_id: usrID
     }
   })
-  if(req.params.syncTime == "null"||req.params.syncTime == null) return res.status(200).json({ data: userPregnancy });
+  if(userPregnancy==null) return res.status(200).json({ data: userPregnancy });
   console.log("userPregnancy",userPregnancy);
   let syncTime;
-  if (req.params.syncTime == null) {
+  if (req.params.syncTime == "null"||req.params.syncTime == null) {
     syncTime =userPregnancy.updatedAt;
   }
   else {
