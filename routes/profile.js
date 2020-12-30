@@ -282,19 +282,20 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   
-  let usrID;
+  let usrID=req.params.userId;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
   }
-  else {
-    usrID = usr.id
-  }
-
-  let userProf=await user_profile.findByPk(req.params.usrID);
-  if(userProf==null) return res.status(200).json({ data: usrProf });
+  
+  let userProf=await user_profile.findOne({
+    where: {
+      user_id: usrID
+    }
+  })
+  if(userProf==null) return res.status(200).json({ data: userProf });
 
   let syncTime;
-  if (req.params.syncTime == "null") {
+  if (req.params.syncTime == "null"||req.params.syncTime == null) {
     syncTime = await user_profile.findOne({
       attributes: ['updatedAt'],
       where: {
