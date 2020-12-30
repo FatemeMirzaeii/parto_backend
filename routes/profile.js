@@ -334,18 +334,18 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
   if ((req.body.data).length == 0 ) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
-  else if (req.body.data.birthdate == null && req.body.data.height == null && req.body.data.weight == null && req.body.data.avg_sleeping_hour == null &&
-    req.body.data.blood_type == null && req.body.data.isLock == null && req.body.data.avg_cycle_length == null && req.body.data.avg_period_length == null &&
-    req.body.data.pms_length == null && req.body.data.pregnant == null && req.body.data.pregnancy_try == null && req.body.data.last_period_date == null &&
-    req.body.data.ovulation_prediction == null && req.body.data.period_prediction == null && req.body.data.red_days == null) {
+  else if (req.body.data[1].birthdate == null && req.body.data[1].height == null && req.body.data[1].weight == null && req.body.data[1].avg_sleeping_hour == null &&
+    req.body.data[1].blood_type == null && req.body.data[1].isLock == null && req.body.data[1].avg_cycle_length == null && req.body.data[1].avg_period_length == null &&
+    req.body.data[1].pms_length == null && req.body.data[1].pregnant == null && req.body.data[1].pregnancy_try == null && req.body.data[1].last_period_date == null &&
+    req.body.data[1].ovulation_prediction == null && req.body.data[1].period_prediction == null && req.body.data[1].red_days == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
     if (uProfile != null) {
-      await uProfile.update(req.body.data);
+      await uProfile.update(req.body.data[1]);
     }
     else {
-      uProfile = await user_profile.create(req.body.data);
+      uProfile = await user_profile.create(req.body.data[1]);
       await uProfile.setUser(usr);
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
