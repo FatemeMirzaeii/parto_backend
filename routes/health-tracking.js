@@ -221,10 +221,10 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
 
   let userOption, existData;
   req.body.data.forEach(async element => {
-    if(element.state ==null){
-      continue;
-    }
-    else if (element.state == 2) {
+    // if(element.state == null){
+    //   continue;
+    // }
+    if (element.state == 2) {
       await user_tracking_option.destroy({
         where: {
           user_id: req.params.userId,
@@ -260,9 +260,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         await userOption.setUser(usr);
       }
     }
-    else {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
+    
   })
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
