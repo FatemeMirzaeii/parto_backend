@@ -243,6 +243,7 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       result = 400;
       break;
     }
+    
     let pregnantUser = await pregnancy.findOne({
       where: {
         user_id: req.params.userId,
