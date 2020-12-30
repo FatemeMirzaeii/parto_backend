@@ -291,8 +291,8 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   }
 
   let syncTime;
-  if (req.params.syncTime == "null") {
-    syncTime = await pregnancy.findOne({
+  if (req.params.syncTime ==null) {
+    syncTime = await user_profile.findOne({
       attributes: ['updatedAt'],
       where: {
         user_id: usrID
