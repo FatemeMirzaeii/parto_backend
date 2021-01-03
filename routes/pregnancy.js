@@ -100,12 +100,25 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
       state: 1
     },
   });
-  let request = {
-    due_date: req.body.dueDate,
-    abortion_date: req.body.abortionDate,
-    state: req.body.state
-  }
+  
   if (uPregnant != null) {
+    let request;
+    if(req.body.dueDate!=null){
+      request = {
+        due_date: req.body.dueDate,
+        abortion_date: req.body.abortionDate,
+        children_number:uPregnant.children_number+1||1,
+        state: req.body.state
+      }
+    }
+    else{
+      request = {
+        due_date: req.body.dueDate,
+        abortion_date: req.body.abortionDate,
+        abortion:uPregnant.abortion+1||1,
+        state: req.body.state
+      }
+    }
     await uPregnant.update(request);
   }
   else {

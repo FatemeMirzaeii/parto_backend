@@ -2841,22 +2841,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "data": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "dueDate": {
-                          "type": "string"
-                        },
-                        "abortionDate": {
-                          "type": "string"
-                        },
-                        "state": {
-                          "type": "integer"
-                        }
-                      }
-                    }
+                  "dueDate": {
+                    "type": "string"
+                  },
+                  "abortionDate": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "integer"
                   }
                 }
               }

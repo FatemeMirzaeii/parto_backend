@@ -180,27 +180,27 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     usrID = usr.id
   }
-  
-  let userOption=await user_tracking_option.findOne({
+
+  let userOption = await user_tracking_option.findOne({
     where: {
       user_id: usrID
     }
   })
-  if(userOption==null) return res.status(200).json({ data: userOption });
-  console.log("userOption",userOption);
+  if (userOption == null) return res.status(200).json({ data: userOption });
+  console.log("userOption", userOption);
   let syncTime;
-  if (req.params.syncTime == "null"||req.params.syncTime == null) {
-    syncTime =userOption.updatedAt;
+  if (req.params.syncTime == "null" || req.params.syncTime == null) {
+    syncTime = userOption.updatedAt;
   }
   else {
     syncTime = new Date(req.params.syncTime);
   }
-  console.log("syncTime",syncTime);
+  console.log("syncTime", syncTime);
 
   let existOption = await user_tracking_option.findAll({
     attributes: ['date', 'tracking_option_id'],
     where: {
-      user_id:usrID,
+      user_id: usrID,
       updatedAt: {
         [Op.gte]: syncTime
       }
@@ -218,14 +218,13 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if ((req.body.data).length == 0 ) {
+  if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   let userOption, existData;
+  let result = 200;
   req.body.data.forEach(async element => {
-    // if(element.state == null){
-    //   continue;
-    // }
+    console.log("stateeeeee", element.state);
     if (element.state == 2) {
       await user_tracking_option.destroy({
         where: {
@@ -262,12 +261,15 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         await userOption.setUser(usr);
       }
     }
-    else{
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
-    
+    else { result = 400; }
+
   })
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  if (result == 400) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  else {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
 });
 
 

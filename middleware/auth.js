@@ -8,24 +8,33 @@ const useragent = require('useragent');
 
 module.exports = async function (req, res, next) {
   let token;
-  console.log("app-type",req.header("app-type"));
-  console.log("app-type",RegExp('pwa').test(req.header("app-type")) == true);
-  if (RegExp('pwa').test(req.header("app-type")) == true){
-    console.log("read cookie");
-    if (RegExp('undefined').test(req.cookies.token) == true) {
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
+  // console.log("hosttttttttttttttttt ", req.headers.host);
+  // console.log("cookieeeeeeeeeeeeeeeeee", req.cookies);
+  // console.log("cookieeeeeeeeeeeeeeeeee", req.cookies.token);
+  // console.log("request.headers['origin']",req.headers['origin']);
+
+  if (useragent.is(req.headers['user-agent']).firefox == false &&
+    useragent.is(req.headers['user-agent']).chrome == false &&
+    useragent.is(req.headers['user-agent']).ie == false &&
+    useragent.is(req.headers['user-agent']).mozilla == false &&
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || 
+    RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true ||RegExp('http://localhost:3925').test(req.headers['origin']) == true ) {
+
+    if (req.header("x-auth-token") == undefined) {
+      res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+    }
+    token = req.header("x-auth-token");
+  }
+  else {
+
+    if (req.cookies.token == undefined) {
       return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.cookies.token;
   }
-  else {
-    console.log("read x-auth-token");
-    
-    if (RegExp('undefined').test(req.header("x-auth-token")) == true) {
-     return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
-    }
-    token = req.header("x-auth-token");
-  }
-
   console.log("token", token);
   if (!token) return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
 
