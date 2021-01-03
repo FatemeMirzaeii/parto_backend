@@ -203,21 +203,21 @@ describe('profile', () => {
         });
     });
 
-    describe('get/profile/pregnancyMode/:userId/:lang', () => {
-        let tempToken;
-        let tempUserId;
-        const exec=()=>{
-           return request(server).get('/profile/pregnancyMode/'+tempUserId+'/fa').set('x-auth-token', tempToken);
-        }
+    // describe('get/profile/pregnancyMode/:userId/:lang', () => {
+    //     let tempToken;
+    //     let tempUserId;
+    //     const exec=()=>{
+    //        return request(server).get('/profile/pregnancyMode/'+tempUserId+'/fa').set('x-auth-token', tempToken);
+    //     }
         
-        it('return',async () => {
-            tempToken=token;
-            tempUserId=userId;
-            const result=await exec(); 
-            expect(result.status).toBe(200);
+    //     it('return',async () => {
+    //         tempToken=token;
+    //         tempUserId=userId;
+    //         const result=await exec(); 
+    //         expect(result.status).toBe(200);
             
-        });
-    });
+    //     });
+    // });
 
 
 });
