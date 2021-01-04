@@ -1,3 +1,4 @@
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const error= require('../../../middleware/error');
 let server ;
 

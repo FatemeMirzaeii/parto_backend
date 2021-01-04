@@ -2,9 +2,9 @@ const { user } = require("../../../models");
 require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const jwt = require("jsonwebtoken");
 const auth=require('../../../middleware/auth');
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 var fs = require("fs");
 const secret = fs.readFileSync("../private.key", "utf8");
-require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 
 describe("user.generateAuthToken", () => {
   it("should return a valid JWT", async() => {
