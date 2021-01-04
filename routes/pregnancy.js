@@ -5,6 +5,7 @@ const translate = require("../config/translate");
 const router = express();
 // const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 const { Op } = require("sequelize");
+const e = require("express");
 
 
 router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
@@ -88,38 +89,40 @@ router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
 
 router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (req.body.state == null || req.body.state == "" || req.body.state == 1) {
+  if (usr == null || req.body.state == null || req.body.state == "" || req.body.state == 1 || req.body.state > 3) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  if (req.body.state == 3 && (req.body.dueDate == null && req.body.abortionDate == null)) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
+
   let uPregnant = await pregnancy.findOne({
     where: {
       user_id: req.params.userId,
       state: 1
     },
   });
-  
+
+  let request = {
+    due_date: req.body.dueDate,
+    abortion_date: req.body.abortionDate,
+    state: req.body.state
+  }
+
   if (uPregnant != null) {
-    let request;
-    if(req.body.dueDate!=null){
-      request = {
-        due_date: req.body.dueDate,
-        abortion_date: req.body.abortionDate,
-        children_number:uPregnant.children_number+1||1,
-        state: req.body.state
-      }
+    if (req.body.state == 2) {
+      await uPregnant.update(request);
     }
-    else{
-      request = {
-        due_date: req.body.dueDate,
-        abortion_date: req.body.abortionDate,
-        abortion:uPregnant.abortion+1||1,
-        state: req.body.state
+    else if (req.body.state == 3) {
+      let updateObj;
+      if (req.body.dueDate != null) {
+        let child = { children_number: uPregnant.children_number + 1 || 1 }
+        updateObj = Object.assign(request, child);
       }
+      else if (req.body.abortionDate != null) {
+        let abortion = { abortion: uPregnant.abortion + 1 || 1 }
+        updateObj = Object.assign(request, abortion);
+      }
+      await uPregnant.update(updateObj);
+
     }
-    await uPregnant.update(request);
   }
   else {
     return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
@@ -134,7 +137,7 @@ router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
- 
+
   if (uPregnantProfile != null && uPregnantProfile.pregnant == 0) {
     return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
   }
@@ -147,7 +150,7 @@ router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
   if (uExist == null) {
     let uPregnant = await pregnancy.create({
       due_date: req.body.dueDate,
-      state:1
+      state: 1
     })
     let usr = await user.findByPk(req.params.userId);
     uPregnant.setUser(usr);
@@ -168,21 +171,21 @@ router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  
-  if (uPregnantProfile!= null && uPregnantProfile.pregnant == 0) {
+
+  if (uPregnantProfile != null && uPregnantProfile.pregnant == 0) {
     return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
   }
   let uExist = await pregnancy.findOne({
     where: {
       user_id: req.params.userId,
-      state:1
+      state: 1
     },
   });
   if (uExist == null) {
     let uExist = await pregnancy.create({
       abortion_date: req.body.abortionDate,
       abortion: 1,
-      state:1
+      state: 1
     })
     let usr = await user.findByPk(req.params.userId);
     uExist.setUser(usr);
@@ -191,7 +194,7 @@ router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
     await uExist.update({
       abortion_date: req.body.abortionDate,
       abortion: uExist.abortion + 1,
-      state:1
+      state: 1
     })
   }
 
@@ -201,7 +204,7 @@ router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
 router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  
+
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -209,21 +212,21 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
   else {
     usrID = usr.id
   }
-  let userPregnancy=await pregnancy.findOne({
+  let userPregnancy = await pregnancy.findOne({
     where: {
       user_id: usrID
     }
   })
-  if(userPregnancy==null) return res.status(200).json({ data: userPregnancy });
+  if (userPregnancy == null) return res.status(200).json({ data: userPregnancy });
   let syncTime;
-  console.log("timeeeeeeeeee",req.params.syncTime);
-  if (req.params.syncTime == "null"||req.params.syncTime == null) {
-    syncTime =userPregnancy.updatedAt;
+  console.log("timeeeeeeeeee", req.params.syncTime);
+  if (req.params.syncTime == "null" || req.params.syncTime == null) {
+    syncTime = userPregnancy.updatedAt;
   }
   else {
     syncTime = new Date(req.params.syncTime);
   }
-  console.log("syncTime",syncTime);
+  console.log("syncTime", syncTime);
 
   let pregnantUse = await pregnancy.findAll({
     where: {
@@ -247,7 +250,7 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let result;
   // console.log("length",req.body.data.length);
-  if ((req.body.data).length == 0 ) {
+  if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   for (i = 0; i < req.body.data.length; i++) {
@@ -256,14 +259,14 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       result = 400;
       break;
     }
-    
+
     let pregnantUser = await pregnancy.findOne({
       where: {
         user_id: req.params.userId,
         state: 1
       },
     });
-    
+
     if (req.body.data[i].due_date == null && req.body.data[i].abortion == null && eq.body.data[i].conception_date == null && req.body.data[i].pregnancy_week == null
       && req.body.data[i].abortion_date == null && req.body.data[i].children_number == null && req.body.data[i].kick_count == null) {
       result = 400;
