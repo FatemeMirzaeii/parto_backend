@@ -93,7 +93,7 @@ router.post("/logIn/:lang", async (req, res) => {
       usr = await user.create({
         name: null,
         phone: req.body.phone,
-        version_type:null
+        version_type: null
       });
     }
   }
@@ -112,28 +112,28 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).mozilla == false,
     useragent.is(req.headers['user-agent']).opera == false,
     useragent.is(req.headers['user-agent']).safari)
-    if (RegExp('http://localhost:3925').test(req.headers['origin']) == true  ) {
-      return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name} });
-    }
-    else if (useragent.is(req.headers['user-agent']).firefox == false &&
-      useragent.is(req.headers['user-agent']).chrome == false &&
-      useragent.is(req.headers['user-agent']).ie == false &&
-      useragent.is(req.headers['user-agent']).mozilla == false &&
-      useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
-      patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
-      console.log("set headersssss");
-      return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name} });
-  
-    }
-    else {
-      console.log("set cookiessssssssss");
-      res.clearCookie('token');
-      return res
-        .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
-        .status(200)
-        .json({ data: { id: usr.id, userName: usr.name} });
-    }
-  
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
+  }
+  else if (useragent.is(req.headers['user-agent']).firefox == false &&
+    useragent.is(req.headers['user-agent']).chrome == false &&
+    useragent.is(req.headers['user-agent']).ie == false &&
+    useragent.is(req.headers['user-agent']).mozilla == false &&
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
+    console.log("set headersssss");
+    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+
+  }
+  else {
+    console.log("set cookiessssssssss");
+    res.clearCookie('token');
+    return res
+      .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
+      .status(200)
+      .json({ data: { id: usr.id, userName: usr.name } });
+  }
+
 })
 
 router.post("/verificationCode", async (req, res) => {
@@ -155,7 +155,7 @@ router.post("/verificationCode", async (req, res) => {
       });
       if (userExist != null && new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
         flag = false;
-        return res.status(409).json({  message: await translate("EXISTS", "fa") });
+        return res.status(409).json({ message: await translate("EXISTS", "fa") });
       }
       else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
         flag = true;
@@ -178,8 +178,8 @@ router.post("/verificationCode", async (req, res) => {
           async (response, status, message) => {
 
             if (status == 418) {
-              await sendEmail('parto@parto.email','Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی ");
-              await sendEmail('parto@parto.email','H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
+              await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی ");
+              await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
             }
             else if (status == 200) {
 
@@ -188,13 +188,13 @@ router.post("/verificationCode", async (req, res) => {
                 code: code
               });
               console.log("userCode", code)
-              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") } ).end();
+              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") }).end();
             }
             return res.status(status).json({ message: message });
           })
       }
       else {
-        return res.status(409).json({  message: await translate("EXISTS", "fa") });
+        return res.status(409).json({ message: await translate("EXISTS", "fa") });
       }
     }
   }
