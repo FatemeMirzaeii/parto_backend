@@ -272,7 +272,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   }
 });
 
-router.get("/getPains/:userId/:lang", auth, async (req, res) => {
+router.get("/getPain/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -294,7 +294,7 @@ router.get("/getPains/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ data: uPainDate });
 });
 
-router.get("/getSports/:userId/:lang", auth, async (req, res) => {
+router.get("/getExcersices/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -316,7 +316,7 @@ router.get("/getSports/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ data: uPainDate });
 });
 
-router.get("/getSleepHours/:userId/:lang", auth, async (req, res) => {
+router.get("/getSleep/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -338,7 +338,7 @@ router.get("/getSleepHours/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ data: uPainDate });
 });
 
-router.get("/getSecretions/:userId/:lang", auth, async (req, res) => {
+router.get("/getVaginalDischarges/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -360,7 +360,7 @@ router.get("/getSecretions/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ data: uPainDate });
 });
 
-router.get("/getGeneralMoods/:userId/:lang", auth, async (req, res) => {
+router.get("/getMood/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -382,7 +382,7 @@ router.get("/getGeneralMoods/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ data: uPainDate });
 });
 
-router.get("/getMarriage/:userId/:lang", auth, async (req, res) => {
+router.get("/getSex/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;

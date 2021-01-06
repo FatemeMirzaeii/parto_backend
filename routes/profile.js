@@ -241,16 +241,20 @@ router.get("/lockStatus/:userId/:lang", auth, async (req, res) => {
 });
 
 router.put("/setLock/:userId/:lang", auth, async (req, res) => {
+  const uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  if (uProfile == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if (req.body.isLock == 0 || req.body.isLock == 1) {
-    const useLock = await user_profile.update({ locked: req.body.isLock },
+    await user_profile.update({ locked: req.body.isLock },
       {
         where: {
           user_id: req.params.userId,
         },
       });
-    if (useLock == null) {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
+
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -265,14 +269,26 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
   if (!checkDate(req.body.lastSyncTime)) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  const setLastSyncTime = await user_profile.update({ last_sync_time: req.body.lastSyncTime },
-    {
-      where: {
-        user_id: req.params.userId,
-      },
-    });
-  if (setLastSyncTime == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  const uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  if (uProfile == null) {
+    await user_profile.create({ last_sync_time: req.body.lastSyncTime },
+      {
+        where: {
+          user_id: req.params.userId,
+        },
+      });
+  }
+  else {
+    await user_profile.update({ last_sync_time: req.body.lastSyncTime },
+      {
+        where: {
+          user_id: req.params.userId,
+        },
+      });
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 
@@ -293,9 +309,8 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     }
   })
   if (userProf == null) return res.status(200).json({ data: userProf });
-  console.log("userProfile", userProf);
+  
   let syncTime;
-  console.log("timeeeeeeeeee", req.params.syncTime);
   if (req.params.syncTime == "null" || req.params.syncTime == null) {
     syncTime = userProf.updatedAt;
   }
@@ -309,10 +324,6 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
       updatedAt: {
         [Op.gte]: syncTime
       }
-      // ,
-      // createdAt: {
-      //   [Op.gte]: syncTime
-      // }
     },
     orderBy: [['group', 'DESC']],
   })
@@ -331,7 +342,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
   });
 
   console.log("data", req.body.data[0]);
-  if ((req.body.data).length == 0 ) {
+  if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   else if ((req.body.data)[0].birthdate == null && req.body.data[0].height == null && req.body.data[0].weight == null && req.body.data[0].avg_sleeping_hour == null &&
