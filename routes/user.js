@@ -1,5 +1,5 @@
 const express = require("express");
-const { user , user_profile,user_tracking_option,pregnancy} = require("../models");
+const { user, user_profile, user_tracking_option, pregnancy } = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -76,9 +76,25 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  await user_profile.destroy({
+  
+  await user_profile.update({ birthdate: null,
+    height: null,
+    weight: null,
+    avg_sleeping_hour: null,
+    blood_type: null,
+    locked: null,
+    avg_cycle_length: 28,
+    avg_period_length: 7,
+    pms_length: null,
+    pregnant: null,
+    pregnancy_try: null,
+    last_period_date: null,
+    ovulation_prediction: null,
+    period_prediction: null,
+    red_days: null
+   }, {
     where: {
-      user_id: req.params.userId,
+      user_id: req.params.userId
     }
   })
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
