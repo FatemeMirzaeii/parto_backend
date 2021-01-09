@@ -287,7 +287,7 @@ router.get("/getPain/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [5,6,7,8]
+        [Op.or]: [5, 6, 7, 8]
       }
     }
   })
@@ -309,7 +309,7 @@ router.get("/getExcersices/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [21,22,23,24]
+        [Op.or]: [21, 22, 23, 24]
       }
     }
   })
@@ -331,7 +331,7 @@ router.get("/getSleep/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [17,18,19,20]
+        [Op.or]: [17, 18, 19, 20]
       }
     }
   })
@@ -353,7 +353,7 @@ router.get("/getVaginalDischarges/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [9,10,11,12]
+        [Op.or]: [9, 10, 11, 12]
       }
     }
   })
@@ -375,7 +375,7 @@ router.get("/getMood/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [13,14,15,16]
+        [Op.or]: [13, 14, 15, 16]
       }
     }
   })
@@ -397,11 +397,76 @@ router.get("/getSex/:userId/:lang", auth, async (req, res) => {
     where: {
       user_id: usrID,
       tracking_option_id: {
-        [Op.or]: [25,26,27,28]
+        [Op.or]: [25, 26, 27, 28]
       }
     }
   })
   res.status(200).json({ data: uPainDate });
 });
+
+router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let categoryAndOptions = await health_tracking_option.findAll({
+    attributes: ['id', 'category_id'],
+  })
+  let result = [];
+  let option = [];
+  let j = 1;
+
+  for (let i = 0; i < categoryAndOptions.length + 1; i++) {
+    if (i == categoryAndOptions.length) {
+      if (option.length != 0) {
+        let temp = {};
+        temp.id = j;
+        temp.option = option;
+        result.push(temp);
+      }
+      break;
+    }
+
+    if (categoryAndOptions[i].category_id != j) {
+      if (option.length != 0) {
+        let temp = {};
+        temp.id = j;
+        temp.option = option;
+        result.push(temp);
+      }
+      option = [];
+      j++
+    }
+
+    if (categoryAndOptions[i].category_id == j) {
+      let temp = await user_tracking_option.findAll({
+        attributes: ['date'],
+        where: {
+          user_id: usrID,
+          tracking_option_id: categoryAndOptions[i].id
+        }
+      })
+      console.log("temp", temp.length > 0)
+      if (temp.length > 0) {
+        let tOption = {};
+        tOption.trackingOptionId = categoryAndOptions[i].id;
+        let dateArray = [];
+        temp.forEach(d => {
+          dateArray.push(d.date);
+        })
+        tOption.date = dateArray;
+        option.push(tOption);
+      }
+
+    }
+  }
+  res.status(200).json({ data: result });
+});
+
 
 module.exports = router;

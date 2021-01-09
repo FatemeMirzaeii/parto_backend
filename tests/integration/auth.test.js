@@ -128,12 +128,12 @@ describe('auth',()=>{
         });
 
     })
-    describe('/verificationCode',async()=>{
-        let phone;
-        const exec=()=>{
-            return request(server).post('/auth/verificationCode')
-             .send({"phone":`${phone}`});
-        }
+    // describe('/verificationCode',async()=>{
+    //     let phone;
+    //     const exec=()=>{
+    //         return request(server).post('/auth/verificationCode')
+    //          .send({"phone":`${phone}`});
+    //     }
 
         // it('400',async()=>{
         //     phone="99199698086";
@@ -152,16 +152,16 @@ describe('auth',()=>{
         //     const result=await exec();
         //     expect(result.status).toBe(409);
         // });
-    })
+    // })
 
-    describe('/checkVerificationCode',async()=>{
-        let phone;
-        let code;
+    // describe('/checkVerificationCode',async()=>{
+    //     let phone;
+    //     let code;
        
-        const exec=()=>{
-            return request(server).post('/auth/checkVerificationCode/fa')
-             .send({"phone":`${phone}`,"code":`${code}`});
-        }
+    //     const exec=()=>{
+    //         return request(server).post('/auth/checkVerificationCode/fa')
+    //          .send({"phone":`${phone}`,"code":`${code}`});
+    //     }
         // it('400',async()=>{
         //     phone="09199698086";
         //     code="9"
@@ -199,5 +199,5 @@ describe('auth',()=>{
         //     expect(result.status).toBe(200);
            
         // });
-    })
+    // })
 })
