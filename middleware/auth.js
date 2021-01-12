@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 var fs = require("fs");
 const translate = require("../config/translate");
-const { user } = require("../models");
 const secret = fs.readFileSync("../private.key", "utf8");
 const useragent = require('useragent');
 
@@ -20,7 +19,7 @@ module.exports = async function (req, res, next) {
     RegExp('http://localhost:3925').test(req.headers['origin']) == true ) {
 
     if (req.header("x-auth-token") == undefined) {
-      res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
     }
     token = req.header("x-auth-token");
   }
@@ -50,7 +49,7 @@ module.exports = async function (req, res, next) {
   });
 
   if (verification == false) {
-    res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+    return res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
   }
   else return next();
 

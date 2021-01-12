@@ -361,8 +361,8 @@ router.post("/linkForgotPassword/:lang", async (req, res) => {
       async (response, status, message) => {
         if (status == 418) {
           sendEmail(
-            "info@partobanoo.com",
-            "parto@partobanoo.com",
+            "info@parto.email",
+            "parto@parto.email",
             message,
             "ارور سامانه پیامکی "
           );
