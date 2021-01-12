@@ -4,6 +4,7 @@ let server;
 
 describe('send Email', () => {
     it('should return email info', async () => {
+        jest.setTimeout(60*1000);
         server = require('../../../development');
         const subject = 'test';
         const text = 'test email in beckend';
