@@ -58,7 +58,7 @@ function authentication(req) {
 
 
 router.get("/question/:lang", async (req, res) => {
-  let posetivQuestion = await survey_answers.findAll({
+  let posetiveQuestion = await survey_answers.findAll({
     attributes: ['id', 'question'],
     where: {
       weakness: 0,
@@ -71,7 +71,7 @@ router.get("/question/:lang", async (req, res) => {
     }
   });
 
-  res.status(200).json({ posetivQuestion: posetivQuestion, negativeQuestion: negativeQuestion });
+  res.status(200).json({ posetiveQuestion: posetiveQuestion, negativeQuestion: negativeQuestion });
 
 });
 
