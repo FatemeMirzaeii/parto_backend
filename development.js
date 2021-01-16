@@ -2,6 +2,7 @@ require("express-async-errors");
 require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
+const testSwaggerDocument = require("./testSwagger.json");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -57,7 +58,6 @@ developmentApp.use("/note", authenticatedLimiter);
 developmentApp.use("/user", authenticatedLimiter);
 developmentApp.use("/auth", authenticatedLimiter);
 developmentApp.use("/profile", authenticatedLimiter);
-developmentApp.use("/survey", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
@@ -68,6 +68,7 @@ const unauthenticatedLimiter = rateLimit({
 });
 developmentApp.use("/auth", unauthenticatedLimiter);
 developmentApp.use("/contactUs", unauthenticatedLimiter);
+developmentApp.use("/survey", authenticatedLimiter);
 
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
@@ -90,6 +91,17 @@ developmentApp.use(
   function (req, res, next) {
     swaggerDocument.host = req.get("https://dev.parto.app");
     req.swaggerDoc = swaggerDocument;
+    next();
+  },
+  swaggerUi.serve,
+  swaggerUi.setup()
+);
+
+developmentApp.use(
+  "/test", //todo: It is better to change the name to: api.pa torto.app/docs
+  function (req, res, next) {
+    testSwaggerDocument.host = req.get("https://dev.parto.app");
+    req.swaggerDoc = testSwaggerDocument;
     next();
   },
   swaggerUi.serve,

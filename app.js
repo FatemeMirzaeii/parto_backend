@@ -54,7 +54,7 @@ app.use("/note", authenticatedLimiter);
 app.use("/user", authenticatedLimiter);
 app.use("/auth", authenticatedLimiter);
 app.use("/profile", authenticatedLimiter);
-app.use("/survey", authenticatedLimiter);
+
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
@@ -65,6 +65,7 @@ const unauthenticatedLimiter = rateLimit({
 });
 app.use("/auth", unauthenticatedLimiter);
 app.use("/contactUs", unauthenticatedLimiter);
+app.use("/survey", authenticatedLimiter);
 
 app.use(helmet());
 app.use(nodeadmin(app));
