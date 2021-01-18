@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const nodeadmin = require("nodeadmin");
+const fileUpload = require('express-fileupload');
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
 const cycle = require("./routes/cycle");
@@ -67,6 +68,7 @@ app.use("/auth", unauthenticatedLimiter);
 app.use("/contactUs", unauthenticatedLimiter);
 app.use("/survey", authenticatedLimiter);
 
+app.use(fileUpload());
 app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json());

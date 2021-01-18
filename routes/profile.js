@@ -5,6 +5,7 @@ const checkDate = require("../middleware/checkDateWithDateOnly");
 const { user, user_profile } = require("../models");
 const translate = require("../config/translate");
 const { Op } = require("sequelize");
+const fs = require("fs");
 
 router.get("/getProfile/:userId/:lang", auth, async (req, res) => {
   console.log("profileeee");
@@ -27,7 +28,7 @@ router.get("/getPeriodInfo/:userId/:lang", auth, async (req, res) => {
   else {
     usrID = usr.id
   }
-  const uProfile = await user_profile.findOne({
+  let uProfile = await user_profile.findOne({
     attributes: ['user_id', 'avg_cycle_length', 'avg_period_length', 'pms_length', 'pregnant',
       'pregnancy_try', 'last_period_date', 'ovulation_prediction', 'period_prediction', 'red_days'],
     where: {
@@ -309,7 +310,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     }
   })
   if (userProf == null) return res.status(200).json({ data: userProf });
-  
+
   let syncTime;
   if (req.params.syncTime == "null" || req.params.syncTime == null) {
     syncTime = userProf.updatedAt;
@@ -363,5 +364,99 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
   }
 
 })
+
+router.post("/:userId/image/:lang", auth, async (req, res) => {
+
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  if (!req.files)
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  let uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+
+  if (uProfile != null && uProfile.image != null) {
+    fs.unlinkSync('images/' + uProfile.image);
+  }
+
+  let file = req.files.image;
+  let userImage = 'image-' + req.params.userId + '-' + file.name;
+
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/gif" || file.mimetype == "image/svg+xml") {
+    file.mv('images/' + 'image-' + req.params.userId + '-' + file.name, async function (err) {
+      if (err)
+        return res.status(500).send(err);
+      else {
+        let image = { image: userImage };
+        if (uProfile != null) {
+          await uProfile.update(image);
+        }
+        else {
+          uProfile = await user_profile.create(image);
+          await uProfile.setUser(usr);
+        }
+      }
+    });
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
+  else {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+
+});
+
+router.get("/:userId/image/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+  if (uProfile == null || uProfile.image == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  var mime = {
+    gif: 'image/gif',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+    jpeg: 'image/jpeg',
+  }
+
+  var type = mime[(uProfile.image.split("."))[(uProfile.image.split(".")).length - 1]] || 'text/plain';
+
+  var s = fs.createReadStream('images/' + uProfile.image);
+  s.on('open', function () {
+    res.set('Content-Type', type);
+    s.pipe(res);
+  });
+  s.on('error', function () {
+    res.set('Content-Type', 'text/plain');
+    return res.status(404).json({ message: translate("INFORMATIONNOTFOUND", req.params.lang) });
+  });
+})
+
+router.delete("/:userId/image/:lang", auth, async (req, res) => {
+
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  
+  let uProfile = await user_profile.findOne({
+    where: {
+      user_id: req.params.userId,
+    },
+  });
+
+  if (uProfile != null && uProfile.image != null) {
+    fs.unlinkSync('images/' + uProfile.image);
+    await uProfile.update({image:null});
+  }
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  
+});
+
 
 module.exports = router;

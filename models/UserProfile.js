@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     blood_type:DataTypes.STRING,
     period_prediction: DataTypes.BOOLEAN,
     ovulation_prediction: DataTypes.BOOLEAN,
-    red_days:DataTypes.BOOLEAN
+    red_days:DataTypes.BOOLEAN,
+    image:DataTypes.STRING
 
   }, {
     freezeTableName: true,

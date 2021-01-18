@@ -2548,6 +2548,199 @@
         }
       }
     },
+    "/profile/{userId}/image/{lang}": {
+      "post": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "create image for user profle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/*": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid entry"
+          }
+        }
+      }
+    },
+    "/profile/{userId}/image/{lang} ": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "get user profile image",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid entry"
+          },
+          "404": {
+            "description": "infortion not found"
+          }
+        }
+      }
+    },
+    "/profile/{userId}/image/{lang}  ": {
+      "delete": {
+        "tags": [
+          "profile"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "description": "user id"
+                }
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "lang",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "name": "x-auth-token",
+            "in": "header",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "edit user perofile information to user",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "invalid entry"
+          }
+        }
+      }
+    },
     "/interview/ordinaryUser/{userId}/{lang}": {
       "post": {
         "tags": [

@@ -61,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       imei: {
         type: DataTypes.STRING,
       }
+      
     },
     {
       freezeTableName: true,

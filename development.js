@@ -1,6 +1,7 @@
 require("express-async-errors");
 require("./models/index");
 const swaggerUi = require("swagger-ui-express");
+const fileUpload = require('express-fileupload');
 const swaggerDocument = require("./swagger.json");
 const testSwaggerDocument = require("./testSwagger.json");
 const express = require("express");
@@ -70,6 +71,7 @@ developmentApp.use("/auth", unauthenticatedLimiter);
 developmentApp.use("/contactUs", unauthenticatedLimiter);
 developmentApp.use("/survey", authenticatedLimiter);
 
+developmentApp.use(fileUpload());
 developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json());
