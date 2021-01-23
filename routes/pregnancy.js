@@ -273,9 +273,19 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       break;
     }
     else {
+      let request={
+        "due_date":req.body.data[i].due_date,
+        "abortion":req.body.data[i].abortion,
+        "conception_date":req.body.data[i].conception_date,
+        "pregnancy_week":req.body.data[i].pregnancy_week,
+        "abortion_date":req.body.data[i].abortion_date,
+        "children_number":req.body.data[i].children_number,
+        "kick_count":req.body.data[i].kick_count,
+        "state":req.body.data[i].state
+      }
       if (pregnantUser == null) {
-        if (req.body.data[i].state == 1 || req.body.data[i].state == 2 || req.body.data[i].state == 3) {
-          pregnantUser = await pregnancy.create(req.body.data[i]);
+        if (request.state == 1 || request.state == 2 || request.state == 3) {
+          pregnantUser = await pregnancy.create(request);
           await pregnantUser.setUser(usr);
         }
         else {
@@ -285,11 +295,11 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
         }
       }
       else {
-        if (req.body.data[i].state > 3) {
+        if (request.state > 3) {
           result = 400;
           break;
         }
-        await pregnantUser.update(req.body.data[i]);
+        await pregnantUser.update(request);
       }
     }
   };

@@ -346,16 +346,29 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
   if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
-  else if(req.body.data[0].user_id!=req.params.userId){
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
   else {
-    console.log("sucssecfullll");
+    let request={
+      "last_sync_time": req.body.data[0].last_sync_time,
+      "blood_type": req.body.data[0].blood_type,
+      "period_perdiction": req.body.data[0].period_prediction,
+      "ovulation_perdiction": req.body.data[0].ovulation_prediction,
+      "locked": req.body.data[0].isLock,
+      "height": req.body.data[0].height,
+      "pregnancy_try": req.body.data[0].pregnancy_try,
+      "weight": req.body.data[0].weight,
+      "avg_period_length": req.body.data[0].avg_period_length,
+      "last_period_date": req.body.data[0].last_period_date,
+      "pms_length": req.body.data[0].pms_length,
+      "avg_cycle_length": req.body.data[0].avg_cycle_length,
+      "birthdate": req.body.data[0].birthdate,
+      "pregnant": req.body.data[0].pregnant,
+      "avg_sleeping_hour": req.body.data[0].avg_sleeping_hour
+    }
     if (uProfile != null) {
-      await uProfile.update(req.body.data[0]);
+      await uProfile.update(request);
     }
     else {
-      uProfile = await user_profile.create(req.body.data[0]);
+      uProfile = await user_profile.create(request);
       await uProfile.setUser(usr);
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
