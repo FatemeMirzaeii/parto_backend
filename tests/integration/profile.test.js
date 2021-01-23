@@ -394,6 +394,7 @@ describe('profile', () => {
                             height: 158,
                             weight: 58,
                             pregnant: false,
+                            user_id:`${tempUserId}`,
                             pregnancy_try: false,
                             locked: false,
                             last_period_date: "1300-01-01",
