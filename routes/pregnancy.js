@@ -267,7 +267,7 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       },
     });
 
-    if (req.body.data[i].due_date == null && req.body.data[i].abortion == null && eq.body.data[i].conception_date == null && req.body.data[i].pregnancy_week == null
+    if (req.body.data[i].due_date == null && req.body.data[i].abortion == null && req.body.data[i].conception_date == null && req.body.data[i].pregnancy_week == null
       && req.body.data[i].abortion_date == null && req.body.data[i].children_number == null && req.body.data[i].kick_count == null) {
       result = 400;
       break;
