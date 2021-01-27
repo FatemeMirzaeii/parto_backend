@@ -19,7 +19,7 @@
     "dialectOptions": {
       "dateStrings": true,
       "typeCast": true,
-      "timezone": "+00:00"
+      "timezone": "-03:30"
     },
     "timezone": "+03:30"
   },
