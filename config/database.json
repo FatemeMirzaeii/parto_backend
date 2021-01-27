@@ -5,11 +5,6 @@
     "password": "P@rto2020",
     "host": "localhost",
     "dialect": "mysql",
-    "dialectOptions": {
-      
-      "dateStrings": true,
-      "typeCast": true
-    },
     "timezone": "+03:30"
   },
   "test": {
@@ -17,11 +12,6 @@
     "username": "administrator",
     "password": "P@rto2020",
     "dialect": "mysql",
-    "dialectOptions": {
-      
-      "dateStrings": true,
-      "typeCast": true
-    },
     "timezone": "+03:30"
   },
   "production": {
@@ -30,11 +20,6 @@
     "password": "P@rto2020",
     "host": "localhost",
     "dialect": "mysql",
-    "dialectOptions": {
-     
-      "dateStrings": true,
-      "typeCast": true
-    },
     "timezone": "+03:30"
   }
 }

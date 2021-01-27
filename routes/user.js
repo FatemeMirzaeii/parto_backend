@@ -1,5 +1,5 @@
 const express = require("express");
-const { user, user_profile, user_tracking_option, pregnancy } = require("../models");
+const { user,user_log, user_profile, user_tracking_option, pregnancy } = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -97,6 +97,40 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+})
+router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  await user_tracking_option.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
+  await pregnancy.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
+  
+  await user_profile.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  })
+  
+  await user_log.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  })
+
+  await user.destroy({
+    where: {
+      id: req.params.userId
+    }
+  })
+
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 
