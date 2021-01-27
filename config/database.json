@@ -4,20 +4,22 @@
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+03:30"
   },
   "test": {
     "database": "parto_Test",
     "username": "administrator",
     "password": "P@rto2020",
-    "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+03:30"
   },
   "production": {
     "database": "parto",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+03:30"
   }
 }
