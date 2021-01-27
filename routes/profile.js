@@ -316,8 +316,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     syncTime = userProf.updatedAt;
   }
   else {
-   syncTime = (req.params.syncTime).toString();
-    // syncTime = new Date(req.params.syncTime);
+    syncTime = new Date(req.params.syncTime);
   }
   console.log("syncTime", syncTime);
   console.log("updated at", userProf.updatedAt);
@@ -330,7 +329,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     },
     orderBy: [['group', 'DESC']],
   })
-  
+
   return res.status(200).json({ data: usrProfile });
 })
 
@@ -349,7 +348,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   else {
-    let request={
+    let request = {
       "last_sync_time": req.body.data[0].last_sync_time,
       "blood_type": req.body.data[0].blood_type,
       "period_perdiction": req.body.data[0].period_prediction,
@@ -456,7 +455,7 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  
+
   let uProfile = await user_profile.findOne({
     where: {
       user_id: req.params.userId,
@@ -465,10 +464,10 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 
   if (uProfile != null && uProfile.image != null) {
     fs.unlinkSync('images/' + uProfile.image);
-    await uProfile.update({image:null});
+    await uProfile.update({ image: null });
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-  
+
 });
 
 
