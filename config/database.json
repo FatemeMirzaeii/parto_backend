@@ -8,8 +8,7 @@
     "dialectOptions": {
       
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+03:30"
+      "typeCast": true
     },
     "timezone": "+03:30"
   },
@@ -21,8 +20,7 @@
     "dialectOptions": {
       
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+03:30"
+      "typeCast": true
     },
     "timezone": "+03:30"
   },
@@ -35,8 +33,7 @@
     "dialectOptions": {
      
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+03:30"
+      "typeCast": true
     },
     "timezone": "+03:30"
   }
