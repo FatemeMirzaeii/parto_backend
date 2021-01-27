@@ -319,6 +319,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     syncTime =req.params.syncTime;
   }
   console.log("syncTime", syncTime);
+  console.log("updated at", userProf.updatedAt);
   let usrProfile = await user_profile.findAll({
     where: {
       user_id: usrID,
@@ -328,7 +329,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     },
     orderBy: [['group', 'DESC']],
   })
-
+  
   return res.status(200).json({ data: usrProfile });
 })
 
