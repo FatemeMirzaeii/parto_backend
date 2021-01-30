@@ -329,6 +329,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     },
     orderBy: [['group', 'DESC']],
   })
+  
 
   return res.status(200).json({ data: usrProfile });
 })

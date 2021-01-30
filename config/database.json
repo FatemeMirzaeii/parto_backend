@@ -17,9 +17,7 @@
     "password": "P@rto2020",
     "dialect": "mysql",
     "dialectOptions": {
-      "dateStrings": true,
-      "typeCast": true,
-      "timezone": "-03:30"
+      "useUTC": false
     },
     "timezone": "+03:30"
   },
