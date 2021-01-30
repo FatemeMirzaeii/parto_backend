@@ -8,7 +8,7 @@ describe('auth',()=>{
     let UserEmail;
     let UserPhone;
     let email="auth_zzand7755@gmail.com";
-    let phone="09199698086";
+    let phone="09199698080";
     let password="11111111";
     let newUser;
         
@@ -122,7 +122,7 @@ describe('auth',()=>{
         });
 
         it('200',async()=>{
-            phone="09199698086";
+            phone="09199698080";
             const result=await exec();
             expect(result.status).toBe(200);
         });
