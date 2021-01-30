@@ -317,6 +317,10 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   }
   else {
     syncTime = new Date(req.params.syncTime); 
+    console.log(syncTime);
+    var milliseconds = Date.parse(syncTime);  
+    milliseconds = milliseconds - ((3*60) * 60 * 1000);    
+    syncTime = new Date(milliseconds)
   }
   console.log("syncTime", syncTime);
   console.log("updated at", userProf.updatedAt);
