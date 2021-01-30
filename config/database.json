@@ -7,7 +7,8 @@
     "dialect": "mysql",
     "dialectOptions": {
       "dateStrings": true,
-      "typeCast": true
+      "typeCast": true,
+      "timezone": "+00:00"
     },
     "timezone": "+03:30"
   },
@@ -17,9 +18,12 @@
     "password": "P@rto2020",
     "dialect": "mysql",
     "dialectOptions": {
-      "useUTC": false
+      "dateStrings": true,
+      "typeCast": true,
+      "timezone": "+03:30"
     },
-    "timezone": "+03:30"
+    "timezone": "+03:30",
+    "operatorsAliases": false
   },
   "production": {
     "database": "parto",
@@ -29,7 +33,8 @@
     "dialect": "mysql",
     "dialectOptions": {
       "dateStrings": true,
-      "typeCast": true
+      "typeCast": true,
+      "timezone": "+00:00"
     },
     "timezone": "+03:30"
   }
