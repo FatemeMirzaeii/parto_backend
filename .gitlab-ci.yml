@@ -42,7 +42,7 @@ deploy_staging_parto:
     - PORT=2216
     - pm2 restart development.js
     - echo "deploy_staging succesfull"
-    #- pm2 logs
+    - pm2 logs
 
   only:
     - test
