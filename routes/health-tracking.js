@@ -188,30 +188,29 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   })
   if (userOption == null) return res.status(200).json({ data: userOption });
   console.log("userOption", userOption);
-  let syncTime;
+  let syncTime, existOption;
   if (req.params.syncTime == "null" || req.params.syncTime == null) {
-    syncTime = userOption.updatedAt;
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+      }
+    })
   }
   else {
     syncTime = new Date(req.params.syncTime);
+    console.log("syncTime", syncTime);
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: syncTime
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    })
   }
-  console.log("syncTime", syncTime);
-
-  let existOption = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      updatedAt: {
-        [Op.gte]: syncTime
-      }
-      // ,
-      // createdAt: {
-      //   [Op.gte]: syncTime
-      // }
-    },
-    orderBy: [['group', 'DESC']],
-  })
-
   return res.status(200).json({ data: existOption });
 });
 
@@ -236,12 +235,28 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
     }
     else if (element.state == 1) {
       if (element.has_multiple_choice == 0) {
+        let categoryId = await health_tracking_option.findOne({
+          attributes: ['category_id'],
+          where: {
+            id: element.tracking_option_id
+          }
+        });
+        console.log("categoryId", categoryId);
+        let options = await health_tracking_option.findAll({
+          attributes: ['id'],
+          where: {
+            category_id: categoryId
+          }
+        });
+        console.log("options", options);
         existData = await user_tracking_option.findOne({
           where: {
             user_id: req.params.userId,
-            date: element.date
+            date: element.date,
+            tracking_option_id: { [Op.in]: options }
           }
         })
+        console.log("existData", existData);
         if (existData != null) {
           await existData.update({ tracking_option_id: element.tracking_option_id });
         }
@@ -253,13 +268,14 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
           await userOption.setUser(usr);
         }
       }
-      else {
+      else if (element.has_multiple_choice == 1) {
         userOption = await user_tracking_option.create({
           tracking_option_id: element.tracking_option_id,
           date: element.date
         });
         await userOption.setUser(usr);
       }
+      else { result = 400; }
     }
     else { result = 400; }
 
@@ -415,13 +431,13 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
     usrID = usr.id
   }
   let categoryAndOptions = await health_tracking_option.findAll({
-    attributes: ['id', 'category_id','title'],
+    attributes: ['id', 'category_id', 'title'],
     include: [
       {
-         model: health_tracking_category, 
+        model: health_tracking_category,
         required: true,
-        attributes: ['id', 'title','color']
-       }
+        attributes: ['id', 'title', 'color']
+      }
     ]
   })
   let result = [];
@@ -433,8 +449,8 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
       if (option.length != 0) {
         let temp = {};
         temp.categoryId = j;
-        temp.categoryTitle=categoryAndOptions[i-1].health_tracking_category.title;
-        temp.categoryColor=categoryAndOptions[i-1].health_tracking_category.color;
+        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
         temp.option = option;
         result.push(temp);
       }
@@ -445,8 +461,8 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
       if (option.length != 0) {
         let temp = {};
         temp.categoryId = j;
-        temp.categoryTitle=categoryAndOptions[i-1].health_tracking_category.title;
-        temp.categoryColor=categoryAndOptions[i-1].health_tracking_category.color;
+        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
         temp.option = option;
         result.push(temp);
       }

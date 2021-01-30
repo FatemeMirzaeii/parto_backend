@@ -311,29 +311,29 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   })
   if (userProf == null) return res.status(200).json({ data: userProf });
 
-  let syncTime;
-  if (req.params.syncTime == "null" || req.params.syncTime == null) {
-    syncTime = userProf.updatedAt;
+  let syncTime, usrProfile;
+  if (req.params.syncTime == "null") {
+    usrProfile = await user_profile.findAll({
+      where: {
+        user_id: usrID
+      }
+    })
   }
   else {
-    syncTime = new Date(req.params.syncTime); 
-    console.log(syncTime);
-    var milliseconds = Date.parse(syncTime);  
-    milliseconds = milliseconds - ((3*60) * 60 * 1000);    
-    syncTime = new Date(milliseconds)
+    syncTime = new Date(req.params.syncTime);
+    let milliseconds = Date.parse(syncTime);
+    milliseconds = milliseconds - ((3*60+30) * 60 * 1000);
+    usrProfile = await user_profile.findAll({
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: new Date(milliseconds),
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    })
   }
-  console.log("syncTime", syncTime);
-  console.log("updated at", userProf.updatedAt);
-  let usrProfile = await user_profile.findAll({
-    where: {
-      user_id: usrID,
-      updatedAt: {
-        [Op.gte]: syncTime
-      }
-    },
-    orderBy: [['group', 'DESC']],
-  })
-  
+
 
   return res.status(200).json({ data: usrProfile });
 })

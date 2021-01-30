@@ -218,31 +218,29 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     }
   })
   if (userPregnancy == null) return res.status(200).json({ data: userPregnancy });
-  let syncTime;
+  let syncTime,pregnantUsre;
   console.log("timeeeeeeeeee", req.params.syncTime);
   if (req.params.syncTime == "null" || req.params.syncTime == null) {
-    syncTime = userPregnancy.updatedAt;
+    pregnantUsre= await pregnancy.findAll({
+      where: {
+        user_id: usrID,
+      }
+    })
   }
   else {
     syncTime = new Date(req.params.syncTime);
+    console.log("syncTime", syncTime);
+    pregnantUsre = await pregnancy.findAll({
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: syncTime
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    })
   }
-  console.log("syncTime", syncTime);
-
-  let pregnantUse = await pregnancy.findAll({
-    where: {
-      user_id: usrID,
-      updatedAt: {
-        [Op.gte]: syncTime
-      }
-      // ,
-      // createdAt: {
-      //   [Op.gte]: syncTime
-      // }
-    },
-    orderBy: [['group', 'DESC']],
-  })
-
-  return res.status(200).json({ data: pregnantUse });
+  return res.status(200).json({ data: pregnantUsre });
 })
 
 router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
@@ -273,15 +271,15 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       break;
     }
     else {
-      let request={
-        "due_date":req.body.data[i].due_date,
-        "abortion":req.body.data[i].abortion,
-        "conception_date":req.body.data[i].conception_date,
-        "pregnancy_week":req.body.data[i].pregnancy_week,
-        "abortion_date":req.body.data[i].abortion_date,
-        "children_number":req.body.data[i].children_number,
-        "kick_count":req.body.data[i].kick_count,
-        "state":req.body.data[i].state
+      let request = {
+        "due_date": req.body.data[i].due_date,
+        "abortion": req.body.data[i].abortion,
+        "conception_date": req.body.data[i].conception_date,
+        "pregnancy_week": req.body.data[i].pregnancy_week,
+        "abortion_date": req.body.data[i].abortion_date,
+        "children_number": req.body.data[i].children_number,
+        "kick_count": req.body.data[i].kick_count,
+        "state": req.body.data[i].state
       }
       if (pregnantUser == null) {
         if (request.state == 1 || request.state == 2 || request.state == 3) {
