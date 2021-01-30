@@ -4,38 +4,20 @@
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+00:00"
-    },
-    "timezone": "+03:30"
+    "dialect": "mysql"
   },
   "test": {
     "database": "parto_Test",
     "username": "administrator",
     "password": "P@rto2020",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+03:30"
-    },
-    "timezone": "+03:30",
-    "operatorsAliases": false
+    "dialect": "mysql"
+    
   },
   "production": {
     "database": "parto",
     "username": "administrator",
     "password": "P@rto2020",
     "host": "localhost",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+00:00"
-    },
-    "timezone": "+03:30"
+    "dialect": "mysql"
   }
 }
