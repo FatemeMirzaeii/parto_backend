@@ -224,13 +224,13 @@ describe('health-tracking', () => {
       expect(result.status).toBe(400);
     });
 
-    it('400- somthing like state is rong', async () => {
-      tempUserId = userId;
-      TempToken = token;
-      state = 3;
-      const result = await execWithData();
-      expect(result.status).toBe(400);
-    });
+    // it('400- somthing like state is rong', async () => {
+    //   tempUserId = userId;
+    //   TempToken = token;
+    //   state = 3;
+    //   const result = await execWithData();
+    //   expect(result.status).toBe(400);
+    // });
 
   });
 
