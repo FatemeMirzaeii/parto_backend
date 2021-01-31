@@ -8,7 +8,7 @@ describe('health-tracking', () => {
   let userId;
 
   beforeAll(async () => {
-    usr = await user.create({ name: "zahra", email: "health_zzand7755@gmail.com", phone: "09102454210", imei: "123456789012345" });
+    usr = await user.create({ name: "zahra", email: "health_zzand7755@gmail.com", phone: "09102454216", imei: "123456789012345" });
     token = usr.generateAuthToken();
     userId = usr.id;
 
@@ -141,7 +141,7 @@ describe('health-tracking', () => {
 
     });
     it('200 - get partner info', async () => {
-      let partnerUsr = await user.create({ name: "partner", email: "p_health_zzand7755@gmail.com", phone: "09102454211" });
+      let partnerUsr = await user.create({ name: "partner", email: "p_health_zzand7755@gmail.com", phone: "09102454201" });
       await partnerUsr.setUser(userId);
       TempToken = partnerUsr.generateAuthToken();
       tempUserId = partnerUsr.id;
@@ -151,7 +151,7 @@ describe('health-tracking', () => {
       await partnerUsr.destroy();
     });
     it('400- user is null', async () => {
-      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454219" });
+      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454289" });
       tempToken = tempUsr.generateAuthToken();
       tempUserId = tempUsr.id;
       await tempUsr.destroy();
@@ -215,7 +215,7 @@ describe('health-tracking', () => {
     });
 
     it('400- user is null', async () => {
-      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454219" });
+      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454289" });
       tempToken = tempUsr.generateAuthToken();
       tempUserId = tempUsr.id;
       data = [];
