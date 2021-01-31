@@ -189,7 +189,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   if (userOption == null) return res.status(200).json({ data: userOption });
   console.log("userOption", userOption);
   let syncTime, existOption;
-  if (req.params.syncTime == "null" || req.params.syncTime == null) {
+  if (req.params.syncTime == "null" ) {
     existOption = await user_tracking_option.findAll({
       attributes: ['date', 'tracking_option_id'],
       where: {
@@ -199,13 +199,15 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   }
   else {
     syncTime = new Date(req.params.syncTime);
+    let milliseconds = Date.parse(syncTime);
+    milliseconds = milliseconds - ((3*60+30) * 60 * 1000);
     console.log("syncTime", syncTime);
     existOption = await user_tracking_option.findAll({
       attributes: ['date', 'tracking_option_id'],
       where: {
         user_id: usrID,
         updatedAt: {
-          [Op.gte]: syncTime
+          [Op.gte]: new Date(milliseconds),
         }
       },
       orderBy: [['group', 'DESC']],
@@ -216,7 +218,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
 
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null|| req.body==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
@@ -224,43 +226,58 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let result = 200;
   req.body.data.forEach(async element => {
     console.log("stateeeeee", element.state);
-    if (element.state == 2) {
-      await user_tracking_option.destroy({
-        where: {
-          user_id: req.params.userId,
-          date: element.date,
-          tracking_option_id: element.tracking_option_id
-        }
-      })
-    }
-    else if (element.state == 1) {
-      if (element.has_multiple_choice == 0) {
-        let categoryId = await health_tracking_option.findOne({
-          attributes: ['category_id'],
-          where: {
-            id: element.tracking_option_id
-          }
-        });
-        console.log("categoryId", categoryId);
-        let options = await health_tracking_option.findAll({
-          attributes: ['id'],
-          where: {
-            category_id: categoryId
-          }
-        });
-        console.log("options", options);
-        existData = await user_tracking_option.findOne({
+    let optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id);
+    if (optionIdExist != null) {
+      if (element.state == 2) {
+        await user_tracking_option.destroy({
           where: {
             user_id: req.params.userId,
             date: element.date,
-            tracking_option_id: { [Op.in]: options }
+            tracking_option_id: element.tracking_option_id
           }
         })
-        console.log("existData", existData);
-        if (existData != null) {
-          await existData.update({ tracking_option_id: element.tracking_option_id });
+      }
+      else if (element.state == 1) {
+        if (element.has_multiple_choice == 0) {
+          let categoryId = await health_tracking_option.findOne({
+            attributes: ['category_id'],
+            where: {
+              id: element.tracking_option_id
+            }
+          });
+          console.log("categoryId", categoryId.category_id);
+          let options = await health_tracking_option.findAll({
+            attributes: ['id'],
+            where: {
+              category_id: categoryId.category_id
+            }
+          });
+          let optionArray = [];
+          for (i = 0; i < options.length; i++) {
+            optionArray.push(options[i].id);
+          }
+          console.log("options", optionArray);
+          existData = await user_tracking_option.findOne({
+            where: {
+              user_id: req.params.userId,
+              date: element.date,
+              tracking_option_id: { [Op.in]: optionArray }
+            }
+          })
+          console.log("existData", existData);
+          console.log("existData", existData != null);
+          if (existData != null) {
+            await existData.update({ tracking_option_id: element.tracking_option_id });
+          }
+          else {
+            userOption = await user_tracking_option.create({
+              tracking_option_id: element.tracking_option_id,
+              date: element.date
+            });
+            await userOption.setUser(usr);
+          }
         }
-        else {
+        else if (element.has_multiple_choice == 1) {
           userOption = await user_tracking_option.create({
             tracking_option_id: element.tracking_option_id,
             date: element.date
@@ -268,24 +285,14 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
           await userOption.setUser(usr);
         }
       }
-      else if (element.has_multiple_choice == 1) {
-        userOption = await user_tracking_option.create({
-          tracking_option_id: element.tracking_option_id,
-          date: element.date
-        });
-        await userOption.setUser(usr);
-      }
-      else { result = 400; }
     }
-    else { result = 400; }
-
   })
-  if (result == 400) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  else {
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-  }
+  // if (result == 400) {
+  //   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  // }
+  // else {
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  // }
 });
 
 router.get("/getPain/:userId/:lang", auth, async (req, res) => {
