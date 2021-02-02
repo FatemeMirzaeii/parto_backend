@@ -212,7 +212,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       },
       orderBy: [['group', 'DESC']],
     })
-    console.length("updatedAt",existOption[0].updatedAt>=new Date(milliseconds));
+    console.log("updatedAt",existOption[0].updatedAt>=new Date(milliseconds));
   }
   return res.status(200).json({ data: existOption });
 });
