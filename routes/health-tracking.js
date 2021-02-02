@@ -203,7 +203,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
     milliseconds = milliseconds - ((3*60+30) * 60 * 1000);
     console.log("syncTime", syncTime);
     existOption = await user_tracking_option.findAll({
-      attributes: ['date', 'tracking_option_id'],
+      attributes: ['date', 'tracking_option_id','updatedAt'],
       where: {
         user_id: usrID,
         updatedAt: {
@@ -212,6 +212,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       },
       orderBy: [['group', 'DESC']],
     })
+    console.length("updatedAt",existOption[0].updatedAt>=new Date(milliseconds));
   }
   return res.status(200).json({ data: existOption });
 });
