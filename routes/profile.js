@@ -322,7 +322,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - ((3*60+30) * 60 * 1000);
+    milliseconds = milliseconds - (((3*60)+30) * 60 * 1000);
     usrProfile = await user_profile.findAll({
       where: {
         user_id: usrID,

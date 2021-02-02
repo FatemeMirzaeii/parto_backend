@@ -266,7 +266,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
           })
           console.log("existData", existData);
           console.log("existData", existData != null);
-          if (existData != null) {
+          if (await existData != null) {
             await existData.update({ tracking_option_id: element.tracking_option_id });
           }
           else {
