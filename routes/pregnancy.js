@@ -281,7 +281,7 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
       }
       else{
         if (request.state == 2 || request.state == 3) {
-          pregnantUser = await pregnancy.update(request);
+          await pregnantUser.update(request);
         }
       }
     }
