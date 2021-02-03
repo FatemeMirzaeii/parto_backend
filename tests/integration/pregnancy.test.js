@@ -253,14 +253,6 @@ describe('pregnancy', () => {
                     }]
                 }).set('x-auth-token', tempToken);
         }
-        it('400', async () => {
-            tempUserId = userId;
-            tempToken = token;
-            state = 4;
-            let result = await exec();
-            expect(result.status).toBe(400);
-        });
-
         it('200', async () => {
             tempUserId = userId;
             tempToken = token;
