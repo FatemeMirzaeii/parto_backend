@@ -189,7 +189,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   if (userOption == null) return res.status(200).json({ data: userOption });
   console.log("userOption", userOption);
   let syncTime, existOption;
-  if (req.params.syncTime == "null" ) {
+  if (req.params.syncTime == "null") {
     existOption = await user_tracking_option.findAll({
       attributes: ['date', 'tracking_option_id'],
       where: {
@@ -200,7 +200,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - ((3*60+30) * 60 * 1000);
+    milliseconds = milliseconds - ((3 * 60 + 30) * 60 * 1000);
     console.log("syncTime", syncTime);
     existOption = await user_tracking_option.findAll({
       attributes: ['date', 'tracking_option_id'],
@@ -212,7 +212,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       },
       orderBy: [['group', 'DESC']],
     })
-    
+
   }
   return res.status(200).json({ data: existOption });
 });
@@ -265,8 +265,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
               tracking_option_id: { [Op.in]: optionArray }
             }
           })
-          console.log("existData", existData);
-          console.log("existData", existData != null);
+
           if (await existData != null) {
             await existData.update({ tracking_option_id: element.tracking_option_id });
           }
@@ -279,11 +278,20 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
           }
         }
         else if (element.has_multiple_choice == 1) {
-          userOption = await user_tracking_option.create({
-            tracking_option_id: element.tracking_option_id,
-            date: element.date
-          });
-          await userOption.setUser(usr);
+          try {
+            userOption = await user_tracking_option.create({
+              tracking_option_id: element.tracking_option_id,
+              date: element.date
+            });
+            await userOption.setUser(usr);
+          } catch (err) {
+            console.log("errrror",err);
+            console.log("errrrorOriginal",err.original.code);
+            console.log("errrrorErrorse",err.errors);
+            if(err.original.code=='ER_DUP_ENTRY'){
+              console.log("errrror");
+            }
+          }
         }
       }
     }

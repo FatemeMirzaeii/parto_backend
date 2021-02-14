@@ -2,12 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
   const UserTrackingOption = sequelize.define('user_tracking_option', {
     date: {
-      type: DataTypes.DATEONLY 
+      type: DataTypes.DATEONLY
     },
   }, {
     freezeTableName: true,
     underscored: true,
   });
+
   UserTrackingOption.associate = function (models) {
     UserTrackingOption.belongsTo(models.user, {
       //foreignKey: "user_id",
@@ -18,5 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     })
   };
+  
   return UserTrackingOption;
 };
