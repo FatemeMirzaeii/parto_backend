@@ -8,7 +8,7 @@ describe('user', () => {
     let userId;
     let partnerCode;
     beforeAll(async()=>{
-        usr =await user.create({name:"zahra", email:"user_zzdand7755@gmail.com",phone:"09125454219"});
+        usr =await user.create({name:"zahra", email:"user_zzdand7755@gmail.com",phone:"09125454218"});
         token =usr.generateAuthToken();
         userId=usr.id;
     });
@@ -40,7 +40,7 @@ describe('user', () => {
         });
 
         it('return 400 ',async () => {
-            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454219"});
+            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454218"});
             tempToken =tempUsr.generateAuthToken();
             tempUserId=tempUsr.id;
             await tempUsr.destroy();
@@ -60,7 +60,7 @@ describe('user', () => {
         }
         
         it('return 200',async () => {
-            let partner =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454219"});
+            let partner =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454218"});
             tempToken =partner.generateAuthToken();
             tempUserId=partner.id;
             tempPartnerCode=partnerCode;
@@ -167,7 +167,7 @@ describe('user', () => {
         });
 
         it('return 400 ',async () => {
-            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454219"});
+            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454218"});
             tempToken =tempUsr.generateAuthToken();
             tempUserId=tempUsr.id;
             await tempUsr.destroy();
