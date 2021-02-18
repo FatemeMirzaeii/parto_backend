@@ -131,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name } });
+      .json({ data: { id: usr.id, userName: usr.name , type: usr.version_type} });
   }
 
 })
