@@ -1,5 +1,5 @@
 const request = require('supertest');
-const {user ,user_profile ,pregnancy} = require("../../models");
+const { user, user_profile, pregnancy } = require("../../models");
 const Pregnancy = require('../../models/Pregnancy');
 
 describe('pregnancy', () => {
@@ -8,28 +8,28 @@ describe('pregnancy', () => {
     let token;
     let userId;
     let uProfile;
-    
-    beforeAll(async()=>{
-        usr =await user.create({name:"zahra", email:"pregnancy_zzdand7755@gmail.com",phone:"09145454211"});
-        token =usr.generateAuthToken();
-        userId=usr.id;
+
+    beforeAll(async () => {
+        usr = await user.create({ name: "zahra", email: "pregnancy_zzdand7755@gmail.com", phone: "09145454211" });
+        token = usr.generateAuthToken();
+        userId = usr.id;
         uProfile = await user_profile.create({
-            birthdate:new Date("1377-05-05"),
-            last_period_date:"2020-01-01",
-            pregnant:0,
+            birthdate: new Date("1377-05-05"),
+            last_period_date: "2020-01-01",
+            pregnant: 1,
             pregnancy_try: 0
         });
         await uProfile.setUser(usr);
-               
+
     })
-    beforeEach(async() => { 
-        server=require('../../development');
+    beforeEach(async () => {
+        server = require('../../development');
     })
-    afterEach(()=>{
+    afterEach(() => {
         server.close();
     })
     afterAll(async () => {
-        await pregnancy.destroy({where:{user_id:userId}});
+        await pregnancy.destroy({ where: { user_id: userId } });
         await uProfile.destroy();
         await usr.destroy();
     });
@@ -37,83 +37,49 @@ describe('pregnancy', () => {
     describe('/pregnancy/savePregnancyData/{userId}/{lang}', () => {
         let tempUserId;
         let tempToken;
-        let dueDate="2021-06-08";
-        const exec=()=>{
-            return request(server).post('/pregnancy/savePregnancyData/'+tempUserId+'/fa')
-            .send({
-                "dueDate": `${dueDate}`,
-                "abortion": 0,
-                "conceptionDate": "2020-06-08"
-              }).set('x-auth-token', tempToken);
-         }
-        it('400',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            dueDate="";
-            await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
+        let dueDate = "2021-06-08";
+        let state = 1;
+        const exec = () => {
+            return request(server).post('/pregnancy/savePregnancyData/' + tempUserId + '/fa')
+                .send({
+                    "dueDate": `${dueDate}`,
+                    "abortion": 0,
+                    "conceptionDate": "2020-06-08",
+                    "state": `${state}`
+                }).set('x-auth-token', tempToken);
+        }
+        it('400', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "";
+            state = 4;
+            let result = await exec();
             expect(result.status).toBe(400);
-           
-        });
-        it('404',async () => {
-            let newUsr =await user.create({name:"zahra", email:"pregnancy_zzdand7755@gmail.com",phone:"09175454211"});
-            tempToken = newUsr.generateAuthToken();
-            tempUserId= newUsr.id;
-            dueDate="2021-06-08";
-            let result=await exec(); 
-            await newUsr.destroy();
-            expect(result.status).toBe(404);
-        });
-        it('409',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            dueDate="2021-06-08";
-            await user_profile.update({pregnant:0},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
-            expect(result.status).toBe(409);
-           
-        });
-        it('200',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            dueDate="2021-06-08";
-            await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
-            expect(result.status).toBe(200);
-        });
-    });
-    
-    describe('/pregnancy/setPregnancyEnd/:userId/:dueDate/:lang',() => {
-        let tempUserId;
-        let tempToken;
-        let dueDate="2021-03-05";
-        const exec=()=>{
-            return request(server).post('/pregnancy/setPregnancyEnd/'+tempUserId+'/'+dueDate+'/fa')
-            .set('x-auth-token', tempToken);
-         }
-        
-        it('404',async () => {
-            let newUsr =await user.create({name:"zahra", email:"pregnancy_zzdand7755@gmail.com",phone:"09185454211"});
-            tempToken = newUsr.generateAuthToken();
-            tempUserId= newUsr.id;
-            let result=await exec(); 
-            await newUsr.destroy();
-            expect(result.status).toBe(404);
-        });
 
-        it('409',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            await user_profile.update({pregnant:0},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
+        });
+        it('404', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-06-08";
+            state = 2;
+            let result = await exec();
+            expect(result.status).toBe(404);
+        });
+        it('409', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-06-08";
+            await user_profile.update({ pregnant: 0 }, { where: { user_id: tempUserId } });
+            let result = await exec();
             expect(result.status).toBe(409);
         });
-        
-        it('200',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-06-08";
+            state = 1;
+            await user_profile.update({ pregnant: 1 }, { where: { user_id: tempUserId } });
+            let result = await exec();
             expect(result.status).toBe(200);
         });
     });
@@ -121,28 +87,179 @@ describe('pregnancy', () => {
     describe('/pregnancy/getPregnancyData/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
-        
-        const exec=()=>{
-            return request(server).get('/pregnancy/getPregnancyData/'+tempUserId+'/fa')
-            .set('x-auth-token', tempToken);
-         }
-        
-        it('404',async () => {
-            let newUsr =await user.create({name:"zahra", email:"pregnancy_zzdand7755@gmail.com",phone:"09195454211"});
-            tempToken =newUsr.generateAuthToken();
-            tempUserId=newUsr.id;
-            let result=await exec(); 
+
+        const exec = () => {
+            return request(server).get('/pregnancy/getPregnancyData/' + tempUserId + '/fa')
+                .set('x-auth-token', tempToken);
+        }
+
+        it('404', async () => {
+            let newUsr = await user.create({ name: "zahra", email: "pregnancy_zzdand7755@gmail.com", phone: "09195454211" });
+            tempToken = newUsr.generateAuthToken();
+            tempUserId = newUsr.id;
+            let result = await exec();
             await newUsr.destroy();
             expect(result.status).toBe(404);
         });
 
-        it('200',async () => {
-            tempUserId=userId;
-            tempToken=token;
-            await user_profile.update({pregnant:1},{ where: {   user_id: tempUserId } } );
-            let result=await exec(); 
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            let result = await exec();
             expect(result.status).toBe(200);
         });
     });
-    
+
+    describe('/pregnancy/endPregnancy/:userId/:lang', () => {
+        let tempUserId;
+        let tempToken;
+        let dueDate = "2021-03-05";
+        let state = 1;
+
+        const exec = () => {
+            return request(server).post('/pregnancy/endPregnancy/' + tempUserId + '/fa')
+                .send({
+                    "dueDate": `${dueDate}`,
+                    "conceptionDate": "2020-06-08",
+                    "state": `${state}`
+                }).set('x-auth-token', tempToken);
+        }
+        it('400', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            let result = await exec();
+            expect(result.status).toBe(400);
+        });
+
+        it('404', async () => {
+            let newUsr = await user.create({ name: "zahra", email: "pregnancy_zzdand7755@gmail.com", phone: "09185454211" });
+            tempToken = newUsr.generateAuthToken();
+            tempUserId = newUsr.id;
+            state = 2;
+            let result = await exec();
+            await newUsr.destroy();
+            expect(result.status).toBe(404);
+        });
+
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            state = 2;
+            await user_profile.update({ pregnant: 1 }, { where: { user_id: tempUserId } });
+            let result = await exec();
+            expect(result.status).toBe(200);
+        });
+    });
+
+    describe('/pregnancy/setِDueDate/:userId/:lang', () => {
+        let tempUserId;
+        let tempToken;
+        let dueDate = "2021-03-05";
+
+        const exec = () => {
+            return request(server).post('/pregnancy/setDueDate/' + tempUserId + '/fa')
+                .send({
+                    "dueDate": `${dueDate}`
+                }).set('x-auth-token', tempToken);
+        }
+        it('409', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-06-08";
+            await user_profile.update({ pregnant: 0 }, { where: { user_id: tempUserId } });
+            let result = await exec();
+            expect(result.status).toBe(409);
+        });
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-03-05";
+            await user_profile.update({ pregnant: 1 }, { where: { user_id: tempUserId } });
+            await pregnancy.update({ state: 1 }, { where: { user_id: tempUserId } })
+            let result = await exec();
+            expect(result.status).toBe(200);
+        });
+    });
+    describe('/pregnancy/setAbortionDate/:userId/:lang', () => {
+        let tempUserId;
+        let tempToken;
+        let abortionDate = "2020-12-05";
+
+        const exec = () => {
+            return request(server).post('/pregnancy/setAbortionDate/' + tempUserId + '/fa')
+                .send({
+                    "abortionDate": `${abortionDate}`
+                }).set('x-auth-token', tempToken);
+        }
+        it('409', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            dueDate = "2021-06-08";
+            await user_profile.update({ pregnant: 0 }, { where: { user_id: tempUserId } });
+            let result = await exec();
+            expect(result.status).toBe(409);
+        });
+
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            abortionDate = "2020-12-05";
+            await user_profile.update({ pregnant: 1 }, { where: { user_id: tempUserId } });
+            await pregnancy.update({ state: 1 }, { where: { user_id: tempUserId } })
+            let result = await exec();
+            expect(result.status).toBe(200);
+        });
+    });
+
+    describe('/pregnancy/syncPregnancyInfo/:userId/:syncTime/:lang', () => {
+        let tempUserId;
+        let tempToken;
+
+        const exec = () => {
+            return request(server).get('/pregnancy/syncPregnancyInfo/' + tempUserId + '/2020-11-01/fa')
+                .set('x-auth-token', tempToken);
+        }
+        // it('400',async () => {
+        //     tempUserId=userId;
+        //     tempToken=token;
+        //     let result=await exec(); 
+        //     expect(result.status).toBe(400);
+        // });
+
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            let result = await exec();
+            expect(result.status).toBe(200);
+        });
+    });
+
+    describe('post/pregnancy/syncPregnancyInfo/:userId/:lang', () => {
+        let tempUserId;
+        let tempToken;
+        let state=1;
+        const exec = () => {
+            return request(server).post('/pregnancy/syncPregnancyInfo/' + tempUserId + '/fa')
+                .send({
+                    "data": [{
+                        "dueDate": "2021-06-01",
+                        "abortion": 0,
+                        "conceptionDate": null,
+                        "pregnancyWeek": 3,
+                        "abortionDate": null,
+                        "childrenNumber": 0,
+                        "kickCount": 0,
+                        "state": `${state}`
+                    }]
+                }).set('x-auth-token', tempToken);
+        }
+        it('200', async () => {
+            tempUserId = userId;
+            tempToken = token;
+            state=1;
+            let result = await exec();
+            expect(result.status).toBe(200);
+        });
+    });
+
 });

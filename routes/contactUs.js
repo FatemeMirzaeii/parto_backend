@@ -5,7 +5,7 @@ const creds = require("../config/email");
 const sEmail = require("../middleware/sendEmail");
 
 
-router.post("/Email", async (req, res) => {
+router.post("/email", async (req, res) => {
   let name = req.body.name;
   let email = req.body.email;
   let message = req.body.message;
@@ -13,7 +13,7 @@ router.post("/Email", async (req, res) => {
   let content = `نام کاربر: ${name} \n ایمیل: ${email}\n عنوان: ${title} \n متن پیام: ${message} `;
   let subject = "ایمیل ارسال شده از طرف کاربر با عنوان:" + req.body.title;
   let result ;
-  result = await sEmail(creds.USER, "info@parto.app", content, subject);
+  result = await sEmail(creds.USER, "info@parto.email", content, subject);
   console.log(result);
   if (result == "ERROR")
     return res

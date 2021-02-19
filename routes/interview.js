@@ -88,6 +88,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
   if(req.body.dueDate!=null ){
     preg=await pregnancy.create({
       due_date:new Date(req.body.dueDate),
+      state:1
     });
     await preg.setUser(usr);
   }
@@ -97,6 +98,7 @@ router.post("/pregnantUser/:userId/:lang",auth, async(req, res) => {
     }
     preg=await pregnancy.create({
       conception_date:new Date(req.body.conceptionDate),
+      state:1
     });
     await preg.setUser(usr);
   }

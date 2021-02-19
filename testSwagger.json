@@ -51,7 +51,7 @@
     }
   ],
   "paths": {
-    "/contactUs/Email": {
+    "/contactUs/email": {
       "post": {
         "summary": "send email to parto manager .",
         "tags": [
@@ -635,7 +635,7 @@
         }
       }
     },
-    "/survey/answers/{lang}": {
+    "/survey/{lang}": {
       "post": {
         "tags": [
           "survey"
@@ -717,7 +717,7 @@
         }
       }
     },
-    "/survey/question/{lang}": {
+    "/survey/{lang} ": {
       "get": {
         "tags": [
           "survey"
@@ -732,6 +732,19 @@
                 "schema": {
                   "type": "string",
                   "description": "language"
+                }
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "an authorization header"
                 }
               }
             }
@@ -782,7 +795,7 @@
         }
       }
     },
-    "/healthTracking/userInfo/{userId}/{lang}": {
+    "/v2/healthTracking/{userId}/userInfo/{lang}": {
       "post": {
         "tags": [
           "healthTracking"
@@ -915,7 +928,7 @@
         }
       }
     },
-    "/healthTracking/userInfo/{userId}/{date}/{lang}": {
+    "/v2/healthTracking/{userId}/userInfo/{date}/{lang}": {
       "get": {
         "tags": [
           "healthTracking"
@@ -1039,7 +1052,7 @@
         }
       }
     },
-    "/healthTracking/syncUserInfo/{userId}/{lang}": {
+    "/v2/healthTracking/{userId}/syncUserInfo/{lang}": {
       "post": {
         "tags": [
           "healthTracking"
@@ -1156,7 +1169,7 @@
         }
       }
     },
-    "/healthTracking/syncUserInfo/{userId}/{syncTime}/{lang}": {
+    "/v2/healthTracking/{userId}/syncUserInfo/{syncTime}/{lang}": {
       "get": {
         "tags": [
           "healthTracking"
@@ -1257,7 +1270,7 @@
         }
       }
     },
-    "/profile/getProfile/{userId}/{lang}": {
+    "/profile/{userId}/{lang}": {
       "get": {
         "tags": [
           "profile"
@@ -1377,7 +1390,7 @@
         }
       }
     },
-    "/profile/getPeriodInfo/{userId}/{lang}": {
+    "/profile/cycleInfo/{userId}/{lang}": {
       "get": {
         "tags": [
           "profile"
@@ -1436,9 +1449,6 @@
                       "type": "object",
                       "description": "user profile information",
                       "properties": {
-                        "user_id": {
-                          "type": "integer"
-                        },
                         "avg_cycle_length": {
                           "type": "integer"
                         },
@@ -1456,15 +1466,6 @@
                         },
                         "last_period_date": {
                           "type": "string"
-                        },
-                        "ovulation_prediction": {
-                          "type": "integer"
-                        },
-                        "period_prediction": {
-                          "type": "integer"
-                        },
-                        "red_days": {
-                          "type": "integer"
                         }
                       }
                     }
@@ -1479,7 +1480,7 @@
         }
       }
     },
-    "/profile/getGeneralInfo/{userId}/{lang}": {
+    "/profile/generalInfo/{userId}/{lang} ": {
       "get": {
         "tags": [
           "profile"
@@ -1538,9 +1539,6 @@
                       "type": "object",
                       "description": "user profile information",
                       "properties": {
-                        "user_id": {
-                          "type": "integer"
-                        },
                         "birthdate": {
                           "type": "string"
                         },
@@ -1572,7 +1570,7 @@
         }
       }
     },
-    "/profile/editProfile/{userId}/{lang}": {
+    "/profile/{userId}/{lang} ": {
       "put": {
         "tags": [
           "profile"
@@ -1686,7 +1684,7 @@
         }
       }
     },
-    "/profile/editGeneralInfo/{userId}/{lang}": {
+    "/profile/generalInfo/{userId}/{lang}": {
       "put": {
         "tags": [
           "profile"
@@ -1752,9 +1750,6 @@
                   "weight": {
                     "type": "integer"
                   },
-                  "isLock": {
-                    "type": "integer"
-                  },
                   "bloodType": {
                     "type": "string"
                   }
@@ -1773,7 +1768,7 @@
         }
       }
     },
-    "/profile/editPeriodInfo/{userId}/{lang}": {
+    "/profile/cycleInfo/{userId}/{lang} ": {
       "put": {
         "tags": [
           "profile"
@@ -1836,23 +1831,8 @@
                   "pmsLength": {
                     "type": "integer"
                   },
-                  "pregnant": {
-                    "type": "integer"
-                  },
-                  "pregnancyTry": {
-                    "type": "integer"
-                  },
                   "lastPeriodDate": {
                     "type": "string"
-                  },
-                  "ovulationPred": {
-                    "type": "integer"
-                  },
-                  "periodPred": {
-                    "type": "integer"
-                  },
-                  "redDays": {
-                    "type": "integer"
                   }
                 }
               }
@@ -1869,7 +1849,7 @@
         }
       }
     },
-    "/profile/deleteProfile/{userId}/{lang}": {
+    "/profile/{userId}/{lang}  ": {
       "delete": {
         "tags": [
           "profile"
@@ -1926,82 +1906,7 @@
         }
       }
     },
-    "/profile/pregnancyMode/{userId}/{lang}": {
-      "get": {
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "user id"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "send user perofile information to user",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "description": "user profile information",
-                      "properties": {
-                        "pregnant": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "user not found"
-          }
-        }
-      }
-    },
-    "/profile/getUserStatus/{userId}/{lang}": {
+    "/profile/status/{userId}/{lang}": {
       "get": {
         "tags": [
           "profile"
@@ -2154,7 +2059,7 @@
         }
       }
     },
-    "/profile/updateUserStatus/{userId}/{lang}": {
+    "/profile/Status/{userId}/{lang}": {
       "put": {
         "tags": [
           "profile"
@@ -2229,7 +2134,7 @@
         }
       }
     },
-    "/profile/setLock/{userId}/{lang}": {
+    "/profile/lockStatus/{userId}/{lang} ": {
       "put": {
         "tags": [
           "profile"
@@ -2336,7 +2241,7 @@
           {
             "name": "x-auth-token",
             "in": "header",
-            "required": true,
+            "required": false,
             "content": {
               "application/json": {
                 "schema": {
@@ -2487,9 +2392,6 @@
                       "type": "object",
                       "description": "user profile information",
                       "properties": {
-                        "user_id": {
-                          "type": "integer"
-                        },
                         "birthdate": {
                           "type": "string"
                         },
@@ -2544,199 +2446,6 @@
           },
           "400": {
             "description": "invalid intery"
-          }
-        }
-      }
-    },
-    "/profile/{userId}/image/{lang}": {
-      "post": {
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "user id"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": false,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "create image for user profle",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "image/*": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "invalid entry"
-          }
-        }
-      }
-    },
-    "/profile/{userId}/image/{lang} ": {
-      "get": {
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "user id"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": false,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "get user profile image",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "image/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "invalid entry"
-          },
-          "404": {
-            "description": "infortion not found"
-          }
-        }
-      }
-    },
-    "/profile/{userId}/image/{lang}  ": {
-      "delete": {
-        "tags": [
-          "profile"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "description": "user id"
-                }
-              }
-            }
-          },
-          {
-            "in": "path",
-            "name": "lang",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "language"
-                }
-              }
-            }
-          },
-          {
-            "name": "x-auth-token",
-            "in": "header",
-            "required": false,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "description": "an authorization header"
-                }
-              }
-            }
-          }
-        ],
-        "summary": "edit user perofile information to user",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "invalid entry"
           }
         }
       }
@@ -2943,7 +2652,7 @@
         }
       }
     },
-    "/pregnancy/getPregnancyData/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/pregnancyData/{lang}": {
       "get": {
         "tags": [
           "pregnancy"
@@ -3027,7 +2736,7 @@
         }
       }
     },
-    "/pregnancy/savePregnancyData/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/pregnancyData/{lang} ": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3127,7 +2836,7 @@
         }
       }
     },
-    "/pregnancy/endPregnancy/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/endPregnancy/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3209,7 +2918,7 @@
         }
       }
     },
-    "/pregnancy/setAbortionDate/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/abortionDate/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3281,7 +2990,7 @@
         }
       }
     },
-    "/pregnancy/setِDueDate/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/dueDate/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3353,7 +3062,7 @@
         }
       }
     },
-    "/pregnancy/syncPregnancyInfo/{userId}/{syncTime}/{lang}": {
+    "/v2/pregnancy/{userId}/syncPregnancyInfo/{syncTime}/{lang}": {
       "get": {
         "tags": [
           "pregnancy"
@@ -3464,7 +3173,7 @@
         }
       }
     },
-    "/pregnancy/syncPregnancyInfo/{userId}/{lang}": {
+    "/v2/pregnancy/{userId}/syncPregnancyInfo/{lang}": {
       "post": {
         "tags": [
           "pregnancy"
@@ -3569,7 +3278,7 @@
         }
       }
     },
-    "/cycle/getLastPeriodDate/{userId}/{lang}": {
+    "/v2/cycle/{userId}/lastPeriod/{lang}": {
       "get": {
         "tags": [
           "cycle"
@@ -3644,7 +3353,7 @@
         }
       }
     },
-    "/cycle/getUserAllPeriodDays/{userId}/{lang}": {
+    "/v2/cycle/{userId}/bleedingDays/{lang}": {
       "get": {
         "tags": [
           "cycle"
@@ -3717,7 +3426,7 @@
         }
       }
     },
-    "/cycle/editLastPeriodDate/{userId}/{lastPeriodDate}/{lang}": {
+    "/v2/cycle/{userId}/lastPeriod/{lastPeriodDate}/{lang}": {
       "put": {
         "tags": [
           "cycle"
@@ -3787,7 +3496,7 @@
         }
       }
     },
-    "/cycle/setBleedingDays/{userId}/{lang}": {
+    "/v2/cycle/{userId}/bleedingDays/{lang} ": {
       "put": {
         "tags": [
           "cycle"

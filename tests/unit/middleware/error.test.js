@@ -1,6 +1,6 @@
+require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 const error= require('../../../middleware/error');
 let server ;
-require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 
 describe('send or handle internal error',()=>{
     it('should return status 500 that show internal error',async()=>{

@@ -51,7 +51,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       version_type: {
         type: DataTypes.ENUM('Main', 'Partner', 'Teenager'),
-        defaultValue: 'Main',
       },
       active: {
         type: DataTypes.BOOLEAN,
@@ -61,7 +60,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       imei: {
         type: DataTypes.STRING,
-      }
+      },
+      
     },
     {
       freezeTableName: true,

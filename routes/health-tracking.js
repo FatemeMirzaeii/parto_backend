@@ -173,73 +173,343 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
 router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let syncTime = new Date(req.params.syncTime);
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
 
-  let existOption = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
+  let userOption = await user_tracking_option.findOne({
     where: {
-      user_id: req.params.userId,
-      updatedAt: {
-        [Op.gte]: syncTime
-      }
-      // ,
-      // createdAt: {
-      //   [Op.gte]: syncTime
-      // }
-    },
-    orderBy: [['group', 'DESC']],
+      user_id: usrID
+    }
   })
+  if (userOption == null) return res.status(200).json({ data: userOption });
+  console.log("userOption", userOption);
+  let syncTime, existOption;
+  if (req.params.syncTime == "null") {
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+      }
+    })
+  }
+  else {
+    syncTime = new Date(req.params.syncTime);
+    let milliseconds = Date.parse(syncTime);
+    milliseconds = milliseconds - ((3 * 60 + 30) * 60 * 1000);
+    console.log("syncTime", syncTime);
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: new Date(milliseconds),
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    })
 
+  }
   return res.status(200).json({ data: existOption });
 });
 
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if ((req.body.data).length == 0) {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
   let userOption, existData;
+  let result = 200;
   req.body.data.forEach(async element => {
-    if (element.state == 2) {
-      await user_tracking_option.destroy({
-        where: {
-          user_id: req.params.userId,
-          date: element.date,
-          tracking_option_id: element.trackingOptionId
-        }
-      })
-    }
-    else if (element.state == 1) {
-      if (element.hasMultipleChoice == 0) {
-        existData = await user_tracking_option.findOne({
+    console.log("stateeeeee", element.state);
+    let optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id);
+    if (optionIdExist != null) {
+      if (element.state == 2) {
+        await user_tracking_option.destroy({
           where: {
             user_id: req.params.userId,
-            date: element.date
+            date: element.date,
+            tracking_option_id: element.tracking_option_id
           }
         })
-        if (existData != null) {
-          await existData.update({ tracking_option_id: element.trackingOptionId });
-        }
-        else {
-          userOption = await user_tracking_option.create({
-            tracking_option_id: element.trackingOptionId,
-            date: element.date
+      }
+      else if (element.state == 1) {
+        if (element.has_multiple_choice == 0) {
+          let categoryId = await health_tracking_option.findOne({
+            attributes: ['category_id'],
+            where: {
+              id: element.tracking_option_id
+            }
           });
-          await userOption.setUser(usr);
+          console.log("categoryId", categoryId.category_id);
+          let options = await health_tracking_option.findAll({
+            attributes: ['id'],
+            where: {
+              category_id: categoryId.category_id
+            }
+          });
+          let optionArray = [];
+          for (i = 0; i < options.length; i++) {
+            optionArray.push(options[i].id);
+          }
+          console.log("options", optionArray);
+          existData = await user_tracking_option.findOne({
+            where: {
+              user_id: req.params.userId,
+              date: element.date,
+              tracking_option_id: { [Op.in]: optionArray }
+            }
+          })
+
+          if (await existData != null) {
+            await existData.update({ tracking_option_id: element.tracking_option_id });
+          }
+          else {
+            userOption = await user_tracking_option.create({
+              tracking_option_id: element.tracking_option_id,
+              date: element.date
+            });
+            await userOption.setUser(usr);
+          }
+        }
+        else if (element.has_multiple_choice == 1) {
+          try {
+            userOption = await user_tracking_option.create({
+              tracking_option_id: element.tracking_option_id,
+              date: element.date
+            });
+            await userOption.setUser(usr);
+          } catch (err) {
+            console.log("errrror",err);
+            console.log("errrrorOriginal",err.original.code);
+            console.log("errrrorErrorse",err.errors);
+            if(err.original.code=='ER_DUP_ENTRY'){
+              console.log("errrror");
+            }
+          }
         }
       }
-      else {
-        userOption = await user_tracking_option.create({
-          tracking_option_id: element.trackingOptionId,
-          date: element.date
-        });
-        await userOption.setUser(usr);
-      }
-    }
-    else {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
   })
+  // if (result == 400) {
+  //   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  // }
+  // else {
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  // }
+});
+
+router.get("/getPain/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [5, 6, 7, 8]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getExcersices/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [21, 22, 23, 24]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getSleep/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [17, 18, 19, 20]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getVaginalDischarges/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [9, 10, 11, 12]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getMood/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [13, 14, 15, 16]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getSex/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let uPainDate = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID,
+      tracking_option_id: {
+        [Op.or]: [25, 26, 27, 28]
+      }
+    }
+  })
+  res.status(200).json({ data: uPainDate });
+});
+
+router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let categoryAndOptions = await health_tracking_option.findAll({
+    attributes: ['id', 'category_id', 'title'],
+    include: [
+      {
+        model: health_tracking_category,
+        required: true,
+        attributes: ['id', 'title', 'color']
+      }
+    ]
+  })
+  let result = [];
+  let option = [];
+  let j = 1;
+
+  for (let i = 0; i < categoryAndOptions.length + 1; i++) {
+    if (i == categoryAndOptions.length) {
+      if (option.length != 0) {
+        let temp = {};
+        temp.categoryId = j;
+        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+        temp.option = option;
+        result.push(temp);
+      }
+      break;
+    }
+
+    if (categoryAndOptions[i].category_id != j) {
+      if (option.length != 0) {
+        let temp = {};
+        temp.categoryId = j;
+        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+        temp.option = option;
+        result.push(temp);
+      }
+      option = [];
+      j++
+    }
+
+    if (categoryAndOptions[i].category_id == j) {
+      let temp = await user_tracking_option.findAll({
+        attributes: ['date'],
+        where: {
+          user_id: usrID,
+          tracking_option_id: categoryAndOptions[i].id
+        }
+      })
+      console.log("temp", temp.length > 0)
+      if (temp.length > 0) {
+        let tOption = {};
+        tOption.trackingOptionId = categoryAndOptions[i].id;
+        tOption.title = categoryAndOptions[i].title;
+        let dateArray = [];
+        temp.forEach(d => {
+          dateArray.push(d.date);
+        })
+        tOption.date = dateArray;
+        option.push(tOption);
+      }
+
+    }
+  }
+  res.status(200).json({ data: result });
 });
 
 

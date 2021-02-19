@@ -40,7 +40,7 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - PORT=2216
-    - pm2 restart development.js
+    - pm2 start development.js
     - echo "deploy_staging succesfull"
     # - pm2 logs
 
@@ -57,9 +57,10 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     - npx sequelize-cli db:migrate 
-    - pm2 restart app.js
+    - pm2 stop app.js
+    - pm2 start app.js
     - echo "Deploy to production server Successful"
-   #- pm2 logs
+    # - pm2 logs
 
   environment:
     name: production

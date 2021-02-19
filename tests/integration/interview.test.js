@@ -8,7 +8,7 @@ describe('interview', () => {
     let userId;
 
     beforeAll(async()=>{
-        usr =await user.create({name:"zahra", email:"interview_zzdand7755@gmail.com",phone:"09135454211"});
+        usr =await user.create({name:"zahra", email:"interview1_zzdand7755@gmail.com",phone:"09135454219"});
         token =usr.generateAuthToken();
         userId=usr.id;
        
@@ -78,6 +78,7 @@ describe('interview', () => {
     describe('/pregnantUser/:userId/:lang', async() => {
         let tempUserId;
         let lastPeriodDate="2020-07-07";
+        
         const exec=()=>{
             return request(server).post('/interview/pregnantUser/'+tempUserId+'/fa')
             .send({

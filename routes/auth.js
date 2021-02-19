@@ -73,11 +73,6 @@ router.post("/logIn/:lang", async (req, res) => {
   //   });
   // }
 
-  if (req.body.type != "" && req.body.type != null) {
-    if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
-  }
   if (usr == null) {
 
     if (req.body.imei != null && req.body.imei != "") {
@@ -86,9 +81,9 @@ router.post("/logIn/:lang", async (req, res) => {
       if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
       usr = await user.create({
-        name: req.body.name,
+        name: null,
         phone: req.body.phone,
-        version_type: req.body.type,
+        version_type: null,
         //email: req.body.email,
         //password: hash,
         imei: req.body.imei
@@ -96,9 +91,9 @@ router.post("/logIn/:lang", async (req, res) => {
     }
     else {
       usr = await user.create({
-        name: req.body.name,
+        name: null,
         phone: req.body.phone,
-        version_type: req.body.type
+        version_type: null
       });
     }
   }
@@ -109,7 +104,14 @@ router.post("/logIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  
+  console.log("req.headers['user-agent']", req.headers['user-agent']);
+  console.log(
+    useragent.is(req.headers['user-agent']).firefox == false,
+    useragent.is(req.headers['user-agent']).chrome == false,
+    useragent.is(req.headers['user-agent']).ie == false,
+    useragent.is(req.headers['user-agent']).mozilla == false,
+    useragent.is(req.headers['user-agent']).opera == false,
+    useragent.is(req.headers['user-agent']).safari)
   if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
     return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
   }
@@ -117,8 +119,8 @@ router.post("/logIn/:lang", async (req, res) => {
     useragent.is(req.headers['user-agent']).chrome == false &&
     useragent.is(req.headers['user-agent']).ie == false &&
     useragent.is(req.headers['user-agent']).mozilla == false &&
-    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari==false||
-    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true) {
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
     console.log("set headersssss");
     return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
 
@@ -129,12 +131,17 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+      .json({ data: { id: usr.id, userName: usr.name , type: usr.version_type} });
   }
+
 })
 
 router.post("/verificationCode", async (req, res) => {
+  let flag = true;
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+  if (req.body.phone == "" || req.body.phone == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
   if (req.body.phone != "") {
     const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
     let check = regex.test(req.body.phone);
@@ -146,20 +153,19 @@ router.post("/verificationCode", async (req, res) => {
           phone: req.body.phone,
         }
       });
-      if (userExist != null) {
-
-        if (new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
-          return res.status(409).json({ data: { message: await translate("EXISTS", "fa") } }).end();
-        }
-        else {
-          await verification_code.destroy({
-            where: {
-              phone: req.body.phone,
-            }
-          });
-        }
+      if (userExist != null && new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
+        flag = false;
+        return res.status(409).json({ message: await translate("EXISTS", "fa") });
       }
-      else {
+      else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
+        flag = true;
+        await verification_code.destroy({
+          where: {
+            phone: req.body.phone,
+          }
+        });
+      }
+      if (flag == true) {
         let api = Kavenegar.KavenegarApi({
           apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
         });
@@ -172,7 +178,8 @@ router.post("/verificationCode", async (req, res) => {
           async (response, status, message) => {
 
             if (status == 418) {
-              sendEmail('info@parto.app', 'parto@parto.app', message, "ارور سامانه پیامکی ");
+              await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی ");
+              await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
             }
             else if (status == 200) {
 
@@ -181,12 +188,13 @@ router.post("/verificationCode", async (req, res) => {
                 code: code
               });
               console.log("userCode", code)
-              return res.status(200).json({ data: { message: await translate("SUCCESSFUL", "fa") } }).end();
+              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") }).end();
             }
-
             return res.status(status).json({ message: message });
-
           })
+      }
+      else {
+        return res.status(409).json({ message: await translate("EXISTS", "fa") });
       }
     }
   }
@@ -206,13 +214,6 @@ router.post("/verificationCode", async (req, res) => {
 });
 
 router.post("/checkVerificationCode/:lang", async (req, res) => {
-  // console.log(req.session);
-  // console.log("code", req.session.code);
-  // if (!req.session.code) {
-  //   return res.status(402).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  // }
-  console.log("ok");
-  console.log("code", req.body.code)
   if (req.body.code == "" || req.body.code == null || req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
@@ -221,12 +222,14 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       phone: req.body.phone,
     }
   });
-  console.log("user Exist", userExist);
-  if (userExist != null) {
-
+  // console.log("user Exist", userExist);
+  if (userExist == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  else {
     if (new Date() - new Date(userExist.createdAt) > (2.5 * 60 * 1000)) {
       console.log("time expier");
-      return res.status(408).json({ data: { message: await translate("TIMEOVER", req.params.lang) } }).end();
+      return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
     else {
       console.log(RegExp(userExist.code).test(req.body.code) == true)
@@ -236,42 +239,233 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
             phone: req.body.phone,
           }
         });
-        return res.status(200).json({ data: { message: await translate("SUCCESSFUL", req.params.lang) } })
+        return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
       }
       else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
   }
-  else return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
 })
 
-router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+router.post("/signUp/:lang", async (req, res) => {
+  if (req.body.phone == "") {
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  let str = req.body.partnerCode;
-  //let code = str.substring(3, str.length);
-  let userId = parseInt(str.substring(4, str.length - 2)) / 3;
-  let checkSum = parseInt(str.substring(str.length - 2, str.length)) - 3;
+  let existsPhone;
+  let existsEmail;
 
-  if ((userId.toString() + checkSum.toString()) % 77 != 1 || userId == req.params.userId) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.phone != "") {
+    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    let check = regex.test(req.body.phone);
+
+    if (!check)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", "fa") });
+
+    existsPhone = await user.findOne({
+      where: {
+        phone: req.body.phone,
+      },
+    });
+  }
+  // else{
+  //   existsEmail = await user.findOne({
+  //     where: {
+  //       email: req.body.email,
+  //     },
+  //   });
+  // }
+  // console.log("existsEmail",existsEmail,"existsPhone",existsPhone);
+  // console.log(existsPhone!=null || existsEmail!=null);
+  if (existsPhone != null)
+    return res
+      .status(409)
+      .json({ message: await translate("EXISTS", req.params.lang) });
+
+  let usr;
+  if (req.body.imei != "") {
+    const regex = RegExp(/^\d{15}$/g);
+    let check = regex.test(req.body.imei);
+    if (!check)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+    //const hash = await bcrypt.hash(req.body.password, 10);
+    usr = await user.create({
+      name: req.body.name,
+      phone: req.body.phone,
+      //email: req.body.email,
+      //password: hash,
+      imei: req.body.imei,
+    });
+  } else {
+    usr = await user.create({
+      name: req.body.name,
+      phone: req.body.phone,
+    });
+  }
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
+    version: req.body.version,
+    login_date: Date.now(),
+  });
+  const token = await usr.generateAuthToken();
+  return res
+    .header("x-auth-token", token)
+    .status(200)
+    .json({ data: { id: usr.id } });
+});
+
+router.post("/linkForgotPassword/:lang", async (req, res) => {
+  let usr;
+  if (req.body.phone == "") {
+    if (!usr)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  if (req.body.phone != "") {
+    usr = await user.findOne({
+      where: {
+        phone: req.body.phone,
+      },
+    });
+    if (usr == null)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+    await usr.update({ uuid: uuid() });
+
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: req.body.version,
+      login_date: Date.now(),
+    });
+
+    let api = Kavenegar.KavenegarApi({
+      apikey:
+        "6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D",
+    });
+    api.VerifyLookup(
+      {
+        receptor: req.body.phone,
+        token: usr.uuid,
+        token2: req.params.lang,
+        template: "forgetPassword",
+      },
+      async (response, status, message) => {
+        if (status == 418) {
+          sendEmail(
+            "info@parto.email",
+            "parto@parto.email",
+            message,
+            "ارور سامانه پیامکی "
+          );
+        }
+        return res.status(status).json({ message: message });
+      }
+    );
+  }
+  // else{
+  //   usr = await user.findOne({
+  //     where: {
+  //       email: req.body.email,
+  //     },
+  //   });
+  //   if (usr==null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  //   await usr.update({ uuid: uuid()});
+
+  //   await usr.createUser_log({
+  //     i_p: req.header("x-forwarded-for"),
+  //     version: req.body.version,
+  //     login_date: Date.now(),
+  //   });
+  //   const subject='Forget password for use parto application';
+  //   const text='please click on the linke https://api.partobanoo.com/auth/forgetPassword/'+ usr.uuid+'/'+req.params.lang;
+  //   const result=sendEmail('parto@partobanoo.com',req.body.email,text,subject);
+  //   if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
+  //   else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", req.params.lang) },link:text });
+  // }
+});
+
+router.post("/setNewPassword/:lang", async (req, res) => {
+  const usr = await user.findOne({
+    where: {
+      uuid: req.body.uuid,
+    },
+  });
+  if (!usr)
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDID", req.params.lang) });
+
+  if (Math.abs(new Date().getTime() - usr.updatedAt) > 900000)
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  await usr.update({ password: await bcrypt.hash(req.body.newPassword, 10) });
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
+    version: req.body.version,
+    login_date: Date.now(),
+  });
+  return res
+    .status(200)
+    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+});
+
+router.post("/changePassword/:lang", async (req, res) => {
+  let usr;
+  if (req.body.phone == "" && req.body.email == "") {
+    if (!usr)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  if (req.body.phone != "") {
+    usr = await user.findOne({
+      where: {
+        phone: req.body.phone,
+      },
+    });
+  } else {
+    usr = await user.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
   }
 
-  let usrPartner = await user.findByPk(userId);
-  if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  await usr.setUser(usrPartner);
+  if (usr == null)
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
-})
+  const pass = await bcrypt.compare(req.body.password, usr.password);
 
-router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
-  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
-  return res.status(200).json({ data: { partnerCode: partnerCode } });
-})
+  if (!pass || req.body.newPassword == "")
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  await usr.update({ password: await bcrypt.hash(req.body.newPassword, 10) });
+
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
+    version: req.body.version,
+    login_date: Date.now(),
+  });
+  return res
+    .status(200)
+    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+});
 
 
 module.exports = router;

@@ -5,13 +5,6 @@ const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const { user, user_tracking_option, user_profile, health_tracking_option } = require("../models");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
-const AsyncLock = require('async-lock');
-
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);

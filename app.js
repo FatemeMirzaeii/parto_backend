@@ -3,12 +3,13 @@ require("./models/index");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const nodeadmin = require("nodeadmin");
+const fileUpload = require('express-fileupload');
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
-const article = require("./routes/article");
 const interview = require("./routes/interview");
 const healthTracking = require("./routes/health-tracking");
 const note = require("./routes/note");
@@ -37,12 +38,42 @@ app.use(cors({
   credentials :true,
   exposedHeaders: 'x-auth-token'
 }));
+
+const authenticatedLimiter = rateLimit({
+  windowMs: 1000, // 1 second window
+  max: 20, // start blocking after 10 requests
+  message:
+  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
+  headers: true,
+});
+
+app.use("/cycle", authenticatedLimiter);
+app.use("/pregnancy", authenticatedLimiter);
+app.use("/interview", authenticatedLimiter);
+app.use("/healthTracking", authenticatedLimiter);
+app.use("/note", authenticatedLimiter);
+app.use("/user", authenticatedLimiter);
+app.use("/auth", authenticatedLimiter);
+app.use("/profile", authenticatedLimiter);
+
+
+const unauthenticatedLimiter = rateLimit({
+  windowMs: 2*60 * 1000, // 2 minet window
+  max: 6, // start blocking after 1 requests
+  message:
+  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
+  headers: true,
+});
+app.use("/auth", unauthenticatedLimiter);
+app.use("/contactUs", unauthenticatedLimiter);
+app.use("/survey", authenticatedLimiter);
+
+app.use(fileUpload());
 app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json());
 app.use("/cycle", cycle);
 app.use("/pregnancy", pregnancy);
-app.use("/article", article);
 app.use("/interview", interview);
 app.use("/healthTracking", healthTracking);
 app.use("/note", note);
