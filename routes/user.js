@@ -14,6 +14,9 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   //let code = str.substring(3, str.length);
   let userId = parseInt(str.substring(4, str.length - 2)) / 3;
   let checkSum = parseInt(str.substring(str.length - 2, str.length)) - 3;
+  if(checkSum>=77){
+    checkSum=checkSum/10;
+  }
 
   if ((userId.toString() + checkSum.toString()) % 77 != 1 || userId == req.params.userId) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -31,6 +34,9 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   console.log("useeeer", usr == null);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
+  if(checkSum<10){
+    checkSum=checkSum*10;
+  }
   console.log("checksum",checkSum);
   let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
   return res.status(200).json({ data: { partnerCode: partnerCode } });
