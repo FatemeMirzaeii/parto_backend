@@ -20,6 +20,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   }
 
   let usrPartner = await user.findByPk(userId);
+  console.log("partner",usrPartner);
   if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   await usr.setUser(usrPartner);
 
@@ -30,6 +31,7 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   console.log("useeeer", usr == null);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (78 - ((usr.id * 100) % 77)) % 77;
+  console.log("checksum",checkSum);
   let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
