@@ -13,9 +13,9 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   console.log("okkkkkkk");
   let str = req.body.partnerCode;
   //let code = str.substring(3, str.length);
-  let userId = parseInt(str.substring(4, str.length - 2)) / 3;
+  let userId = parseInt(str.substring(4, str.length - 5)) / 3;
   console.log("ussssrId",userId);
-  let checkSum = parseInt(str.substring(str.length - 2, str.length)) - 3;
+  let checkSum = parseInt(str.substring(str.length - 2, str.length));
   console.log("checksummmmm",checkSum);
   
   if ((userId.toString() + checkSum.toString()) % 97 != 1 || userId == req.params.userId) {
@@ -36,7 +36,7 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
   
   console.log("checksum",checkSum);
-  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3);
+  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3)+"-"+ checkSum;
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
 router.put("/versionType/:userId/:lang", auth, async (req, res) => {
