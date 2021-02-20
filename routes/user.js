@@ -10,10 +10,13 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
+  console.log("okkkkkkk");
   let str = req.body.partnerCode;
   //let code = str.substring(3, str.length);
   let userId = parseInt(str.substring(4, str.length - 2)) / 3;
+  console.log("ussssrId",userId);
   let checkSum = parseInt(str.substring(str.length - 2, str.length)) - 3;
+  console.log("checksummmmm",checkSum);
   if(checkSum>=77){
     checkSum=checkSum-87;
   }
