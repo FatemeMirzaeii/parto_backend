@@ -163,18 +163,21 @@ router.delete("/deleteProfile/:userId/:lang", auth, async (req, res) => {
 router.post("/addProfile/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  try {
+    let userProf = await user_profile.create(
+      {
+        birthdate: new Date(req.body.birthdate),
+        height: req.body.height,
+        weight: req.body.weight,
+        avg_sleeping_hour: req.body.sleepingHour,
+        blood_type: req.body.bloodType,
+        locked: req.body.isLock,
 
-  let userProf = await user_profile.create(
-    {
-      birthdate: new Date(req.body.birthdate),
-      height: req.body.height,
-      weight: req.body.weight,
-      avg_sleeping_hour: req.body.sleepingHour,
-      blood_type: req.body.bloodType,
-      locked: req.body.isLock,
-
-    });
-  userProf.setUser(usr);
+      });
+    userProf.setUser(usr);
+  } catch (err) {
+    handleError(userProf, err);
+  }
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
@@ -322,7 +325,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - (((3*60)+30) * 60 * 1000);
+    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
     usrProfile = await user_profile.findAll({
       where: {
         user_id: usrID,
@@ -374,8 +377,12 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       await uProfile.update(request);
     }
     else {
+      try{
       uProfile = await user_profile.create(request);
       await uProfile.setUser(usr);
+    } catch (err) {
+      handleError(uProfile, err);
+    }
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }

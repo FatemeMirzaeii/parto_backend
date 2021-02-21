@@ -5,7 +5,7 @@ const { user, health_tracking_category, user_tracking_option, health_tracking_op
 const translate = require("../config/translate");
 const router = express();
 const { Op } = require("sequelize");
-
+const handleError = require("../middleware/handleMysqlError");
 router.get("/getCategories", auth, async (req, res) => {
   const categories = await health_tracking_category.findAll();
   res.status(200).json({ data: categories });
@@ -122,6 +122,7 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
       }
     })
   }
+
   for (i = 0; i < req.body.selected.length; i++) {
     if (req.body.selected[i].hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
@@ -161,11 +162,15 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
 
       }
     }
-    userOption = await user_tracking_option.create({
-      tracking_option_id: req.body.selected[i].trackingOptionId,
-      date: req.body.date
-    });
-    await userOption.setUser(usr);
+    try {
+      userOption = await user_tracking_option.create({
+        tracking_option_id: req.body.selected[i].trackingOptionId,
+        date: req.body.date
+      });
+      await userOption.setUser(usr);
+    } catch (err) {
+      handleError(userOption, err);
+    }
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
@@ -270,11 +275,15 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             await existData.update({ tracking_option_id: element.tracking_option_id });
           }
           else {
-            userOption = await user_tracking_option.create({
-              tracking_option_id: element.tracking_option_id,
-              date: element.date
-            });
-            await userOption.setUser(usr);
+            try {
+              userOption = await user_tracking_option.create({
+                tracking_option_id: element.tracking_option_id,
+                date: element.date
+              });
+              await userOption.setUser(usr);
+            } catch (err) {
+              handleError(userOption, err);
+            }
           }
         }
         else if (element.has_multiple_choice == 1) {
@@ -285,23 +294,15 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             });
             await userOption.setUser(usr);
           } catch (err) {
-            console.log("errrror",err);
-            console.log("errrrorOriginal",err.original.code);
-            console.log("errrrorErrorse",err.errors);
-            if(err.original.code=='ER_DUP_ENTRY'){
-              console.log("errrror");
-            }
+            handleError(userOption, err);
           }
         }
       }
     }
   })
-  // if (result == 400) {
-  //   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  // }
-  // else {
+
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-  // }
+
 });
 
 router.get("/getPain/:userId/:lang", auth, async (req, res) => {
