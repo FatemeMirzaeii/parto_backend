@@ -124,6 +124,7 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   }
 
   for (i = 0; i < req.body.selected.length; i++) {
+    console.log("selrcted", req.body.selected[i]);
     if (req.body.selected[i].hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
         where: {
@@ -131,44 +132,47 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
           date: req.body.date
         }
       })
+      console.log("existDate", existDate);
       if (existDate != null) {
         //find options in category
-        let category = await health_tracking_option.findAll({
+        let options = await health_tracking_option.findAll({
           attributes: ['id'],
           where: {
             category_id: req.body.selected[i].categoryId
           }
         });
+
+        console.log("not null-category", options);
         //find all for that option in helthTracing 
-        for (option in category) {
-          existOption = await user_tracking_option.findOne({
-            where: {
-              user_id: req.params.userId,
+        let optionArray = [];
+        for (j = 0; j < options.length; j++) {
+          optionArray.push(options[j].id);
+        }
+        console.log("options", optionArray);
+        existData = await user_tracking_option.findOne({
+          where: {
+            user_id: req.params.userId,
               date: req.body.date,
-              tracking_option_id: option
-            }
-          })
-          //delete it
-          if (existOption) {
-            await user_tracking_option.destroy({
-              where: {
-                user_id: req.params.userId,
-                date: req.body.date,
-                tracking_option_id: option
-              }
-            })
+            tracking_option_id: { [Op.in]: optionArray }
           }
+        })
+
+        if (await existData != null) {
+          await existData.destroy();
         }
 
       }
     }
     try {
+      console.log('i',i);
+      console.log("req.body.selected[i].trackingOptionId",req.body.selected[i]);
       userOption = await user_tracking_option.create({
         tracking_option_id: req.body.selected[i].trackingOptionId,
         date: req.body.date
       });
       await userOption.setUser(usr);
     } catch (err) {
+      console.log("errrrrrrrrrr",err);
       handleError(userOption, err);
     }
   }

@@ -100,12 +100,15 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
         tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
       }
     })
-
-    let u = await user_tracking_option.create({
-      date: new Date(element2),
-    });
-    await u.setUser(usr);
-    await u.setHealth_tracking_option(trackingOption);
+    try {
+      let u = await user_tracking_option.create({
+        date: new Date(element2),
+      });
+      await u.setUser(usr);
+      await u.setHealth_tracking_option(trackingOption);
+    } catch (err) {
+      handleError(u, err);
+    }
   });
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
