@@ -130,35 +130,33 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
           date: req.body.date
         }
       })
+      console.log("existDate", existDate);
       if (existDate != null) {
         //find options in category
-        let category = await health_tracking_option.findAll({
+        let options = await health_tracking_option.findAll({
           attributes: ['id'],
           where: {
             category_id: req.body.selected[i].categoryId
           }
         });
-        //find all for that option in helthTracing 
-        for (option in category) {
-          existOption = await user_tracking_option.findOne({
-            where: {
-              user_id: req.params.userId,
-              date: req.body.date,
-              tracking_option_id: option
-            }
-          })
-          //delete it
-          if (existOption) {
-            await user_tracking_option.destroy({
-              where: {
-                user_id: req.params.userId,
-                date: req.body.date,
-                tracking_option_id: option
-              }
-            })
-          }
-        }
 
+        //find all option in health Tracing 
+        let optionArray = [];
+        for (j = 0; j < options.length; j++) {
+          optionArray.push(options[j].id);
+        }
+        
+        existData = await user_tracking_option.findOne({
+          where: {
+            user_id: req.params.userId,
+              date: req.body.date,
+            tracking_option_id: { [Op.in]: optionArray }
+          }
+        })
+
+        if (await existData != null) {
+          await existData.destroy();
+        }
       }
     }
     userOption = await user_tracking_option.create({
