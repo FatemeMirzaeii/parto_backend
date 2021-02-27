@@ -168,7 +168,7 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
       userOption = await user_tracking_option.create({
         date: req.body.date
       });
-      await userOption.setUser(usr).then(userOption.setHealth_tracking_option(trackingOption));
+      await userOption.setHealth_tracking_option(trackingOption).then(userOption.setUser(usr));
     } catch (err) {
       handleError(userOption, err);
     }
