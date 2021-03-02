@@ -377,12 +377,10 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       await uProfile.update(request);
     }
     else {
-      try{
       uProfile = await user_profile.create(request);
-      await uProfile.setUser(usr);
-    } catch (err) {
-      handleError(uProfile, err);
-    }
+      await uProfile.setUser(usr).catch(async function (err) {
+        await handleError(usr, err);
+      })
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
