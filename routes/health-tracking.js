@@ -229,13 +229,16 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
-  let userOption, existData,optionIdExist;
+  let userOption, existData, optionIdExist;
 
   for (const element of req.body.data) {
-    console.log("#### tracking option#", element.tracking_option_id);
-    optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id);
+    optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id).catch(async function (err) {
+      console.log("ERR- health_tracking_option.findByPk(element.tracking_option_id)", err);
+      console.log(optionIdExist);
+    })
 
     if (moment(element.date, "YYYY-MM-DD", true).isValid() && (optionIdExist != null || optionIdExist != undefined)) {
+
       if (element.state == 2) {
         await user_tracking_option.destroy({
           where: {
@@ -299,12 +302,14 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             userOption = await user_tracking_option.create({
               date: element.date
             });
+            console.log("hrrrrrrrrr")
             if (userOption != null) {
-              await userOption.setHealth_tracking_option(optionIdExist)
-                .then(userOption.setUser(usr).catch(async function (err) {
-                  await handleError(userOption, err);
-
-                }))
+              await userOption.setHealth_tracking_option(optionIdExist).catch(async function ( err) {
+                await handleError(userOption, err)
+              })
+              await userOption.setUser(usr).catch(async function (err) {
+                await handleError(userOption, err);
+              })
             }
           } catch (err) {
             await handleError(userOption, err);
