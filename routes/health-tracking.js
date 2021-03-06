@@ -230,11 +230,13 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   let userOption, existData, optionIdExist;
-
+  let error = 0;
   for (const element of req.body.data) {
     optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id).catch(async function (err) {
       console.log("ERR- health_tracking_option.findByPk(element.tracking_option_id)", err);
       console.log(optionIdExist);
+      error = 1;
+      return;
     })
 
     if (moment(element.date, "YYYY-MM-DD", true).isValid() && (optionIdExist != null || optionIdExist != undefined)) {
@@ -286,14 +288,23 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             await existData.setHealth_tracking_option(optionIdExist);
           }
           else {
-            userOption = await user_tracking_option.create({
-              date: element.date
-            });
-            if (userOption != null) {
-              await userOption.setHealth_tracking_option(optionIdExist)
-                .then(userOption.setUser(usr).catch(async function (err) {
-                  await handleError(userOption, err);
-                }))
+            try {
+              userOption = await user_tracking_option.create({
+                date: element.date
+              });
+              if (userOption != null) {
+                await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
+                  let result = await handleError(userOption, err);
+                  if (!result) error = 1;
+                })
+                await userOption.setUser(usr).catch(async function (err) {
+                  let result2 = await handleError(userOption, err);
+                  if (!result2) error = 1;
+                })
+              }
+            } catch (err) {
+              let result3 = await handleError(userOption, err);
+              if (!result3) error = 1;
             }
           }
         }
@@ -302,27 +313,31 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             userOption = await user_tracking_option.create({
               date: element.date
             });
-            console.log("hrrrrrrrrr")
             if (userOption != null) {
-              await userOption.setHealth_tracking_option(optionIdExist).catch(async function ( err) {
-                await handleError(userOption, err)
+              await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
+                let result = await handleError(userOption, err);
+                if (!result) error = 1;
               })
               await userOption.setUser(usr).catch(async function (err) {
-                await handleError(userOption, err);
+                let result2 = await handleError(userOption, err);
+                if (!result2) error = 1;
               })
             }
           } catch (err) {
-            await handleError(userOption, err);
+            let result3 = await handleError(userOption, err);
+            if (!result3) error = 1;
           }
         }
       }
-
-
-
     }
 
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  if (error == 1) {
+    return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+  }
+  else {
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
 
 });
 
