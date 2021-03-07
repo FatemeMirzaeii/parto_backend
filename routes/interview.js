@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const { user_profile, user, pregnancy } = require("../models");
 const translate = require("../config/translate");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
+const moment = require("moment");
 
 function check(cycleLength, periodLength) {
   if (cycleLength < 10 || cycleLength > 100) return false;
@@ -23,29 +24,28 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
   if (!check(req.body.avgCycleLength, req.body.avgPeriodLength)) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  let tempBirthdate = req.body.birthdate;
-  if (req.body.birthdate == "" || req.body.birthdate == null) {
-    tempBirthdate = "1111-11-11"
+  let request = {
+    "birthdate": req.body.birthdate,
+    "blood_type": req.body.bloodType,
+    "locked": req.body.isLock,
+    "avg_cycle_length": req.body.avgCycleLength,
+    "avg_period_length": req.body.avgPeriodLength,
+    "pregnancy_try": req.body.pregnancyTry,
+    "last_period_date": req.body.lastPeriodDate,
   }
-
-  let tempLastPeriod = req.body.lastPeriodDate;
-  if (req.body.lastPeriodDate == "") {
-    tempLastPeriod = "1111-11-11"
+  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
+    request.birthdate = undefined;
   }
-  try {
-    let uProfile = await user_profile.create({
-      birthdate: new Date(tempBirthdate),
-      avg_cycle_length: req.body.avgCycleLength,
-      avg_period_length: req.body.avgPeriodLength,
-      last_period_date: new Date(tempLastPeriod),
-      pregnant: 0,
-      pregnancy_try: req.body.pregnancyTry
-
-    });
-    await uProfile.setUser(usr);
-  } catch (err) {
-    handleError(uProfile, err);
+  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
+    request.last_period_date = undefined;
   }
+  let uProfile = await user_profile.create(request);
+  await uProfile.setUser(usr).catch(async function (err) {
+    let checkError = await handleError(usr, err);
+    if (!checkError) {
+      return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+    }
+  })
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
@@ -65,58 +65,41 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
   if (!checkDateWithDateOnly(req.body.lastPeriodDate)) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-
+  let requestProf = {
+    "birthdate": req.body.birthdate,
+    "last_period_date": req.body.lastPeriodDate,
+    "pregnant": 1,
+    "pregnancy_try": 0
+  }
   let uProfile;
   let preg;
-  try {
-    if (req.body.birthdate != null || req.body.birthdate != "") {
-
-      uProfile = await user_profile.create({
-        birthdate: new Date(req.body.birthdate),
-        last_period_date: new Date(req.body.lastPeriodDate),
-        pregnant: 1,
-        pregnancy_try: 0
-
-      });
-
+  uProfile = await user_profile.create(requestProf);
+  await uProfile.setUser(usr).catch(async function (err) {
+    let checkError = await handleError(uProfile, err);
+    if (!checkError) {
+      return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
     }
-    else {
-      uProfile = await user_profile.create({
-        last_period_date: new Date(req.body.lastPeriodDate),
-        pregnant: 1,
-        pregnancy_try: 0
-
-      });
-    }
-    await uProfile.setUser(usr);
-  } catch (err) {
-    handleError(uProfile, err);
+  })
+  let requestPreg = {
+    "due_date": req.body.dueDate,
+    "conception_date": req.body.conceptionDate,
+    "state": 1
   }
-  if (req.body.dueDate != null) {
-    try {
-      preg = await pregnancy.create({
-        due_date: new Date(req.body.dueDate),
-        state: 1
-      });
-      await preg.setUser(usr);
-    } catch (err) {
-      handleError(preg, err);
-    }
+  console.log(moment(requestPreg.conception_date, "YYYY-MM-DD", true).isValid() == false && !checkDateWithDateOnly(requestPreg.conception_date))
+  if (moment(requestPreg.conception_date, "YYYY-MM-DD", true).isValid() == false || !checkDateWithDateOnly(requestPreg.conception_date)) {
+    requestPreg.conception_date = undefined;
   }
-  else if (req.body.conceptionDate != null) {
-    if (!checkDateWithDateOnly(req.body.conceptionDate)) {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
-    try {
-      preg = await pregnancy.create({
-        conception_date: new Date(req.body.conceptionDate),
-        state: 1
-      });
-      await preg.setUser(usr);
-    } catch (err) {
-      handleError(uProfile, err);
-    }
+  if (moment(requestPreg.due_date, "YYYY-MM-DD", true).isValid() == false) {
+    requestPreg = undefined;
   }
+  preg = await pregnancy.create(requestPreg);
+  await preg.setUser(usr).catch(async function (err) {
+    let checkError = await handleError(preg, err);
+    if (!checkError) {
+      return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+    }
+  })
+
   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
