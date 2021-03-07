@@ -296,15 +296,18 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
                 await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
                   let result = await handleError(userOption, err);
                   if (!result) error = 1;
+                  return;
                 })
                 await userOption.setUser(usr).catch(async function (err) {
                   let result2 = await handleError(userOption, err);
                   if (!result2) error = 1;
+                  return;
                 })
               }
             } catch (err) {
               let result3 = await handleError(userOption, err);
               if (!result3) error = 1;
+              return;
             }
           }
         }
@@ -317,15 +320,18 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
               await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
                 let result = await handleError(userOption, err);
                 if (!result) error = 1;
+                return;
               })
               await userOption.setUser(usr).catch(async function (err) {
                 let result2 = await handleError(userOption, err);
                 if (!result2) error = 1;
+                return;
               })
             }
           } catch (err) {
             let result3 = await handleError(userOption, err);
             if (!result3) error = 1;
+            return;
           }
         }
       }
