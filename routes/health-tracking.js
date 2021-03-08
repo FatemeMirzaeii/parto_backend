@@ -126,7 +126,7 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
     })
   }
 
-  for (const element of req.body.deleted) {
+  for (const element of req.body.selected) {
     if (element.hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
         where: {
