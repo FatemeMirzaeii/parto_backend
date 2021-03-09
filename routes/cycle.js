@@ -79,7 +79,7 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
 
   let deleted;
   //  deleleDate for delete user date
-  req.body.deleteDate.forEach(async element => {
+  for(const element of req.body.deleteDate) {
     console.log(element);
     deleted = await user_tracking_option.destroy({
       where: {
@@ -88,11 +88,11 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
         tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
       }
     })
-  });
+  };
 
   // add user period Date 
   const trackingOption = await health_tracking_option.findByPk(3);
-  req.body.addDate.forEach(async element2 => {
+  for(const element2 of req.body.addDate) {
     let dest = await user_tracking_option.destroy({
       where: {
         user_id: req.params.userId,
@@ -100,13 +100,15 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
         tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
       }
     })
-
-    let u = await user_tracking_option.create({
-      date: new Date(element2),
-    });
-    await u.setUser(usr);
-    await u.setHealth_tracking_option(trackingOption);
-  });
+    
+      let u = await user_tracking_option.create({
+        date: new Date(element2),
+      });
+      await u.setHealth_tracking_option(trackingOption)
+      .then(u.setUser(usr).catch(async function (err) {
+        await handleError(u, err);
+      }))
+  };
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 

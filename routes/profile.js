@@ -6,6 +6,8 @@ const { user, user_profile } = require("../models");
 const translate = require("../config/translate");
 const { Op } = require("sequelize");
 const fs = require("fs");
+const handleError = require("../middleware/handleMysqlError");
+const moment = require("moment");
 
 router.get("/getProfile/:userId/:lang", auth, async (req, res) => {
   console.log("profileeee");
@@ -55,65 +57,61 @@ router.put("/editProfile/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
   if (userProfil == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
 
-  let tempBirthdate = req.body.birthdate;
-  if (req.body.birthdate == "" || req.body.birthdate == null) {
-    tempBirthdate = "1111-11-11"
+  let request = {
+    "birthdate": req.body.birthdate,
+    "height": req.body.height,
+    "weight": req.body.weight,
+    "avg_sleeping_hour": req.body.sleepingHour,
+    "blood_type": req.body.bloodType,
+    "locked": req.body.isLock,
+    "avg_cycle_length": req.body.cycleLength,
+    "avg_period_length": req.body.periodLength,
+    "pms_length": req.body.pmsLength,
+    "pregnant": req.body.pregnant,
+    "pregnancy_try": req.body.pregnancyTry,
+    "last_period_date": req.body.lastPeriodDate,
+    "ovulation_prediction": req.body.ovulationPred,
+    "period_prediction": req.body.periodPred,
+    "red_days": req.body.redDays
   }
-
-  let tempLastPeriod = req.body.lastPeriodDate;
-  if (req.body.lastPeriodDate == "") {
-    tempLastPeriod = "1111-11-11"
+  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
+    request.birthdate = undefined;
   }
-
-  await user_profile.update(
+  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
+    request.last_period_date = undefined;
+  }
+  await user_profile.update(request,
     {
-      birthdate: new Date(tempBirthdate),
-      height: req.body.height,
-      weight: req.body.weight,
-      avg_sleeping_hour: req.body.sleepingHour,
-      blood_type: req.body.bloodType,
-      locked: req.body.isLock,
-      avg_cycle_length: req.body.cycleLength,
-      avg_period_length: req.body.periodLength,
-      pms_length: req.body.pmsLength,
-      pregnant: req.body.pregnant,
-      pregnancy_try: req.body.pregnancyTry,
-      last_period_date: new Date(tempLastPeriod),
-      ovulation_prediction: req.body.ovulationPred,
-      period_prediction: req.body.periodPred,
-      red_days: req.body.redDays
-
-    }, {
-    where: {
-      user_id: req.params.userId
-    }
-  });
+      where: {
+        user_id: req.params.userId
+      }
+    });
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
 router.put("/editPeriodInfo/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
   if (userProfil == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-  let tempLastPeriod = req.body.lastPeriodDate;
-  if (req.body.lastPeriodDate == null || req.body.lastPeriodDate == "") {
-    tempLastPeriod = "1111-11-11";
+  let request = {
+    "avg_cycle_length": req.body.cycleLength,
+    "avg_period_length": req.body.periodLength,
+    "pms_length": req.body.pmsLength,
+    "pregnant": req.body.pregnant,
+    "pregnancy_try": req.body.pregnancyTry,
+    "last_period_date": req.body.lastPeriodDate,
+    "ovulation_prediction": req.body.ovulationPred,
+    "period_prediction": req.body.periodPred,
+    "red_days": req.body.redDays
   }
-  await user_profile.update(
+  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
+    request.last_period_date = undefined;
+  }
+  await user_profile.update(request,
     {
-      avg_cycle_length: req.body.cycleLength,
-      avg_period_length: req.body.periodLength,
-      pms_length: req.body.pmsLength,
-      pregnant: req.body.pregnant,
-      pregnancy_try: req.body.pregnancyTry,
-      last_period_date: new Date(tempLastPeriod),
-      ovulation_prediction: req.body.ovulationPred,
-      period_prediction: req.body.periodPred,
-      red_days: req.body.redDays
-    }, {
-    where: {
-      user_id: req.params.userId
-    }
-  });
+      where: {
+        user_id: req.params.userId
+      }
+    });
 
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
@@ -122,24 +120,24 @@ router.put("/editGeneralInfo/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
   if (userProfil == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
 
-  let tempBirthdate = req.body.birthdate;
-  if (req.body.birthdate == "" || req.body.birthdate == null) {
-    tempBirthdate = "1111-11-11"
+  let request = {
+    "birthdate": req.body.birthdate,
+    "height": req.body.height,
+    "weight": req.body.weight,
+    "avg_sleeping_hour": req.body.sleepingHour,
+    "blood_type": req.body.bloodType,
+    "locked": req.body.isLock
+  }
+  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
+    request.birthdate = undefined;
   }
 
-  await user_profile.update(
+  await user_profile.update(request,
     {
-      birthdate: new Date(tempBirthdate),
-      height: req.body.height,
-      weight: req.body.weight,
-      avg_sleeping_hour: req.body.sleepingHour,
-      blood_type: req.body.bloodType,
-      locked: req.body.isLock
-    }, {
-    where: {
-      user_id: req.params.userId
-    }
-  });
+      where: {
+        user_id: req.params.userId
+      }
+    });
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
@@ -160,21 +158,29 @@ router.delete("/deleteProfile/:userId/:lang", auth, async (req, res) => {
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
-router.post("/addProfile/:lang", auth, async (req, res) => {
+router.post("/addProfile/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let request = {
+    "birthdate": req.body.birthdate,
+    "height": req.body.height,
+    "weight": req.body.weight,
+    "avg_sleeping_hour": req.body.sleepingHour,
+    "blood_type": req.body.bloodType,
+    "locked": req.body.isLock,
+  }
+  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
+    request.birthdate = undefined;
+  }
 
-  let userProf = await user_profile.create(
-    {
-      birthdate: new Date(req.body.birthdate),
-      height: req.body.height,
-      weight: req.body.weight,
-      avg_sleeping_hour: req.body.sleepingHour,
-      blood_type: req.body.bloodType,
-      locked: req.body.isLock,
+  let userProf = await user_profile.create(request);
+  userProf.setUser(usr).catch(async function (err) {
+    let checkError = await handleError(usr, err);
+    if (!checkError) {
+      return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+    }
+  })
 
-    });
-  userProf.setUser(usr);
   res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
 });
 
@@ -322,7 +328,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - (((3*60)+30) * 60 * 1000);
+    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
     usrProfile = await user_profile.findAll({
       where: {
         user_id: usrID,
@@ -370,12 +376,26 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       "pregnant": req.body.data[0].pregnant,
       "avg_sleeping_hour": req.body.data[0].avg_sleeping_hour
     }
+    if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
+      request.birthdate = undefined;
+    }
+    if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
+      request.last_period_date = undefined;
+    }
+    if (moment(request.last_sync_time, "YYYY-MM-DD", true).isValid() == false) {
+      request.last_sync_time = undefined;
+    }
     if (uProfile != null) {
       await uProfile.update(request);
     }
     else {
       uProfile = await user_profile.create(request);
-      await uProfile.setUser(usr);
+      await uProfile.setUser(usr).catch(async function (err) {
+        let checkError = await handleError(usr, err);
+        if (!checkError) {
+          return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+        }
+      })
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }

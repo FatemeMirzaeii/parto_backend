@@ -41,9 +41,9 @@ app.use(cors({
 
 const authenticatedLimiter = rateLimit({
   windowMs: 1000, // 1 second window
-  max: 20, // start blocking after 10 requests
+  max: 50, // start blocking after 10 requests
   message:
-  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
+  { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
 });
 
@@ -59,9 +59,9 @@ app.use("/profile", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
-  max: 6, // start blocking after 1 requests
+  max: 9, // start blocking after 1 requests
   message:
-  { message: "تعداد درخواست ها از حد مجاز بیشتر است "},
+  { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
 });
 app.use("/auth", unauthenticatedLimiter);
@@ -71,7 +71,8 @@ app.use("/survey", authenticatedLimiter);
 app.use(fileUpload());
 app.use(helmet());
 app.use(nodeadmin(app));
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.use("/cycle", cycle);
 app.use("/pregnancy", pregnancy);
 app.use("/interview", interview);
