@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 const { user, health_tracking_category, user_tracking_option, health_tracking_option } = require("../models");
 const translate = require("../config/translate");
 const router = express();
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const handleError = require("../middleware/handleMysqlError");
 const moment = require("moment");
 
@@ -347,137 +347,137 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
 
 });
 
-router.get("/getPain/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [5, 6, 7, 8]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getPain/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [5, 6, 7, 8]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
-router.get("/getExcersices/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [21, 22, 23, 24]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getExcersices/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [21, 22, 23, 24]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
-router.get("/getSleep/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [17, 18, 19, 20]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getSleep/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [17, 18, 19, 20]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
-router.get("/getVaginalDischarges/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [9, 10, 11, 12]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getVaginalDischarges/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [9, 10, 11, 12]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
-router.get("/getMood/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [13, 14, 15, 16]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getMood/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [13, 14, 15, 16]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
-router.get("/getSex/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let uPainDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
-    where: {
-      user_id: usrID,
-      tracking_option_id: {
-        [Op.or]: [25, 26, 27, 28]
-      }
-    }
-  })
-  res.status(200).json({ data: uPainDate });
-});
+// router.get("/getSex/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let uPainDate = await user_tracking_option.findAll({
+//     attributes: ['date', 'tracking_option_id'],
+//     where: {
+//       user_id: usrID,
+//       tracking_option_id: {
+//         [Op.or]: [25, 26, 27, 28]
+//       }
+//     }
+//   })
+//   res.status(200).json({ data: uPainDate });
+// });
 
 router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
@@ -552,7 +552,84 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
 
     }
   }
-  res.status(200).json({ data: result });
+  return res.status(200).json({ data: result });
+});
+
+router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id
+  }
+  else {
+    usrID = usr.id
+  }
+  let info = await user_tracking_option.findAll({
+    attributes: ['date', 'tracking_option_id'],
+    where: {
+      user_id: usrID
+    }
+  })
+
+  let categoryAndOptions = await health_tracking_option.findAll({
+    attributes: ['id', 'category_id', 'title'],
+    include: [
+      {
+        model: health_tracking_category,
+        required: true,
+        attributes: ['id', 'title', 'color']
+      }
+    ]
+  })
+
+  let result = [];
+  let days = {};
+  for (let i of info) {
+    let options = [];
+
+    for (let t of info) {
+      if (i.date == t.date) {
+        options.push(t.tracking_option_id);
+      }
+    }
+    let exist = false;
+    for (let r of result) {
+      if (i.date == r.date) {
+        console.log("is existtttt");
+        console.log("date", i.date);
+        exist = true;
+      }
+    }
+    if (exist == false) {
+
+      days.date = i.date;
+      console.log("date1", i.date);
+      let temp = [];
+      let j;
+      for (j of options) {
+
+        let temp2 = {};
+        for (let k of categoryAndOptions) {
+
+          if (j == k.id) {
+            temp2.categoryId = k.category_id;
+            temp2.categoryTitle = k.health_tracking_category.title;
+            temp2.categoryColor = k.health_tracking_category.color;
+            temp2.optionId = k.id;
+            temp2.optionTitle = k.title;
+            temp.push(temp2);
+            break;
+          }
+        }
+      }
+      days.options = temp;
+
+      result.push({ date: days.date, options: days.options });
+    }
+  }
+  return res.status(200).json({ data: result });
+
 });
 
 

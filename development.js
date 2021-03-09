@@ -45,7 +45,7 @@ developmentApp.use(cors({
 
 const authenticatedLimiter = rateLimit({
   windowMs: 1000, // 1 second window
-  max: 20, // start blocking after 20 requests
+  max: 50, // start blocking after 20 requests
   message:
   { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
@@ -62,7 +62,7 @@ developmentApp.use("/profile", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
-  max: 6, // start blocking after 1 requests
+  max: 9, // start blocking after 1 requests
   message:
   { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
