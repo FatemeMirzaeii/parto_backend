@@ -1,5 +1,5 @@
 const express = require("express");
-const { user,user_log, user_profile, user_tracking_option, pregnancy } = require("../models");
+const { user, user_log, user_profile, user_tracking_option, pregnancy } = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -10,20 +10,19 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  console.log("okkkkkkk");
+
   let str = req.body.partnerCode;
   //let code = str.substring(3, str.length);
   let userId = parseInt(str.substring(4, str.length - 5)) / 3;
-  console.log("ussssrId",userId);
+  console.log("ussssrId", userId);
   let checkSum = parseInt(str.substring(str.length - 2, str.length));
-  console.log("checksummmmm",checkSum);
-  
+
   if ((userId.toString() + checkSum.toString()) % 97 != 1 || userId == req.params.userId) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
 
   let usrPartner = await user.findByPk(userId);
-  console.log("partner",usrPartner);
+  console.log("partner", usrPartner);
   if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   await usr.setUser(usrPartner);
 
@@ -34,9 +33,9 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   console.log("useeeer", usr == null);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
-  
-  console.log("checksum",checkSum);
-  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3)+"-"+ checkSum;
+
+  console.log("checksum", checkSum);
+  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3) + "-" + checkSum;
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
 router.put("/versionType/:userId/:lang", auth, async (req, res) => {
@@ -82,8 +81,9 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  
-  await user_profile.update({ birthdate: null,
+
+  await user_profile.update({
+    birthdate: null,
     height: null,
     weight: null,
     avg_sleeping_hour: null,
@@ -98,7 +98,7 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
     ovulation_prediction: null,
     period_prediction: null,
     red_days: null
-   }, {
+  }, {
     where: {
       user_id: req.params.userId
     }
@@ -108,7 +108,7 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
 router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  
+
   await user_tracking_option.destroy({
     where: {
       user_id: req.params.userId,
@@ -119,18 +119,33 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  
+
   await user_profile.destroy({
     where: {
       user_id: req.params.userId
     }
   })
-  
+
   await user_log.destroy({
     where: {
       user_id: req.params.userId
     }
   })
+  let list = await user.findAll(
+    {
+      where: {
+        partner_id: req.params.userId
+      }
+    }
+  );
+    //console.log(list);
+  for (let i of list) {
+    let pUser=await user.findByPk(i.id);
+    console.log(pUser.getUser())
+    await i.setUser(null);
+  }
+
+  await usr.destroy();
 
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
