@@ -157,13 +157,9 @@ router.post("/verificationCode", async (req, res) => {
         flag = false;
         return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
       }
-      else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
+      else if (userExist != null && (new Date() - new Date(userExist.createdAt)) > (2 * 60 * 1000)) {
         flag = true;
-        await verification_code.destroy({
-          where: {
-            phone: req.body.phone,
-          }
-        });
+        await userExist.destroy();
       }
       if (flag == true) {
         let api = Kavenegar.KavenegarApi({
