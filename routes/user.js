@@ -131,19 +131,19 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
-  let list = await user.findAll(
-    {
-      where: {
-        partner_id: req.params.userId
-      }
-    }
-  );
-    //console.log(list);
-  for (let i of list) {
-    let pUser=await user.findByPk(i.id);
-    console.log(pUser.getUser())
-    await i.setUser(null);
-  }
+  // let list = await user.findAll(
+  //   {
+  //     where: {
+  //       partner_id: req.params.userId
+  //     }
+  //   }
+  // );
+  //   //console.log(list);
+  // for (let i of list) {
+  //   let pUser=await user.findByPk(i.id);
+  //   console.log(pUser.getUser())
+  //   await i.setUser(null);
+  // }
 
   await usr.destroy();
 
