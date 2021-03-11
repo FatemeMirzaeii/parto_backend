@@ -156,10 +156,11 @@ router.post("/verificationCode", async (req, res) => {
       console.log("flag",flag);
       console.log("userExist",userExist);
       if (userExist != null) {
-        console.log("date",(new Date().getTime()+( 3*60*60 * 1000)+(30*60 * 1000) )- new Date(userExist.createdAt));
-        console.log("date now",(new Date().getTime()+( 3*60*60 * 1000)+(30*60 * 1000) ));
-        console.log("date create At",new Date(userExist.createdAt) );
-        if ((new Date().getTime()+( 3*60*60 * 1000)+(30*60 * 1000))- new Date(userExist.createdAt) < ( 2*60 * 1000)) {
+        console.log("date",new Date()- milliseconds < ( 2*60 * 1000));
+        let createAt = new Date(userExist.createdAt);
+        let milliseconds = Date.parse(createAt);
+        milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+        if (new Date()- milliseconds < ( 2*60 * 1000)) {
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
@@ -168,9 +169,7 @@ router.post("/verificationCode", async (req, res) => {
           await userExist.destroy();
         }
       }
-      else{ flag=true;}
-
-      console.log("flag",flag);
+      
       if (flag == true) {
         console.log("kavenegar");
         let api = Kavenegar.KavenegarApi({
