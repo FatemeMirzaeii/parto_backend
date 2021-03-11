@@ -153,17 +153,23 @@ router.post("/verificationCode", async (req, res) => {
           phone: req.body.phone,
         }
       });
+      console.log("flag",flag);
+      console.log("userExist",userExist);
       if (userExist != null) {
-        if (new Date() - new Date(userExist.createdAt) < ( 60 * 1000)) {
+        if ((new Date() - new Date(userExist.createdAt)) < ( 2*60 * 1000)) {
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
-        else if ((new Date() - new Date(userExist.createdAt)) > (60 * 1000)) {
+        else if ((new Date() - new Date(userExist.createdAt)) > (2*60 * 1000)) {
           flag = true;
           await userExist.destroy();
         }
       }
+      else{ flag=true;}
+      
+      console.log("flag",flag);
       if (flag == true) {
+        console.log("kavenegar");
         let api = Kavenegar.KavenegarApi({
           apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
         });
@@ -174,7 +180,7 @@ router.post("/verificationCode", async (req, res) => {
           template: "verificationCode",
         },
           async (response, status, message) => {
-
+            console.log("status",status);
             if (status == 418) {
               await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی ");
               await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
@@ -190,9 +196,6 @@ router.post("/verificationCode", async (req, res) => {
             }
             return res.status(status).json({ message: message });
           })
-      }
-      else {
-        return res.status(409).json({ message: await translate("EXISTS", "fa") });
       }
     }
   }
