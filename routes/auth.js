@@ -131,7 +131,7 @@ router.post("/logIn/:lang", async (req, res) => {
     return res
       .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name , type: usr.version_type} });
+      .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
   }
 
 })
@@ -153,13 +153,15 @@ router.post("/verificationCode", async (req, res) => {
           phone: req.body.phone,
         }
       });
-      if ( new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
-        flag = false;
-        return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
-      }
-      else if (userExist != null && (new Date() - new Date(userExist.createdAt)) > (2 * 60 * 1000)) {
-        flag = true;
-        await userExist.destroy();
+      if (userExist != null) {
+        if (new Date() - new Date(userExist.createdAt) < ( 60 * 1000)) {
+          flag = false;
+          return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
+        }
+        else if ((new Date() - new Date(userExist.createdAt)) > (60 * 1000)) {
+          flag = true;
+          await userExist.destroy();
+        }
       }
       if (flag == true) {
         let api = Kavenegar.KavenegarApi({
