@@ -156,10 +156,10 @@ router.post("/verificationCode", async (req, res) => {
       console.log("flag",flag);
       console.log("userExist",userExist);
       if (userExist != null) {
-        console.log("date",(new Date() - new Date(userExist.createdAt)));
-        console.log("date now",(new Date() ));
+        console.log("date",(new Date().getTime()+( 3*60*60 * 1000)+(30*60 * 1000) )- new Date(userExist.createdAt));
+        console.log("date now",(new Date().getTime()+( 3*60*60 * 1000)+(30*60 * 1000) ));
         console.log("date create At",new Date(userExist.createdAt) );
-        if ((new Date() - new Date(userExist.createdAt)) < ( 2*60 * 1000)) {
+        if ((new Date()+( 3*60*60 * 1000)+(30*60 * 1000) )- new Date(userExist.createdAt) < ( 2*60 * 1000)) {
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
