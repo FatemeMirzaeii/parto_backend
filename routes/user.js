@@ -119,7 +119,7 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-
+  
   await user_profile.destroy({
     where: {
       user_id: req.params.userId

@@ -153,9 +153,9 @@ router.post("/verificationCode", async (req, res) => {
           phone: req.body.phone,
         }
       });
-      if (userExist != null && new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
+      if ( new Date() - new Date(userExist.createdAt) < (2 * 60 * 1000)) {
         flag = false;
-        return res.status(409).json({ message: await translate("EXISTS", "fa") });
+        return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
       }
       else if (userExist != null && new Date() - new Date(userExist.createdAt) > (2 * 60 * 1000)) {
         flag = true;
