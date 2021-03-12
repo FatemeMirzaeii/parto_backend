@@ -31,6 +31,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "avg_cycle_length": req.body.avgCycleLength,
     "avg_period_length": req.body.avgPeriodLength,
     "pregnancy_try": req.body.pregnancyTry,
+    "pregnant":0,
     "last_period_date": req.body.lastPeriodDate,
   }
   
