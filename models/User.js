@@ -72,12 +72,13 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.role, {
       onDelete: "RESTRICT",
     });
+    
     User.belongsTo(models.user, {
       foreignKey: "partner_id",
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
     User.hasMany(models.user_log, {
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
     User.belongsToMany(models.category, {
       through: "user_favorite_category",

@@ -22,7 +22,7 @@ module.exports = {
   down(queryInterface, Sequelize) {
     // logic for reverting the changes
     return Promise.all([
-      queryInterface.removeColumn('User', 'partner'),
+      queryInterface.removeColumn('User', 'partner_id'),
     ]);
   },
 };
