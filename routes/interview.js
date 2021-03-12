@@ -34,6 +34,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "pregnant":0,
     "last_period_date": req.body.lastPeriodDate,
   }
+  console.log("request",request);
   if(request.lastPeriodDate==null){
     request.lastPeriodDate=undefined;
   }
