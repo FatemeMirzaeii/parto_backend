@@ -376,16 +376,20 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       "pregnant": req.body.data[0].pregnant,
       "avg_sleeping_hour": req.body.data[0].avg_sleeping_hour
     }
-    if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
-      request.birthdate = undefined;
-    }
-    if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
-      request.last_period_date = undefined;
-    }
-    if (moment(request.last_sync_time, "YYYY-MM-DD", true).isValid() == false) {
-      request.last_sync_time = undefined;
-    }
+    // console.log("request", request.last_period_date == null);
+    // if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false || request.birthdate == null) {
+    //   request.birthdate = undefined;
+    // }
+    // if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false  || request.last_period_date==null) {
+    //   request.last_period_date = undefined;
+    //   console.log("request", request.last_period_date);
+    // }
+    // if (moment(request.last_sync_time, "YYYY-MM-DD", true).isValid() == false || request.last_sync_time == null) {
+    //   request.last_sync_time = undefined;
+    // }
+    console.log("uprofile", uProfile != null)
     if (uProfile != null) {
+      
       await uProfile.update(request);
     }
     else {
