@@ -35,7 +35,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "last_period_date": req.body.lastPeriodDate,
   }
   if(request.lastPeriodDate==null){
-    request.lastPeriodDate==undefined;
+    request.lastPeriodDate=undefined;
   }
   let uProfile = await user_profile.create(request);
   await uProfile.setUser(usr).catch(async function (err) {
