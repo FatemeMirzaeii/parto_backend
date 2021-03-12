@@ -60,7 +60,7 @@ deploy_prod_parto:
     - pm2 stop app.js
     - pm2 start app.js
     - echo "Deploy to production server Successful"
-    - pm2 logs
+    #- pm2 logs
 
   environment:
     name: production
