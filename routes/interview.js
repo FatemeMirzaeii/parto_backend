@@ -33,12 +33,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "pregnancy_try": req.body.pregnancyTry,
     "last_period_date": req.body.lastPeriodDate,
   }
-  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
-    request.birthdate = undefined;
-  }
-  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
-    request.last_period_date = undefined;
-  }
+  
   let uProfile = await user_profile.create(request);
   await uProfile.setUser(usr).catch(async function (err) {
     let checkError = await handleError(usr, err);
@@ -85,13 +80,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
     "conception_date": req.body.conceptionDate,
     "state": 1
   }
-  console.log(moment(requestPreg.conception_date, "YYYY-MM-DD", true).isValid() == false && !checkDateWithDateOnly(requestPreg.conception_date))
-  if (moment(requestPreg.conception_date, "YYYY-MM-DD", true).isValid() == false || !checkDateWithDateOnly(requestPreg.conception_date)) {
-    requestPreg.conception_date = undefined;
-  }
-  if (moment(requestPreg.due_date, "YYYY-MM-DD", true).isValid() == false) {
-    requestPreg = undefined;
-  }
+  
   preg = await pregnancy.create(requestPreg);
   await preg.setUser(usr).catch(async function (err) {
     let checkError = await handleError(preg, err);

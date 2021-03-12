@@ -74,12 +74,7 @@ router.put("/editProfile/:userId/:lang", auth, async (req, res) => {
     "period_prediction": req.body.periodPred,
     "red_days": req.body.redDays
   }
-  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
-    request.birthdate = undefined;
-  }
-  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
-    request.last_period_date = undefined;
-  }
+  
   await user_profile.update(request,
     {
       where: {
@@ -103,9 +98,7 @@ router.put("/editPeriodInfo/:userId/:lang", auth, async (req, res) => {
     "period_prediction": req.body.periodPred,
     "red_days": req.body.redDays
   }
-  if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false) {
-    request.last_period_date = undefined;
-  }
+  
   await user_profile.update(request,
     {
       where: {
@@ -128,10 +121,7 @@ router.put("/editGeneralInfo/:userId/:lang", auth, async (req, res) => {
     "blood_type": req.body.bloodType,
     "locked": req.body.isLock
   }
-  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
-    request.birthdate = undefined;
-  }
-
+  
   await user_profile.update(request,
     {
       where: {
@@ -169,10 +159,7 @@ router.post("/addProfile/:userId/:lang", auth, async (req, res) => {
     "blood_type": req.body.bloodType,
     "locked": req.body.isLock,
   }
-  if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false) {
-    request.birthdate = undefined;
-  }
-
+  
   let userProf = await user_profile.create(request);
   userProf.setUser(usr).catch(async function (err) {
     let checkError = await handleError(usr, err);
