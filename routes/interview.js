@@ -34,7 +34,9 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "pregnant":0,
     "last_period_date": req.body.lastPeriodDate,
   }
-  
+  if(request.lastPeriodDate==null){
+    request.lastPeriodDate==undefined;
+  }
   let uProfile = await user_profile.create(request);
   await uProfile.setUser(usr).catch(async function (err) {
     let checkError = await handleError(usr, err);
