@@ -239,79 +239,53 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
       return;
     })
 
-    if (moment(element.date, "YYYY-MM-DD", true).isValid() && (optionIdExist != null || optionIdExist != undefined)) {
+    if (element.state == 2) {
+      await user_tracking_option.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: element.date,
+          tracking_option_id: element.tracking_option_id
+        }
+      })
+    }
+    else if (element.state == 1) {
+      let categoryId = await health_tracking_option.findOne({
+        attributes: ['category_id'],
+        where: {
+          id: element.tracking_option_id
+        }
+      });
+      let choice = await health_tracking_category.findOne({
+        attributes: ['has_multiple_choice'],
+        where: {
+          id: categoryId.category_id
+        }
+      });
 
-      if (element.state == 2) {
-        await user_tracking_option.destroy({
+      if (choice.has_multiple_choice == 0) {
+        let options = await health_tracking_option.findAll({
+          attributes: ['id'],
+          where: {
+            category_id: categoryId.category_id
+          }
+        });
+        let optionArray = [];
+        for (i = 0; i < options.length; i++) {
+          optionArray.push(options[i].id);
+        }
+
+        existData = await user_tracking_option.findOne({
           where: {
             user_id: req.params.userId,
             date: element.date,
-            tracking_option_id: element.tracking_option_id
+            tracking_option_id: { [Op.in]: optionArray }
           }
         })
-      }
-      else if (element.state == 1) {
-        let categoryId = await health_tracking_option.findOne({
-          attributes: ['category_id'],
-          where: {
-            id: element.tracking_option_id
-          }
-        });
-        let choice = await health_tracking_category.findOne({
-          attributes: ['has_multiple_choice'],
-          where: {
-            id: categoryId.category_id
-          }
-        });
 
-        if (choice.has_multiple_choice == 0) {
-          let options = await health_tracking_option.findAll({
-            attributes: ['id'],
-            where: {
-              category_id: categoryId.category_id
-            }
-          });
-          let optionArray = [];
-          for (i = 0; i < options.length; i++) {
-            optionArray.push(options[i].id);
-          }
-
-          existData = await user_tracking_option.findOne({
-            where: {
-              user_id: req.params.userId,
-              date: element.date,
-              tracking_option_id: { [Op.in]: optionArray }
-            }
-          })
-
-          if (existData != null) {
-            await existData.setHealth_tracking_option(optionIdExist);
-          }
-          else {
-            try {
-              userOption = await user_tracking_option.create({
-                date: element.date
-              });
-              if (userOption != null) {
-                await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
-                  let result = await handleError(userOption, err);
-                  if (!result) error = 1;
-                  return;
-                })
-                await userOption.setUser(usr).catch(async function (err) {
-                  let result2 = await handleError(userOption, err);
-                  if (!result2) error = 1;
-                  return;
-                })
-              }
-            } catch (err) {
-              let result3 = await handleError(userOption, err);
-              if (!result3) error = 1;
-              return;
-            }
-          }
+        if (existData != null) {
+          await existData.setHealth_tracking_option(optionIdExist);
         }
-        else if (choice.has_multiple_choice == 1) {
+        else {
           try {
             userOption = await user_tracking_option.create({
               date: element.date
@@ -333,6 +307,29 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
             if (!result3) error = 1;
             return;
           }
+        }
+      }
+      else if (choice.has_multiple_choice == 1) {
+        try {
+          userOption = await user_tracking_option.create({
+            date: element.date
+          });
+          if (userOption != null) {
+            await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
+              let result = await handleError(userOption, err);
+              if (!result) error = 1;
+              return;
+            })
+            await userOption.setUser(usr).catch(async function (err) {
+              let result2 = await handleError(userOption, err);
+              if (!result2) error = 1;
+              return;
+            })
+          }
+        } catch (err) {
+          let result3 = await handleError(userOption, err);
+          if (!result3) error = 1;
+          return;
         }
       }
     }
