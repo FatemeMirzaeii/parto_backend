@@ -242,16 +242,13 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
     if (moment(element.date, "YYYY-MM-DD", true).isValid() && (optionIdExist != null || optionIdExist != undefined)) {
 
       if (element.state == 2) {
-        let findData = await user_tracking_option.findOne({
+        await user_tracking_option.destroy({
           where: {
             user_id: req.params.userId,
             date: element.date,
             tracking_option_id: element.tracking_option_id
           }
         })
-        await findData.setUser(null);
-        await findData.setHealth_tracking_option(null);
-        await findData.destroy()
       }
       else if (element.state == 1) {
         let categoryId = await health_tracking_option.findOne({
