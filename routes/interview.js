@@ -4,7 +4,6 @@ const auth = require("../middleware/auth");
 const { user_profile, user, pregnancy } = require("../models");
 const translate = require("../config/translate");
 const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
-const moment = require("moment");
 
 function check(cycleLength, periodLength) {
   if (cycleLength < 10 || cycleLength > 100) return false;
@@ -38,7 +37,12 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
   if(request.lastPeriodDate==null){
     request.lastPeriodDate=undefined;
   }
-  let uProfile = await user_profile.create(request);
+  let uProfile = await user_profile.create(request).catch(async function (err) {
+    let checkError = await handleError(uProfile, err);
+    if (!checkError) {
+      return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+    }
+  });
   await uProfile.setUser(usr).catch(async function (err) {
     let checkError = await handleError(usr, err);
     if (!checkError) {
@@ -79,12 +83,18 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
       return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
     }
   })
+  
   let requestPreg = {
     "due_date": req.body.dueDate,
     "conception_date": req.body.conceptionDate,
     "state": 1
   }
-  
+  if(requestPreg.conceptionDate==null){
+    requestPreg.conceptionDate=undefined;
+  }
+  if(requestPreg.due_date==null){
+    requestPreg.due_date=undefined;
+  }
   preg = await pregnancy.create(requestPreg);
   await preg.setUser(usr).catch(async function (err) {
     let checkError = await handleError(preg, err);
