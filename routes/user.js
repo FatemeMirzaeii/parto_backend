@@ -128,13 +128,13 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
 
   await user_answer_survey.destroy({
     where: {
-      user_id: req.params.userId
+      userId: req.params.userId
     }
   })
   
   await user_log.destroy({
     where: {
-      userId: req.params.userId
+      user_id: req.params.userId
     }
   })
   
