@@ -1,5 +1,5 @@
 const express = require("express");
-const { user, user_log, user_profile, user_tracking_option, pregnancy } = require("../models");
+const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey } = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -126,25 +126,18 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
     }
   })
 
+  await user_answer_survey.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  })
+  
   await user_log.destroy({
     where: {
       user_id: req.params.userId
     }
   })
-  // let list = await user.findAll(
-  //   {
-  //     where: {
-  //       partner_id: req.params.userId
-  //     }
-  //   }
-  // );
-  //   //console.log(list);
-  // for (let i of list) {
-  //   let pUser=await user.findByPk(i.id);
-  //   console.log(pUser.getUser())
-  //   await i.setUser(null);
-  // }
-
+  
   await usr.destroy();
 
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
