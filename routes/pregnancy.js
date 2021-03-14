@@ -224,6 +224,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
+        state:{[Op.in]:[1,3]}
       }
     })
   }
@@ -235,6 +236,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
+        state:{[Op.in]:[1,3]},
         updatedAt: {
           [Op.gte]: new Date(milliseconds)
         }
