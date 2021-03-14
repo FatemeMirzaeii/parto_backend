@@ -71,8 +71,8 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
   let requestProf = {
     "birthdate": req.body.birthdate,
     "last_period_date": req.body.lastPeriodDate,
-    "pregnant": 1,
-    "pregnancy_try": 0
+    "pregnant": req.body.pregnant,
+    "pregnancy_try": req.body.pregnancyTry
   }
   let uProfile;
   let preg;

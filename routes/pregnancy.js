@@ -214,8 +214,8 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
   }
   let userPregnancy = await pregnancy.findOne({
     where: {
-      user_id: usrID
-    }
+      user_id: usrID,
+   }
   })
   if (userPregnancy == null) return res.status(200).json({ data: userPregnancy });
   let syncTime, pregnantUsre;
@@ -224,6 +224,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
+        state:{ [Op.in]: [1,3] }
       }
     })
   }
@@ -235,6 +236,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
+        state:{ [Op.in]: [1,3] },
         updatedAt: {
           [Op.gte]: new Date(milliseconds)
         }
