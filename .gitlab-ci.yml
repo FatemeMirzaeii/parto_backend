@@ -1,10 +1,9 @@
 image: node:latest
 
-job:
-  rules:
-    - if: $CHECK_SERVER == "up"
-      script:
-      - pm2 stop development.js
+rules:
+  - if: $CHECK_SERVER == "up"
+    script:
+    - pm2 stop development.js
     
 
 stages:
