@@ -10,12 +10,13 @@ cache:
 
 bulding_parto:
   stage: build
+  rules:
+    - when: always
   script:
-    - echo "testing Parto..."
-    - echo "$CHECK_SERVER"
-    - if: $CHECK_SERVER == "up"
-      script:
-        - pm2 stop development.js
+    - |- 
+        if [[ $CHECK_SERVER== "up" ]]; then
+            pm2 stop development.js
+        fi
      
   only:
     - test
