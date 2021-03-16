@@ -1,18 +1,20 @@
 image: node:latest
-
-rules:
-  - if: $CHECK_SERVER == "up"
-    script:
-    - pm2 stop development.js
-    
-
 stages:
+  - build
   - test
   - deploy
 
 cache:
-  paths:
-    - node_modules/
+paths:
+  - node_modules/
+
+build-job:
+  stage: build
+  rules:
+    - if: $CHECK_SERVER == "up"
+      script:
+      - pm2 stop development.js
+    
 
 testing_parto:
   stage: test
