@@ -8,9 +8,15 @@ cache:
   paths:
     - node_modules/
 
-
-build_parto:
+bulding_parto:
   stage: build
+  script:
+    - echo "testing Parto..."
+    - echo "$CHECK_SERVER"
+     
+  only:
+    - test
+  # stage: build
   # rules:
   #   - if: $CHECK_SERVER == "up"
   #     script:
