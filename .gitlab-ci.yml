@@ -9,12 +9,12 @@ cache:
     - node_modules/
 
 
-build-job:
+build_parto:
   stage: build
   rules:
     - if: $CHECK_SERVER == "up"
       script:
-      - pm2 stop development.js
+        - pm2 stop development.js
     
 
 testing_parto:
