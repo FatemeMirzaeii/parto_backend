@@ -13,14 +13,15 @@ bulding_parto:
   script:
     - echo "testing Parto..."
     - echo "$CHECK_SERVER"
+    - if: $CHECK_SERVER == "up"
+      script:
+        - pm2 stop development.js
      
   only:
     - test
   # stage: build
   # rules:
-  #   - if: $CHECK_SERVER == "up"
-  #     script:
-  #       - pm2 stop development.js
+  #   
     
 
 testing_parto:
