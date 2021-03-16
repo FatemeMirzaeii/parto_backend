@@ -25,6 +25,7 @@ testing_parto:
   script:
     - echo "testing Parto..."
     - echo $NODE_ENV
+    - echo "$CHECK_SERVER"
     - npm install
     - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
@@ -33,6 +34,7 @@ testing_parto:
     # - npx sequelize-cli db:seed:all
     - npm test
     - echo "testing succsecfull  "
+    
   only:
     - test
 
