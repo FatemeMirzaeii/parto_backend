@@ -1,11 +1,11 @@
 image: node:latest
 
-# before_script:
-#   job:
-#   rules:
-#     - if: $CHECK_SERVER == "up"
-#       script:
-#       - pm2 stop development.js
+before_script:
+  job:
+  rules:
+    - if: $CHECK_SERVER == "up"
+      script:
+      - pm2 stop development.js
     
 
 stages:
@@ -27,7 +27,7 @@ testing_parto:
     - echo $NODE_ENV
     - echo "$CHECK_SERVER"
     - npm install
-    - pm2 stop development.js
+    # - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
