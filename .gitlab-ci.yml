@@ -1,7 +1,6 @@
 image: node:latest
 
-before_script:
-  job:
+job:
   rules:
     - if: $CHECK_SERVER == "up"
       script:
