@@ -1,6 +1,5 @@
 image: node:latest
 stages:
-  - build
   - test
   - deploy
 
@@ -8,21 +7,19 @@ cache:
   paths:
     - node_modules/
 
-bulding_parto:
-  stage: build
-  rules:
-    - when: always
-  script:
-    - |- 
-        if [[ $CHECK_SERVER== "up" ]]; then
-            pm2 stop development.js
-        fi
+# bulding_parto:
+#   stage: build
+#   rules:
+#     - when: always
+#   script:
+#     - |- 
+#         if [[ $CHECK_SERVER== "up" ]]; then
+#             pm2 stop development.js
+#         fi
      
-  only:
-    - test
-  # stage: build
-  # rules:
-  #   
+#   only:
+#     - test
+    
     
 
 testing_parto:
@@ -36,7 +33,7 @@ testing_parto:
     - echo $NODE_ENV
     - echo "$CHECK_SERVER"
     - npm install
-    # - pm2 stop development.js
+    - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     - npx sequelize-cli db:migrate
