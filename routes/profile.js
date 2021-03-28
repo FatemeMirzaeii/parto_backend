@@ -315,7 +315,7 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+    milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
     usrProfile = await user_profile.findAll({
       where: {
         user_id: usrID,
@@ -382,7 +382,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     else {
       uProfile = await user_profile.create(request);
       await uProfile.setUser(usr).catch(async function (err) {
-        let checkError = await handleError(usr, err);
+        let checkError = await handleError(uProfile, err);
         if (!checkError) {
           return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
         }

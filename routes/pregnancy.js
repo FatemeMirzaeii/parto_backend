@@ -231,7 +231,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+    milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
 
     pregnantUsre = await pregnancy.findAll({
       where: {
