@@ -59,9 +59,9 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     # - npx sequelize-cli db:migrate 
-    - pm2 stop app.js
-    # - pm2 start app.js
-    - npm start
+    # - pm2 stop app.js
+    - pm2 start app.js
+    # - npm start
     - echo "Deploy to production server Successful"
 
   environment:
