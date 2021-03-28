@@ -20,9 +20,9 @@ testing_parto:
     - npm install
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
-    - npx sequelize-cli db:migrate
+    # - npx sequelize-cli db:migrate
     # - npx sequelize-cli db:seed:all
-    - npm test
+    # - npm test
     - echo "testing succsecfull  "
   only:
     - test
@@ -56,7 +56,7 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     - npx sequelize-cli db:migrate 
-    - pm2 startOrRestart app.js
+    - pm2 start sapp.js
     - echo "Deploy to production server Successful"
     #- pm2 logs
 
