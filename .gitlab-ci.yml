@@ -18,7 +18,12 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
+<<<<<<< HEAD
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
+=======
+    - pm2 stop development.js
+    # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci
+>>>>>>> 6d292190b6080afb5d15081c202c5bd97b9b8515
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     # - npx sequelize-cli db:migrate
     # - npx sequelize-cli db:seed:all
@@ -62,7 +67,7 @@ deploy_prod_parto:
     - pm2 stop app.js
     - pm2 start app.js
     - echo "Deploy to production server Successful"
-   
+
   environment:
     name: production
     url: https://api.parto.app
