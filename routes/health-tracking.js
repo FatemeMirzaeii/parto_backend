@@ -206,7 +206,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - ((3 * 60 + 30) * 60 * 1000);
+    milliseconds = milliseconds - ((4 * 60 + 30) * 60 * 1000);
     console.log("syncTime", syncTime);
     existOption = await user_tracking_option.findAll({
       attributes: ['date', 'tracking_option_id'],
