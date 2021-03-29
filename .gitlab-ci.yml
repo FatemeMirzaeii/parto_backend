@@ -39,7 +39,7 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - PORT=2216
-    # - pm2 stop --silent development.js
+    - pm2 stop development.js
     - pm2 start development.js
 
     # - pm2 startOrRestart development.js
