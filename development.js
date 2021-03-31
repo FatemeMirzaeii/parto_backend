@@ -121,7 +121,7 @@ developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-
+console.log('The value of PORT is:', process.env);
 const developmentServer = developmentApp.listen(2216, () =>
   logger.info("Listening on port 2218...")
 );
