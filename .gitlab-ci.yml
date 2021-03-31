@@ -39,7 +39,7 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - PORT=2216
-    - pm2 stop
+    - pm2 stop development.js
     # - pm2 startOrRestart ecosystem.config.js --only "development"
     - echo "deploy_staging succesfull"
     # - pm2 logs
