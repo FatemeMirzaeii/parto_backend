@@ -155,7 +155,7 @@ router.post("/verificationCode", async (req, res) => {
       if (userExist != null) {
 
         let createAt = new Date(userExist.createdAt);
-        console.log("date", new Date(userExist.createdAt);
+        console.log("date", new Date(userExist.createdAt));
         let milliseconds = Date.parse(createAt);
         milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
         console.log("date", new Date() - new Date(milliseconds) < (2 * 60 * 1000));
