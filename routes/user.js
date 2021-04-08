@@ -35,7 +35,7 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
 
   console.log("checksum", checkSum);
-  let partnerCode = "PRT-" + (usr.id * 3) + (checkSum + 3) + "-" + checkSum;
+  let partnerCode = "PRT-" + ((483 * 3) + (checkSum + 3)).toString() + "-" + checkSum.toString();
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
 router.put("/versionType/:userId/:lang", auth, async (req, res) => {
