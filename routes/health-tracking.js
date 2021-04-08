@@ -633,4 +633,29 @@ router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
 });
 
 
+router.get("/v1/healthTrackingIcon/:lang", async (req, res) => {
+
+  let i, option;
+  let data=[];
+  let category = await health_tracking_category.findAll({
+    attributes: ['id', 'title', 'has_multiple_choice', 'color', 'icon']
+  });
+  for (i = 0; i < category.length; i++) {
+    let temp = {};
+    temp.id = category[i].id;
+    temp.title = category[i].title;
+    temp.hasMultipleChoice = category[i].has_multiple_choice;
+    temp.color = category[i].color;
+    temp.icon = category[i].icon;
+    temp.optiones = (await health_tracking_option.findAll({
+      attributes: ['id', 'title', 'icon'],
+      where: {
+        category_id: category[i].id
+      }
+    }))
+    data.push(temp);
+  }
+
+  return res.status(200).json({ data: data });
+});
 module.exports = router;
