@@ -3,10 +3,10 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('health_tracking_option', [
-    {id:29, title: 'سرموعد استفاده‌شد',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    {id:29, title: 'سروقت',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
  <style type="text/css">
-   .st1{stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
+   .st0{display:none;fill:#FFFFFF;}
    .st2{display:none;}
    .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
    .st4{stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
@@ -18,7 +18,19 @@ module.exports = {
  <rect x="-530" y="-211.4" class="st0" width="1302.5" height="1394.7"/>
  <image style="display:none;overflow:visible;" width="512" height="512" xlink:href="../../edit.png"  transform="matrix(0.5713 0 0 0.5713 142.4963 139.8898)">
  </image>
- 
+ <g class="st2">
+   <path class="st3" d="M365.5,187.8H202.4c-7.8,0-14.1-6.3-14.1-14.1v-50.2c0-7.8,6.3-14.1,14.1-14.1h163.1c7.8,0,14.1,6.3,14.1,14.1
+     v50.2C379.6,181.5,373.3,187.8,365.5,187.8z"/>
+   <path class="st3" d="M356.1,212.1v-24.2H211.9v24.2c0,12.4-10.1,22.5-22.5,22.5H189c-10.6,0-19.2,8.6-19.2,19.2v166
+     c0,10.6,8.6,19.2,19.2,19.2h190c10.6,0,19.2-8.6,19.2-19.2v-166c0-10.6-8.6-19.2-19.2-19.2h-0.4
+     C366.1,234.5,356.1,224.5,356.1,212.1z"/>
+   <path class="st3" d="M-77.2,165.6h-163.1c-7.8,0-14.1-6.3-14.1-14.1v-50.2c0-7.8,6.3-14.1,14.1-14.1h163.1
+     c7.8,0,14.1,6.3,14.1,14.1v50.2C-63.1,159.3-69.4,165.6-77.2,165.6z"/>
+   <path class="st3" d="M-86.7,189.8v-24.2h-144.2v24.2c0,12.4-10.1,22.5-22.5,22.5h-0.4c-10.6,0-19.2,8.6-19.2,19.2v166
+     c0,10.6,8.6,19.2,19.2,19.2h190c10.6,0,19.2-8.6,19.2-19.2v-166c0-10.6-8.6-19.2-19.2-19.2h-0.4C-76.6,212.3-86.7,202.2-86.7,189.8
+     z"/>
+   <rect x="244.5" y="275.7" class="st4" width="153.6" height="125.6"/>
+ </g>
  <g>
    <g>
      <path class="st5" d="M386,185.4c-1.9,1-3.7,1.8-5.5,2.9c-1,0.6-1.6,0.4-2.3-0.5c-2.5-2.9-5.5-5-9-6.5c-1.7,3.7-2.5,4.4-4.2,3.9
@@ -61,11 +73,11 @@ module.exports = {
    </g>
  </g>
  </svg>
- `, created_at: new Date(), updated_at: new Date() },
-    {id:30, title: ' با تاخیر استفاده‌شد',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  `, created_at: new Date(), updated_at: new Date() },
+    {id:30, title: 'با تاخیر',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
  <style type="text/css">
-   .st1{stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
+   .st0{display:none;fill:#FFFFFF;}
    .st2{display:none;}
    .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
    .st4{stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
@@ -135,11 +147,12 @@ module.exports = {
        c-0.1,0.4-0.4,0.6-0.8,0.7c-2.1,0.6-4.2,1.2-6.3,1.9c-0.2,0.1-0.4,0.1-0.7,0.2c0.4,1.4,0.8,2.7,1.2,4.1c0.9-0.3,1.8-0.5,2.6-0.8
        c2.2-0.6,4.4-1.3,6.6-1.9c0.3-0.1,0.5-0.2,0.6-0.5c2.1-5.9,4.3-11.8,6.4-17.7C366,187.9,366,187.8,366.1,187.6z"/>
    </g>
- </g>`, created_at: new Date(), updated_at: new Date() },
-    {id:31, title: ' دوز دو برابراستفاده‌شد',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+ </g>
+ </svg>`, created_at: new Date(), updated_at: new Date() },
+    {id:31, title: 'دوز دو برابر',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
  <style type="text/css">
-   .st1{stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
+   .st0{display:none;fill:#FFFFFF;}
    .st2{display:none;}
    .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
    .st4{stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
@@ -184,11 +197,12 @@ module.exports = {
        <line class="st7" x1="-100.8" y1="687" x2="-99" y2="685.2"/>
      </g>
    </g>
- </g>`, created_at: new Date(), updated_at: new Date() },
-    {id:32, title: 'استفاده‌نشده',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+ </g>
+ </svg>`, created_at: new Date(), updated_at: new Date() },
+    {id:32, title: 'مصرف نشد',category_id:8,	icon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
  <style type="text/css">
-   .st1{stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
+   .st0{display:none;fill:#FFFFFF;}
    .st2{display:none;}
    .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
    .st4{stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
@@ -223,7 +237,9 @@ module.exports = {
        <line class="st6" x1="329.6" y1="241.8" x2="330.7" y2="240.7"/>
      </g>
    </g>
- </g>`, created_at: new Date(), updated_at: new Date() }    
+ </g>
+ </svg>
+ `, created_at: new Date(), updated_at: new Date() }    
     ], {});
   },
 
