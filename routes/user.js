@@ -12,12 +12,15 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   }
 
   let str = req.body.partnerCode;
+  console.log("str",str);
   //let code = str.substring(3, str.length);
-  let userId = parseInt(str.substring(4, str.length - 5)) / 3;
+  let splitStr=str.split("-");
+  console.log(splitStr[2]);
+  let checkSum = (parseInt(splitStr[2], 10)-9)/2;
+  let userId = (parseInt(splitStr[1],10)-(checkSum+3)) / 3;
   console.log("ussssrId", userId);
-  let checkSum = parseInt(str.substring(str.length - 2, str.length));
-
-  if ((userId.toString() + checkSum.toString()) % 97 != 1 || userId == req.params.userId) {
+  console.log("ussssrId", checkSum);
+  if (parseInt(userId.toString()[0]) != checkSum || userId == req.params.userId) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
 
@@ -32,10 +35,12 @@ router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   console.log("useeeer", usr == null);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let checkSum = (98 - ((usr.id * 100) % 97)) % 97;
+  
+  
+  let checkSum =  parseInt(usr.id.toString()[0],10);
 
   console.log("checksum", checkSum);
-  let partnerCode = "PRT-" + ((483 * 3) + (checkSum + 3)).toString() + "-" + checkSum.toString();
+  let partnerCode = "PRT-" + ((usr.id * 3) + (checkSum + 3)).toString() + "-" + ((checkSum*2)+9).toString();
   return res.status(200).json({ data: { partnerCode: partnerCode } });
 })
 router.put("/versionType/:userId/:lang", auth, async (req, res) => {
