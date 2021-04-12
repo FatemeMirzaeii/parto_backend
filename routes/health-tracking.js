@@ -668,6 +668,7 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   }
 
   for (const element of req.body.selected) {
+    console.log("hasM",element.hasMultipleChoice)
     if (element.hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
         where: {
@@ -698,7 +699,7 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
             tracking_option_id: { [Op.in]: optionArray }
           }
         })
-        console.log("existData",existDate)
+        console.log("existData", existDate)
         if (await existData != null) {
           await existData.destroy();
         }
@@ -706,29 +707,27 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
       }
     }
 
-    else {
-      try {
-        let trackingOption = await health_tracking_option.findByPk(element.trackingOptionId);
-        userOption = await user_tracking_option.create({
-          date: req.body.date
-        });
-        if (userOption != null) {
-          await userOption.setHealth_tracking_option(trackingOption).catch(async function (err) {
-            let result = await handleError(userOption, err);
-            if (!result) error = 1;
-            return;
-          })
-          await userOption.setUser(usr).catch(async function (err) {
-            let result2 = await handleError(userOption, err);
-            if (!result2) error = 1;
-            return;
-          })
-        }
-      } catch (err) {
-        let result3 = await handleError(userOption, err);
-        if (!result3) error = 1;
-        return;
+    try {
+      let trackingOption = await health_tracking_option.findByPk(element.trackingOptionId);
+      userOption = await user_tracking_option.create({
+        date: req.body.date
+      });
+      if (userOption != null) {
+        await userOption.setHealth_tracking_option(trackingOption).catch(async function (err) {
+          let result = await handleError(userOption, err);
+          if (!result) error = 1;
+          return;
+        })
+        await userOption.setUser(usr).catch(async function (err) {
+          let result2 = await handleError(userOption, err);
+          if (!result2) error = 1;
+          return;
+        })
       }
+    } catch (err) {
+      let result3 = await handleError(userOption, err);
+      if (!result3) error = 1;
+      return;
     }
   }
 
