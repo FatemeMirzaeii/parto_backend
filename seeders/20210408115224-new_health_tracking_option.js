@@ -13,7 +13,7 @@ module.exports = {
       .st2{display:none;}
       .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
       .st4{display:inline;}
-      .st5{fill:#EF719C;}
+      .st5{}
     </style>
     <rect x="-530" y="-211.4" class="st0" width="1302.5" height="1394.7"/>
     <path class="st1" d="M283.5,508.4c123.9,0,225-101.1,225-225s-101.1-225-225-225s-225,101.1-225,225S159.6,508.4,283.5,508.4z"/>
@@ -82,7 +82,7 @@ module.exports = {
       .st1{display:none;stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
       .st2{display:none;}
       .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
-      .st4{fill:#EF719C;}
+      .st4{}
       .st5{display:inline;}
     </style>
     <rect x="-530" y="-211.4" class="st0" width="1302.5" height="1394.7"/>
