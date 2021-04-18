@@ -367,6 +367,7 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
       }
     ]
   })
+  categoryAndOptions.sort(function (a, b) { return a.id - b.id });
   console.log("cccccccc", categoryAndOptions.length);
   let result = [];
   let option = [];
