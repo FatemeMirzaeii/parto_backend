@@ -374,6 +374,7 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
   let j = 1;
 
   for (let i = 0; i < categoryAndOptions.length + 1; i++) {
+    console.log("iiiiiiiiiii",i);
     if (i == categoryAndOptions.length) {
       console.log("eeeeeeeeeeeennnnnnnddddd",i);
       if (option.length != 0) {
