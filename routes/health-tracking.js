@@ -367,6 +367,7 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
       }
     ]
   })
+  console.log("cccccccc", categoryAndOptions.length);
   let result = [];
   let option = [];
   let j = 1;
@@ -405,7 +406,8 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
           tracking_option_id: categoryAndOptions[i].id
         }
       })
-      console.log("temp", temp.length > 0)
+      console.log("temp", temp.length > 0);
+      console.log("j", j);
       if (temp.length > 0) {
         let tOption = {};
         tOption.trackingOptionId = categoryAndOptions[i].id;
@@ -417,7 +419,6 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
         tOption.date = dateArray;
         option.push(tOption);
       }
-
     }
   }
   return res.status(200).json({ data: result });
@@ -514,7 +515,7 @@ router.get("/v1/healthTrackingIcon/:lang", async (req, res) => {
     temp.hasMultipleChoice = category[i].has_multiple_choice;
     temp.color = category[i].color;
     temp.icon = category[i].icon;
-    temp.optiones = (await health_tracking_option.findAll({
+    temp.options = (await health_tracking_option.findAll({
       attributes: ['id', 'title', 'icon'],
       where: {
         category_id: category[i].id
@@ -542,6 +543,7 @@ router.get("/v2/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
       user_id: usrID
     }
   })
+  infoO.sort(function (a, b) { return a.tracking_option_id - b.tracking_option_id });
   let infoC = await user_tracking_category.findAll({
     attributes: ['date', 'tracking_category_id', 'value'],
     where: {
@@ -558,11 +560,11 @@ router.get("/v2/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
       {
         model: health_tracking_category,
         required: true,
-        attributes: ['id', 'title', 'color']
+        attributes: ['id', 'title', 'color', 'has_multiple_choice']
       }
     ]
   })
-
+  categoryAndOptions.sort(function (a, b) { return a.category_id - b.category_id });
   let result = [];
   let days = {};
   for (let i of infoO.concat(infoC)) {
@@ -668,7 +670,7 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   }
 
   for (const element of req.body.selected) {
-    console.log("hasM",element.hasMultipleChoice)
+    console.log("hasM", element.hasMultipleChoice)
     if (element.hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
         where: {
@@ -770,5 +772,82 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   }
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
+
+router.get("/v2/userHealthInfo/:userId/:lang", auth, async (req, res) => {
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let usrID;
+    if (usr.partner_id != null) {
+      usrID = usr.partner_id
+    }
+    else {
+      usrID = usr.id
+    }
+    let categoryAndOptions = await health_tracking_option.findAll({
+      attributes: ['id', 'category_id', 'title'],
+      include: [
+        {
+          model: health_tracking_category,
+          required: true,
+          attributes: ['id', 'title', 'color']
+        }
+      ]
+    })
+    
+    let result = [];
+    let option = [];
+    let j = 1;
+  
+    for (let i = 0; i < categoryAndOptions.length + 1; i++) {
+      if (i == categoryAndOptions.length) {
+        if (option.length != 0) {
+          let temp = {};
+          temp.categoryId = j;
+          temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+          temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+          temp.option = option;
+          result.push(temp);
+        }
+        break;
+      }
+  
+      if (categoryAndOptions[i].category_id != j) {
+        if (option.length != 0) {
+          let temp = {};
+          temp.categoryId = j;
+          temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+          temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+          temp.option = option;
+          result.push(temp);
+        }
+        option = [];
+        j++
+      }
+  
+      if (categoryAndOptions[i].category_id == j) {
+        let temp = await user_tracking_option.findAll({
+          attributes: ['date'],
+          where: {
+            user_id: usrID,
+            tracking_option_id: categoryAndOptions[i].id
+          }
+        })
+        console.log("temp", temp.length > 0)
+        if (temp.length > 0) {
+          let tOption = {};
+          tOption.trackingOptionId = categoryAndOptions[i].id;
+          tOption.title = categoryAndOptions[i].title;
+          let dateArray = [];
+          temp.forEach(d => {
+            dateArray.push(d.date);
+          })
+          tOption.date = dateArray;
+          option.push(tOption);
+        }
+      }
+    }
+   
+    return res.status(200).json({ data: result });
+  });
 
 module.exports = router;

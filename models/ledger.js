@@ -15,5 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
     })
   };
+  ledger.associate = function (models) {
+    ledger.belongsTo(models.user, {
+      onDelete: "CASCADE",
+    })
+  };
   return ledger;
 };

@@ -8,6 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "user",
+          key: "id",
+          as:"user_id"
+        },
+        onDelete: "CASCADE",
+      },
       services_id: {
         type: Sequelize.INTEGER,
         references: {
