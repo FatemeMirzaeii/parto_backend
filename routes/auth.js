@@ -6,6 +6,7 @@ const sendEmail = require("../middleware/sendEmail");
 const auth = require("../middleware/auth");
 const Kavenegar = require("kavenegar");
 const useragent = require("useragent");
+const logger = require("../config/logger/logger");
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
@@ -67,7 +68,7 @@ router.post("/logIn/:lang", async (req, res) => {
       .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    const regex = RegExp(/^(\+98|0098|98|0)9\d{9}$/g);
     let check = regex.test(req.body.phone);
     console.log("check", check);
     if (!check)
@@ -164,7 +165,7 @@ router.post("/verificationCode", async (req, res) => {
       .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    const regex = RegExp(/^(\+98|0098|98|0)9\d{9}$/g);
     let check = regex.test(req.body.phone);
 
     if (!check)
@@ -186,6 +187,7 @@ router.post("/verificationCode", async (req, res) => {
         milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
         console.log("date", new Date() - new Date(milliseconds) < (2 * 60 * 1000));
         if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
+          logger.info("error 2 min "+req.body.phone);
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
