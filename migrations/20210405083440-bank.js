@@ -1,21 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('transaction', {
+    return queryInterface.createTable('bank', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      wallet_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "wallet",
-          key: "id",
-          as:"wallet_id"
-        },
-        onDelete: "CASCADE",
       },
       invoice_id: {
         type: Sequelize.INTEGER,
@@ -26,7 +17,28 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      description:{
+      card_pan:{
+        type: Sequelize.STRING
+      },
+      card_hash:{
+        type: Sequelize.STRING
+      },
+      order_id:{
+        type: Sequelize.INTEGER
+      },
+      gateway:{
+        type: Sequelize.ENUM('zp'),
+        allowNull: false,
+        defaultValue: 'zp',
+      },
+      status:{
+        type: Sequelize.ENUM('Success', 'UnSuccess','Reversed'),
+        allowNull: false,
+      },
+      status_description:{
+        type: Sequelize.STRING
+      },
+      authority:{
         type: Sequelize.STRING
       },
       created_at: {
@@ -40,6 +52,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('transaction');
+    return queryInterface.dropTable('bank');
   }
 };

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('ledger', {
+    return queryInterface.createTable('wallet', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,21 +17,12 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      services_id: {
+      remaining: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "service",
-          key: "id",
-          as:"services_id"
-        },
-        onDelete: "CASCADE",
+        allowNull: false,
+        defaultValue:0,
       },
-      description:{
-        type: Sequelize.STRING
-      },
-      transaction_type:{
-        type: Sequelize.ENUM('Debtor', 'Creditor')
-      },
+      
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -43,6 +34,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ledger');
+    return queryInterface.dropTable('wallet');
   }
 };

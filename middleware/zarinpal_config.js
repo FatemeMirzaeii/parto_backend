@@ -1,7 +1,7 @@
 let config = {
 	https: 'https://api.zarinpal.com/pg/',
 	sandbox: 'https://sandbox.zarinpal.com/pg/',
-	merchant:"1344b5d4-0048-11e8-94db-005056a205be",
+	merchant:"40217f0a-3a26-4529-8b08-d1c395953298",
 	merchantIDLength: 36,
 	API: {
 		PR: 'v4/payment/request.json',

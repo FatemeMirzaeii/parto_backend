@@ -8,9 +8,24 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      service:{
-        type: Sequelize.STRING
-      },    
+      type: {
+        type: Sequelize.ENUM('virtual S', 'real S', 'Physical P'),
+        allowNull: false,
+        defaultValue: 'virtual S',
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      amount: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      commision: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

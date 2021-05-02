@@ -1,26 +1,30 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('credit', {
+    return queryInterface.createTable('invoice', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      service_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "user",
+          model: "service",
           key: "id",
-          as:"user_id"
+          as:"service"
         },
         onDelete: "CASCADE",
       },
-      remaining: {
-        type: Sequelize.INTEGER
+      method:{
+        type: Sequelize.ENUM('gateway', 'wallet'),
+        allowNull: false,
       },
-      
+      status:{
+        type: Sequelize.ENUM('Success', 'UnSuccess','wating to pay'),
+        allowNull: false,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -32,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('credit');
+    return queryInterface.dropTable('transaction');
   }
 };
