@@ -252,10 +252,10 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
     if (accountCredit == 0) {
         return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     }
-    return res.status(200).json({ data: { accountCredit } })
+    return res.status(200).json({ data: { remaining:accountCredit.remaining } })
 })
 
-router.get("/v1/services/:lang", auth, async (req, res) => {
+router.get("/v1/services/:lang", async (req, res) => {
 
     let services = await service.findAll({
         attributes: ['id', 'name', 'amount'] 
