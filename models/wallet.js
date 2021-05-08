@@ -1,16 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const credit = sequelize.define('credit', {
+  const wallet = sequelize.define('wallet', {
     remaining:DataTypes.INTEGER,
     
   }, {
     freezeTableName: true,
     underscored: true,
   });
-  credit.associate = function (models) {
-    credit.belongsTo(models.user, {
+  wallet.associate = function (models) {
+    wallet.belongsTo(models.user, {
       onDelete: "CASCADE",
     })
   };
-  return credit;
+  return wallet;
 };

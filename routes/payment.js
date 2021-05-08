@@ -1,177 +1,289 @@
 const express = require("express");
 const router = express();
-const { user ,transaction, ledger, credit,service} = require("../models");
+const { user, transaction, bank, invoice, service, wallet } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
-const axios=require('axios')
-const config = require('../middleware/zarinpal_config');
+const config = require('../middleware/IDPay_config');
+const handleError = require("../middleware/handleMysqlError");
+const request = require("request-promise");
+const callback = 'http://localhost:2216‎';
 
-router.post("/v1/payment/:userId/:lang", auth, async (req, res) => {
+async function createInvoice(tService, tUser, method) {
+    let inv = await invoice.create({
+        method: method,
+        status: 'wating to pay'
+    });
+    await inv.setService(tService);
+    await inv.setUser(tUser);
+    return await inv;
+}
+async function bankPayment(tService, tUser, tInvoice, gateway) {
+    let options = {
+        method: 'POST',
+        url: config.url,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-KEY': config.key,
+            'X-SANDBOX': 1,
+        },
+        body: {
+            'order_id': (tUser.id + tInvoice.id).toString(),
+            'amount': tService.amount,
+            'callback': 'https://example.com/callback',
+        },
+        json: true,
+    };
+    let tBank = await bank.create({
+        order_id: (tUser.id + tInvoice.id).toString(),
+        gateway: gateway
+    });
+    let result
+    try {
+        result = await request(options);
+        if (result.id) {
+            await tBank.update({
+                status: 'Waiting',
+                authority: result.id,
+                gateway_link: result.link
+            })
+        }
+        else {
+            await tBank.update({ status: 'UnSuccess' })
+        }
+        await tBank.setInvoice(tInvoice);
+    } catch (err) {
+        await tBank.update({ status: 'UnSuccess' })
+        await tBank.setInvoice(tInvoice);
+
+    }
+    return await tBank;
+}
+async function bankVerify(authority, orderId) {
+    let options = {
+        method: 'POST',
+        url: config.url + config.API.PV,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-KEY': config.key,
+            'X-SANDBOX': 1,
+        },
+        body: {
+            'id': authority,
+            'order_id': orderId,
+        },
+        json: true,
+    };
+    let tBank = await bank.findOne({
+        where: {
+            authority: authority,
+            order_id: orderId
+        }
+    })
+    let result
+    try {
+        result = await request(options);
+        if (result.status == 100) {
+            await tBank.update({
+                status: 'Success',
+                meta_data: result.toString()
+            })
+        }
+        else if (result.status == 5 || result.status == 6) {
+            await tBank.update({ status: 'Reversed' });
+        }
+        else if (result.status == 7) {
+            await tBank.update({ status: 'Cancel' });
+        }
+        else if (result.status == 101 || result.status == 200) {
+            await tBank.update({ status: 'Success' });
+        }
+        else {
+            await tBank.update({ status: 'UnSuccess' });
+        }
+
+    } catch (err) {
+        await tBank.update({ status: 'UnSuccess' });
+    }
+    return await tBank;
+}
+async function checkWallet(tUser, tService) {
+    let credit = await wallet.findOne({
+        attributes: ['remaining'],
+        where: {
+            user_id: tUser.id
+        }
+    })
+    if (credit != null && credit.remaining > tService.amount) { return true; }
+    return false;
+}
+async function doTransaction(tWallet, tInvoice, tService) {
+    let trans;
+    if (tService.id == 3 || tService.id == 4 || tService.id == 5 || tService.id == 6 || tService.id == 7) {
+        trans = await transaction.create({ amount: "+" + (tService.amount).toString() });
+    }
+    else {
+        trans = await transaction.create({ amount: "-" + (tService.amount).toString() });
+    }
+    await trans.setInvoice(tInvoice);
+    await trans.setWallet(tWallet);
+    return await trans;
+}
+async function updateInvoice(tInvoice, status) {
+    await tInvoice.update({ status: status });
+
+}
+async function decreaseWallet(tWallet, tService) {
+    if (tService.id == 1 || tService.id == 2) {
+        await tWallet.update({ remaining: tWallet.remaining - tService.amount });
+    }
+}
+async function increaseWallet(tWallet, tService) {
+    if (tService.id == 3 || tService.id == 4 || tService.id == 5 || tService.id == 6 || tService.id == 7) {
+        await tWallet.update({ remaining: tWallet.remaining + tService.amount });
+    }
+
+}
+async function createWallet(tUser) {
+    let wall = await wallet.findOne({
+        where: {
+            user_id: tUser.id
+        }
+    })
+    if (wall != null) return wall;
+
+    wall = await wallet.create({ remaining: 0 });
+    await wall.setUser(tUser);
+
+    return wall;
+}
+router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    if(req.body.amount==null) return res.status(400).json({ message: " مبلغ وارد نشده" });
-    if(req.body.callback_url==null)  return res.status(400).json({ message: "ادرس بازگشت وارد نشده است" });
-    if(req.body.description==null)  return res.status(400).json({ message: "اتوضیحات وارد نشده است" });
-    let parametr = {
-        merchant_id: config.merchant,
-        amount: req.body.amount,
-        callback_url: req.body.callback_url,
-        description: req.body.description,
-        email: req.body.email,
-        mobile: req.body.mobile
-    };
-    
-    axios.post(config.https+config.API.PR,parametr)
-      .then(async function (response) {
-        console.log(response);
-        if(response.data.data.code===100&& response.data.data.authority!=null){
-            return res.status(200).json({data:{location: "https://www.zarinpal.com/pg/StartPay/"+ response.data.data.authority ,
-            authority:response.data.data.authority }})
+    let serv = await service.findByPk(req.body.serviceId);
+    if (serv == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (req.body.method == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let wall = await createWallet(usr);
+    let inv = await createInvoice(serv, usr, req.body.method);
+
+    if (req.body.method == 'gateway') {
+        let tBank = await bankPayment(serv, usr, inv, 'ID_pay');
+        if (tBank.status == "Waiting") {
+            return res.status(200).json({ data: { link: tBank.gateway_link, authority: tBank.authority, orderId: tBank.order_id } });
         }
-        if(response.data.errors!=null){
-            let e_code=response.data.errors.code;
-            if(e_code==-9||e_code==-10||e_code==-33|| e_code==-40){
-                return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-            }
-            else if(e_code==-11||e_code==-15){
-                return res.status(500).json({message:"مریچنت کد فعال نیست یا ترمینال به حالت تعلیق درآمده است با پشتیبانی زرین پال تماس بگیرید."})
-            }
-            else if(e_code==-12){
-                return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) });
-            }
-            return res.status(400).json({data:{error: response.data.errors}})
+        else if (tBank.status == "UnSuccess") {
+            return res.status(405).json({ message: "مشکلی در ایجاد تراکنش بوجود امد" });
         }
-     })
-      .catch(function (error) {
-        console.log(error);
-        return res.status(500).json({data:error})
-    })
+    }
+    else if (req.body.method == 'wallet') {
+        console.log("methodeeeeeeee wallet", await checkWallet(usr, serv));
+        if (await checkWallet(usr, serv) == false) {
+            await updateInvoice(inv, 'UnSuccess');
+            return res.status(400).json({ message: "موجودی کافی نیست" });
+        }
+        else {
+            await doTransaction(wall, inv, serv);
+            await updateInvoice(inv, 'Success');
+            await decreaseWallet(wall, serv);
+            return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
+        }
+    }
 })
 
-router.post("/v1/verify/:userId/:lang", auth, async (req, res) => {
+async function checkBankInfo(authority, orderId) {
+    let info = await bank.findOne({
+        where: {
+            authority: authority,
+            order_id: orderId
+        }
+    })
+    if (info != null) return true;
+    return false;
+}
+router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    
-    let parametr = {
-        merchant_id: config.merchant,
-        amount: req.body.amount,
-        authority: req.body.authority,
-        description:req.body.description
-    };
-    
-    axios.post(config.https+config.API.PV,parametr)
-      .then(async function (response) {
-        console.log(response);
-        if(response.data.data.code===100){
-            let zp_res=response.data.data;
-            //add transaction
-            let tran=await transaction.create({amount:req.body.amount,description:req.body.description,card_pan:zp_res.card_pan,card_hash:zp_res.card_hash,
-                transaction_number:zp_res.ref_id,transaction_type:'Debtor'});
-                await tran.setUser(usr).catch(async function (err) {
-                    let result2 = await handleError(tran, err);
-                    if (!result2) error = 1;
-                    return;
-                })
-                // increse user creadit
-                let userCredit=await credit.findOne({
-                    where:{
-                        user_id:req.params.userId
-                    }
-                })
-                if(userCredit==null){
-                    userCredit=await credit.create({remaining:req.body.amount});
-                    await userCredit.setUser(usr).catch(async function (err) {
-                        let result2 = await handleError(userCredit, err);
-                        if (!result2) error = 1;
-                        return;
-                    })
-                }
-                else{
-                    userCredit.update({remaining:userCredit.remaining+req.body.amount});
-                }
-                // add to ledger with fix services id 
-                let addLedger=await ledger.creare({
-                    description:req.body.description,
-                    transaction_type:'Debtor'
-                })
-                await addLedger.setUser(usr).catch(async function (err) {
-                    let result = await handleError(addLedger, err);
-                    if (!result) error = 1;
-                    return;
-                })
-                await addLedger.setService(await service.findByPk(1)).catch(async function (err) {
-                    let result2 = await handleError(addLedger, err);
-                    if (!result2) error = 1;
-                    return;
-                })
-                
-            return res.status(200).json({data:{transaction_number:zp_res.ref_id}});
+    if (req.body.authority == null || req.body.orderId == null || req.body.status == null) {
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
+    console.log("kl;;;;;", await checkBankInfo(req.body.authority, req.body.orderId));
+    if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
+        if (req.body.status == 200) {
+            let tBank = await bankVerify(req.body.authority, req.body.orderId);
+            let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
+            let inv = await invoice.findByPk(tBank.invoiceId);
+            let serv = await service.findByPk(await inv.serviceId);
+            
+            if (tBank.status == "Success") {
+                await doTransaction(wall, inv, serv);
+                await updateInvoice(inv, 'Success');
+                increaseWallet(wall, serv);
+                return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
+            }
+            else {
+                await updateInvoice(inv, 'UnSuccess');
+                return res.status(400).json({ message: " پرداخت کامل نشد" });
+            }
+
         }
-        if(response.data.data.code===101){
-            // search in transaction table that have transaction with this ref_id
-            return res.status(400).json({ message: "تراکنش تکراری است"});
+        else {
+            await updateInvoice(inv, 'UnSuccess');
+            //یه تعیین تکلیفی باید برای نتیجه انجام بشه که وضعیت میشه ناموفق یا کنسل یا برگشت خورده
+            return res.status(400).json({ message: " پرداخت کامل نشد" });
         }
-        if(response.data.errors!=null){
-            let e_code=response.data.errors.code;
-            if(e_code==-9||e_code==-10||e_code==-54|| e_code==-53 ){
-                return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-            }
-            else if(e_code==-52){
-                return res.status(500).json({message:"خطای غیر منتظره با پشتیبانی زرین پال تماس بگیرید"})
-            }
-            else if(e_code==-51){
-                return res.status(400).json({ message: "پرداخت ناموفق " });
-            }
-            else if(e_code==-50){
-                return res.status(409).json({ message: "مبلغ پرداخت شده با مقدار مبلغ در وریفای متفاوت است" });
-            }
-            return res.status(400).json({data:{error: response.data.errors}})
-        }
-     })
-      .catch(function (error) {
-        console.log(error);
-        return res.status(500).json({data:error})
-    })
+    }
+    else {
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
+
 })
 
-router.get("/v1/accountCredit/:userId/:lang", auth, async (req, res) => {
+router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let accountCredit=await credit.findOne({
-        attributes: ['user_id','remaining'],
+    let accountCredit = await wallet.findOne({
+        attributes: ['user_id', 'remaining'],
         where: {
             user_id: req.params.userId,
         }
     })
-    if(accountCredit==0){
-
+    if (accountCredit == 0) {
+        return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     }
-    return res.status(200).json({data:{accountCredit}})
+    return res.status(200).json({ data: { accountCredit } })
+})
+
+router.get("/v1/services/:lang", auth, async (req, res) => {
+
+    let services = await service.findAll({
+        attributes: ['id', 'name', 'amount'] 
+    });
+    
+    return res.status(200).json({ data: { services } })
 })
 
 router.get("/v1/accountHistory/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let accountHistory=await ledger.findAll({
+    let accountHistory = await ledger.findAll({
         include: [
             {
-              model: service,
-              required: true,
-              attributes: ['id', 'service']
+                model: service,
+                required: true,
+                attributes: ['id', 'service']
             }
-          ],
+        ],
         where: {
             user_id: req.params.userId,
         }
     })
 
-    if(accountHistory==NULL){
+    if (accountHistory == NULL) {
 
     }
-    return res.status(200).json({data:{error: response.data.errors}})
+    return res.status(200).json({ data: { error: response.data.errors } })
 })
 module.exports = router;

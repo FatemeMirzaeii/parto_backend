@@ -3,20 +3,20 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('health_tracking_category', [
-      { id:8,title: 'دارو',has_multiple_choice:0	,color:"#EF719C" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      { id:8,title: 'دارو',has_multiple_choice:1	,color:"#78CFB5" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
         .st0{display:none;fill:#FFFFFF;}
-        .st1{fill:none;stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
+        .st1{fill:none;stroke:#78CFB5;stroke-width:30;stroke-miterlimit:22.9256;}
         .st2{display:none;}
         .st3{display:inline;fill:none;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
-        .st4{display:none;fill:none;stroke:#EF719C;stroke-width:10;stroke-linecap:round;stroke-miterlimit:10;}
-        .st5{fill:none;stroke:#EF719C;stroke-width:10;stroke-linecap:round;stroke-miterlimit:10;}
-        .st6{fill:#EF719C;}
-        .st7{fill:none;stroke:#EF719C;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;}
-        .st8{fill:none;stroke:#EF719C;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;stroke-dasharray:5.0232,10.0463;}
+        .st4{display:none;fill:none;stroke:#78CFB5;stroke-width:10;stroke-linecap:round;stroke-miterlimit:10;}
+        .st5{fill:none;stroke:#78CFB5;stroke-width:10;stroke-linecap:round;stroke-miterlimit:10;}
+        .st6{fill:#78CFB5;}
+        .st7{fill:none;stroke:#78CFB5;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;}
+        .st8{fill:none;stroke:#78CFB5;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;stroke-dasharray:5.0232,10.0463;}
       </style>
       <rect x="-530" y="-211.4" class="st0" width="1302.5" height="1394.7"/>
       <path class="st1" d="M283.5,508.4c123.9,0,225-101.1,225-225s-101.1-225-225-225s-225,101.1-225,225S159.6,508.4,283.5,508.4z"/>
@@ -70,15 +70,15 @@ module.exports = {
       </g>
       </svg>`
       , created_at: new Date(), updated_at: new Date() },
-      {id:9, title: 'وزن',has_multiple_choice:0	,color:"#00B6DF" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:9, title: 'وزن',has_multiple_choice:0	,color:"#7D92DB" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
-        .st0{fill:none;stroke:#00B6DF;stroke-width:30;stroke-miterlimit:22.9256;}
-        .st1{fill:none;stroke:#00B6DF;stroke-width:15;stroke-miterlimit:10;}
-        .st2{fill:none;stroke:#00B6DF;stroke-width:12;stroke-miterlimit:10;}
-        .st3{fill:#00B6DF;}
+        .st0{fill:none;stroke:#7D92DB;stroke-width:30;stroke-miterlimit:22.9256;}
+        .st1{fill:none;stroke:#7D92DB;stroke-width:15;stroke-miterlimit:10;}
+        .st2{fill:none;stroke:#7D92DB;stroke-width:12;stroke-miterlimit:10;}
+        .st3{fill:#7D92DB;}
       </style>
       <path class="st0" d="M283.5,508.4c123.9,0,225-101.1,225-225s-101.1-225-225-225s-225,101.1-225,225S159.6,508.4,283.5,508.4z"/>
       <g>
@@ -112,13 +112,13 @@ module.exports = {
         <rect x="279.5" y="209.1" class="st3" width="10.1" height="24.4"/>
       </g>
       </svg>`, created_at: new Date(), updated_at: new Date() },
-      {id:10, title: 'دما',has_multiple_choice:0	,color:"#B6D442" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
+      {id:10, title: 'دما',has_multiple_choice:0	,color:"#7D92DB" ,	icon:`<?xml version="1.0" encoding="utf-8"?>
       <!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 566.9 566.9" style="enable-background:new 0 0 566.9 566.9;" xml:space="preserve">
       <style type="text/css">
-        .st0{fill:none;stroke:#B6D442;stroke-width:30;stroke-miterlimit:22.9256;}
-        .st1{fill:#B6D442;}
+        .st0{fill:none;stroke:#7D92DB;stroke-width:30;stroke-miterlimit:22.9256;}
+        .st1{fill:#7D92DB;}
       </style>
       <path class="st0" d="M283.5,508.4c123.9,0,225-101.1,225-225s-101.1-225-225-225s-225,101.1-225,225S159.6,508.4,283.5,508.4z"/>
       <path class="st1" d="M257.1,311.3h8.4c6,0,11.4-4.5,11.4-10c0-6.1-5.4-10.6-11.4-10.6h-8.4v-14.5h8.4c6,0,11.4-5,11.4-10.6
@@ -132,7 +132,7 @@ module.exports = {
         c-25.2,0-46.2,19.5-46.2,42.9V230v35.6v65.7c-7.2,5.6-12.6,12.8-17.4,20.6c-13.8,25-8.4,56.2,13.2,76.8c27,24.5,69,25.6,97.3,2.8
         c13.2-10.6,22.2-25.6,24-42.3C353.7,376.4,351.3,363.6,344.7,351.9L344.7,351.9z"/>
       </svg>
-      `, created_at: new Date(), updated_at: new Date() },
+       `, created_at: new Date(), updated_at: new Date() },
        
     ], {});
   },

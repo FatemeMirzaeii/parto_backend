@@ -17,30 +17,28 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      card_pan:{
-        type: Sequelize.STRING
-      },
-      card_hash:{
-        type: Sequelize.STRING
-      },
       order_id:{
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       gateway:{
-        type: Sequelize.ENUM('zp'),
+        type: Sequelize.ENUM('zp' ,'ID_pay'),
         allowNull: false,
-        defaultValue: 'zp',
+        defaultValue:'ID_pay',
       },
       status:{
-        type: Sequelize.ENUM('Success', 'UnSuccess','Reversed'),
+        type: Sequelize.ENUM('Success', 'UnSuccess', 'Reversed', 'Waiting', 'Cancel'),
         allowNull: false,
+        defaultValue:'Waiting',
       },
-      status_description:{
+      gateway_link:{
         type: Sequelize.STRING
       },
       authority:{
         type: Sequelize.STRING
       },
+      meta_data:{
+        type: Sequelize.STRING
+        },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

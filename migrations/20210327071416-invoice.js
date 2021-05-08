@@ -17,6 +17,15 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "user",
+          key: "id",
+          as:"user_id"
+        },
+        onDelete: "CASCADE",
+      },
       method:{
         type: Sequelize.ENUM('gateway', 'wallet'),
         allowNull: false,

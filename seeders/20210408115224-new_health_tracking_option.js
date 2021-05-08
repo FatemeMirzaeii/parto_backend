@@ -152,7 +152,7 @@ module.exports = {
       .st1{display:none;stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
       .st2{display:none;}
       .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
-      .st4{fill:#EF719C;stroke:#FFFFFF;stroke-width:7;stroke-miterlimit:10;}
+      .st4{stroke:#FFFFFF;stroke-width:7;stroke-miterlimit:10;}
       .st5{stroke:#FFFFFF;stroke-width:18.9234;stroke-linecap:round;stroke-miterlimit:10;}
     </style>
     <rect x="-452305" y="-483966.2" class="st0" width="904852.5" height="968904.2"/>
@@ -188,8 +188,8 @@ module.exports = {
       .st1{display:none;stroke:#EF719C;stroke-width:30;stroke-miterlimit:22.9256;}
       .st2{display:none;}
       .st3{display:inline;stroke:#1D1D1B;stroke-width:17.8462;stroke-linecap:round;stroke-miterlimit:10;}
-      .st4{stroke:#EF719C;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.3084,21.2333;}
-      .st5{stroke:#EF719C;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.7105,22.842;}
+      .st4{stroke:#78CFB5;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.3084,21.2333;}
+      .st5{stroke:#78CFB5;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.7105,22.842;}
     </style>
     <rect x="-530" y="-211.4" class="st0" width="1302.5" height="1394.7"/>
     <path class="st1" d="M283.5,508.4c123.9,0,225-101.1,225-225s-101.1-225-225-225s-225,101.1-225,225S159.6,508.4,283.5,508.4z"/>
