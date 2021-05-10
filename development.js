@@ -22,6 +22,7 @@ const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
 const payment = require("./routes/payment");
 const profile = require("./routes/profile");
+const message= require("./routes/message");
 const cookieParser = require('cookie-parser');
 
 const developmentApp = express();
@@ -61,6 +62,7 @@ developmentApp.use("/user", authenticatedLimiter);
 developmentApp.use("/auth", authenticatedLimiter);
 developmentApp.use("/profile", authenticatedLimiter);
 developmentApp.use("/payment", authenticatedLimiter);
+developmentApp.use("/message", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
@@ -89,6 +91,7 @@ developmentApp.use("/contactUs", contactUs);
 developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
 developmentApp.use("/payment", payment);
+developmentApp.use("/message", message);
 developmentApp.use(error);
 
 

@@ -6,7 +6,7 @@ const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
-const callback = 'http://localhost:2216‎';
+const callback = 'https://test.parto.app/pament/callback‎';
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -24,12 +24,12 @@ async function bankPayment(tService, tUser, tInvoice, gateway) {
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            'X-SANDBOX': 1,
+           
         },
         body: {
             'order_id': (tUser.id + tInvoice.id).toString(),
             'amount': tService.amount,
-            'callback': 'https://example.com/callback',
+            'callback': callback,
         },
         json: true,
     };
@@ -65,7 +65,7 @@ async function bankVerify(authority, orderId) {
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            'X-SANDBOX': 1,
+            
         },
         body: {
             'id': authority,
@@ -116,9 +116,9 @@ async function checkWallet(tUser, tService) {
     if (credit != null && credit.remaining > tService.amount) { return true; }
     return false;
 }
-async function doTransaction(tWallet, tInvoice, tService) {
+async function doTransaction(tWallet, tInvoice, method) {
     let trans;
-    if (tService.id == 3 || tService.id == 4 || tService.id == 5 || tService.id == 6 || tService.id == 7) {
+    if (method=="gateway") {
         trans = await transaction.create({ amount: "+" + (tService.amount).toString() });
     }
     else {
@@ -138,11 +138,9 @@ async function decreaseWallet(tWallet, tService) {
     }
 }
 async function increaseWallet(tWallet, tService) {
-    if (tService.id == 3 || tService.id == 4 || tService.id == 5 || tService.id == 6 || tService.id == 7) {
-        await tWallet.update({ remaining: tWallet.remaining + tService.amount });
-    }
-
+    await tWallet.update({ remaining: tWallet.remaining + tService.amount });
 }
+
 async function createWallet(tUser) {
     let wall = await wallet.findOne({
         where: {
@@ -182,7 +180,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             return res.status(400).json({ message: "موجودی کافی نیست" });
         }
         else {
-            await doTransaction(wall, inv, serv);
+            await doTransaction(wall, inv, req.body.method);
             await updateInvoice(inv, 'Success');
             await decreaseWallet(wall, serv);
             return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
@@ -216,9 +214,9 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             let serv = await service.findByPk(await inv.serviceId);
             
             if (tBank.status == "Success") {
-                await doTransaction(wall, inv, serv);
+                await doTransaction(wall, inv, "gateway");
                 await updateInvoice(inv, 'Success');
-                increaseWallet(wall, serv);
+                await increaseWallet(wall, serv);
                 return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
             }
             else {
