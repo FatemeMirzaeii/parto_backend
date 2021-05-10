@@ -6,7 +6,8 @@ const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
-const callback = 'https://test.parto.app/pament/callback‎';
+const callback = 'https://test.parto.app/payment/callback‎';
+const logger = require("../config/logger/logger");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -48,10 +49,12 @@ async function bankPayment(tService, tUser, tInvoice, gateway) {
             })
         }
         else {
+            logger.info("bank payment error",result);
             await tBank.update({ status: 'UnSuccess' })
         }
         await tBank.setInvoice(tInvoice);
     } catch (err) {
+        logger.info("bank payment error",err);
         await tBank.update({ status: 'UnSuccess' })
         await tBank.setInvoice(tInvoice);
 
@@ -98,10 +101,12 @@ async function bankVerify(authority, orderId) {
             await tBank.update({ status: 'Success' });
         }
         else {
+            logger.info("bank verify payment error",result);
             await tBank.update({ status: 'UnSuccess' });
         }
 
     } catch (err) {
+        logger.info("bank verify payment error",err);
         await tBank.update({ status: 'UnSuccess' });
     }
     return await tBank;
@@ -170,6 +175,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             return res.status(200).json({ data: { link: tBank.gateway_link, authority: tBank.authority, orderId: tBank.order_id } });
         }
         else if (tBank.status == "UnSuccess") {
+            await updateInvoice(inv, 'UnSuccess');
             return res.status(405).json({ message: "مشکلی در ایجاد تراکنش بوجود امد" });
         }
     }
