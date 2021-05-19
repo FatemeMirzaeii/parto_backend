@@ -1,27 +1,30 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const messageStatus = sequelize.define('message_status', {
+  const messageInfo = sequelize.define('message_info', {
     status: {
       type: DataTypes.BOOLEAN
     },
-    category_id: {
-      type: DataTypes.STRING
+    total_message:{
+      type: DataTypes.INTEGER ,
+    },
+    total_question:{
+      type: DataTypes.INTEGER ,
     },
   }, {
     freezeTableName: true,
     underscored: true,
   });
 
-  messageStatus.associate = function (models) {
+  messageInfo.associate = function (models) {
     messageStatus.belongsTo(models.user, {
       foreignKey: "user_id",
       onDelete: "CASCADE",
     });
-    messageStatus.belongsTo(models.message_category, {
+    messageInfo.belongsTo(models.message_category, {
         foreignKey: "category_id",
         onDelete: "CASCADE",
       });
  };
   
-  return messageStatus;
+  return messageInfo;
 };

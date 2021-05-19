@@ -1,5 +1,5 @@
 const express = require("express");
-const { message_status , user,message_category , } = require("../models");
+const { message_info , user,message_category , } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const router = express();
@@ -8,7 +8,7 @@ const router = express();
 router.get("/v1/status/:userId/:messageStatusId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let sta = await message_status.findByPk(req.params.messageStatusId);
+    let sta = await message_info.findByPk(req.params.messageStatusId);
     if (sta == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     return res.status(200).json({ data: { status: sta.status } });
 

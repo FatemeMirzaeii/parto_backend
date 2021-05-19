@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('message_status', {
+    return queryInterface.createTable('message_info', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -31,6 +31,14 @@ module.exports = {
         allowNull: false,
         default:0
       },
+      total_message:{
+        type: Sequelize.INTEGER ,
+        default:0
+      },
+      total_question:{
+        type: Sequelize.INTEGER ,
+        default:0
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -42,6 +50,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('message_status');
+    return queryInterface.dropTable('message_info');
   }
 };
