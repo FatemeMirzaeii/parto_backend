@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   messageInfo.associate = function (models) {
-    messageStatus.belongsTo(models.user, {
+    messageInfo.belongsTo(models.user, {
       foreignKey: "user_id",
       onDelete: "CASCADE",
     });
