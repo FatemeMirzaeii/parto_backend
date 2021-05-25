@@ -259,8 +259,8 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
             user_id: req.params.userId,
         }
     })
-    if (accountCredit == 0) {
-        return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    if (accountCredit == null) {
+        accountCredit=await createWallet(usr);
     }
     return res.status(200).json({ data: { remaining:accountCredit.remaining } })
 })
