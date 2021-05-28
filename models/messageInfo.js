@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.BOOLEAN
     },
-    total_message:{
-      type: DataTypes.INTEGER ,
-    },
     total_question:{
       type: DataTypes.INTEGER ,
     },

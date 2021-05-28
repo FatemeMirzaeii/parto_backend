@@ -31,12 +31,9 @@ module.exports = {
         allowNull: false,
         default:0
       },
-      total_message:{
-        type: Sequelize.INTEGER ,
-        default:0
-      },
       total_question:{
         type: Sequelize.INTEGER ,
+        allowNull: false,
         default:0
       },
       created_at: {

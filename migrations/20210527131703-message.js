@@ -8,27 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "user",
-          key: "id",
-        },
-        onDelete: "RESTRICT"
+      content:{
+        type: Sequelize.TEXT,
+        allowNull: false, 
       },
-      title: {
-        type: Sequelize.STRING
+      type:{
+        type: Sequelize.ENUM('text', 'file','voice','startForm', 'delayForm' , 'offlineForm'),
+        allowNull: false,
       },
-      content: {
-        type: Sequelize.STRING
+      sender_id:{
+        type: Sequelize.INTEGER ,
+        allowNull: false,
       },
-      parent_message_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "message",
-          key: "id",
-        },
-        onDelete: "RESTRICT"
+      receiver_id:{
+        type: Sequelize.INTEGER ,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
