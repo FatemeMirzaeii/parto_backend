@@ -25,13 +25,12 @@ async function bankPayment(amount, tUser, tInvoice, gateway) {
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            'X-SANDBOX': 1
-           
+            // 'X-SANDBOX': 1
         },
         body: {
             'order_id': (tUser.id + tInvoice.id).toString(),
             'amount': amount,
-            'callback': 'https://example.com/callback',
+            'callback':callback, // 'https://example.com/callback',
         },
         json: true,
     };
@@ -69,7 +68,7 @@ async function bankVerify(authority, orderId) {
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            'X-SANDBOX': 1
+            //'X-SANDBOX': 1
             
         },
         body: {
@@ -113,14 +112,14 @@ async function bankVerify(authority, orderId) {
     }
     return await tBank;
 }
-async function checkWallet(tUser, tService) {
+async function checkWallet(tUser, amount) {
     let credit = await wallet.findOne({
         attributes: ['remaining'],
         where: {
             user_id: tUser.id
         }
     })
-    if (credit != null && credit.remaining > tService.amount) { return true; }
+    if (credit != null && credit.remaining > amount) { return true; }
     return false;
 }
 async function doTransaction(tWallet, tInvoice, method,amount) {
@@ -168,12 +167,21 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     let serv = await service.findByPk(req.body.serviceId);
     if (serv == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (req.body.method == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let wall = await createWallet(usr);
-    let inv = await createInvoice(serv, usr, req.body.method);
-    let amount=serv.amount;
-    if(req.body.discount!= null || req.body.discount!= undefined){
-        amount=(serv.amount*(req.body.discount/100))
+    
+    let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
+    if(wall==null) {
+        wall=await createWallet(usr);
     }
+    
+    let inv = await createInvoice(serv, usr, req.body.method);
+    
+    let amount=serv.amount;
+    
+    if(req.body.discount!= null || req.body.discount!= undefined){
+        amount=(serv.amount*(req.body.discount/100));
+        discount=req.body.discount;
+    }
+    
     if (req.body.method == 'gateway') {
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay');
         if (tBank.status == "Waiting") {
@@ -185,15 +193,15 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
         }
     }
     else if (req.body.method == 'wallet') {
-        console.log("methodeeeeeeee wallet", await checkWallet(usr, serv));
-        if (await checkWallet(usr, serv) == false) {
+        console.log("methodeeeeeeee wallet", await checkWallet(usr, amount));
+        if (await checkWallet(usr, amount) == false) {
             await updateInvoice(inv, 'UnSuccess');
             return res.status(400).json({ message: "موجودی کافی نیست" });
         }
         else {
             await doTransaction(wall, inv, req.body.method,amount);
             await updateInvoice(inv, 'Success');
-            await decreaseWallet(wall, serv);
+            await decreaseWallet(wall, amount);
             return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
         }
     }
@@ -216,7 +224,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     if (req.body.authority == null || req.body.orderId == null || req.body.status == null) {
         return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
-    console.log("kl;;;;;", await checkBankInfo(req.body.authority, req.body.orderId));
+    
     if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 200) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
@@ -226,7 +234,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             
             if (tBank.status == "Success") {
                 let metaData=JSON.parse(tBank.meta_data);
-                await doTransaction(wall, inv, "gateway",metaData.amount);
+                await doTransaction(wall, inv, "gateway",metaData.amount,);
                 await updateInvoice(inv, 'Success');
                 await increaseWallet(wall, serv);
                 return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
