@@ -6,7 +6,7 @@ const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
-const callback = 'https://test.parto.app/payment/callback‎';
+const callback = 'https://test.parto.app';
 const logger = require("../config/logger/logger");
 
 async function createInvoice(tService, tUser, method) {
@@ -25,7 +25,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway) {
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            // 'X-SANDBOX': 1
+            'X-SANDBOX':0
         },
         body: {
             'order_id': (tUser.id + tInvoice.id).toString(),
