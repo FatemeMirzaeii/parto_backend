@@ -6,7 +6,7 @@ const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
-const callback = 'https://test.parto.app‎';
+const callback = 'https://test.parto.app/payment/callback‎';
 const logger = require("../config/logger/logger");
 
 async function createInvoice(tService, tUser, method) {
