@@ -93,7 +93,7 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment error",result);
+            logger.info("bank verify payment UnSuccess",result.status);
             await tBank.update({ status: 'UnSuccess' });
         }
 
