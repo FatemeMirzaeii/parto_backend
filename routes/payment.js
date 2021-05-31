@@ -226,7 +226,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     }
     
     if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
-        if (req.body.status == 200) {
+        if (req.body.status == 10) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
             let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
             let inv = await invoice.findByPk(tBank.invoiceId);
