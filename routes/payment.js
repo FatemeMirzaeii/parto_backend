@@ -85,6 +85,7 @@ async function bankVerify(authority, orderId) {
         }
     })
     let result
+    logger.info("bank verify options",options.body);
     try {
         result = await request(options);
         if (result.status == 200) {
@@ -94,7 +95,7 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment UnSuccess",result.status,'---',options);
+            logger.info("bank verify payment UnSuccess",result.status,'---',options.body);
             await tBank.update({ status: 'UnSuccess' });
         }
 
