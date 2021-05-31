@@ -225,9 +225,9 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 10) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
-            let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
-            let inv = await invoice.findByPk(tBank.invoiceId);
-            let serv = await service.findByPk(await inv.serviceId);
+            // let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
+            // let inv = await invoice.findByPk(tBank.invoiceId);
+            // let serv = await service.findByPk(await inv.serviceId);
             return res.status(400).json({ message: tBank });
             // if (tBank.status == "Success") {
             //     let metaData=JSON.parse(tBank.meta_data);
