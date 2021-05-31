@@ -222,7 +222,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
         return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
     
-    // if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
+    if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 10) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
             let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
@@ -268,10 +268,10 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             await tBank.update({ status: 'UnSuccess' });
             return res.status(400).json({ message: " پرداخت ناموفق " });
         }
-    // }
-    // else {
-    //     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    // }
+    }
+    else {
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
 
 })
 
