@@ -86,20 +86,11 @@ async function bankVerify(authority, orderId) {
     let result
     try {
         result = await request(options);
-        if (result.status == 100) {
+        if (result.status == 200) {
             await tBank.update({
                 status: 'Success',
                 meta_data: result.toString()
             })
-        }
-        else if (result.status == 5 || result.status == 6) {
-            await tBank.update({ status: 'Reversed' });
-        }
-        else if (result.status == 7) {
-            await tBank.update({ status: 'Cancel' });
-        }
-        else if (result.status == 101 || result.status == 200) {
-            await tBank.update({ status: 'Success' });
         }
         else {
             logger.info("bank verify payment error",result);
@@ -241,14 +232,35 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             }
             else {
                 await updateInvoice(inv, 'UnSuccess');
-                return res.status(400).json({ message: " پرداخت کامل نشد" });
+                return res.status(400).json({ message: " پرداخت تایید و کامل نشد " });
             }
 
         }
-        else {
+        else if (req.body.status == 5 || req.body.status == 6) {
             await updateInvoice(inv, 'UnSuccess');
-            //یه تعیین تکلیفی باید برای نتیجه انجام بشه که وضعیت میشه ناموفق یا کنسل یا برگشت خورده
-            return res.status(400).json({ message: " پرداخت کامل نشد" });
+            await tBank.update({ status: 'Reversed' });
+            return res.status(400).json({ message: " برگشت به پرداخت کننده " });
+        }
+        else if (req.body.status == 7) {
+            await updateInvoice(inv, 'UnSuccess');
+            await tBank.update({ status: 'Cancel' });
+            return res.status(400).json({ message: " انصراف از پرداخت " });
+        }
+        else if (req.body.status == 8) {
+            await updateInvoice(inv, 'wating to pay');
+            await tBank.update({ status: 'Waiting' });
+            return res.status(400).json({ message: " به درگاه پرداخت منتقل شد " });
+        }
+        else if (req.body.status == 100||req.body.status == 101 || req.body.status == 200) {
+            await updateInvoice(inv, 'UnSuccess');
+            await tBank.update({ status: 'Success' });
+            return res.status(400).json({ message: " پرداخت قبلا با موفقیت انجام شده است " });
+        }
+        else {
+            logger.info("calback status error", req.body.status);
+            await updateInvoice(inv, 'UnSuccess');
+            await tBank.update({ status: 'UnSuccess' });
+            return res.status(400).json({ message: " پرداخت ناموفق " });
         }
     }
     else {
