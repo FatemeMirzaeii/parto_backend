@@ -62,14 +62,14 @@ async function bankPayment(amount, tUser, tInvoice, gateway) {
     return await tBank;
 }
 async function bankVerify(authority, orderId) {
+    
     let options = {
         method: 'POST',
-        url:'https://api.idpay.ir/v1.1/payment/verify',
+        url: 'https://api.idpay.ir/v1.1/payment/verify',
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            'X-SANDBOX': 0
-            
+            'X-SANDBOX':0
         },
         body: {
             'id': authority,
@@ -77,18 +77,21 @@ async function bankVerify(authority, orderId) {
         },
         json: true,
     };
-    
     let tBank = await bank.findOne({
         where: {
             authority: authority,
             order_id: orderId
         }
     })
-    let result
-    logger.info("bank verify options",options.body);
+    
+    console.log("bank verify options",options.body);
+    let result;
     try {
+        
         result = await request(options);
-        if (result.status == 200) {
+        console.log("result",result)
+        logger.info("bank result",result);
+        if (result.status == 100) {
             await tBank.update({
                 status: 'Success',
                 meta_data: result.toString()
@@ -96,6 +99,7 @@ async function bankVerify(authority, orderId) {
         }
         else {
             logger.info("bank verify payment UnSuccess",result.status,'---',options.body);
+            console.log("bank verify payment UnSuccess",result.status,'---',options.body);
             await tBank.update({ status: 'UnSuccess' });
         }
 
@@ -218,7 +222,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
         return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
     
-    if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
+    // if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 10) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
             let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
@@ -264,10 +268,10 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             await tBank.update({ status: 'UnSuccess' });
             return res.status(400).json({ message: " پرداخت ناموفق " });
         }
-    }
-    else {
-        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
+    // }
+    // else {
+    //     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    // }
 
 })
 
