@@ -64,11 +64,11 @@ async function bankPayment(amount, tUser, tInvoice, gateway) {
 async function bankVerify(authority, orderId) {
     let options = {
         method: 'POST',
-        url: config.url + config.API.PV,
+        url:'https://api.idpay.ir/v1.1/payment/verify',
         headers: {
             'Content-Type': 'application/json',
             'X-API-KEY': config.key,
-            //'X-SANDBOX': 1
+            'X-SANDBOX': 0
             
         },
         body: {
@@ -77,6 +77,7 @@ async function bankVerify(authority, orderId) {
         },
         json: true,
     };
+    
     let tBank = await bank.findOne({
         where: {
             authority: authority,
@@ -93,7 +94,7 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment UnSuccess",result.status);
+            logger.info("bank verify payment UnSuccess",result.status,'---',options);
             await tBank.update({ status: 'UnSuccess' });
         }
 
