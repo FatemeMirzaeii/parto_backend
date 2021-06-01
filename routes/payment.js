@@ -94,7 +94,7 @@ async function bankVerify(authority, orderId) {
         if (result.status == 100) {
             await tBank.update({
                 status: 'Success',
-                meta_data: result.toString()
+                meta_data:JSON.stringify(result)
             })
         }
         else {
