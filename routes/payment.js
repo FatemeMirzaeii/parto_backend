@@ -98,8 +98,7 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment UnSuccess",result.status,'---',options.body);
-            console.log("bank verify payment UnSuccess",result.status,'---',options.body);
+            logger.info("bank verify payment- UnSuccess. result :",result);
             await tBank.update({ status: 'UnSuccess' });
         }
 
@@ -107,7 +106,7 @@ async function bankVerify(authority, orderId) {
         logger.info("bank verify payment error",err);
         await tBank.update({ status: 'UnSuccess' });
     }
-    return await result;
+    return await tBank;
 }
 async function checkWallet(tUser, amount) {
     let credit = await wallet.findOne({
@@ -225,21 +224,20 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 10) {
             let tBank = await bankVerify(req.body.authority, req.body.orderId);
-            // let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
-            // let inv = await invoice.findByPk(tBank.invoiceId);
-            // let serv = await service.findByPk(await inv.serviceId);
-            return res.status(400).json({ message: tBank });
-            // if (tBank.status == "Success") {
-            //     let metaData=JSON.parse(tBank.meta_data);
-            //     await doTransaction(wall, inv, "gateway",metaData.amount,);
-            //     await updateInvoice(inv, 'Success');
-            //     await increaseWallet(wall, serv);
-            //     return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
-            // }
-            // else {
-            //     await updateInvoice(inv, 'UnSuccess');
-            //     return res.status(400).json({ message: " پرداخت تایید و کامل نشد " });
-            // }
+            let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
+            let inv = await invoice.findByPk(tBank.invoiceId);
+            let serv = await service.findByPk(await inv.serviceId);
+            if (tBank.status == "Success") {
+                let metaData=JSON.parse(tBank.meta_data);
+                await doTransaction(wall, inv, "gateway",metaData.amount,);
+                await updateInvoice(inv, 'Success');
+                await increaseWallet(wall, serv);
+                return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
+            }
+            else {
+                await updateInvoice(inv, 'UnSuccess');
+                return res.status(400).json({ message: " پرداخت تایید و کامل نشد " });
+            }
 
         }
         else if (req.body.status == 5 || req.body.status == 6) {
