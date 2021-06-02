@@ -185,7 +185,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
         }
         else if (tBank.status == "UnSuccess") {
             await updateInvoice(inv, 'UnSuccess');
-            return res.status(405).json({ message: "مشکلی در ایجاد تراکنش بوجود امد" });
+            return res.status(405).json({ message: "مشکلی در ایجاد تراکنش بوجود آمد" });//
         }
     }
     else if (req.body.method == 'wallet') {
@@ -228,11 +228,16 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             let inv = await invoice.findByPk(tBank.invoiceId);
             let serv = await service.findByPk(await inv.serviceId);
             if (tBank.status == "Success") {
+                logger.info("111");
                 let metaData=JSON.parse(tBank.meta_data);
-                await doTransaction(wall, inv, "gateway",metaData.amount,);
+                logger.info("222");
+                await doTransaction(wall, inv, "gateway",metaData.amount);
+                logger.info("333");
                 await updateInvoice(inv, 'Success');
+                logger.info("4444");
                 await increaseWallet(wall, serv);
-                return res.status(200).json({ message: "پزداخت با موفقیت انجام شد " });
+                logger.info("5555");
+                return res.status(200).json({ message: "پرداخت با موفقیت انجام شد " });
             }
             else {
                 await updateInvoice(inv, 'UnSuccess');
