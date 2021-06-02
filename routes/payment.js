@@ -229,17 +229,16 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             let serv = await service.findByPk(await inv.serviceId);
             
             if (tBank.status == "Success") {
-                logger.info("111","111");
+                logger.info("111");
                 let metaData=JSON.parse(tBank.meta_data);
-                return res.status(200).json({ message: "پرداخت با موفقیت انجام شد ", meta_Data:metaData });
-                // logger.info("222","111");
-                // await doTransaction(wall, inv, "gateway",metaData.amount);
-                // logger.info("333","111");
-                // await updateInvoice(inv, 'Success');
-                // logger.info("4444","111");
-                // await increaseWallet(wall, serv);
-                // logger.info("5555","111");
-                // return res.status(200).json({ message: "پرداخت با موفقیت انجام شد " });
+                logger.info("222");
+                await doTransaction(wall, inv, "gateway",metaData);
+                logger.info("333");
+                await updateInvoice(inv, 'Success');
+                logger.info("4444");
+                await increaseWallet(wall, serv);
+                logger.info("5555");
+                return res.status(200).json({ message: "پرداخت با موفقیت انجام شد " });
             }
             else {
                 await updateInvoice(inv, 'UnSuccess');
