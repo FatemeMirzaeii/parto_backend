@@ -1,5 +1,5 @@
 const express = require("express");
-const { message_info, user, message_category,message } = require("../models");
+const { message_info, user, message_category, message } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const router = express();
@@ -22,13 +22,13 @@ router.get("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let gId = await message_info.findAll({
-        attributes:[['goftino_id','goftinoId'],['category_id','categoryId']],
+        attributes: [['goftino_id', 'goftinoId'], ['category_id', 'categoryId']],
         where: {
             user_id: req.params.userId,
         }
     });
-    if (gId == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-    return res.status(200).json({ data:gId});
+    if (gId.length == 0) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res.status(200).json({ data: gId });
 
 });
 router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
@@ -40,7 +40,7 @@ router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
             user_id: req.params.userId,
         }
     });
-    console.log("sta.length",sta.length)
+    console.log("sta.length", sta.length)
     if (sta.length > 0) {
         for (j = 0; j < sta.length; j++) {
             totalQuestion = totalQuestion + sta[j].total_question
@@ -73,7 +73,12 @@ router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     if (sta != null) await sta.update({ goftino_id: req.body.goftinoId });
     else {
         let category = await message_category.findByPk(req.body.categoryId);
-        sta = await message_info.create({ goftino_id: req.body.goftinoId });
+        sta = await message_info.create(
+            {
+                goftino_id: req.body.goftinoId,
+                status: false,
+                total_question: 0
+            });
         await sta.setUser(usr).catch(async function (err) {
             let result2 = await handleError(sta, err);
             if (!result2) error = 1;
