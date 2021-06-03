@@ -29,7 +29,7 @@ module.exports = {
       status:{
         type: Sequelize.BOOLEAN ,
         allowNull: false,
-        default:0
+        default:false
       },
       total_question:{
         type: Sequelize.INTEGER ,
