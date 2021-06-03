@@ -18,6 +18,19 @@ router.get("/v1/info/:userId/:categoryId/:lang", auth, async (req, res) => {
     return res.status(200).json({ data: { status: sta.status, totalQuestion: sta.total_question } });
 
 });
+router.get("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let gId = await message_info.findAll({
+        attributes:[['goftino_id','goftinoId'],['category_id','categoryId']],
+        where: {
+            user_id: req.params.userId,
+        }
+    });
+    if (gId == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res.status(200).json({ data:gId});
+
+});
 router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -45,6 +58,34 @@ router.get("/v1/messageCategory/:lang", async (req, res) => {
     if (cat == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     return res.status(200).json({ data: cat });
 
+});
+
+router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (req.body.goftinoId == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let sta = await message_info.findOne({
+        where: {
+            user_id: req.params.userId,
+            category_id: req.body.categoryId
+        }
+    });
+    if (sta != null) await sta.update({ goftino_id: req.body.goftinoId });
+    else {
+        let category = await message_category.findByPk(req.body.categoryId);
+        sta = await message_info.create({ goftino_id: req.body.goftinoId });
+        await sta.setUser(usr).catch(async function (err) {
+            let result2 = await handleError(sta, err);
+            if (!result2) error = 1;
+            return;
+        })
+        await sta.setMessage_category(category).catch(async function (err) {
+            let result2 = await handleError(sta, err);
+            if (!result2) error = 1;
+            return;
+        })
+    }
+    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
 router.post("/v1/status/:userId/:lang", auth, async (req, res) => {

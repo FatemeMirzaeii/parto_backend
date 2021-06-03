@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const bank = sequelize.define('bank', {
+    const bank = sequelize.define('bank_receipt', {
 
         order_id: DataTypes.STRING,
         authority: DataTypes.STRING,

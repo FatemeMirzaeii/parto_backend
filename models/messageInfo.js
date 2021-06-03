@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     total_question:{
       type: DataTypes.INTEGER ,
     },
+    goftino_id:{
+      type: DataTypes.INTEGER ,
+    },
   }, {
     freezeTableName: true,
     underscored: true,

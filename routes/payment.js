@@ -6,7 +6,6 @@ const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
-const callback = 'https://test.parto.app/payment/callback‎';
 const logger = require("../config/logger/logger");
 
 async function createInvoice(tService, tUser, method) {
@@ -118,18 +117,25 @@ async function checkWallet(tUser, amount) {
     if (credit != null && credit.remaining > amount) { return true; }
     return false;
 }
-async function doTransaction(tWallet, tInvoice, method,amount) {
+async function setTransaction(tWallet, tInvoice, method,amount,description) {
     let trans;
     if (method=="gateway") {
-        trans = await transaction.create({ amount: "+" + (amount).toString() });
+        trans = await transaction.create({ 
+            amount: "+" + (amount).toString(),
+            description:description
+        });
     }
     else {
-        trans = await transaction.create({ amount: "-" + (amount).toString() });
+        trans = await transaction.create({ 
+            amount: "-" + (amount).toString(),
+            description:description
+         });
     }
     await trans.setInvoice(tInvoice);
     await trans.setWallet(tWallet);
     return await trans;
 }
+
 async function updateInvoice(tInvoice, status) {
     await tInvoice.update({ status: status });
 
@@ -172,7 +178,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     let inv = await createInvoice(serv, usr, req.body.method);
     
     let amount=serv.amount;
-    
+    let discount=0;
     if(req.body.discount!= null || req.body.discount!= undefined){
         amount=(serv.amount*(req.body.discount/100));
         discount=req.body.discount;
@@ -181,6 +187,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     if (req.body.method == 'gateway') {
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay');
         if (tBank.status == "Waiting") {
+            await setTransaction(wall,inv,"gateway",amount, `discount:${discount}`);
             return res.status(200).json({ data: { link: tBank.gateway_link, authority: tBank.authority, orderId: tBank.order_id } });
         }
         else if (tBank.status == "UnSuccess") {
@@ -195,7 +202,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             return res.status(400).json({ message: "موجودی کافی نیست" });
         }
         else {
-            await doTransaction(wall, inv, req.body.method,amount);
+            await setTransaction(wall, inv, req.body.method,amount,"");
             await updateInvoice(inv, 'Success');
             await decreaseWallet(wall, amount);
             return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
@@ -230,10 +237,6 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             
             if (tBank.status == "Success") {
                 logger.info("111");
-                let metaData=JSON.parse(tBank.meta_data);
-                logger.info("222");
-                await doTransaction(wall, inv, "gateway",metaData);
-                logger.info("333");
                 await updateInvoice(inv, 'Success');
                 logger.info("4444");
                 await increaseWallet(wall, serv);

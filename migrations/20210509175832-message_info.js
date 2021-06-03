@@ -36,6 +36,9 @@ module.exports = {
         allowNull: false,
         default:0
       },
+      goftino_id:{
+        type: Sequelize.INTEGER ,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
