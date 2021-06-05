@@ -18,10 +18,14 @@ testing_parto:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
+    - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     # - npx sequelize-cli db:migrate
     # - npx sequelize-cli db:seed:all
+    # - npx sequelize db:seed --seed 20210408115203-new_health_tracking_category.js
+    # - npx sequelize db:seed --seed 20210408115224-new_health_tracking_option.js
+    # -  npx sequelize db:seed --seed 20210509195107-message_category.js
     # - npm test
     - echo "testing succsecfull  "
   only:
@@ -39,7 +43,7 @@ deploy_staging_parto:
   script:
     - echo "Deploy to staging server ..."
     - PORT=2216
-    # - pm2 stop development.js
+    # - pm2 start development.js
     - pm2 startOrRestart ecosystem.config.js --only "development"
     - echo "deploy_staging succesfull"
     # - pm2 logs
@@ -56,7 +60,11 @@ deploy_prod_parto:
     - echo "Deploy to production server ..."
     - npm install
     - PORT=2218
-    # - npx sequelize-cli db:migrate 
+    - npx sequelize-cli db:migrate
+    - npx sequelize db:seed --seed 20200901131342-health_tracking_category.js
+    - npx sequelize db:seed --seed 20210408115203-new_health_tracking_category.js
+    - npx sequelize db:seed --seed 20210408115224-new_health_tracking_option.js
+    # - pm2 start app.js
     - pm2 startOrRestart ecosystem.config.js --only "app"
     - echo "Deploy to production server Successful"
     #- pm2 logs

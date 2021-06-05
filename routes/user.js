@@ -1,5 +1,5 @@
 const express = require("express");
-const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey } = require("../models");
+const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey,note , user_tracking_category} = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
