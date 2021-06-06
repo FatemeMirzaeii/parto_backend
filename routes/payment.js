@@ -225,8 +225,8 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     }
     let tBank =await bank_receipt.findOne({
         where: {
-            authority: authority,
-            order_id: orderId
+            authority: req.body.authority,
+            order_id: req.body.orderId
         }
     });
     let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
