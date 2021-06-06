@@ -170,11 +170,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     if (serv == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (req.body.method == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     
-    let wall = await wallet.findOne({ where: { user_id: req.params.userId } });
-    if(wall==null) {
-        wall=await createWallet(usr);
-    }
-    
+    let wall=await createWallet(usr);
     let inv = await createInvoice(serv, usr, req.body.method);
     
     let amount=serv.amount;
