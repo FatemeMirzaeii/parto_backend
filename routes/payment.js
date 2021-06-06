@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express();
-const { user, transaction, bank, invoice, service, wallet } = require("../models");
+const { user, transaction, bank_receipt, invoice, service, wallet } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
@@ -33,7 +33,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway) {
         },
         json: true,
     };
-    let tBank = await bank.create({
+    let tBank = await bank_receipt.create({
         order_id: (tUser.id + tInvoice.id).toString(),
         gateway: gateway
     });
@@ -76,7 +76,7 @@ async function bankVerify(authority, orderId) {
         },
         json: true,
     };
-    let tBank = await bank.findOne({
+    let tBank = await bank_receipt.findOne({
         where: {
             authority: authority,
             order_id: orderId
@@ -207,7 +207,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
 })
 
 async function checkBankInfo(authority, orderId) {
-    let info = await bank.findOne({
+    let info = await bank_receipt.findOne({
         where: {
             authority: authority,
             order_id: orderId
