@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER ,
     },
     goftino_id:{
-      type: DataTypes.INTEGER ,
+      type: DataTypes.STRING ,
     },
   }, {
     freezeTableName: true,
