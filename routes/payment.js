@@ -141,9 +141,8 @@ async function updateInvoice(tInvoice, status) {
 
 }
 async function decreaseWallet(tWallet, tService) {
-    if (tService.id == 1 || tService.id == 2) {
-        await tWallet.update({ remaining: tWallet.remaining - tService.amount });
-    }
+    await tWallet.update({ remaining: tWallet.remaining - tService.amount });
+    
 }
 async function increaseWallet(tWallet, tService) {
     await tWallet.update({ remaining: tWallet.remaining + tService.amount });
