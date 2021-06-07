@@ -140,8 +140,8 @@ async function updateInvoice(tInvoice, status) {
     await tInvoice.update({ status: status });
 
 }
-async function decreaseWallet(tWallet, tService) {
-    await tWallet.update({ remaining: tWallet.remaining - tService.amount });
+async function decreaseWallet(tWallet, amount) {
+    await tWallet.update({ remaining: tWallet.remaining - amount });
     
 }
 async function increaseWallet(tWallet, tService) {
