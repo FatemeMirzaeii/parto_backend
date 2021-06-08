@@ -93,7 +93,7 @@ async function bankVerify(authority, orderId) {
         if (result.status == 100) {
             await tBank.update({
                 status: 'Success',
-                meta_data: JSON.stringify(result.amount)
+                meta_data: JSON.stringify(result)
             })
         }
         else {
@@ -234,9 +234,9 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
     if (await checkBankInfo(req.body.authority, req.body.orderId) == true) {
         if (req.body.status == 10) {
-            tBank = await bankVerify(req.body.authority, req.body.orderId);
+            let tBankVerify = await bankVerify(req.body.authority, req.body.orderId);
 
-            if (tBank.status == "Success") {
+            if (tBankVerify.status == "Success") {
                 await updateInvoice(inv, 'Success');
                 await increaseWallet(wall, serv);
                 return res.status(200).json({ message: "پرداخت با موفقیت انجام شد " });
