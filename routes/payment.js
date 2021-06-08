@@ -7,6 +7,7 @@ const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../config/logger/logger");
+const e = require("express");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -142,7 +143,7 @@ async function updateInvoice(tInvoice, status) {
 }
 async function decreaseWallet(tWallet, amount) {
     await tWallet.update({ remaining: tWallet.remaining - amount });
-    
+
 }
 async function increaseWallet(tWallet, tService) {
     await tWallet.update({ remaining: tWallet.remaining + tService.amount });
@@ -222,7 +223,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
     if (req.body.authority == null || req.body.orderId == null || req.body.status == null) {
         return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
-    let tBank =await bank_receipt.findOne({
+    let tBank = await bank_receipt.findOne({
         where: {
             authority: req.body.authority,
             order_id: req.body.orderId
@@ -309,22 +310,45 @@ router.get("/v1/accountHistory/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let accountHistory = await ledger.findAll({
+    let accountHistory = await transaction.findAll({
+
         include: [
             {
-                model: service,
+                model: invoice,
                 required: true,
-                attributes: ['id', 'service']
+                where: {
+                    user_id: req.params.userId,
+                    status: "Success",
+                },
+                attributes: ['method', 'status', 'serviceId'],
+                include: [
+                    {
+                        model: service,
+                        required: true,
+                        attributes: ['name']
+
+                    }
+                ],
+
             }
         ],
-        where: {
-            user_id: req.params.userId,
-        }
+
     })
 
-    if (accountHistory == NULL) {
-
+    if (accountHistory.length == 0) {
+        return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) })
     }
-    return res.status(200).json({ data: { error: response.data.errors } })
+    let list = [];
+    for (i = 0; i < accountHistory.length; i++) {
+        let temp = {};
+        temp.amount = accountHistory[i].amount;
+        temp.date = accountHistory[i].updatedAt;
+        temp.method = accountHistory[i].invoice.method;
+        temp.serviceName = accountHistory[i].invoice.service.name;
+        temp.description = accountHistory[i].description;
+
+        list.push(temp);
+    }
+    return res.status(200).json({ data: list })
 })
 module.exports = router;
