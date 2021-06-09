@@ -1,31 +1,18 @@
 
 const request = require('supertest');
-const { user ,user_profile, user_tracking_option} = require("../../models");
+const { user, transaction, bank_receipt, invoice, service, wallet,user_log } = require("../models");
 
-describe('cycle', () => {
+describe('payment', () => {
     let usr;
     let server;
     let token;
     let userId;
-    let uProfile;
+    
     beforeAll(async()=>{
-        usr =await user.create({name:"zahra", email:"cycle_zzdand7755@gmail.com",phone:"09125454211"});
+        usr =await user.create({name:"zahra", email:"payment@gmail.com",phone:"09125454219"});
         token =usr.generateAuthToken();
         userId=usr.id;
-        uProfile = await user_profile.create({
-            birthdate:new Date("1377-05-05"),
-            avg_cycle_length:23,
-            avg_period_length:7,
-            avg_sleeping_hour:8,
-            pms_length:3,
-            height:158,
-            weight:58,
-            pregnant:false,
-            pregnancy_try:false,
-            locked:false,
-            last_period_date:"2020-01-01"
-        });
-        await uProfile.setUser(usr);
+        
     })
     beforeEach(async() => { 
         server=require('../../development');
@@ -34,18 +21,12 @@ describe('cycle', () => {
          server.close();
     })
     afterAll(async () => {
-        await user_tracking_option.destroy({
-            where:{
-                user_id: userId
-            }
-        })
-        await uProfile.destroy();
         let userLog=await user_log.findOne({where: {user_id:userId}});
         await userLog.destroy();
         await usr.destroy();
     });
 
-    describe('/getLastPeriodDate/:userId/:lang', () => {
+    describe('POST - /v1/purchase/:userId/:lang', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
@@ -71,7 +52,7 @@ describe('cycle', () => {
         });
     });
 
-    describe('/editLastPeriodDate/:userId/:lastPeriodDate/:lang', () => {
+    describe('POST - /v1/verifyPurchase/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec=()=>{
@@ -92,7 +73,7 @@ describe('cycle', () => {
         });
     });
 
-    describe('/setBleedingDays/:userId/:lang', () => {
+    describe('GET - /v1/credit/:userId/:lang', () => {
         let tempToken=token;
         let tempUserId=userId;
         
@@ -111,7 +92,7 @@ describe('cycle', () => {
         });
     });
 
-    describe('/getUserAllPeriodDays/:userId/:lang', () => {
+    describe('GET - /v1/services/:lang', () => {
         let tempToken=token;
         let tempUserId=userId;
         
@@ -136,6 +117,44 @@ describe('cycle', () => {
         //     await nUser.destroy()
         //     expect(result.status).toBe(404);
         // });
+        
+    });
+
+    describe('GET - /v1/:userId/accountHistory/:lang', () => {
+        let tempToken=token;
+        let tempUserId=userId;
+        
+        const exec=()=>{
+            return request(server).get('/payment/v1/'+tempUserId+'/accountHistory/fa').set('x-auth-token', tempToken);
+        }
+         
+        it('return 400 if information invalid',async () => {
+            tempUserId = userId + 100;
+            TempToken = token;
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
+
+        it('return 404 if information not found',async () => {
+            let nUser =await user.create({name:"zahra", email:"newPayment@gmail.com",phone:"09125454218"});
+            tempToken =nUser.generateAuthToken();
+            tempUserId=nUser.id;
+            let result=await exec(); 
+             await user_log.destroy({where: {user_id:userId}});
+            await nUser.destroy()
+            expect(result.status).toBe(404);
+        });
+
+        it('return 200 if every things ok',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const addOption=await user_tracking_option.create({date: "2020-01-01",tracking_option_id:2 });
+            await addOption.setUser(usr);   
+            let result=await exec(); 
+            expect(result.status).toBe(200);
+        });
+
+        
         
     });
 

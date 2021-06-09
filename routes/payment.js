@@ -7,7 +7,6 @@ const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../config/logger/logger");
-const e = require("express");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -162,6 +161,17 @@ async function createWallet(tUser) {
 
     return wall;
 }
+async function checkBankInfo(authority, orderId) {
+    let info = await bank_receipt.findOne({
+        where: {
+            authority: authority,
+            order_id: orderId
+        }
+    })
+    if (info != null) return true;
+    return false;
+}
+
 router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
@@ -206,16 +216,6 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     }
 })
 
-async function checkBankInfo(authority, orderId) {
-    let info = await bank_receipt.findOne({
-        where: {
-            authority: authority,
-            order_id: orderId
-        }
-    })
-    if (info != null) return true;
-    return false;
-}
 router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
@@ -306,7 +306,7 @@ router.get("/v1/services/:lang", async (req, res) => {
     return res.status(200).json({ data: { services } })
 })
 
-router.get("/v1/accountHistory/:userId/:lang", auth, async (req, res) => {
+router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
