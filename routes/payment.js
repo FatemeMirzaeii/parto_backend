@@ -351,4 +351,33 @@ router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
     }
     return res.status(200).json({ data: list })
 })
+router.get("/v1/:userId/services/:serviceId/amount/:lang", auth, async (req, res) => {
+
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null || req.params.serviceId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let services = await service.findOne({
+        attributes: ['amount'],
+        where: {
+            id: req.params.serviceId
+        }
+    });
+    if (services == null) {
+        return res
+            .status(404)
+            .json(
+                {
+                    status: "error",
+                    data: {},
+                    message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+                });
+    }
+    return res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                data: {amount: services.amount },
+                message: await translate("SUCCESSFUL", req.params.lang)
+            });
+})
 module.exports = router;
