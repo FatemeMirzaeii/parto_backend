@@ -187,7 +187,7 @@ router.post("/verificationCode", async (req, res) => {
         milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
 
         if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
-          logger.info("error 2 min "+req.body.phone);
+          logger.info("error 2 min " + req.body.phone);
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
@@ -280,25 +280,20 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
-    if (new Date() - new Date(userExist[userExist.length-1].createdAt) > (2.5 * 60 * 1000)) {
+    if (new Date() - new Date(userExist[userExist.length - 1].createdAt) > (2.5 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
     else {
-      console.log(RegExp(userExist[userExist.length-1].code).test(req.body.code) == true)
-      if (RegExp(userExist[userExist.length-1].code).test(req.body.code) == true) {
-        await verification_code.destroy({
-          where: {
-            phone: req.body.phone,
-          },
-        });
-        return res
-          .status(200)
-          .json({ message: await translate("SUCCESSFUL", req.params.lang) });
-      } else
-        return res
-          .status(400)
-          .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      console.log(RegExp(userExist[userExist.length - 1].code).test(req.body.code) == true)
+
+      for (const element of userExist) {
+        await element.destroy();
+      }
+      return res
+        .status(200)
+        .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+
     }
   }
 });
