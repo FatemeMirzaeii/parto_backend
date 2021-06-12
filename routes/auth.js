@@ -68,7 +68,7 @@ router.post("/logIn/:lang", async (req, res) => {
       .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)9\d{9}$/g);
+    const regex = RegExp(/^(\98)9\d{9}$/g);
     let check = regex.test(req.body.phone);
     console.log("check", check);
     if (!check)
@@ -165,7 +165,7 @@ router.post("/verificationCode", async (req, res) => {
       .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)9\d{9}$/g);
+    const regex = RegExp(/^(\98)9\d{9}$/g);
     let check = regex.test(req.body.phone);
 
     if (!check)
