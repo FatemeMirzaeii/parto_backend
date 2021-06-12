@@ -137,7 +137,7 @@ router.post("/signIn/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    const regex = RegExp(/^(\98)9\d{9}$/g);
     let check = regex.test(req.body.phone);
 
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
