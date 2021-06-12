@@ -126,7 +126,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   let userExist;
-  if (req.body.type!= undefined && req.body.type == "lock") {
+  if (req.body.type != undefined && req.body.type == "lock") {
     userExist = await verification_code.findAll({
       where: {
         phone: req.body.phone,
@@ -147,7 +147,11 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
-    if (new Date() - new Date(userExist[userExist.length - 1].createdAt) > (2 * 60 * 1000)) {
+    let createAt = new Date(userExist[userExist.length - 1].createdAt);
+    let milliseconds = Date.parse(createAt);
+    milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+
+    if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
