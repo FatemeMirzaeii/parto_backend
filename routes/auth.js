@@ -16,8 +16,8 @@ router.post("/verificationCode", async (req, res) => {
   if (req.body.phone == "" || req.body.phone == null) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  console.log("lock", req.body.lock == true);
-  if (req.body.lock != undefined && req.body.lock == true) {
+  console.log("lock", req.body.type == "lock");
+  if (req.body.type != undefined && req.body.type == "lock") {
     code = Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
   }
   if (req.body.phone != "") {
@@ -27,7 +27,7 @@ router.post("/verificationCode", async (req, res) => {
     if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
     else {
       let userExist;
-      if (req.body.lock != undefined && req.body.lock == true) {
+      if (req.body.type != undefined && req.body.type == "lock") {
         userExist = await verification_code.findAll({
           where: {
             phone: req.body.phone,
@@ -69,7 +69,7 @@ router.post("/verificationCode", async (req, res) => {
           apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
         });
         let template = "verificationCode";
-        if (req.body.lock == true) { template = "lockCode" }
+        if (req.body.type == "lock") { template = "lockCode" }
         api.VerifyLookup({
           receptor: req.body.phone,
           token: code.toString(),
@@ -82,7 +82,7 @@ router.post("/verificationCode", async (req, res) => {
               await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
             }
             else if (status == 200) {
-              if (req.body.lock == true) {
+              if (req.body.type == "lock") {
                 console.log("heare");
                 await verification_code.create({
                   phone: req.body.phone,
@@ -126,7 +126,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   let userExist;
-  if (req.body.lock != undefined && req.body.lock == true) {
+  if (req.body.type!= undefined && req.body.type == "lock") {
     userExist = await verification_code.findAll({
       where: {
         phone: req.body.phone,
