@@ -26,7 +26,7 @@ testing_parto:
     # - npx sequelize db:seed --seed 20210408115203-new_health_tracking_category.js
     # - npx sequelize db:seed --seed 20210408115224-new_health_tracking_option.js
     # -  npx sequelize db:seed --seed 20210509195107-message_category.js
-    - npm test
+    # - npm test
     - echo "testing succsecfull  "
   only:
     - test
