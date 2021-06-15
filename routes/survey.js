@@ -32,7 +32,6 @@ function authentication(req) {
     }
     token = req.cookies.token;
   }
-  console.log("tokenValu", token);
   if (token == "") return "401";
 
   let verification = true;

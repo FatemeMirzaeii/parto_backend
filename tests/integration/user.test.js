@@ -19,6 +19,8 @@ describe('user', () => {
          server.close();
     })
     afterAll(async () => {
+        let userLog=await user_log.findOne({where: {user_id:userId}});
+        await userLog.destroy();
         await usr.destroy();
     });
 
@@ -69,7 +71,7 @@ describe('user', () => {
         });
 
         it('return 400 ',async () => {
-            tempPartnerCode=partnerCode+"a2";
+            tempPartnerCode=partnerCode+"2";
             const result=await exec(); 
             expect(result.status).toBe(400);
         });

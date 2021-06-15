@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const service = sequelize.define('service', {
     name:DataTypes.STRING,
-    amount:DataTypes.INTEGER,
+    price:DataTypes.INTEGER,
     commision: DataTypes.INTEGER,
     type: DataTypes.ENUM('virtual S', 'real S', 'Physical P'),
   }, {

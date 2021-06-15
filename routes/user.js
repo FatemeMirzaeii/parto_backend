@@ -12,14 +12,10 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
   }
 
   let str = req.body.partnerCode;
-  console.log("str",str);
-  //let code = str.substring(3, str.length);
   let splitStr=str.split("-");
-  console.log(splitStr[2]);
   let checkSum = (parseInt(splitStr[2], 10)-9)/2;
   let userId = (parseInt(splitStr[1],10)-(checkSum+3)) / 3;
-  console.log("ussssrId", userId);
-  console.log("ussssrId", checkSum);
+  
   if (parseInt(userId.toString()[0]) != checkSum || userId == req.params.userId) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
