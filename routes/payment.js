@@ -366,7 +366,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
             .json(
                 {
                     status: "error",
-                    data: {price:services.price},
+                    data: {},
                     message: await translate("INFORMATIONNOTFOUND", req.params.lang)
                 });
     }
@@ -375,7 +375,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
         .json(
             {
                 status: "success",
-                data: {amount: services.amount },
+                data: {price:services.price },
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
