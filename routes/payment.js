@@ -353,8 +353,7 @@ router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
 })
 router.get("/services/:serviceId/price/:lang", async (req, res) => {
 
-    let usr = await user.findByPk(req.params.userId);
-    if (usr == null || req.params.serviceId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (req.params.serviceId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let services = await service.findOne({
         attributes: ['price'],
         where: {
