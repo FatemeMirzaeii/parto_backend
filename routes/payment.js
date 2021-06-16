@@ -145,7 +145,7 @@ async function decreaseWallet(tWallet, amount) {
 
 }
 async function increaseWallet(tWallet, tService) {
-    await tWallet.update({ remaining: tWallet.remaining + tService.amount });
+    await tWallet.update({ remaining: tWallet.remaining + tService.price });
 }
 
 async function createWallet(tUser) {
@@ -300,7 +300,7 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
 router.get("/v1/services/:lang", async (req, res) => {
 
     let services = await service.findAll({
-        attributes: ['id', 'name', 'amount']
+        attributes: ['id', 'name', 'price']
     });
 
     return res.status(200).json({ data: { services } })
@@ -366,7 +366,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
             .json(
                 {
                     status: "error",
-                    data: {},
+                    data: {price:services.price},
                     message: await translate("INFORMATIONNOTFOUND", req.params.lang)
                 });
     }
