@@ -183,10 +183,10 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     let wall = await createWallet(usr);
     let inv = await createInvoice(serv, usr, req.body.method);
 
-    let amount = serv.amount;
+    let amount = serv.price;
     let discount = 0;
     if (req.body.discount != null || req.body.discount != undefined) {
-        amount = serv.amount - (serv.amount * (req.body.discount / 100));
+        amount = serv.price - (serv.price * (req.body.discount / 100));
         discount = req.body.discount;
     }
 
