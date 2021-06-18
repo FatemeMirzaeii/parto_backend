@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { Op } = require("sequelize");
-const auth = require("../middleware/auth");
-const translate = require("../config/translate");
-const { user, user_tracking_option, user_profile, health_tracking_option } = require("../models");
-const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
+const auth = require("../../middleware/auth");
+const translate = require("../../config/translate");
+const { user, user_tracking_option, user_profile, health_tracking_option } = require("../../models");
+const checkDateWithDateOnly = require("../../middleware/checkDateWithDateOnly");
 
 router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);

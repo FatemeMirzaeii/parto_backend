@@ -1,12 +1,12 @@
 const express = require("express");
-const { user, survey_answers, user_answer_survey } = require("../models");
-const auth = require("../middleware/auth");
+const { user, survey_answers, user_answer_survey } = require("../../models");
+const auth = require("../../middleware/auth");
 const router = express.Router();
-const translate = require("../config/translate");
+const translate = require("../../config/translate");
 const jwt = require("jsonwebtoken");
 var fs = require("fs");
 const useragent = require('useragent');
-const secret = fs.readFileSync("../private.key", "utf8");
+const secret = fs.readFileSync("../../private.key", "utf8");
 
 function authentication(req) {
   let token = "";

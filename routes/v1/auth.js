@@ -1,10 +1,10 @@
 
 const express = require("express");
-const { user, verification_code } = require("../models");
+const { user, verification_code } = require("../../models");
 const router = express.Router();
-const translate = require("../config/translate");
-const sendEmail = require("../middleware/sendEmail");
-const auth = require("../middleware/auth");
+const translate = require("../../config/translate");
+const sendEmail = require("../../middleware/sendEmail");
+const auth = require("../../middleware/auth");
 const Kavenegar = require('kavenegar');
 const useragent = require('useragent');
 

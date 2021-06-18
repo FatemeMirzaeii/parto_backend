@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const translate = require("../config/translate");
-const creds = require("../config/email");
-const sEmail = require("../middleware/sendEmail");
-const logger = require("../config/logger/logger");
+const translate = require("../../config/translate");
+const creds = require("../../config/email");
+const sEmail = require("../../middleware/sendEmail");
+const logger = require("../../config/logger/logger");
 
 
 router.post("/email", async (req, res) => {

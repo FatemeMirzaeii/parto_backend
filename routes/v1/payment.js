@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express();
-const { user, transaction, bank_receipt, invoice, service, wallet } = require("../models");
-const auth = require("../middleware/auth");
-const translate = require("../config/translate");
-const config = require('../middleware/IDPay_config');
-const handleError = require("../middleware/handleMysqlError");
+const { user, transaction, bank_receipt, invoice, service, wallet } = require("../../models");
+const auth = require("../../middleware/auth");
+const translate = require("../../config/translate");
+const config = require('../../middleware/IDPay_config');
+const handleError = require("../../middleware/handleMysqlError");
 const request = require("request-promise");
-const logger = require("../config/logger/logger");
+const logger = require("../../config/logger/logger");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -172,7 +172,7 @@ async function checkBankInfo(authority, orderId) {
     return false;
 }
 
-router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
+router.post("/purchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -216,7 +216,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     }
 })
 
-router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
+router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -281,7 +281,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
 })
 
-router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
+router.get("/credit/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -297,7 +297,7 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ data: { remaining: accountCredit.remaining } })
 })
 
-router.get("/v1/services/:lang", async (req, res) => {
+router.get("/services/:lang", async (req, res) => {
 
     let services = await service.findAll({
         attributes: ['id', 'name', 'price']
@@ -306,7 +306,7 @@ router.get("/v1/services/:lang", async (req, res) => {
     return res.status(200).json({ data: { services } })
 })
 
-router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
+router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });

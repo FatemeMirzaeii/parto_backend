@@ -1,11 +1,11 @@
 const express = require("express");
-const { message_info, user, message_category, message } = require("../models");
-const auth = require("../middleware/auth");
-const translate = require("../config/translate");
+const { message_info, user, message_category, message } = require("../../models");
+const auth = require("../../middleware/auth");
+const translate = require("../../config/translate");
 const router = express();
 const { Op } = require("sequelize");
 
-router.get("/v1/info/:userId/:categoryId/:lang", auth, async (req, res) => {
+router.get("/info/:userId/:categoryId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let sta = await message_info.findOne({
@@ -18,7 +18,7 @@ router.get("/v1/info/:userId/:categoryId/:lang", auth, async (req, res) => {
     return res.status(200).json({ data: { status: sta.status, totalQuestion: sta.total_question } });
 
 });
-router.get("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
+router.get("/goftinoId/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let gId = await message_info.findAll({
@@ -31,7 +31,7 @@ router.get("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ data: gId });
 
 });
-router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
+router.get("/totalQuestion/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let totalQuestion = 0;
@@ -50,7 +50,7 @@ router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
 
 });
 
-router.get("/v1/messageCategory/:lang", async (req, res) => {
+router.get("/messageCategory/:lang", async (req, res) => {
     let cat = await message_category.findAll({
         attributes: [['id', 'categoryId'], 'name']
     });
@@ -60,7 +60,7 @@ router.get("/v1/messageCategory/:lang", async (req, res) => {
 
 });
 
-router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
+router.post("/goftinoId/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (req.body.goftinoId == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -93,7 +93,7 @@ router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
-router.post("/v1/status/:userId/:lang", auth, async (req, res) => {
+router.post("/status/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (req.body.status == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -120,7 +120,7 @@ router.post("/v1/status/:userId/:lang", auth, async (req, res) => {
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
-router.post("/v1/:userId/:lang", auth, async (req, res) => {
+router.post("/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     let category = await message_category.findByPk(req.body.categoryId);
     if (usr == null || category == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -165,7 +165,7 @@ router.post("/v1/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 
-router.get("/v1/:userId/:categoryId/:lang", auth, async (req, res) => {
+router.get("/:userId/:categoryId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     let category = await message_category.findByPk(req.params.categoryId);
     if (usr == null || category == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });

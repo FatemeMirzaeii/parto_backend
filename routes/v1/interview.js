@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express();
-const auth = require("../middleware/auth");
-const { user_profile, user, pregnancy } = require("../models");
-const translate = require("../config/translate");
-const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
+const auth = require("../../middleware/auth");
+const { user_profile, user, pregnancy } = require("../../models");
+const translate = require("../../config/translate");
+const checkDateWithDateOnly = require("../../middleware/checkDateWithDateOnly");
 
 function check(cycleLength, periodLength) {
   if (cycleLength < 10 || cycleLength > 100) return false;

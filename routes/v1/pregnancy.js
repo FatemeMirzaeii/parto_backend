@@ -1,7 +1,7 @@
 const express = require("express");
-const { user, pregnancy, user_profile } = require("../models");
-const auth = require("../middleware/auth");
-const translate = require("../config/translate");
+const { user, pregnancy, user_profile } = require("../../models");
+const auth = require("../../middleware/auth");
+const translate = require("../../config/translate");
 const router = express();
 // const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 const { Op } = require("sequelize");

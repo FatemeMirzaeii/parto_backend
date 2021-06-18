@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express();
-const auth = require("../middleware/auth");
-const checkDate = require("../middleware/checkDateWithDateOnly");
-const { user, user_profile } = require("../models");
-const translate = require("../config/translate");
+const auth = require("../../middleware/auth");
+const checkDate = require("../../middleware/checkDateWithDateOnly");
+const { user, user_profile } = require("../../models");
+const translate = require("../../config/translate");
 const { Op } = require("sequelize");
 const fs = require("fs");
-const handleError = require("../middleware/handleMysqlError");
-const moment = require("moment");
+const handleError = require("../../middleware/handleMysqlError");
 
 router.get("/getProfile/:userId/:lang", auth, async (req, res) => {
   console.log("profileeee");

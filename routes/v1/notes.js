@@ -1,9 +1,9 @@
 const express = require("express");
-const auth = require("../middleware/auth");
-const { note, user } = require("../models");
+const auth = require("../../middleware/auth");
+const { note, user } = require("../../models");
 const router = express.Router();
-const translate = require("../config/translate");
-const handleError = require("../middleware/handleMysqlError");
+const translate = require("../../config/translate");
+const handleError = require("../../middleware/handleMysqlError");
 const { Op } = require("sequelize");
 
 router.get("/:userId/:noteId/:lang", auth, async (req, res) => {

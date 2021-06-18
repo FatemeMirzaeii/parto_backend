@@ -11,19 +11,28 @@ const nodeadmin = require("nodeadmin");
 const rateLimit = require("express-rate-limit");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
-const cycle = require("./routes/cycle");
-const pregnancy = require("./routes/pregnancy");
-const interview = require("./routes/interview");
-const healthTracking = require("./routes/health-tracking");
-const notes = require("./routes/notes");
-const user = require("./routes/user");
-const auth = require("./routes/auth");
-const contactUs = require("./routes/contactUs");
-const survey = require("./routes/survey");
-const payment = require("./routes/payment");
-const profile = require("./routes/profile");
-const message= require("./routes/message");
 const cookieParser = require('cookie-parser');
+
+
+// v1
+const cycle1 = require("./routes/v1/cycle");
+const pregnancy1 = require("./routes/v1/pregnancy");
+const interview1 = require("./routes/v1/interview");
+const healthTracking1 = require("./routes/v1/health-tracking");
+const notes1 = require("./routes/v1/notes");
+const user1 = require("./routes/v1/user");
+const auth1 = require("./routes/v1/auth");
+const contactUs1 = require("./routes/v1/contactUs");
+const survey1 = require("./routes/v1/survey");
+const payment1 = require("./routes/v1/payment");
+const profile1 = require("./routes/v1/profile");
+const message1= require("./routes/v1/message");
+
+
+// v2
+const healthTracking2 = require("./routes/v2/health-tracking");
+const user2 = require("./routes/v2/user");
+
 
 const developmentApp = express();
 
@@ -43,7 +52,7 @@ developmentApp.use(cors({
   credentials: true,
   exposedHeaders: 'x-auth-token'
 }));
-// developmentApp.set('trust proxy', 1) // trust first proxy
+
 
 const authenticatedLimiter = rateLimit({
   windowMs: 1000, // 1 second window
@@ -52,17 +61,20 @@ const authenticatedLimiter = rateLimit({
   { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
 });
-
+// v1
 developmentApp.use("/cycle", authenticatedLimiter);
 developmentApp.use("/pregnancy", authenticatedLimiter);
 developmentApp.use("/interview", authenticatedLimiter);
 developmentApp.use("/healthTracking", authenticatedLimiter);
 developmentApp.use("/notes", authenticatedLimiter);
 developmentApp.use("/user", authenticatedLimiter);
-developmentApp.use("/auth", authenticatedLimiter);
 developmentApp.use("/profile", authenticatedLimiter);
 developmentApp.use("/payment", authenticatedLimiter);
 developmentApp.use("/message", authenticatedLimiter);
+// v2
+developmentApp.use("/v2/healthTracking", authenticatedLimiter);
+developmentApp.use("/v2/user", authenticatedLimiter);
+
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
@@ -80,23 +92,28 @@ developmentApp.use(helmet());
 developmentApp.use(nodeadmin(developmentApp));
 developmentApp.use(express.json({limit: '50mb'}));
 developmentApp.use(express.urlencoded({limit: '50mb'}));
-developmentApp.use("/cycle", cycle);
-developmentApp.use("/pregnancy", pregnancy);
-developmentApp.use("/interview", interview);
-developmentApp.use("/healthTracking", healthTracking);
-developmentApp.use("/notes", notes);
-developmentApp.use("/user", user);
-developmentApp.use("/auth", auth);
-developmentApp.use("/contactUs", contactUs);
-developmentApp.use("/survey", survey);
-developmentApp.use("/profile", profile);
-developmentApp.use("/payment", payment);
-developmentApp.use("/message", message);
+// v1 route
+developmentApp.use("/cycle", cycle1);
+developmentApp.use("/pregnancy", pregnancy1);
+developmentApp.use("/interview", interview1);
+developmentApp.use("/healthTracking", healthTracking1);
+developmentApp.use("/notes", notes1);
+developmentApp.use("/user", user1);
+developmentApp.use("/auth", auth1);
+developmentApp.use("/contactUs", contactUs1);
+developmentApp.use("/survey", survey1);
+developmentApp.use("/profile", profile1);
+developmentApp.use("/payment", payment1);
+developmentApp.use("/message", message1);
+// v2 
+developmentApp.use("/v2/healthTracking", healthTracking2);
+developmentApp.use("/v2/user", user2);
+
 developmentApp.use(error);
 
 
 developmentApp.use(
-  "/api-doc", //todo: It is better to change the name to: api.pa torto.app/docs
+  "/doc", //url is dev.parto.app/doc
   function (req, res, next) {
     swaggerDocument.host = req.get("https://dev.parto.app");
     req.swaggerDoc = swaggerDocument;
@@ -106,16 +123,7 @@ developmentApp.use(
   swaggerUi.setup()
 );
 
-developmentApp.use(
-  "/test", //todo: It is better to change the name to: api.pa torto.app/docs
-  function (req, res, next) {
-    testSwaggerDocument.host = req.get("https://dev.parto.app");
-    req.swaggerDoc = testSwaggerDocument;
-    next();
-  },
-  swaggerUi.serve,
-  swaggerUi.setup()
-);
+
 console.log(process.env.NODE_PORT);
 // developmentApp.use(function(req, res, next) {
 //   res.setHeader("Content-Security-Policy", "script-src 'self'");
