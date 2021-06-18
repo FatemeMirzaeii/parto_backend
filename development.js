@@ -3,7 +3,6 @@ require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const fileUpload = require('express-fileupload');
 const swaggerDocument = require("./swagger.json");
-const testSwaggerDocument = require("./testSwagger.json");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -100,16 +99,6 @@ developmentApp.use(
   swaggerUi.setup()
 );
 
-developmentApp.use(
-  "/test", //todo: It is better to change the name to: api.pa torto.app/docs
-  function (req, res, next) {
-    testSwaggerDocument.host = req.get("https://dev.parto.app");
-    req.swaggerDoc = testSwaggerDocument;
-    next();
-  },
-  swaggerUi.serve,
-  swaggerUi.setup()
-);
 console.log(process.env.NODE_PORT);
 // developmentApp.use(function(req, res, next) {
 //   res.setHeader("Content-Security-Policy", "script-src 'self'");
