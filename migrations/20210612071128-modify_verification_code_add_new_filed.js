@@ -4,12 +4,12 @@ module.exports = {
   up(queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.addColumn(
-        'User', // table name
-        'version_type', // new field name
+        'verification_codes', // table name
+        'type', // new field name
         {
-          type: Sequelize.ENUM('Main', 'Partner', 'Teenager'),
+          type: Sequelize.STRING,
           allowNull: false,
-          defaultValue: 'Main',
+          default:"login"
         },
       ),
     ]);
@@ -18,7 +18,7 @@ module.exports = {
   down(queryInterface, Sequelize) {
     // logic for reverting the changes
     return Promise.all([
-      queryInterface.removeColumn('User', 'version_type'),
+      queryInterface.removeColumn('verification_codes', 'type'),
     ]);
   },
 };

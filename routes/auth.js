@@ -8,6 +8,164 @@ const Kavenegar = require("kavenegar");
 const useragent = require("useragent");
 const logger = require("../config/logger/logger");
 
+
+
+router.post("/verificationCode", async (req, res) => {
+  let flag = true;
+  let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+  if (req.body.phone == "" || req.body.phone == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  console.log("lock", req.body.type == "lock");
+  if (req.body.type != undefined && req.body.type == "lock") {
+    code = Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
+  }
+  if (req.body.phone != "") {
+    const regex = RegExp(/^(\98)9\d{9}$/g);
+    let check = regex.test(req.body.phone);
+
+    if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+    else {
+      let userExist;
+      if (req.body.type != undefined && req.body.type == "lock") {
+        userExist = await verification_code.findAll({
+          where: {
+            phone: req.body.phone,
+            type: "lock"
+          }
+        });
+      }
+      else {
+        userExist = await verification_code.findAll({
+          where: {
+            phone: req.body.phone,
+            type: "login"
+          }
+        });
+      }
+      console.log("flag", flag);
+      console.log("userExist", userExist);
+      if (userExist.length > 0) {
+
+        let createAt = new Date(userExist[userExist.length - 1].createdAt);
+        let milliseconds = Date.parse(createAt);
+        milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+
+        if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
+          flag = false;
+          return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
+        }
+        else if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+          for (const element of userExist) {
+            await element.destroy();
+          }
+          flag = true;
+        }
+      }
+
+      if (flag == true) {
+        console.log("kavenegar");
+        let api = Kavenegar.KavenegarApi({
+          apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
+        });
+        let template = "verificationCode";
+        if (req.body.type == "lock") { template = "lockCode" }
+        api.VerifyLookup({
+          receptor: req.body.phone,
+          token: code.toString(),
+          template: template,
+        },
+          async (response, status, message) => {
+            console.log("status", status);
+            if (status == 418) {
+              await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی ");
+              await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی ");
+            }
+            else if (status == 200) {
+              if (req.body.type == "lock") {
+                console.log("heare");
+                await verification_code.create({
+                  phone: req.body.phone,
+                  code: code,
+                  type: "lock"
+                });
+              }
+              else {
+                await verification_code.create({
+                  phone: req.body.phone,
+                  code: code,
+                  type: "login"
+                });
+
+              }
+              console.log("userCode", code)
+              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") }).end();
+            }
+            return res.status(status).json({ message: message });
+          })
+      }
+    }
+  }
+  // else{
+  //   const regex = RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})$/);
+  //   let check=regex.test(req.body.email); 
+
+  //   if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+  //   else{
+  //     const subject='Verification Code for parto application ';
+  //     let text =`کد فعالسازی شما : ${code}  `;
+  //     const result=sendEmail('parto@parto.app',req.body.email,text,subject);
+  //     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
+  //     else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa") , code:code}})
+  //   }
+  // }
+});
+
+router.post("/checkVerificationCode/:lang", async (req, res) => {
+  if (req.body.code == "" || req.body.code == null || req.body.phone == "" || req.body.phone == null) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  let userExist;
+  if (req.body.type != undefined && req.body.type == "lock") {
+    userExist = await verification_code.findAll({
+      where: {
+        phone: req.body.phone,
+        type: "lock"
+      }
+    });
+  }
+  else {
+    userExist = await verification_code.findAll({
+      where: {
+        phone: req.body.phone,
+        type: "login"
+      }
+    });
+  }
+  // console.log("user Exist", userExist);
+  if (userExist.length == 0) {
+    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  }
+  else {
+    let createAt = new Date(userExist[userExist.length - 1].createdAt);
+    let milliseconds = Date.parse(createAt);
+    milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+
+    if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+      console.log("time expier");
+      return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
+    }
+    else {
+      for (const element of userExist) {
+        await element.destroy();
+      }
+      return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+
+    }
+  }
+
+});
+
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
   if (req.body.phone == "") {
@@ -16,7 +174,7 @@ router.post("/signIn/:lang", async (req, res) => {
       .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\+98|0098|98|0)?9\d{9}$/g);
+    const regex = RegExp(/^(\98)9\d{9}$/g);
     let check = regex.test(req.body.phone);
 
     if (!check)
@@ -153,148 +311,6 @@ router.post("/logIn/:lang", async (req, res) => {
       .json({
         data: { id: usr.id, userName: usr.name, type: usr.version_type },
       });
-  }
-});
-
-router.post("/verificationCode", async (req, res) => {
-  let flag = true;
-  let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-  if (req.body.phone == "" || req.body.phone == null) {
-    return res
-      .status(400)
-      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  if (req.body.phone != "") {
-    const regex = RegExp(/^(\98)9\d{9}$/g);
-    let check = regex.test(req.body.phone);
-
-    if (!check)
-      return res
-        .status(400)
-        .json({ message: await translate("INVALIDENTRY", "fa") });
-    else {
-      let userExist = await verification_code.findAll({
-        where: {
-          phone: req.body.phone,
-        },
-      });
-      console.log("flag", flag);
-      console.log("userExist", userExist);
-      if (userExist.length > 0) {
-
-        let createAt = new Date(userExist[userExist.length - 1].createdAt);
-        let milliseconds = Date.parse(createAt);
-        milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
-
-        if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
-          logger.info("error 2 min " + req.body.phone);
-          flag = false;
-          return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
-        }
-        else if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
-          for (const element of userExist) {
-            await element.destroy();
-          }
-          flag = true;
-        }
-      }
-
-      if (flag == true) {
-        console.log("kavenegar");
-        let api = Kavenegar.KavenegarApi({
-          apikey:
-            "6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D",
-        });
-
-        api.VerifyLookup(
-          {
-            receptor: req.body.phone,
-            token: code.toString(),
-            template: "verificationCode",
-          },
-          async (response, status, message) => {
-            console.log("status", status);
-            if (status == 418) {
-              await sendEmail(
-                "parto@parto.email",
-                "Parvanebanoo.parto@gmail.com",
-                message,
-                "ارور سامانه پیامکی "
-              );
-              await sendEmail(
-                "parto@parto.email",
-                "H.Aghashahi @parto.email",
-                message,
-                "ارور سامانه پیامکی "
-              );
-            } else if (status == 200) {
-              await verification_code.create({
-                phone: req.body.phone,
-                code: code,
-              });
-              console.log("userCode", code);
-              return res
-                .status(200)
-                .json({ message: await translate("SUCCESSFUL", "fa") })
-                .end();
-            }
-            return res.status(status).json({ message: message });
-          }
-        );
-      }
-    }
-  }
-  // else{
-  //   const regex = RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})$/);
-  //   let check=regex.test(req.body.email);
-
-  //   if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-  //   else{
-  //     const subject='Verification Code for parto application ';
-  //     let text =`کد فعالسازی شما : ${code}  `;
-  //     const result=sendEmail('parto@parto.app',req.body.email,text,subject);
-  //     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
-  //     else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa") , code:code}})
-  //   }
-  // }
-});
-
-router.post("/checkVerificationCode/:lang", async (req, res) => {
-  if (
-    req.body.code == "" ||
-    req.body.code == null ||
-    req.body.phone == "" ||
-    req.body.phone == null
-  ) {
-    return res
-      .status(400)
-      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  let userExist = await verification_code.findAll({
-    where: {
-      phone: req.body.phone,
-    },
-  });
-  // console.log("user Exist", userExist);
-  if (userExist.length == 0) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  else {
-    if (new Date() - new Date(userExist[userExist.length - 1].createdAt) > (2.5 * 60 * 1000)) {
-      console.log("time expier");
-      return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
-    }
-    else {
-      console.log(RegExp(userExist[userExist.length - 1].code).test(req.body.code) == true)
-
-      for (const element of userExist) {
-        await element.destroy();
-      }
-      return res
-        .status(200)
-        .json({ message: await translate("SUCCESSFUL", req.params.lang) });
-
-    }
   }
 });
 

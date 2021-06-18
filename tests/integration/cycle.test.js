@@ -40,6 +40,8 @@ describe('cycle', () => {
             }
         })
         await uProfile.destroy();
+        let userLog=await user_log.findOne({where: {user_id:userId}});
+        await userLog.destroy();
         await usr.destroy();
     });
 

@@ -9,8 +9,6 @@ describe('contactUs', () => {
            return request(server).post('/contactUs/email')
            .send({"name":"zahra","email":`${email}`,"message":"صرفا براي تست","title":"تست ايميل كاربر"});
         }
-        
-
         it('return 200',async () => {
             jest.setTimeout(60*1000);
             const result=await exec(); 

@@ -23,7 +23,7 @@ router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
     },
   });
   if (uPeriod == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-  res.status(200).json({ data: uPeriod });
+  return res.status(200).json({ data: uPeriod });
 });
 
 router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, res) => {

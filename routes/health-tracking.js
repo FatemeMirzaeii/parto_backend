@@ -374,9 +374,9 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
   let j = 1;
 
   for (let i = 0; i < categoryAndOptions.length + 1; i++) {
-    console.log("iiiiiiiiiii",i);
+    console.log("iiiiiiiiiii", i);
     if (i == categoryAndOptions.length) {
-      console.log("eeeeeeeeeeeennnnnnnddddd",i);
+      console.log("eeeeeeeeeeeennnnnnnddddd", i);
       if (option.length != 0) {
         let temp = {};
         temp.categoryId = j;
@@ -642,6 +642,261 @@ router.get("/v2/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
     }
   }
   return res.status(200).json({ data: result });
+
+});
+
+router.get("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  let usrID;
+  if (usr.partner_id != null) {
+    usrID = usr.partner_id;
+  }
+  else {
+    usrID = usr.id;
+  }
+
+  let userOption = await user_tracking_option.findOne({
+    where: {
+      user_id: usrID
+    }
+  })
+  if (userOption == null) return res.status(200).json({ data: userOption });
+
+  let syncTime, existOption, existCategory;
+  if (req.params.syncTime == "null") {
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+      }
+    });
+    existCategory = await user_tracking_category.findAll({
+      attributes: ['tracking_category_id', 'date', 'value'],
+      where: {
+        user_id: usrID,
+      }
+    });
+  }
+  else {
+    syncTime = new Date(req.params.syncTime);
+    let milliseconds = Date.parse(syncTime);
+    milliseconds = milliseconds - ((4 * 60 + 30) * 60 * 1000);
+
+    existOption = await user_tracking_option.findAll({
+      attributes: ['date', 'tracking_option_id'],
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: new Date(milliseconds),
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    })
+    existCategory = await user_tracking_category.findAll({
+      attributes: ['tracking_category_id', 'date', 'value'],
+      where: {
+        user_id: usrID,
+        updatedAt: {
+          [Op.gte]: new Date(milliseconds),
+        }
+      },
+      orderBy: [['group', 'DESC']],
+    });
+
+  }
+  return res
+    .status(200)
+    .json(
+      {
+        status: "success",
+        data: { nonDescriptive: existOption, descriptive: existCategory },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+});
+
+router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if ((req.body.data).length == 0) {
+    return res
+      .status(200)
+      .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
+  let userOption, existData, optionIdExist;
+  let error = 0;
+  for (const element of req.body.nonDescriptive) {
+    optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id).catch(async function (err) {
+      console.log("ERR- health_tracking_option.findByPk(element.tracking_option_id)", err);
+      console.log(optionIdExist);
+      error = 1;
+      return;
+    })
+
+
+    if (element.state == 2) {
+      await user_tracking_option.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: element.date,
+          tracking_option_id: element.tracking_option_id
+        }
+      })
+    }
+    else if (element.state == 1) {
+      let categoryId = await health_tracking_option.findOne({
+        attributes: ['category_id'],
+        where: {
+          id: element.tracking_option_id
+        }
+      });
+      let choice = await health_tracking_category.findOne({
+        attributes: ['has_multiple_choice'],
+        where: {
+          id: categoryId.category_id
+        }
+      });
+
+      if (choice.has_multiple_choice == 0) {
+        let options = await health_tracking_option.findAll({
+          attributes: ['id'],
+          where: {
+            category_id: categoryId.category_id
+          }
+        });
+        let optionArray = [];
+        for (i = 0; i < options.length; i++) {
+          optionArray.push(options[i].id);
+        }
+
+        existData = await user_tracking_option.findOne({
+          where: {
+            user_id: req.params.userId,
+            date: element.date,
+            tracking_option_id: { [Op.in]: optionArray }
+          }
+        })
+
+        if (existData != null) {
+          await existData.setHealth_tracking_option(optionIdExist);
+        }
+        else {
+          try {
+            userOption = await user_tracking_option.create({
+              date: element.date
+            });
+            if (userOption != null) {
+              await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
+                let result = await handleError(userOption, err);
+                if (!result) error = 1;
+                return;
+              })
+              await userOption.setUser(usr).catch(async function (err) {
+                let result2 = await handleError(userOption, err);
+                if (!result2) error = 1;
+                return;
+              })
+            }
+          } catch (err) {
+            let result3 = await handleError(userOption, err);
+            if (!result3) error = 1;
+            return;
+          }
+        }
+      }
+      else if (choice.has_multiple_choice == 1) {
+        try {
+          userOption = await user_tracking_option.create({
+            date: element.date
+          });
+          if (userOption != null) {
+            await userOption.setHealth_tracking_option(optionIdExist).catch(async function (err) {
+              let result = await handleError(userOption, err);
+              if (!result) error = 1;
+              return;
+            })
+            await userOption.setUser(usr).catch(async function (err) {
+              let result2 = await handleError(userOption, err);
+              if (!result2) error = 1;
+              return;
+            })
+          }
+        } catch (err) {
+          let result3 = await handleError(userOption, err);
+          if (!result3) error = 1;
+          return;
+        }
+      }
+    }
+
+
+  }
+  for (const element of req.body.descriptive) {
+    optionIdExist = await health_tracking_category.findByPk(element.tracking_category_id).catch(async function (err) {
+      console.log("ERR- tracking_category_id.findByPk(element.tracking_option_id)", err);
+      console.log(optionIdExist);
+      error = 1;
+      return;
+    })
+    if (element.state == 2) {
+      await user_tracking_category.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: element.date,
+          tracking_category_id: element.tracking_category_id
+        }
+      })
+    }
+    else if (element.state == 1) {
+      
+        existData = await user_tracking_category.findOne({
+          where: {
+            user_id: req.params.userId,
+            date: element.date,
+            tracking_category_id: element.tracking_category_id
+          }
+        })
+
+        if (existData != null) {
+          await existData.update({value:element.value});
+        }
+        else {
+          try {
+            userOption = await category.create({
+              date: element.date,
+              value:element.value
+            });
+            if (userOption != null) {
+              await userOption.setHealth_tracking_category(optionIdExist).catch(async function (err) {
+                let result = await handleError(userOption, err);
+                if (!result) error = 1;
+                return;
+              })
+              await userOption.setUser(usr).catch(async function (err) {
+                let result2 = await handleError(userOption, err);
+                if (!result2) error = 1;
+                return;
+              })
+            }
+          } catch (err) {
+            let result3 = await handleError(userOption, err);
+            if (!result3) error = 1;
+            return;
+          }
+        }
+      }
+      
+    }
+  if (error == 1) {
+    return res
+    .status(500)
+    .json({ message: await translate("SERVERERROR", req.params.lang) });
+  }
+  else {
+    return res
+    .status(200)
+    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  }
 
 });
 
