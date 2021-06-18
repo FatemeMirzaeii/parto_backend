@@ -156,6 +156,10 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
     else {
+      console.log("code",userExist[userExist.length-1].code)
+      if(userExist[userExist.length-1].code!=req.body.code){
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      }
       for (const element of userExist) {
         await element.destroy();
       }
