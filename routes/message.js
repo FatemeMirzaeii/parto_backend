@@ -31,19 +31,32 @@ router.get("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ data: gId });
 
 });
-router.get("/v1/goftinoId/:userId/:categoryId/:lang", auth, async (req, res) => {
+router.get("/messageInfo/:userId/:categoryId/goftinoId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    let gId = await message_info.findAll({
-        attributes: [['goftino_id', 'goftinoId']],
+    let gId = await message_info.findOne({
+        attributes: ['goftino_id'],
         where: {
             user_id: req.params.userId,
-            category_id:req.params.categoryId
+            category_id: req.params.categoryId
         }
     });
-    if (gId.length == 0) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-    return res.status(200).json({ data: gId });
-
+    if (gId==null) {
+        return res.status(404)
+            .json({
+                status: "error",
+                data: {},
+                message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+            });
+    }
+    return res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                data: { goftinoId: gId.goftino_id },
+                message: await translate("SUCCESSFUL", req.params.lang)
+            });
 });
 
 router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
