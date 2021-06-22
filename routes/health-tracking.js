@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 const { user, health_tracking_category, user_tracking_option, health_tracking_option, user_tracking_category } = require("../models");
 const translate = require("../config/translate");
 const router = express();
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const handleError = require("../middleware/handleMysqlError");
 const moment = require("moment");
 
@@ -718,13 +718,15 @@ router.get("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res
 router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if ((req.body.data).length == 0) {
+  if ((req.body).length == 0) {
     return res
       .status(200)
       .json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
   let userOption, existData, optionIdExist;
   let error = 0;
+  console.log("nonDescriptive", req.body.nonDescriptive);
+
   for (const element of req.body.nonDescriptive) {
     optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id).catch(async function (err) {
       console.log("ERR- health_tracking_option.findByPk(element.tracking_option_id)", err);
@@ -732,7 +734,6 @@ router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, re
       error = 1;
       return;
     })
-
 
     if (element.state == 2) {
       await user_tracking_option.destroy({
@@ -838,17 +839,20 @@ router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, re
       error = 1;
       return;
     })
-    if (element.state == 2) {
-      await user_tracking_category.destroy({
-        where: {
-          user_id: req.params.userId,
-          date: element.date,
-          tracking_category_id: element.tracking_category_id
-        }
-      })
-    }
-    else if (element.state == 1) {
-      
+    let isDescriptive = await health_tracking_option.findOne({ where: { category_id: element.tracking_category_id } });
+    if (isDescriptive == null) {
+
+      if (element.state == 2) {
+        await user_tracking_category.destroy({
+          where: {
+            user_id: req.params.userId,
+            date: element.date,
+            tracking_category_id: element.tracking_category_id
+          }
+        })
+      }
+      else if (element.state == 1) {
+
         existData = await user_tracking_category.findOne({
           where: {
             user_id: req.params.userId,
@@ -858,13 +862,13 @@ router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, re
         })
 
         if (existData != null) {
-          await existData.update({value:element.value});
+          await existData.update({ value: element.value });
         }
         else {
           try {
-            userOption = await category.create({
+            userOption = await user_tracking_category.create({
               date: element.date,
-              value:element.value
+              value: element.value
             });
             if (userOption != null) {
               await userOption.setHealth_tracking_category(optionIdExist).catch(async function (err) {
@@ -885,17 +889,18 @@ router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, re
           }
         }
       }
-      
+
     }
+  }
   if (error == 1) {
     return res
-    .status(500)
-    .json({ message: await translate("SERVERERROR", req.params.lang) });
+      .status(500)
+      .json({ message: await translate("SERVERERROR", req.params.lang) });
   }
   else {
     return res
-    .status(200)
-    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+      .status(200)
+      .json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
 
 });
