@@ -24,11 +24,21 @@ describe('user', () => {
         await usr.destroy();
     });
 
-    describe('/get-partnerVerificationCode/:userId/:lang', () => {
+    // describe('parseCode(partnerCode)', () => {
+    //     it('should equal ',async () => {
+    //         const result=partnerCode("PRT-2128-23"); 
+    //         console.log("resultt",result.text);
+    //         expect(result.text).toBe(200);
+    //         // partnerCode=((result.text).split("\"")[5]).toString();
+            
+    //     });
+    // });
+
+    describe('/get- partnerVerificationCode/:lang', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
-           return request(server).get('/user/partnerVerificationCode/'+tempUserId+'/fa')
+           return request(server).get('/user/'+tempUserId+'/partnerVerificationCode/fa')
            .set('x-auth-token', tempToken);
         }
         
@@ -37,26 +47,17 @@ describe('user', () => {
             tempUserId=userId;
             const result=await exec(); 
             expect(result.status).toBe(200);
-            partnerCode=((result.text).split("\"")[5]).toString();
-            
-        });
-
-        it('return 400 ',async () => {
-            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454218"});
-            tempToken =tempUsr.generateAuthToken();
-            tempUserId=tempUsr.id;
-            await tempUsr.destroy();
-            const result=await exec(); 
-            expect(result.status).toBe(400);
+            console.log("ppp",result.body.data.partnerCode);
+            partnerCode=result.body.data.partnerCode;
         });
     });
 
-    describe('/post-partnerVerificationCode/:userId/:lang', () => {
+    describe('/post- partnerVerificationCode/:lang', () => {
         let tempToken=token;
         let tempUserId=userId;
         let tempPartnerCode=partnerCode;
         const exec=()=>{
-           return request(server).post('/user/partnerVerificationCode/'+tempUserId+'/fa')
+           return request(server).post('/user/'+tempUserId+'/partnerVerificationCode/fa')
            .send({"partnerCode":`${tempPartnerCode}`})
            .set('x-auth-token', tempToken);
         }
@@ -81,6 +82,12 @@ describe('user', () => {
             const result=await exec(); 
             expect(result.status).toBe(400);
         });
+
+        // it('return 404 ',async () => {
+        //     tempPartnerCode="";
+        //     const result=await exec(); 
+        //     expect(result.status).toBe(400);
+        // });
     });
 
     describe('/post-user/versionType/:userId/:lang', () => {
@@ -88,7 +95,7 @@ describe('user', () => {
         let tempUserId=userId;
         let type;
         const exec=()=>{
-           return request(server).post('/user/versionType/'+tempUserId+'/fa')
+           return request(server).post('/user/'+tempUserId+'/versionType/fa')
            .send({"type":`${type}`})
            .set('x-auth-token', tempToken);
         }
@@ -123,7 +130,7 @@ describe('user', () => {
         let tempUserId=userId;
         let type;
         const exec=()=>{
-           return request(server).put('/user/versionType/'+tempUserId+'/fa')
+           return request(server).put('/user/'+tempUserId+'/versionType/fa')
            .send({"type":`${type}`})
            .set('x-auth-token', tempToken);
         }
@@ -139,7 +146,7 @@ describe('user', () => {
         it('return 400 ',async () => {
             tempToken=token;
             tempUserId=userId;
-            type="Partner";
+            type="partner";
             const result=await exec(); 
             expect(result.status).toBe(400);
         });
@@ -157,7 +164,7 @@ describe('user', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
-           return request(server).get('/user/versionType/'+tempUserId+'/fa')
+           return request(server).get('/user/'+tempUserId+'/versionType/fa')
            .set('x-auth-token', tempToken);
         }
         
@@ -168,14 +175,6 @@ describe('user', () => {
             expect(result.status).toBe(200);
         });
 
-        it('return 400 ',async () => {
-            let tempUsr =await user.create({name:"zahra", email:"tempUser_zzdand7755@gmail.com",phone:"09125454218"});
-            tempToken =tempUsr.generateAuthToken();
-            tempUserId=tempUsr.id;
-            await tempUsr.destroy();
-            const result=await exec(); 
-            expect(result.status).toBe(400);
-        });
     });
 
         

@@ -12,13 +12,15 @@ module.exports = {
       { key: 'NONOTES', created_at: new Date(), updated_at: new Date() },//404
       { key: 'EXISTS', created_at: new Date(), updated_at: new Date() },//409
       { key: 'NOPERMISSION', created_at: new Date(), updated_at: new Date() },//401
-      { key: 'INVALIDTOKEN', created_at: new Date(), updated_at: new Date() },//400
+      { key: 'INVALIDTOKENORUSERID', created_at: new Date(), updated_at: new Date() },//400
       { key: 'TIMEOVER', created_at: new Date(), updated_at: new Date() },//408
       { key: 'INVALIDID', created_at: new Date(), updated_at: new Date() },//400
       { key: 'SERVERERROR', created_at: new Date(), updated_at: new Date() },//500
       { key: 'INFORMATIONNOTFOUND', created_at: new Date(), updated_at: new Date() },//404
       { key: 'INVALIDDATE', created_at: new Date(), updated_at: new Date() },//400
       { key: 'CONTRADICTION', created_at: new Date(), updated_at: new Date() },//409
+      { key: 'UERENOTFOUND', created_at: new Date(), updated_at: new Date() },//404
+      { key: 'PARTNERNOTFOUND', created_at: new Date(), updated_at: new Date() },//404
       
     ], {});
   },

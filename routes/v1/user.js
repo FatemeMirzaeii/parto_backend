@@ -1,77 +1,129 @@
 const express = require("express");
-const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey,note , user_tracking_category} = require("../../models");
+const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey, note, user_tracking_category } = require("../../models");
 const router = express.Router();
 const translate = require("../../config/translate");
 const auth = require("../../middleware/auth");
 
+function parseCode(partnerCode) {
+  let splitStr = partnerCode.split("-");
+  let checkSum = (parseInt(splitStr[2], 10) - 9) / 2;
+  let partnerId = (parseInt(splitStr[1], 10) - (checkSum + 3)) / 3;
+  return { "partnerId": partnerId, "checkSum": checkSum };
 
-router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
+}
+router.post("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || usr == "" || req.body.partnerCode == null || req.body.partnerCode == "") {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
 
-  let str = req.body.partnerCode;
-  let splitStr=str.split("-");
-  let checkSum = (parseInt(splitStr[2], 10)-9)/2;
-  let userId = (parseInt(splitStr[1],10)-(checkSum+3)) / 3;
-  
-  if (parseInt(userId.toString()[0]) != checkSum || userId == req.params.userId) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.partnerCode == null || req.body.partnerCode == "") {
+    return res.status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
-
-  let usrPartner = await user.findByPk(userId);
-  console.log("partner", usrPartner);
-  if (usrPartner == null || usrPartner == "") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  // check
+  let parse=parseCode(req.body.partnerCode);
+  let partnerId = parse.partnerId;
+  let checksum = parse.checkSum;
+  if (partnerId.toString()[0] != checksum || partnerId == usr.id) {
+    return res.status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
+  }
+  let usrPartner = await user.findByPk(partnerId);
+  if (usrPartner == null){
+    return res.status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("PARTNERNOTFOUND", req.params.lang)
+    });
+  } 
+  // set partner
   await usr.setUser(usrPartner);
-
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
-router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
+router.get("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  console.log("useeeer", usr == null);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  
-  let checkSum =  parseInt(usr.id.toString()[0],10);
-
-  console.log("checksum", checkSum);
-  let partnerCode = "PRT-" + ((usr.id * 3) + (checkSum + 3)).toString() + "-" + ((checkSum*2)+9).toString();
-  return res.status(200).json({ data: { partnerCode: partnerCode } });
+  let checkSum = parseInt(usr.id.toString()[0], 10);
+  let partnerCode = "PRT-" + ((usr.id * 3) + (checkSum + 3)).toString() + "-" + ((checkSum * 2) + 9).toString();
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {partnerCode: partnerCode},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
-router.put("/versionType/:userId/:lang", auth, async (req, res) => {
+router.put("/:userId/versionType/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body.type == "" || req.body.type == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  if (usr.version_type != "Teenager" || req.body.type != "Main") return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.type == "" || req.body.type == null) {
+    return res.status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
+  }
+  if (usr.version_type != "Teenager" || req.body.type != "Main"){
+    return res.status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
+  }
   await usr.update({ version_type: req.body.type });
-  return res
-    .status(200)
-    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
-router.post("/versionType/:userId/:lang", auth, async (req, res) => {
+router.post("/:userId/versionType/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body.type == "" || req.body.type == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.type == "" || req.body.type == null||
+   (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager")) {
+    return res.status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
-  if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  }
-  usr.version_type = req.body.type ;
-  await usr.save();
-  return res
-    .status(200)
-    .json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  // if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
+  //   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  // }
+  await usr.update({ version_type: req.body.type });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
-router.get("/versionType/:userId/:lang", auth, async (req, res) => {
+router.get("/:userId/versionType/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  return res
-    .status(200)
-    .json({ data: { type: usr.version_type } });
+  return res.status(200)
+  .json({
+    status: "success",
+    data: {type: usr.version_type},
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
+  
 })
 
-router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
+router.put("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   await user_tracking_option.destroy({
     where: {
       user_id: req.params.userId,
@@ -104,12 +156,16 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
-router.delete("/user/:userId/:lang", auth, async (req, res) => {
+router.delete("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   await user_tracking_option.destroy({
     where: {
       user_id: req.params.userId,
@@ -120,7 +176,7 @@ router.delete("/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  
+
   await user_profile.destroy({
     where: {
       user_id: req.params.userId
@@ -132,16 +188,21 @@ router.delete("/user/:userId/:lang", auth, async (req, res) => {
       userId: req.params.userId
     }
   })
-  
+
   await user_log.destroy({
     where: {
       user_id: req.params.userId
     }
   })
-  
+
   await usr.destroy();
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 })
 
 
