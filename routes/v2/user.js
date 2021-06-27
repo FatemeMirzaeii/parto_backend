@@ -50,7 +50,12 @@ router.put("/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res.status(200)
+  .json({
+    status: "success",
+    data: {},
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
 })
 router.delete("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
@@ -98,7 +103,12 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
   
   await usr.destroy();
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res.status(200)
+  .json({
+    status: "success",
+    data: {},
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
 })
 
 module.exports = router;

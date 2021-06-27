@@ -11,7 +11,7 @@ function parseCode(partnerCode) {
   return { "partnerId": partnerId, "checkSum": checkSum };
 
 }
-router.post("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => {
+router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
 
   if (req.body.partnerCode == null || req.body.partnerCode == "") {
@@ -52,7 +52,7 @@ router.post("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => 
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
-router.get("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => {
+router.get("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let checkSum = parseInt(usr.id.toString()[0], 10);
   let partnerCode = "PRT-" + ((usr.id * 3) + (checkSum + 3)).toString() + "-" + ((checkSum * 2) + 9).toString();
@@ -63,7 +63,7 @@ router.get("/:userId/partnerVerificationCode/:lang", auth, async (req, res) => {
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
-router.put("/:userId/versionType/:lang", auth, async (req, res) => {
+router.put("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (req.body.type == "" || req.body.type == null) {
     return res.status(400)
@@ -89,7 +89,7 @@ router.put("/:userId/versionType/:lang", auth, async (req, res) => {
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
-router.post("/:userId/versionType/:lang", auth, async (req, res) => {
+router.post("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (req.body.type == "" || req.body.type == null||
    (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager")) {
@@ -111,7 +111,7 @@ router.post("/:userId/versionType/:lang", auth, async (req, res) => {
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
-router.get("/:userId/versionType/:lang", auth, async (req, res) => {
+router.get("/versionType/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   return res.status(200)
   .json({

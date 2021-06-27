@@ -177,5 +177,39 @@ describe('user', () => {
 
     });
 
+    describe('/PUT-user/:userId/:lang', () => {
+        let tempToken=token;
+        let tempUserId=userId;
+        const exec=()=>{
+           return request(server).put('/user/'+tempUserId+'/fa')
+           .set('x-auth-token', tempToken);
+        }
+        
+        it('return 200',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+        });
+
+    });
+
+    describe('/DELETE-user/:userId/:lang', () => {
+        let tempToken=token;
+        let tempUserId=userId;
+        const exec=()=>{
+           return request(server).delete('/user/'+tempUserId+'/fa')
+           .set('x-auth-token', tempToken);
+        }
+        
+        it('return 200',async () => {
+            tempToken=token;
+            tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+        });
+
+    });
+
         
 });
