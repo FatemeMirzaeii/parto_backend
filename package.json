@@ -5,9 +5,7 @@
   "main": "pm2-manage.json",
   "scripts": {
     "start": "node app.js",
-    "test": "jest --detectOpenHandles --maxWorkers=1",
-    "test:watch": "jest --watch --maxWorkers=25%",
-    "test:ci": "jest --runInBand"
+    "test": "jest --coverage --forceExit --detectOpenHandles --maxWorkers=1"
   },
   "repository": {
     "type": "git",

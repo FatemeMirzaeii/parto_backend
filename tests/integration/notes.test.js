@@ -58,13 +58,7 @@ describe('note', () => {
             expect(result.status).toBe(404);
 
         });
-        it('return 400 if user not exist', async () => {
-            tempToken = token;
-            tempUserId = userId + 3;
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
+       
     });
 
     describe('GET-/note/:userId/:noteId/:lang', () => {
@@ -75,13 +69,6 @@ describe('note', () => {
             return request(server).get('/notes/' + tempUserId + '/' + tempNoteId + '/fa').set('x-auth-token', tempToken);
         }
 
-        it('return 400 if resive inavalid intery', async () => {
-            tempToken = token;
-            tempUserId = userId + 100;
-            tempNoteId = noteId;
-            const result = await exec();
-            expect(result.status).toBe(400);
-        });
         it('return 200 if every things ok', async () => {
             tempToken = token;
             tempUserId = userId;
@@ -144,17 +131,7 @@ describe('note', () => {
             const result = await exec();
             expect(result.status).toBe(400);
         });
-        it('return 400 if user not exist', async () => {
-            tempToken = token;
-            tempUserId = userId + 3;
-            tempNoteId = noteId;
-            tempTitle = "title";
-            tempContent = "content";
-            date = "2021-01-01";
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
+       
     });
 
     describe('POST-/note/:userId/:lang', () => {
@@ -182,16 +159,6 @@ describe('note', () => {
             tempUserId = userId;
             tempTitle = null;
             tempContent = null;
-            date = "2021-01-01";
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
-        it('return 400 if user not exist', async () => {
-            tempToken = token;
-            tempUserId = userId + 3;
-            tempTitle = "title";
-            tempContent = "content";
             date = "2021-01-01";
             const result = await exec();
             expect(result.status).toBe(400);
@@ -243,14 +210,6 @@ describe('note', () => {
                 .set('x-auth-token', tempToken);
         }
 
-        it('return 400 if date is null', async () => {
-            tempToken = token;
-            tempUserId = userId+10;
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
-
         it('return 200 if every things ok', async () => {
             tempToken = token;
             tempUserId = userId;
@@ -284,14 +243,7 @@ describe('note', () => {
             const result = await exec();
             expect(result.status).toBe(200);
         });
-        
-        it('return 400 if user not exist', async () => {
-            tempToken = token;
-            tempUserId = userId + 3;
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
+                
     });
 
     describe('DELETE-/note/:userId/:lang', () => {
@@ -302,13 +254,6 @@ describe('note', () => {
             return request(server).delete('/notes/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
-        it('return 400 if date is null', async () => {
-            tempToken = token;
-            tempUserId = userId + 3;
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
         it('return 200 if every things ok', async () => {
             tempToken = token;
             tempUserId = userId;
@@ -331,15 +276,6 @@ describe('note', () => {
             return request(server).delete('/notes/' + tempUserId + '/' + tempNoteId + '/fa').set('x-auth-token', tempToken);
         }
 
-        it('return 400 if date is null', async () => {
-
-            tempToken = token;
-            tempUserId = userId + 10;
-            tempNoteId = noteId;
-            const result = await exec();
-            expect(result.status).toBe(400);
-
-        });
         it('return 200 if every things ok', async () => {
             tempToken = token;
             tempUserId = userId;

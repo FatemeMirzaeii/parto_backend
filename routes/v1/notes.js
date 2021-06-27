@@ -7,9 +7,7 @@ const handleError = require("../../middleware/handleMysqlError");
 const { Op } = require("sequelize");
 
 router.get("/:userId/:noteId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   const nt = await note.findOne({
     attributes: ['id', 'title', 'content', ['note_date', 'noteDate']],
     where: {
@@ -20,9 +18,7 @@ router.get("/:userId/:noteId/:lang", auth, async (req, res) => {
   return res.status(200).json({ data: nt });
 });
 router.get("/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   const nt = await note.findAll({
     attributes: ['id', 'title', 'content', ['note_date', 'noteDate']],
     where: {
@@ -35,10 +31,10 @@ router.get("/:userId/:lang", auth, async (req, res) => {
 });
 router.post("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body.noteDate == null || req.body.noteDate == undefined || req.body.noteDate == "") {
+  if (req.body.noteDate == null  || req.body.noteDate == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
-  if ((req.body.content == null || req.body.content == undefined || req.body.content == "") && (req.body.title == null || req.body.title == undefined || req.body.title == "")) {
+  if ((req.body.content == null || req.body.content == "") && (req.body.title == null || req.body.title == "")) {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
 
@@ -71,7 +67,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
 
 router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body.noteDate == null || req.body.noteDate == undefined || req.body.noteDate == "") {
+  if (req.body.noteDate == null || req.body.noteDate == undefined || req.body.noteDate == "") {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if ((req.body.content == null || req.body.content == undefined || req.body.content == "") && (req.body.title == null || req.body.title == undefined || req.body.title == "")) {
@@ -95,8 +91,7 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
 
 router.delete("/:userId/:noteId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   const nt = await note.destroy({
     where: {
       id: req.params.noteId,
@@ -108,8 +103,7 @@ router.delete("/:userId/:noteId/:lang", auth, async (req, res) => {
 
 router.delete("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   const nt = await note.destroy({
     where: {
       user_id: req.params.userId,
@@ -120,8 +114,7 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
 
 router.get("/syncNote/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
+  
   let syncTime, uNote;
   if (req.params.syncTime == "null" || req.params.syncTime == undefined) {
     uNote = await note.findAll({
@@ -153,7 +146,7 @@ router.get("/syncNote/:userId/:syncTime/:lang", auth, async (req, res) => {
 
 router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body == undefined) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if ( req.body == undefined) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
   let uNote = {};
   let result = [];

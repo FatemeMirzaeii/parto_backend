@@ -38,7 +38,7 @@ describe('user', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
-           return request(server).get('/user/'+tempUserId+'/partnerVerificationCode/fa')
+           return request(server).get('/user/partnerVerificationCode/'+tempUserId+'/fa')
            .set('x-auth-token', tempToken);
         }
         
@@ -57,7 +57,7 @@ describe('user', () => {
         let tempUserId=userId;
         let tempPartnerCode=partnerCode;
         const exec=()=>{
-           return request(server).post('/user/'+tempUserId+'/partnerVerificationCode/fa')
+           return request(server).post('/user/partnerVerificationCode/'+tempUserId+'/fa')
            .send({"partnerCode":`${tempPartnerCode}`})
            .set('x-auth-token', tempToken);
         }
@@ -95,7 +95,7 @@ describe('user', () => {
         let tempUserId=userId;
         let type;
         const exec=()=>{
-           return request(server).post('/user/'+tempUserId+'/versionType/fa')
+           return request(server).post('/user/versionType/'+tempUserId+'/fa')
            .send({"type":`${type}`})
            .set('x-auth-token', tempToken);
         }
@@ -130,7 +130,7 @@ describe('user', () => {
         let tempUserId=userId;
         let type;
         const exec=()=>{
-           return request(server).put('/user/'+tempUserId+'/versionType/fa')
+           return request(server).put('/user/versionType/'+tempUserId+'/fa')
            .send({"type":`${type}`})
            .set('x-auth-token', tempToken);
         }
@@ -164,7 +164,7 @@ describe('user', () => {
         let tempToken=token;
         let tempUserId=userId;
         const exec=()=>{
-           return request(server).get('/user/'+tempUserId+'/versionType/fa')
+           return request(server).get('/user/versionType/'+tempUserId+'/fa')
            .set('x-auth-token', tempToken);
         }
         
@@ -205,6 +205,43 @@ describe('user', () => {
         it('return 200',async () => {
             tempToken=token;
             tempUserId=userId;
+            const result=await exec(); 
+            expect(result.status).toBe(200);
+        });
+
+    });
+
+    describe('/PUT-/v2/user/:userId/:lang', () => {
+        let tempToken=token;
+        let tempUserId=userId;
+        const exec=()=>{
+           return request(server).put('/v2/user/'+tempUserId+'/fa')
+           .set('x-auth-token', tempToken);
+        }
+        
+        it('return 200',async () => {
+            let tempUser =await user.create({name:"zahra", email:"user_zzdand7755@gmail.com",phone:"09125454218"});
+            tempToken =tempUser.generateAuthToken();
+            tempUserId=tempUser.id;
+            const result=await exec(); 
+            await tempUser.destroy()
+            expect(result.status).toBe(200);
+        });
+
+    });
+
+    describe('/DELETE-/v2/user/:userId/:lang', () => {
+        let tempToken=token;
+        let tempUserId=userId;
+        const exec=()=>{
+           return request(server).delete('/v2/user/'+tempUserId+'/fa')
+           .set('x-auth-token', tempToken);
+        }
+        
+        it('return 200',async () => {
+            let tempUser =await user.create({name:"zahra", email:"user_zzdand7755@gmail.com",phone:"09125454218"});
+            tempToken =tempUser.generateAuthToken();
+            tempUserId=tempUser.id;
             const result=await exec(); 
             expect(result.status).toBe(200);
         });
