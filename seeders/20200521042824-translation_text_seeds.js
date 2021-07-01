@@ -35,7 +35,7 @@ module.exports = {
       { language_id: 2, key_id: 15, text: " Invalid Date", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 16, text: "بین اطلاعات وارد شده و اطلاعات موجود تناقض وجود دارد", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 16, text: "Discrepancy between the information entered and available", created_at: new Date(), updated_at: new Date() },
-      { language_id: 1, key_id: 17, text: " کاربر وجود ندارد", created_at: new Date(), updated_at: new Date() },
+      { language_id: 1, key_id: 17, text: "کاربر پیدا نشد", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 17, text: "User not exist", created_at: new Date(), updated_at: new Date() },
       { language_id: 1, key_id: 18, text: "اطلاعات همسر شما یافت نشد", created_at: new Date(), updated_at: new Date() },
       { language_id: 2, key_id: 18, text: "partner information not found", created_at: new Date(), updated_at: new Date() },

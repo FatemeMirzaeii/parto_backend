@@ -100,9 +100,7 @@ router.post("/versionType/:userId/:lang", auth, async (req, res) => {
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
-  // if (req.body.type != "Main" && req.body.type != "Partner" && req.body.type != "Teenager") {
-  //   return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  // }
+  
   await usr.update({ version_type: req.body.type });
   return res.status(200)
     .json({
