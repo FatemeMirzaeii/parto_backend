@@ -43,38 +43,21 @@ async function sendSms(type, phone, code, template) {
   let api = Kavenegar.KavenegarApi({
     apikey: '6D58546F68663949326476336B636A354F39542B474B47456D564A68504361377154414D78446D637263383D'
   });
+  return new Promise((resolve, reject) => {
+    api.VerifyLookup({
+      receptor: phone,
+      token: code.toString(),
+      template: template,
+    },
+      async (response, status, message) => {
 
-  api.VerifyLookup({
-    receptor: phone,
-    token: code.toString(),
-    template: template,
-  },
-    async (response, status, message) => {
-      if (status == 418) {
-        await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی- بک اند ");
-        await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی- بک اند ");
-      }
-      // else if (status == 200) {
-      //   if (type == "lock") {
-      //     await verification_code.create({
-      //       phone: phone,
-      //       code: code,
-      //       type: "lock"
-      //     });
-      //   }
-      //   else {
-      //     await verification_code.create({
-      //       phone: phone,
-      //       code: code,
-      //       type: "login"
-      //     });
-
-      //   }
-      //   return status
-      // }
-      return status;
-    })
-
+        if (status == 418) {
+          await sendEmail('parto@parto.email', 'Parvanebanoo.parto@gmail.com', message, "ارور سامانه پیامکی- بک اند ");
+          await sendEmail('parto@parto.email', 'H.Aghashahi @parto.email', message, "ارور سامانه پیامکی- بک اند ");
+        }
+        resolve(status);
+      })
+  })
 }
 
 async function getCreateTime(userExist) {
@@ -605,7 +588,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
         .json({
           status: "error",
           data: {},
-          message: "لطفا پس از  دو دقیقه دوباره درخواست دهید"
+          message: "دقیقه دوباره درخواست دهید " + time / 60000 + "لطفا پس از"
         });
     }
     else if (getCreateTime(userExist) > time) {
@@ -623,7 +606,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
     let result;
     // send Email
     if (req.body.phone != null) {
-      result = sendSms(type, req.body.phone, code, template);
+      result = await sendSms(type, req.body.phone, code, template);
       if (result == 200) {
         await verification_code.create({
           phone: req.body.phone,
@@ -642,22 +625,22 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
         code: code,
         type: type
       })
-    
+
     }
-    console.log("resultttttttttt",result);
-    if (result==true|| result == 200) {
+    console.log("resultttttttttt", result);
+    if (result == 200) {
       return res.status(200).json({
         status: "success",
-        data: { code: code },
+        data: {},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
     else return res.status(502)
-    .json({
-      status: "error",
-      data: {},
-      message: await translate("SERVERERROR", req.params.lang)
-    });
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("SERVERERROR", req.params.lang)
+      });
   }
 
 });
@@ -707,7 +690,9 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       });
   }
   else {
-    if (getCreateTime(userExist) > time) {
+    console.log("tttttttttttt",getCreateTime(userExist));
+    console.log("tttttttttttt",time);
+    if (await getCreateTime(userExist) > time) {
       console.log("time expier");
       return res.status(408)
         .json({
@@ -733,7 +718,7 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
   }
   return res.status(200).json({
     status: "success",
-    data: { },
+    data: {},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });

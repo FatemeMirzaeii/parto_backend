@@ -36,11 +36,11 @@ async function sendEmail(from, to, message, subject) {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log("error is " + error);
-                resolve(false); // or use rejcet(false) but then you will have to handle errors
+                resolve(500); // or use rejcet(false) but then you will have to handle errors
             }
             else {
                 console.log('Email sent: ' + info.response);
-                resolve(true);
+                resolve(200);
             }
         });
     })
