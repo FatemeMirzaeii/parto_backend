@@ -483,7 +483,11 @@ router.put("/forgetPassword/:lang", async (req, res) => {
         data: {},
         message: await translate("INVALIDENTRY", req.params.lang)
       });
-  usr = await checkUserWithEmail(req.body.email, req.body.password)
+  usr = await user.findOne({
+    where: {
+      email: req.body.email
+    }
+  })
   if (usr == null)
     return res.status(404)
       .json({
@@ -492,10 +496,9 @@ router.put("/forgetPassword/:lang", async (req, res) => {
         message: await translate("UERENOTFOUND", req.params.lang)
       });
   else {
-
     await usr.update({ password: req.body.newPassword });
   }
-  return res.header("x-auth-token", token).status(200)
+  return res.status(200)
     .json({
       status: "success",
       data: {},
@@ -534,7 +537,7 @@ router.put("/changePassword/:lang", async (req, res) => {
 
     await usr.update({ password: req.body.newPassword });
   }
-  return res.header("x-auth-token", token).status(200)
+  return res.status(200)
     .json({
       status: "success",
       data: {},
@@ -633,7 +636,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       let subject = ` Parto- ${template}  `;
       let text = `کد فعالسازی شما : ${code}  `;
       result = await sendEmail('parto@parto.email', req.body.email, text, subject);
-      
+
       await verification_code.create({
         email: req.body.email,
         code: code,
@@ -642,7 +645,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
     
     }
     console.log("resultttttttttt",result);
-    if (result.status== "success" || result == 200) {
+    if (result==true|| result == 200) {
       return res.status(200).json({
         status: "success",
         data: { code: code },
@@ -676,11 +679,6 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
 
   let userExist;
   let time;
-  let request = {
-    phone: req.body.phone,
-    email: req.body.email,
-    type: type
-  }
   if (req.body.phone != null) {
     time = (2 * 60 * 1000);
     userExist = await verification_code.findAll({
@@ -735,7 +733,7 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
   }
   return res.status(200).json({
     status: "success",
-    data: { code: code },
+    data: { },
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });
