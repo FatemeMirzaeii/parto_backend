@@ -153,6 +153,11 @@ router.delete("/v2/userInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
+  await note.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
   await user_tracking_category.destroy({
     where: {
       user_id: req.params.userId,
@@ -202,6 +207,12 @@ router.delete("/v2/user/:userId/:lang", auth, async (req, res) => {
     }
   })
   await pregnancy.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
+  
+  await note.destroy({
     where: {
       user_id: req.params.userId,
     }
