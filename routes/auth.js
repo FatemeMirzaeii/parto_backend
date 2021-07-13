@@ -33,7 +33,7 @@ async function checkUserWithEmail(email, pass) {
       password: pass
     }
   })
-  if (userExist == null) return null;
+  //if (userExist == null) return null;
   // const checkPass = await bcrypt.compare(pass, userExist.pass);
   // if (!checkPass) return null;
   return userExist;
@@ -106,7 +106,12 @@ router.post("/signIn/:lang", async (req, res) => {
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr = await checkUserWithEmail(req.body.email, req.body.password);
+    usr = await user.findOne({
+      where: {
+        email: email,
+        password: pass
+      }
+    })
     if (usr == null)
       return res.status(404)
         .json({
@@ -514,8 +519,13 @@ router.put("/changePassword/:lang", async (req, res) => {
         data: {},
         message: await translate("INVALIDENTRY", req.params.lang)
       });
-  usr = await checkUserWithEmail(req.body.email, req.body.password)
-  if (usr == null)
+  usr = await user.findOne({
+    where: {
+      email: email,
+      password: pass
+    }
+  })
+  if (await usr == null)
     return res.status(404)
       .json({
         status: "error",
