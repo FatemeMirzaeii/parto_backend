@@ -525,23 +525,22 @@ router.put("/changePassword/:lang", async (req, res) => {
       password: req.body.password
     }
   })
-})
-if (await usr == null)
-  return res.status(404)
+  if (await usr == null)
+    return res.status(404)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("UERENOTFOUND", req.params.lang)
+      });
+  else {
+    await usr.update({ password: req.body.newPassword });
+  }
+  return res.status(200)
     .json({
-      status: "error",
+      status: "success",
       data: {},
-      message: await translate("UERENOTFOUND", req.params.lang)
+      message: await translate("SUCCESSFUL", req.params.lang)
     });
-else {
-  await usr.update({ password: req.body.newPassword });
-}
-return res.status(200)
-  .json({
-    status: "success",
-    data: {},
-    message: await translate("SUCCESSFUL", req.params.lang)
-  });
 });
 
 router.post("/v2/verificationCode/:lang", async (req, res) => {
