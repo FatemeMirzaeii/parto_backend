@@ -106,7 +106,7 @@ router.post("/signIn/:lang", async (req, res) => {
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr = await checkUserWithEmail(req.body.email, req.body.password)
+    usr = await checkUserWithEmail(req.body.email, req.body.password);
     if (usr == null)
       return res.status(404)
         .json({
@@ -115,18 +115,20 @@ router.post("/signIn/:lang", async (req, res) => {
           message: await translate("UERENOTFOUND", req.params.lang)
         });
   }
-  const token = await usr.generateAuthToken();
-  await usr.createUser_log({
-    i_p: req.header("x-forwarded-for"),
-    version: req.body.version,
-    login_date: Date.now(),
-  });
-  return res.header("x-auth-token", token).status(200)
-    .json({
-      status: "success",
-      data: { id: usr.id, userName: usr.name },
-      message: await translate("SUCCESSFUL", req.params.lang)
+  if (usr != null) {
+    const token = await usr.generateAuthToken();
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: req.body.version,
+      login_date: Date.now(),
     });
+    return res.header("x-auth-token", token).status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+  }
 });
 
 router.post("/signUp/:lang", async (req, res) => {
@@ -173,7 +175,11 @@ router.post("/signUp/:lang", async (req, res) => {
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr = await checkUserWithEmail(req.body.email, req.body.password)
+    usr = await user.findOne({
+      where: {
+        email: req.body.email,
+      }
+    })
     if (usr != null)
       return res.status(409)
         .json({
@@ -517,7 +523,6 @@ router.put("/changePassword/:lang", async (req, res) => {
         message: await translate("UERENOTFOUND", req.params.lang)
       });
   else {
-
     await usr.update({ password: req.body.newPassword });
   }
   return res.status(200)
@@ -591,7 +596,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
           message: "دقیقه دوباره درخواست دهید " + time / 60000 + "لطفا پس از"
         });
     }
-    else if (getCreateTime(userExist) > time) {
+    else if (await getCreateTime(userExist) > time) {
       for (const element of userExist) {
         await element.destroy();
       }
@@ -690,8 +695,8 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       });
   }
   else {
-    console.log("tttttttttttt",getCreateTime(userExist));
-    console.log("tttttttttttt",time);
+    console.log("tttttttttttt", getCreateTime(userExist));
+    console.log("tttttttttttt", time);
     if (await getCreateTime(userExist) > time) {
       console.log("time expier");
       return res.status(408)
