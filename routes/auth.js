@@ -23,8 +23,7 @@ async function checkUserWithPhone(phone) {
       phone: phone
     }
   })
-  if (await userExist == null) return null;
-  else return userExist;
+  return userExist;
 }
 async function checkUserWithEmail(email, pass) {
   let userExist = await user.findOne({
@@ -33,8 +32,6 @@ async function checkUserWithEmail(email, pass) {
       password: pass
     }
   })
-  //if (userExist == null) return null;
-  
   return userExist;
 }
 async function sendSms(type, phone, code, template) {
@@ -105,20 +102,16 @@ router.post("/signIn/:lang", async (req, res) => {
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr = await user.findOne({
-      where: {
-        email: req.body.email,
-        password: req.body.password
-      }
-    })
-    console.log("uuuuuuuuuuuuuuuuuu",usr==null)
-    if (await usr == null)
+    usr = await checkUserWithEmail(req.body.email,req.body.password);
+
+    if ( usr == null){
       return res.status(404)
         .json({
           status: "error",
           data: {},
           message: await translate("UERENOTFOUND", req.params.lang)
         });
+    }
   }
   if (usr != null) {
     const token = await usr.generateAuthToken();
@@ -519,12 +512,7 @@ router.put("/changePassword/:lang", async (req, res) => {
         data: {},
         message: await translate("INVALIDENTRY", req.params.lang)
       });
-  usr = await user.findOne({
-    where: {
-      email: req.body.email,
-      password: req.body.password
-    }
-  })
+  usr = await checkUserWithEmail(req.body.email,req.body.password);
   if (await usr == null)
     return res.status(404)
       .json({
@@ -705,8 +693,6 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       });
   }
   else {
-    console.log("tttttttttttt", getCreateTime(userExist));
-    console.log("tttttttttttt", time);
     if (await getCreateTime(userExist) > time) {
       console.log("time expier");
       return res.status(408)
@@ -723,7 +709,7 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
           .json({
             status: "error",
             data: {},
-            message: " کد وارد شده نادرست است"//await translate("INFORMATIONNOTFOUND", req.params.lang)
+            message: await translate("INVALIDCODE", req.params.lang)
           });
       }
       for (const element of userExist) {
