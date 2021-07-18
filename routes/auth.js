@@ -34,8 +34,7 @@ async function checkUserWithEmail(email, pass) {
     }
   })
   //if (userExist == null) return null;
-  // const checkPass = await bcrypt.compare(pass, userExist.pass);
-  // if (!checkPass) return null;
+  
   return userExist;
 }
 async function sendSms(type, phone, code, template) {
@@ -112,7 +111,8 @@ router.post("/signIn/:lang", async (req, res) => {
         password: req.body.password
       }
     })
-    if (usr == null)
+    console.log("uuuuuuuuuuuuuuuuuu",usr==null)
+    if (await usr == null)
       return res.status(404)
         .json({
           status: "error",
