@@ -24,11 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       phone: {
         type: DataTypes.STRING,
         unique: true,
-        validate: {
-          notEmpty: {
-            msg: "لطفا شماره تلفن خود را وارد کنید.",
-          },
-        },
+        
       },
       // username: {
       //   type: DataTypes.STRING,
@@ -42,12 +38,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        validate: {
-          max: 1024,
-          notEmpty: {
-            msg: "لطفا رمز خود را وارد کنید.",
-          },
-        },
+        // validate: {
+        //   max: 1024,
+        //   notEmpty: {
+        //     msg: "لطفا رمز خود را وارد کنید.",
+        //   },
+        // },
       },
       version_type: {
         type: DataTypes.ENUM('Main', 'Partner', 'Teenager'),

@@ -76,7 +76,7 @@ router.post("/signIn/:lang", async (req, res) => {
       });
   }
 
-  if (req.body.phone != null) {
+  if (req.body.phone != null && req.body.phone != "") {
     if (!checkPhone(req.body.phone))
       return res.status(400)
         .json({
@@ -102,9 +102,9 @@ router.post("/signIn/:lang", async (req, res) => {
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr = await checkUserWithEmail(req.body.email,req.body.password);
+    usr = await checkUserWithEmail(req.body.email, req.body.password);
 
-    if ( usr == null){
+    if (usr == null) {
       return res.status(404)
         .json({
           status: "error",
@@ -113,20 +113,19 @@ router.post("/signIn/:lang", async (req, res) => {
         });
     }
   }
-  if (usr != null) {
-    const token = await usr.generateAuthToken();
-    await usr.createUser_log({
-      i_p: req.header("x-forwarded-for"),
-      version: req.body.version,
-      login_date: Date.now(),
+
+  const token = await usr.generateAuthToken();
+  await usr.createUser_log({
+    i_p: req.header("x-forwarded-for"),
+    version: req.body.version,
+    login_date: Date.now(),
+  });
+  return res.header("x-auth-token", token).status(200)
+    .json({
+      status: "success",
+      data: { id: usr.id, userName: usr.name },
+      message: await translate("SUCCESSFUL", req.params.lang)
     });
-    return res.header("x-auth-token", token).status(200)
-      .json({
-        status: "success",
-        data: { id: usr.id, userName: usr.name },
-        message: await translate("SUCCESSFUL", req.params.lang)
-      });
-  }
 });
 
 router.post("/signUp/:lang", async (req, res) => {
@@ -147,7 +146,7 @@ router.post("/signUp/:lang", async (req, res) => {
     password: req.body.password
   }
   let usr;
-  if (req.body.phone != null) {
+  if (req.body.phone != null && req.body.phone != "") {
     if (!checkPhone(req.body.phone))
       return res.status(400)
         .json({
@@ -165,7 +164,7 @@ router.post("/signUp/:lang", async (req, res) => {
         });
 
   }
-  if (req.body.email != null) {
+  else{
     if (!checkEmail(req.body.email))
       return res.status(400)
         .json({
@@ -187,7 +186,6 @@ router.post("/signUp/:lang", async (req, res) => {
         });
 
   }
-
   usr = await user.create(request);
   const token = await usr.generateAuthToken();
   await usr.createUser_log({
@@ -512,7 +510,7 @@ router.put("/changePassword/:lang", async (req, res) => {
         data: {},
         message: await translate("INVALIDENTRY", req.params.lang)
       });
-  usr = await checkUserWithEmail(req.body.email,req.body.password);
+  usr = await checkUserWithEmail(req.body.email, req.body.password);
   if (await usr == null)
     return res.status(404)
       .json({
@@ -550,7 +548,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
 
   let userExist;
   let time;
-  if (req.body.phone != null) {
+  if (req.body.phone != null  && req.body.phone!="") {
     time = (2 * 60 * 1000);
     if (!checkPhone(req.body.phone))
       return res.status(400)
