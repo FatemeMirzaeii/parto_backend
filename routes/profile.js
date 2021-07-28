@@ -74,7 +74,7 @@ router.put("/editProfile/:userId/:lang", auth, async (req, res) => {
     "period_prediction": req.body.periodPred,
     "red_days": req.body.redDays
   }
-  
+
   await user_profile.update(request,
     {
       where: {
@@ -98,7 +98,7 @@ router.put("/editPeriodInfo/:userId/:lang", auth, async (req, res) => {
     "period_prediction": req.body.periodPred,
     "red_days": req.body.redDays
   }
-  
+
   await user_profile.update(request,
     {
       where: {
@@ -121,7 +121,7 @@ router.put("/editGeneralInfo/:userId/:lang", auth, async (req, res) => {
     "blood_type": req.body.bloodType,
     "locked": req.body.isLock
   }
-  
+
   await user_profile.update(request,
     {
       where: {
@@ -159,7 +159,7 @@ router.post("/addProfile/:userId/:lang", auth, async (req, res) => {
     "blood_type": req.body.bloodType,
     "locked": req.body.isLock,
   }
-  
+
   let userProf = await user_profile.create(request);
   userProf.setUser(usr).catch(async function (err) {
     let checkError = await handleError(usr, err);
@@ -376,7 +376,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     // }
     console.log("uprofile", uProfile != null)
     if (uProfile != null) {
-      
+
       await uProfile.update(request);
     }
     else {
@@ -486,5 +486,50 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 
 });
 
+router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
+  let usr = await user.findOne({ where: { id: req.params.userId } });
+  if (usr == null)
+    return res.status(404)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+      });
+
+  if ((req.body.phone == undefined || req.body.phone == "") && 
+  ((req.body.email == undefined || req.body.email == "")|| (req.body.password==undefined || req.body.password=="") )) {
+    return res.status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
+  }
+  if(usr.email==req.body.email || usr.phone== req.body.phone ){
+    return res.status(409)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("EXISTS", req.params.lang)
+        });
+  }
+  let request = {
+    "phone": req.body.phone,
+    "email": req.body.email,
+    "password":req.body.password
+  }
+
+  await usr.update(request,
+    {
+      where: {
+        id: req.params.userId
+      }
+    });
+  return res.status(200).json({
+    status: "success",
+    data: {},
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
+});
 
 module.exports = router;

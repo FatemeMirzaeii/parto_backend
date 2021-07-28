@@ -28,206 +28,212 @@ describe('auth', () => {
         let userLog = await user_log.findOne({ where: { user_id: newUser.id } });
         await userLog.destroy();
         await newUser.destroy();
-
     })
 
-    // describe("POST-/signIn/:lang", () => {
-    //     let tempPhone;
-    //     let tempEmail;
-    //     let tempVersion;
-    //     let tempPass;
+    describe("POST-/signIn/:lang", () => {
+        let tempPhone;
+        let tempEmail;
+        let tempVersion;
+        let tempPass;
 
-    //     const exec = () => {
-    //         return request(server).post('/auth/signIn/fa')
-    //             .send({ "phone": `${tempPhone}`, "email": `${tempEmail}`, "password": `${tempPass}`, "version": `${tempVersion}` });
-    //     }
+        const exec = () => {
+            return request(server).post('/auth/signIn/fa')
+                .send({ "phone": `${tempPhone}`, "email": `${tempEmail}`, "password": `${tempPass}`, "version": `${tempVersion}` });
+        }
 
-    //     it('return 400 if input are null ', async () => {
-    //         tempEmail = "";
-    //         tempPhone = "";
-    //         tempVersion = null;
-    //         tempPass = null;
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
+        it('return 400 if input are null ', async () => {
+            tempEmail = "";
+            tempPhone = "";
+            tempVersion = null;
+            tempPass = null;
+            const result = await exec();
+            expect(result.status).toBe(400);
 
-    //     });
+        });
 
-    //     it('return 400 if email is not correct', async () => {
-    //         tempPhone = ""
-    //         tempEmail = "zzand.com";
-    //         tempPass = "zasffn,kol.";
-    //         tempVersion = "android";
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
-    //     });
+        it('return 400 if email is not correct', async () => {
+            tempPhone = ""
+            tempEmail = "zzand.com";
+            tempPass = "zasffn,kol.";
+            tempVersion = "android";
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
 
-    //     it('return 404 if user not found with email and password', async () => {
-    //         tempPhone = ""
-    //         tempEmail = "zzand7755@gmail.com";
-    //         tempPass = "zasffn,kol.nkjnm";
-    //         tempVersion = "android";
-    //         const result = await exec();
-    //         expect(result.status).toBe(404);
-    //     });
+        it('return 404 if user not found with email and password', async () => {
+            tempPhone = ""
+            tempEmail = "zzand7755@gmail.com";
+            tempPass = "zasffn,kol.nkjnm";
+            tempVersion = "android";
+            const result = await exec();
+            expect(result.status).toBe(404);
+        });
 
-    //     it('return 400 if phone is not correct', async () => {
-    //         tempPhone = "0919979808"
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
+        it('return 400 if phone is not correct', async () => {
+            tempPhone = "0919979808"
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(400);
 
-    //     });
-    //     it('return 404 if user not found with phone', async () => {
-    //         tempPhone = "989199698000"
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(404);
-    //     });
+        });
+        it('return 404 if user not found with phone', async () => {
+            tempPhone = "989199698000"
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(404);
+        });
 
-    //     it('return 200 ', async () => {
-    //         tempPhone = "";
-    //         tempEmail = email;
-    //         tempPass = hash;
-    //         tempVersion = "android";
-    //         const result = await exec();
-    //         expect(result.status).toBe(200);
-    //         })
+        it('return 200 ', async () => {
+            tempPhone = "";
+            tempEmail = email;
+            tempPass = hash;
+            tempVersion = "android";
+            const result = await exec();
+            expect(result.status).toBe(200);
+        })
 
-    //     it('return 200 if every thing be ok and send token and id for user', async () => {
-    //         tempPhone = phone;
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(200);
-    //         })
+        it('return 200 if every thing be ok and send token and id for user', async () => {
+            tempPhone = phone;
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(200);
+        })
 
-    // });
+    });
 
-    // describe("POST-/signUp/:lang", () => {
-    //     let tempPhone;
-    //     let tempEmail;
-    //     let tempVersion;
-    //     let tempPass;
+    describe("POST-/signUp/:lang", () => {
+        let tempPhone;
+        let tempEmail;
+        let tempVersion;
+        let tempPass;
 
-    //     const exec = () => {
-    //         return request(server).post('/auth/signUp/fa')
-    //             .send({ "phone": `${tempPhone}`, "email": `${tempEmail}`, "password": `${tempPass}`, "version": `${tempVersion}` });
-    //     }
+        const exec = () => {
+            return request(server).post('/auth/signUp/fa')
+                .send({ "phone": `${tempPhone}`, "email": `${tempEmail}`, "password": `${tempPass}`, "version": `${tempVersion}` });
+        }
 
-    //     it('return 400 if input are null ', async () => {
-    //         tempEmail = "";
-    //         tempPhone = "";
-    //         tempVersion = null;
-    //         tempPass = null;
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
+        it('return 400 if input are null ', async () => {
+            tempEmail = "";
+            tempPhone = "";
+            tempVersion = null;
+            tempPass = null;
+            const result = await exec();
+            expect(result.status).toBe(400);
 
-    //     });
+        });
 
-    //     it('return 400 if phone is not correct', async () => {
-    //         tempPhone = "0919979808"
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
+        it('return 400 if phone is not correct', async () => {
+            tempPhone = "0919979808"
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(400);
 
-    //     });
-    //     it('return 409 if userexist with phone', async () => {
-    //         tempPhone = phone;
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(409);
-    //     });
-    //     it('return 400 if email is not correct', async () => {
-    //         tempPhone = ""
-    //         tempEmail = "zzand.com";
-    //         tempPass = "zasffn,kol.";
-    //         tempVersion = "android";
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
-    //     });
+        });
+        it('return 409 if userexist with phone', async () => {
+            tempPhone = phone;
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(409);
+        });
+        it('return 400 if email is not correct', async () => {
+            tempPhone = ""
+            tempEmail = "zzand.com";
+            tempPass = "zasffn,kol.";
+            tempVersion = "android";
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
 
-    //     it('return 409 if user exist with email and password', async () => {
-    //         tempPhone = ""
-    //         tempEmail = email;
-    //         tempPass = hash;
-    //         tempVersion = "android";
-    //         const result = await exec();
-    //         expect(result.status).toBe(409);
+        it('return 409 if user exist with email and password', async () => {
+            tempPhone = ""
+            tempEmail = email;
+            tempPass = hash;
+            tempVersion = "android";
+            const result = await exec();
+            expect(result.status).toBe(409);
+        });
+
+        it('return 200 ', async () => {
+            tempPhone = "";
+            tempEmail = "new_auth@gmail.com";
+            tempPass = "zzzz.derfc.,huhyh$mnkm,k";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(200);
+            await user.destroy({
+                where:{
+                    email:"new_auth@gmail.com",
+                    password:"zzzz.derfc.,huhyh$mnkm,k"
+                }
+            })
+        })
+
+        it('return 200 if every thing be ok and send token and id for user', async () => {
+            tempPhone = "989105454213";
+            tempEmail = "";
+            tempPass = "";
+            tempVersion = "PWA";
+            const result = await exec();
+            expect(result.status).toBe(200);
+            await user.destroy({
+                where:{
+                    phone:"989105454213"
+                }
+            })
+        })
+
+    });
+
+    describe("PUT-/forgetPassword/:lang", () => {
+        let tempEmail;
+        let tempNewPass;
+
+        const exec = () => {
+            return request(server).put('/auth/forgetPassword/fa')
+                .send({ "email": `${tempEmail}`, "newPassword": `${tempNewPass}` });
+        }
+
+        it('return 400 if input are null ', async () => {
+            tempEmail = "";
+            tempNewPass = null;
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
+
+        it('return 400 if email is not correct', async () => {
+            tempEmail = "zzand.com";
+            tempNewPass = "zasffn,kol.";
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
+
+        it('return 404 if user not found with email and password', async () => {
+            tempEmail = "zzand7755@gmail.com";
+            tempNewPass = "zasffn,kol.nkjnm";
+            const result = await exec();
+            expect(result.status).toBe(404);
 
 
-    //     });
+        });
 
-    //     it('return 200 ', async () => {
-
-    //         tempPhone = "";
-    //         tempEmail = "new_auth@gmail.com";
-    //         tempPass = "zzzz.derfc.,huhyh$mnkm,k";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         expect(result.status).toBe(200);
-    //             })
-
-    //     it('return 200 if every thing be ok and send token and id for user', async () => {
-    //         tempPhone = "989105454213";
-    //         tempEmail = "";
-    //         tempPass = "";
-    //         tempVersion = "PWA";
-    //         const result = await exec();
-    //         console.log("rrrrrrrr",result);
-    //         expect(result.status).toBe(200);
-    //         })
-
-    // });
-
-    // describe("PUT-/forgetPassword/:lang", () => {
-    //     let tempEmail;
-    //     let tempNewPass;
-
-    //     const exec = () => {
-    //         return request(server).put('/auth/forgetPassword/fa')
-    //             .send({ "email": `${tempEmail}`, "newPassword": `${tempNewPass}` });
-    //     }
-
-    //     it('return 400 if input are null ', async () => {
-    //         tempEmail = "";
-    //         tempNewPass = null;
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
-    //     });
-
-    //     it('return 400 if email is not correct', async () => {
-    //         tempEmail = "zzand.com";
-    //         tempNewPass = "zasffn,kol.";
-    //         const result = await exec();
-    //         expect(result.status).toBe(400);
-    //     });
-
-    //     it('return 404 if user not found with email and password', async () => {
-    //         tempEmail = "zzand7755@gmail.com";
-    //         tempNewPass = "zasffn,kol.nkjnm";
-    //         const result = await exec();
-    //         expect(result.status).toBe(404);
-
-
-    //     });
-
-    //     it('return 200 ', async () => {
-    //         hash = await bcrypt.hash("password", 10);
-    //         tempEmail = "auth_zzand7755@gmail.com";
-    //         tempNewPass = hash;
-    //         const result = await exec();
-    //         expect(result.status).toBe(200);
-    //     })
-    // });
+        it('return 200 ', async () => {
+            hash = await bcrypt.hash("password", 10);
+            tempEmail = "auth_zzand7755@gmail.com";
+            tempNewPass = hash;
+            const result = await exec();
+            expect(result.status).toBe(200);
+        })
+    });
 
     describe("PUT-/changePassword/:lang", () => {
         let tempEmail;
@@ -239,19 +245,13 @@ describe('auth', () => {
                 .send({ "email": `${tempEmail}`, "password": `${tempPass}`, "newPassword": `${tempNewPass}` });
         }
 
-        // it('return 400 if input are null ', async () => {
-        //     jest.setTimeout(3 * 60 * 1000)
-        //     await new Promise(res => setTimeout(() => {
-        //         console.log("Why don't I run?")
-        //         expect(true).toBe(true)
-        //         res()
-        //     }, 2.5 * 60 * 1000))
-        //     tempEmail = "";
-        //     tempNewPass = null;
-        //     tempPass = "";
-        //     const result = await exec();
-        //     expect(result.status).toBe(400);
-        // });
+        it('return 400 if input are null ', async () => {
+            tempEmail = "";
+            tempNewPass = null;
+            tempPass = "";
+            const result = await exec();
+            expect(result.status).toBe(400);
+        });
 
         it('return 400 if email is not correct', async () => {
             tempEmail = "zzand.com";
@@ -309,23 +309,32 @@ describe('auth', () => {
             expect(result.status).toBe(200);
         });
         it('return 409  ', async () => {
-            tempPhone = "989109698080";
-            await verification_code.create({
-                where: {
-                    phone: "989109698080",
-                    code:"1234",
-                    type:"login"
-                }
-            });
+            tempPhone = "989199698086";
+            // let new_code = await verification_code.create({
+            //     phone: tempPhone,
+            //     code: "1234",
+            //     type: "login"
+            // });
             const result = await execPhone();
+            await verification_code.destroy({
+                where:{
+                    phone:tempPhone
+                }
+            })
             expect(result.status).toBe(409);
+
         });
         it('return 200 if email send corectly', async () => {
             tempEmail = "zzand7755@gmail.com";
             const result = await execEmail();
             expect(result.status).toBe(200);
+            await verification_code.destroy({
+                where:{
+                    email:tempEmail
+                }
+            })
         });
-        
+
     })
 
     describe("POST- /v2/checkVerificationCode", () => {
@@ -341,6 +350,26 @@ describe('auth', () => {
             return request(server).post('/auth/v2/checkVerificationCode/fa')
                 .send({ "phone": `${tempPhone}`, "code": `${tempCode}` });
         }
+        it('408', async () => {
+            jest.setTimeout(3 * 60 * 1000)
+            await new Promise(res => setTimeout(() => {
+                console.log("Why don't I run?")
+                expect(true).toBe(true)
+                res()
+            }, 2.5 * 60 * 1000))
+            tempPhone = "989199698086";
+            let userExist = await verification_code.create({
+                where: {
+                    phone: "989199698086",
+                    code:"33335",
+                    type:"login"
+                }
+            });
+            code = userExist.code;
+            const result = await execPhone();
+            expect(result.status).toBe(408);
+        });
+
         it('return 400 if phone is null ', async () => {
             tempPhone = "";
             tempCode = "";
@@ -357,153 +386,138 @@ describe('auth', () => {
 
         it('400', async () => {
             tempPhone = "989129698086";
-            await request(server).post('/auth/v2/verificationCode').send({ "phone": `${tempPhone}` });
+            let new_code = await verification_code.create({
+                phone: tempPhone,
+                code: "1234",
+                type: "login"
+            });
             tempCode = "9"
             const result = await execPhone();
+            await new_code.destroy();
             expect(result.status).toBe(400);
         });
 
         it('200 if send sms corect and code was true', async () => {
             tempPhone = "989139698086";
-            await request(server).post('/auth/v2/verificationCode').send({ "phone": `${tempPhone}` });
-            let userExist = await verification_code.findOne({
-                where: {
-                    phone: "989139698086",
-                    type:"login"
-                }
+            let new_code = await verification_code.create({
+                phone: tempPhone,
+                code: "1234",
+                type: "login"
             });
-            
-            tempCode = userExist.code;
+            tempCode = new_code.code;
             const result = await execPhone();
+            await new_code.destroy();
             expect(result.status).toBe(200);
+            await new_code.destroy();
         });
         it('200 if send email corect and code was true', async () => {
             tempEmail = "chevkverification@gmail.com";
-            await request(server).post('/auth/v2/verificationCode').send({ "email": `${tempEmail}`, "type": "lock" });
-            let userExist = await verification_code.findOne({
-                where: {
-                    email: tempEmail,
-                    type:"lock"
-                }
+            let new_code = await verification_code.create({
+                email: tempEmail,
+                code: "1234",
+                type: "login"
             });
-            console.log("ueeee",userExist);
-            tempCode = userExist.code;
+            tempCode = "1234";
             const result = await execEmail();
+            await new_code.destroy();
             expect(result.status).toBe(200);
         });
 
-        it('408', async () => {
-            jest.setTimeout(3 * 60 * 1000)
-            await new Promise(res => setTimeout(() => {
-                console.log("Why don't I run?")
-                expect(true).toBe(true)
-                res()
-            }, 2.5 * 60 * 1000))
-            tempPhone = "989199698086";
-            let userExist = await verification_code.findOne({
-                where: {
-                    phone: "989199698086",
-                    type:"login"
-                }
-            });
-            code = userExist.code;
-            const result = await execPhone();
-            expect(result.status).toBe(408);
-        });
+        
     })
-    // // describe('/logIn',()=>{
-    // //     let phone;
-    // //     const exec=()=>{
-    // //         return request(server).post('/auth/logIn/fa')
-    // //          .send({"name":"zahra","phone":`${phone}`});
+    // describe('/logIn',()=>{
+    //     let phone;
+    //     const exec=()=>{
+    //         return request(server).post('/auth/logIn/fa')
+    //          .send({"name":"zahra","phone":`${phone}`});
 
-    // //     }
+    //     }
 
-    // //     it('400',async()=>{
-    // //         phone="";
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(400);
-    // //         //await new Promise(resolve => setTimeout(resolve, 2000));
+    //     it('400',async()=>{
+    //         phone="";
+    //         const result=await exec();
+    //         expect(result.status).toBe(400);
+    //         //await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // //     });
+    //     });
 
-    // //     it('200',async()=>{
-    // //         phone="09199698080";
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(200);
-    // //     });
+    //     it('200',async()=>{
+    //         phone="09199698080";
+    //         const result=await exec();
+    //         expect(result.status).toBe(200);
+    //     });
 
-    // // })
-    // // describe('/verificationCode',async()=>{
-    // //     let phone;
-    // //     const exec=()=>{
-    // //         return request(server).post('/auth/verificationCode')
-    // //          .send({"phone":`${phone}`});
-    // //     }
+    // })
+    // describe('/verificationCode',async()=>{
+    //     let phone;
+    //     const exec=()=>{
+    //         return request(server).post('/auth/verificationCode')
+    //          .send({"phone":`${phone}`});
+    //     }
 
-    // //     it('400',async()=>{
-    // //         phone="99199698086";
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(400);
-    // //     });
+    //     it('400',async()=>{
+    //         phone="99199698086";
+    //         const result=await exec();
+    //         expect(result.status).toBe(400);
+    //     });
 
-    // //     it('200',async()=>{
-    // //         phone="09199698086";
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(200);
-    // //     });
+    //     it('200',async()=>{
+    //         phone="09199698086";
+    //         const result=await exec();
+    //         expect(result.status).toBe(200);
+    //     });
 
-    // //     it('409',async()=>{
-    // //         phone="09199698086";
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(409);
-    // //     });
-    // // })
+    //     it('409',async()=>{
+    //         phone="09199698086";
+    //         const result=await exec();
+    //         expect(result.status).toBe(409);
+    //     });
+    // })
 
-    // // describe('/checkVerificationCode',async()=>{
-    // //     let phone;
-    // //     let code;
+    // describe('/checkVerificationCode',async()=>{
+    //     let phone;
+    //     let code;
 
-    // //     const exec=()=>{
-    // //         return request(server).post('/auth/checkVerificationCode/fa')
-    // //          .send({"phone":`${phone}`,"code":`${code}`});
-    // //     }
-    // //     it('400',async()=>{
-    // //         phone="09199698086";
-    // //         code="9"
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(400);
-    // //     });
+    //     const exec=()=>{
+    //         return request(server).post('/auth/checkVerificationCode/fa')
+    //          .send({"phone":`${phone}`,"code":`${code}`});
+    //     }
+    //     it('400',async()=>{
+    //         phone="09199698086";
+    //         code="9"
+    //         const result=await exec();
+    //         expect(result.status).toBe(400);
+    //     });
 
-    // //     it('408',async()=>{
-    // //         jest.setTimeout(3*60*1000)
-    // //         await new Promise(res => setTimeout(() => {
-    // //             console.log("Why don't I run?")
-    // //             expect(true).toBe(true)
-    // //             res()
-    // //           }, 2.5*60*1000))
-    // //         phone="09199698086";
-    // //         let userExist = await verification_code.findOne({
-    // //             where: {
-    // //               phone: "09199698086",
-    // //             }
-    // //           });
-    // //         code=userExist.code;
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(408);
-    // //     });
-    // //     it('200',async()=>{
-    // //         await request(server).post('/auth/verificationCode').send({"phone":`${phone}`});
-    // //         let userExist = await verification_code.findOne({
-    // //             where: {
-    // //               phone: "09199698086",
-    // //             }
-    // //           });
-    // //         phone="09199698086";
-    // //         code=userExist.code;
-    // //         const result=await exec();
-    // //         expect(result.status).toBe(200);
+    //     it('408',async()=>{
+    //         jest.setTimeout(3*60*1000)
+    //         await new Promise(res => setTimeout(() => {
+    //             console.log("Why don't I run?")
+    //             expect(true).toBe(true)
+    //             res()
+    //           }, 2.5*60*1000))
+    //         phone="09199698086";
+    //         let userExist = await verification_code.findOne({
+    //             where: {
+    //               phone: "09199698086",
+    //             }
+    //           });
+    //         code=userExist.code;
+    //         const result=await exec();
+    //         expect(result.status).toBe(408);
+    //     });
+    //     it('200',async()=>{
+    //         await request(server).post('/auth/verificationCode').send({"phone":`${phone}`});
+    //         let userExist = await verification_code.findOne({
+    //             where: {
+    //               phone: "09199698086",
+    //             }
+    //           });
+    //         phone="09199698086";
+    //         code=userExist.code;
+    //         const result=await exec();
+    //         expect(result.status).toBe(200);
 
-    // //     });
-    // // })
+    //     });
+    // })
 })

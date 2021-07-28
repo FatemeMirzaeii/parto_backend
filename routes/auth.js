@@ -114,18 +114,59 @@ router.post("/signIn/:lang", async (req, res) => {
     }
   }
 
-  const token = await usr.generateAuthToken();
-  await usr.createUser_log({
-    i_p: req.header("x-forwarded-for"),
-    version: req.body.version,
-    login_date: Date.now(),
-  });
-  return res.header("x-auth-token", token).status(200)
-    .json({
-      status: "success",
-      data: { id: usr.id, userName: usr.name },
-      message: await translate("SUCCESSFUL", req.params.lang)
+  // const token = await usr.generateAuthToken();
+  // await usr.createUser_log({
+  //   i_p: req.header("x-forwarded-for"),
+  //   version: req.body.version,
+  //   login_date: Date.now(),
+  // });
+  // return res
+  // .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
+  // .status(200)
+  //   .json({
+  //     status: "success",
+  //     data: { id: usr.id, userName: usr.name ,type:usr.version_type,token:token},
+  //     message: await translate("SUCCESSFUL", req.params.lang)
+  //   });
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
+  }
+  else if (useragent.is(req.headers['user-agent']).firefox == false &&
+    useragent.is(req.headers['user-agent']).chrome == false &&
+    useragent.is(req.headers['user-agent']).ie == false &&
+    useragent.is(req.headers['user-agent']).mozilla == false &&
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
+
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: "android",
+      login_date: Date.now(),
     });
+    return res.header("x-auth-token", token).status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+
+  }
+  else {
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: "PWA",
+      login_date: Date.now(),
+    });
+    res.clearCookie('token');
+    return res
+      .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
+      .status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+  }
 });
 
 router.post("/signUp/:lang", async (req, res) => {
@@ -164,7 +205,7 @@ router.post("/signUp/:lang", async (req, res) => {
         });
 
   }
-  else{
+  else {
     if (!checkEmail(req.body.email))
       return res.status(400)
         .json({
@@ -188,17 +229,56 @@ router.post("/signUp/:lang", async (req, res) => {
   }
   usr = await user.create(request);
   const token = await usr.generateAuthToken();
-  await usr.createUser_log({
-    i_p: req.header("x-forwarded-for"),
-    version: req.body.version,
-    login_date: Date.now(),
-  });
-  return res.header("x-auth-token", token).status(200)
-    .json({
-      status: "success",
-      data: { id: usr.id, userName: usr.name },
-      message: await translate("SUCCESSFUL", req.params.lang)
+  // await usr.createUser_log({
+  //   i_p: req.header("x-forwarded-for"),
+  //   version: req.body.version,
+  //   login_date: Date.now(),
+  // });
+  // return res.header("x-auth-token", token).status(200)
+  //   .json({
+  //     status: "success",
+  //     data: { id: usr.id, userName: usr.name },
+  //     message: await translate("SUCCESSFUL", req.params.lang)
+  //   });
+  if (RegExp('http://localhost:3925').test(req.headers['origin']) == true) {
+    return res.status(200).json({ data: { id: usr.id, token: token, userName: usr.name, type: usr.version_type } });
+  }
+  else if (useragent.is(req.headers['user-agent']).firefox == false &&
+    useragent.is(req.headers['user-agent']).chrome == false &&
+    useragent.is(req.headers['user-agent']).ie == false &&
+    useragent.is(req.headers['user-agent']).mozilla == false &&
+    useragent.is(req.headers['user-agent']).opera == false && useragent.is(req.headers['user-agent']).safari == false ||
+    patt1.test(req.headers.host) == true || patt2.test(req.headers.host) == true || RegExp('https://dev.parto.app/api-doc').test(req.headers['origin']) == true) {
+
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: "android",
+      login_date: Date.now(),
     });
+    return res.header("x-auth-token", token).status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+
+  }
+  else {
+    await usr.createUser_log({
+      i_p: req.header("x-forwarded-for"),
+      version: "PWA",
+      login_date: Date.now(),
+    });
+    res.clearCookie('token');
+    return res
+      .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
+      .status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
+  }
 
 });
 
@@ -548,7 +628,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
 
   let userExist;
   let time;
-  if (req.body.phone != null  && req.body.phone!="") {
+  if (req.body.phone != null && req.body.phone != "") {
     time = (2 * 60 * 1000);
     if (!checkPhone(req.body.phone))
       return res.status(400)
