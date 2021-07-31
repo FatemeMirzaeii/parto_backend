@@ -114,7 +114,7 @@ router.post("/signIn/:lang", async (req, res) => {
     }
   }
 
-  // const token = await usr.generateAuthToken();
+  const token = await usr.generateAuthToken();
   // await usr.createUser_log({
   //   i_p: req.header("x-forwarded-for"),
   //   version: req.body.version,
