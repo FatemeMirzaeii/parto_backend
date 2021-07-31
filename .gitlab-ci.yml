@@ -63,6 +63,9 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     - npx sequelize-cli db:migrate
+    # -  npx sequelize db:seed --seed 20210509195107-message_category.js
+    -  npx sequelize db:seed --seed 20200521042512-translation_key_seeds2.js
+    -  npx sequelize db:seed --seed 20200521042824-translation_text_seeds2.js
     # - pm2 start app.js
     - pm2 startOrRestart ecosystem.config.js --only "app"
     - echo "Deploy to production server Successful"
