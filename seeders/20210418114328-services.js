@@ -3,12 +3,10 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('service', [
-      { name: 'صحبت با مشاور', type: 'virtual S', amount: 100000, created_at: new Date(), updated_at: new Date() },
-      { name: 'افزایش اعتبار به  ارزش 10000 ریال', type: 'virtual S', amount: 10000, created_at: new Date(), updated_at: new Date() },
-      { name: 'افزایش اعتبار به  ارزش 100000 ریال', type: 'virtual S', amount: 100000, created_at: new Date(), updated_at: new Date() },
-      { name: 'افزایش اعتبار به  ارزش 200000 ریال', type: 'virtual S', amount: 200000, created_at: new Date(), updated_at: new Date() },
-      { name: 'افزایش اعتبار به  ارزش 500000 ریال', type: 'virtual S', amount: 500000, created_at: new Date(), updated_at: new Date() },
-      { name: 'افزایش اعتبار به  ارزش 1000000 ریال', type: 'virtual S', amount: 1000000, created_at: new Date(), updated_at: new Date() },
+      { name: 'بسته تکی گفتگو', type: 'virtual S', amount: 100000, created_at: new Date(), updated_at: new Date() },
+      { name: 'بسته سه تایی گقتگو', type: 'virtual S', amount: 300000, created_at: new Date(), updated_at: new Date() },
+      { name: 'بسته 5 تایی گفنگو', type: 'virtual S', amount: 500000, created_at: new Date(), updated_at: new Date() },
+      { name: 'بسته 10 تایی گفتگو', type: 'virtual S', amount: 1000000, created_at: new Date(), updated_at: new Date() },
     ], {});
   },
   down: (queryInterface, Sequelize) => {
