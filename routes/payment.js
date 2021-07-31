@@ -114,7 +114,7 @@ async function checkWallet(tUser, amount) {
             user_id: tUser.id
         }
     })
-    if (credit != null && credit.remaining > amount) { return true; }
+    if (credit != null && credit.remaining >= amount) { return true; }
     return false;
 }
 async function setTransaction(tWallet, tInvoice, method, amount, description) {
