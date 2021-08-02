@@ -3,6 +3,7 @@ require("./models/index");
 const swaggerUi = require("swagger-ui-express");
 const fileUpload = require('express-fileupload');
 const swaggerDocument = require("./swagger.json");
+const testSwaggerDocument = require("./testSwagger.json");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -14,12 +15,14 @@ const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const interview = require("./routes/interview");
 const healthTracking = require("./routes/health-tracking");
-const note = require("./routes/notes");
+const notes = require("./routes/notes");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
+const payment = require("./routes/payment");
 const profile = require("./routes/profile");
+const message= require("./routes/message");
 const cookieParser = require('cookie-parser');
 
 const developmentApp = express();
@@ -58,6 +61,8 @@ developmentApp.use("/notes", authenticatedLimiter);
 developmentApp.use("/user", authenticatedLimiter);
 developmentApp.use("/auth", authenticatedLimiter);
 developmentApp.use("/profile", authenticatedLimiter);
+developmentApp.use("/payment", authenticatedLimiter);
+developmentApp.use("/message", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
@@ -79,12 +84,14 @@ developmentApp.use("/cycle", cycle);
 developmentApp.use("/pregnancy", pregnancy);
 developmentApp.use("/interview", interview);
 developmentApp.use("/healthTracking", healthTracking);
-developmentApp.use("/notes", note);
+developmentApp.use("/notes", notes);
 developmentApp.use("/user", user);
 developmentApp.use("/auth", auth);
 developmentApp.use("/contactUs", contactUs);
 developmentApp.use("/survey", survey);
 developmentApp.use("/profile", profile);
+developmentApp.use("/payment", payment);
+developmentApp.use("/message", message);
 developmentApp.use(error);
 
 
@@ -99,6 +106,16 @@ developmentApp.use(
   swaggerUi.setup()
 );
 
+developmentApp.use(
+  "/test", //todo: It is better to change the name to: api.pa torto.app/docs
+  function (req, res, next) {
+    testSwaggerDocument.host = req.get("https://dev.parto.app");
+    req.swaggerDoc = testSwaggerDocument;
+    next();
+  },
+  swaggerUi.serve,
+  swaggerUi.setup()
+);
 console.log(process.env.NODE_PORT);
 // developmentApp.use(function(req, res, next) {
 //   res.setHeader("Content-Security-Policy", "script-src 'self'");
@@ -110,7 +127,7 @@ developmentApp.get("/*", (req, res) => {
   res.sendFile("index.html", { root: "../../Fattahi/deploy/staging/build" });
 });
 
-
+console.log('The value of PORT is:', process.env);
 const developmentServer = developmentApp.listen(2216, () =>
   logger.info("Listening on port 2218...")
 );

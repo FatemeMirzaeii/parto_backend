@@ -1,24 +1,26 @@
 require("express-async-errors");
 require("./models/index");
+const fileUpload = require('express-fileupload');
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
 const nodeadmin = require("nodeadmin");
-const fileUpload = require('express-fileupload');
+const rateLimit = require("express-rate-limit");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
 const cycle = require("./routes/cycle");
 const pregnancy = require("./routes/pregnancy");
 const interview = require("./routes/interview");
 const healthTracking = require("./routes/health-tracking");
-const note = require("./routes/notes");
+const notes = require("./routes/notes");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const contactUs = require("./routes/contactUs");
 const survey = require("./routes/survey");
+const payment = require("./routes/payment");
 const profile = require("./routes/profile");
-const cookieParser = require('cookie-parser')
+const message= require("./routes/message");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -55,6 +57,8 @@ app.use("/notes", authenticatedLimiter);
 app.use("/user", authenticatedLimiter);
 app.use("/auth", authenticatedLimiter);
 app.use("/profile", authenticatedLimiter);
+app.use("/payment", authenticatedLimiter);
+app.use("/message", authenticatedLimiter);
 
 
 const unauthenticatedLimiter = rateLimit({
@@ -77,12 +81,14 @@ app.use("/cycle", cycle);
 app.use("/pregnancy", pregnancy);
 app.use("/interview", interview);
 app.use("/healthTracking", healthTracking);
-app.use("/notes", note);
+app.use("/notes", notes);
 app.use("/user", user);
 app.use("/auth", auth);
 app.use("/contactUs", contactUs);
 app.use("/survey", survey);
 app.use("/profile", profile);
+app.use("/payment", payment);
+app.use("/message", message);
 app.use(error);
 
 console.log(process.env.NODE_PORT);
