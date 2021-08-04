@@ -79,7 +79,7 @@ developmentApp.use("/v2/user", authenticatedLimiter);
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
-  max: 9, // start blocking after 1 requests
+  max: 30, // start blocking after 1 requests
   message:
   { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,

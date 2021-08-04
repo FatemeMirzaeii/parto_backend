@@ -4,8 +4,13 @@ const auth = require("../../middleware/auth");
 const { user, health_tracking_category, user_tracking_option, health_tracking_option, user_tracking_category } = require("../../models");
 const translate = require("../../config/translate");
 const router = express();
+<<<<<<< HEAD:routes/v1/health-tracking.js
 const { Op, where } = require("sequelize");
 const handleError = require("../../middleware/handleMysqlError");
+=======
+const { Op } = require("sequelize");
+const handleError = require("../middleware/handleMysqlError");
+>>>>>>> test:routes/health-tracking.js
 const moment = require("moment");
 
 
