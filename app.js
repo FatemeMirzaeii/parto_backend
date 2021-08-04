@@ -8,6 +8,7 @@ const nodeadmin = require("nodeadmin");
 const rateLimit = require("express-rate-limit");
 const error = require("./middleware/error");
 const logger = require("./config/logger/logger");
+<<<<<<< HEAD
 const cookieParser = require('cookie-parser');
 
 
@@ -24,6 +25,21 @@ const survey1 = require("./routes/v1/survey");
 const payment1 = require("./routes/v1/payment");
 const profile1 = require("./routes/v1/profile");
 const message1= require("./routes/v1/message");
+=======
+const cycle = require("./routes/cycle");
+const pregnancy = require("./routes/pregnancy");
+const interview = require("./routes/interview");
+const healthTracking = require("./routes/health-tracking");
+const notes = require("./routes/notes");
+const user = require("./routes/user");
+const auth = require("./routes/auth");
+const contactUs = require("./routes/contactUs");
+const survey = require("./routes/survey");
+const payment = require("./routes/payment");
+const profile = require("./routes/profile");
+const message= require("./routes/message");
+const cookieParser = require('cookie-parser');
+>>>>>>> 9350e6abfd6677328adac00b7c0b4ce6f54d923d
 
 
 // v2
@@ -61,14 +77,19 @@ app.use("/cycle", authenticatedLimiter);
 app.use("/pregnancy", authenticatedLimiter);
 app.use("/interview", authenticatedLimiter);
 app.use("/healthTracking", authenticatedLimiter);
-app.use("/note", authenticatedLimiter);
+app.use("/notes", authenticatedLimiter);
 app.use("/user", authenticatedLimiter);
 app.use("/auth", authenticatedLimiter);
 app.use("/profile", authenticatedLimiter);
+<<<<<<< HEAD
 // v2
 app.use("/v2/healthTracking", authenticatedLimiter);
 app.use("/v2/user", authenticatedLimiter);
 
+=======
+app.use("/payment", authenticatedLimiter);
+app.use("/message", authenticatedLimiter);
+>>>>>>> 9350e6abfd6677328adac00b7c0b4ce6f54d923d
 
 
 const unauthenticatedLimiter = rateLimit({
@@ -87,6 +108,7 @@ app.use(helmet());
 app.use(nodeadmin(app));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
+<<<<<<< HEAD
 
 //v1
 app.use("/cycle", cycle1);
@@ -103,6 +125,20 @@ app.use("/profile", profile1);
 app.use("/v2/healthTracking", healthTracking2);
 app.use("/v2/user", user2);
 
+=======
+app.use("/cycle", cycle);
+app.use("/pregnancy", pregnancy);
+app.use("/interview", interview);
+app.use("/healthTracking", healthTracking);
+app.use("/notes", notes);
+app.use("/user", user);
+app.use("/auth", auth);
+app.use("/contactUs", contactUs);
+app.use("/survey", survey);
+app.use("/profile", profile);
+app.use("/payment", payment);
+app.use("/message", message);
+>>>>>>> 9350e6abfd6677328adac00b7c0b4ce6f54d923d
 app.use(error);
 
 console.log(process.env.NODE_PORT);

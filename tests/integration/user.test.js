@@ -13,7 +13,7 @@ describe('user', () => {
         userId=usr.id;
     });
     beforeEach(async() => { 
-        server=require('../../development');
+        server=  require('../../development');
     })
     afterEach(()=>{
          server.close();

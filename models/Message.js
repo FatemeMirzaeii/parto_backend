@@ -1,24 +1,28 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const message = sequelize.define('message', {
-    content:{
-      type: DataTypes.TEXT,
+  const Message = sequelize.define('message', {
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        max: 1024,
+      },
     },
-    type:{
-      type: DataTypes.ENUM('text', 'file','voice','startForm', 'delayForm' , 'offlineForm'),
-    },
-    sender_id:{
-      type: DataTypes.INTEGER ,
-    },
-    receiver_id:{
-      type: DataTypes.INTEGER ,
-    },
+    content: {
+      type: DataTypes.STRING
+    }
   }, {
     freezeTableName: true,
     underscored: true,
   });
-  message.associate = function (models) {
-    
+  Message.associate = function (models) {
+    Message.belongsTo(models.message, {
+      foreignKey: "parent_message_id",
+      onDelete: "RESTRICT"
+    });
+    Message.belongsTo(models.user,{
+      foreignKey: "user_id",
+      onDelete: "RESTRICT"
+    })
   };
-  return message;
+  return Message;
 };

@@ -1,4 +1,3 @@
-
 const express = require("express");
 const { user, verification_code } = require("../../models");
 const router = express.Router();
@@ -262,19 +261,24 @@ router.post("/signIn/:lang", async (req, res) => {
 });
 
 router.post("/logIn/:lang", async (req, res) => {
-  const patt1 = RegExp('127.0.0.1*');
-  const patt2 = RegExp('localhost*');
+  const patt1 = RegExp("127.0.0.1*");
+  const patt2 = RegExp("localhost*");
   let usr;
   let version;
   console.log("phone", req.body.phone)
   if (req.body.phone == "" || req.body.phone == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(?:[0-9] ?){5,13}[0-9]$/);
+    const regex = RegExp(/^(\98)9\d{9}$/g);
     let check = regex.test(req.body.phone);
-    console.log("check", check)
-    if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+    console.log("check", check);
+    if (!check)
+      return res
+        .status(400)
+        .json({ message: await translate("INVALIDENTRY", "fa") });
 
     usr = await user.findOne({
       where: {
@@ -291,11 +295,13 @@ router.post("/logIn/:lang", async (req, res) => {
   // }
 
   if (usr == null) {
-
     if (req.body.imei != null && req.body.imei != "") {
       const regex = RegExp(/^\d{15}$/g);
       let check = regex.test(req.body.imei);
-      if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      if (!check)
+        return res
+          .status(400)
+          .json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
       usr = await user.create({
         name: null,
@@ -303,14 +309,13 @@ router.post("/logIn/:lang", async (req, res) => {
         version_type: null,
         //email: req.body.email,
         //password: hash,
-        imei: req.body.imei
+        imei: req.body.imei,
       });
-    }
-    else {
+    } else {
       usr = await user.create({
         name: null,
         phone: req.body.phone,
-        version_type: null
+        version_type: null,
       });
     }
   }
@@ -342,12 +347,18 @@ router.post("/logIn/:lang", async (req, res) => {
     });
     res.clearCookie('token');
     return res
-      .cookie("token", await token, { httpOnly: true, expires: false, secure: true, maxAge: 10 * 365 * 24 * 60 * 60 * 1000 })
+      .cookie("token", await token, {
+        httpOnly: true,
+        expires: false,
+        secure: true,
+        maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+      })
       .status(200)
-      .json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
+      .json({
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+      });
   }
-
-})
+});
 
 router.post("/signUp/:lang", async (req, res) => {
   if ((req.body.phone == "" || req.body.phone == null) &&
