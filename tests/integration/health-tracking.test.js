@@ -34,13 +34,6 @@ describe('health-tracking', () => {
         .set('x-auth-token', TempToken);
     }
 
-    it('400', async () => {
-      tempUserId = userId + 100;
-      TempToken = token;
-      const result = await exec();
-      expect(result.status).toBe(400);
-    })
-
     it('200', async () => {
       tempUserId = userId;
       TempToken = token;
@@ -150,14 +143,7 @@ describe('health-tracking', () => {
       expect(result.status).toBe(200);
       await partnerUsr.destroy();
     });
-    it('400- user is null', async () => {
-      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454289" });
-      tempToken = tempUsr.generateAuthToken();
-      tempUserId = tempUsr.id;
-      await tempUsr.destroy();
-      const result = await exec();
-      expect(result.status).toBe(400);
-    });
+
   });
 
   describe('post-/syncUserInfo/:userId/:lang', () => {
@@ -188,7 +174,7 @@ describe('health-tracking', () => {
                 "category_id": 2,
                 "tracking_option_id": 6,
                 "has_multiple_choice": 1,
-                "state":2,
+                "state": 2,
               }
             ]
           }
@@ -214,25 +200,5 @@ describe('health-tracking', () => {
 
     });
 
-    it('400- user is null', async () => {
-      let tempUsr = await user.create({ name: "zahra", email: "tempUser_zzdand7755@gmail.com", phone: "09125454289" });
-      tempToken = tempUsr.generateAuthToken();
-      tempUserId = tempUsr.id;
-      data = [];
-      await tempUsr.destroy();
-      const result = await execWithNullData();
-      expect(result.status).toBe(400);
-    });
-
-    // it('400- somthing like state is rong', async () => {
-    //   tempUserId = userId;
-    //   TempToken = token;
-    //   state = 3;
-    //   const result = await execWithData();
-    //   expect(result.status).toBe(400);
-    // });
-
   });
-
-
 });

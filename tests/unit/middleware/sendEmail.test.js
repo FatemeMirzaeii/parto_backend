@@ -9,7 +9,8 @@ describe('send Email', () => {
         const subject = 'test';
         const text = 'test email in beckend';
         const result = await sendEmail('parto@parto.email', 'zzand7755@gmail.com', text, subject);
-        expect(result).toContain('info  [object Object]   info.response  250 2.0.0 Ok: queued as');
+        console.log("rrrrrrrrr",result)
+        expect(result).toBe(200);
     });
     afterAll(async () => {
         await server.close();

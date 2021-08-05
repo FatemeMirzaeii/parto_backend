@@ -5,7 +5,7 @@ const { user, health_tracking_category, user_tracking_option, health_tracking_op
 const translate = require("../../config/translate");
 const router = express();
 const { Op } = require("sequelize");
-const handleError = require("../middleware/handleMysqlError");
+const handleError = require("../../middleware/handleMysqlError");
 const moment = require("moment");
 
 

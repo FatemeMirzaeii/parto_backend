@@ -232,14 +232,6 @@ describe('profile', () => {
             expect(result.status).toBe(404);
             await tempuser.destroy();
         });
-        it('return 400', async () => {
-            let tempuser = await user.create({ name: "zahra", email: "profile_zzdand7755@gmail.com", phone: "09125454218" });
-            tempToken = tempuser.generateAuthToken();
-            tempUserId = tempuser.id;
-            await tempuser.destroy();
-            const result = await exec();
-            expect(result.status).toBe(400);
-        });
     });
 
     describe('put/profile/updateUserStatus/:userId/:lang', () => {
@@ -258,16 +250,6 @@ describe('profile', () => {
             pregnant = 1;
             const result = await exec();
             expect(result.status).toBe(200);
-        });
-
-        it('return 400 - user information is null', async () => {
-            let tempuser = await user.create({ name: "zahra", email: "profile_zzdand7755@gmail.com", phone: "09125454218" });
-            tempToken = tempuser.generateAuthToken();
-            tempUserId = tempuser.id;
-            pregnant = 1;
-            await tempuser.destroy();
-            const result = await exec();
-            expect(result.status).toBe(400);
         });
 
         it('return 400 - user information is null', async () => {
@@ -359,16 +341,6 @@ describe('profile', () => {
             expect(result.status).toBe(200);
         });
 
-        it('return 400 - lastSyncTime is not correct date ', async () => {
-            let tempuser = await user.create({ name: "zahra", email: "profile_zzdand7755@gmail.com", phone: "09125454218" });
-            tempToken = tempuser.generateAuthToken();
-            tempUserId = tempuser.id;
-            lastSyncTime = "2023-09-08";
-            await tempuser.destroy();
-            const result = await exec();
-            expect(result.status).toBe(400);
-        });
-
         it('return 400 -lastSyncTime is null;', async () => {
             tempToken = token;
             tempUserId = userId;
@@ -394,7 +366,7 @@ describe('profile', () => {
                             height: 158,
                             weight: 58,
                             pregnant: false,
-                            user_id:`${tempUserId}`,
+                            user_id: `${tempUserId}`,
                             pregnancy_try: false,
                             locked: false,
                             last_period_date: "1300-01-01",
@@ -419,13 +391,13 @@ describe('profile', () => {
             expect(result.status).toBe(200);
         });
 
-        it('return 400 - user not exist', async () => {
+        it('return 404 - user not exist', async () => {
             let tempuser = await user.create({ name: "zahra", email: "profile_zzdand7755@gmail.com", phone: "09125454218" });
             tempToken = tempuser.generateAuthToken();
             tempUserId = tempuser.id;
             await tempuser.destroy();
             const result = await execWithoutData()
-            expect(result.status).toBe(400);
+            expect(result.status).toBe(404);
         });
 
         it('return 200 -data is null', async () => {
@@ -441,12 +413,12 @@ describe('profile', () => {
         let tempUserId;
         let syncTime;
         const exec = () => {
-            return request(server).get('/profile/syncProfile/' + tempUserId +'/'+syncTime+ '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/syncProfile/' + tempUserId + '/' + syncTime + '/fa').set('x-auth-token', tempToken);
         }
         it('return 200 - with syncTime', async () => {
             tempToken = token;
             tempUserId = userId;
-            syncTime="2021-01-01";
+            syncTime = "2021-01-01";
             const result = await exec();
             expect(result.status).toBe(200);
         });
@@ -454,19 +426,11 @@ describe('profile', () => {
         it('return 200 - syncTime is null', async () => {
             tempToken = token;
             tempUserId = userId;
-            syncTime=null;
+            syncTime = null;
             const result = await exec();
             expect(result.status).toBe(200);
         });
 
-        it('return 400 - user not exist', async () => {
-            let tempuser = await user.create({ name: "zahra", email: "profile_zzdand7755@gmail.com", phone: "09125454218" });
-            tempToken = tempuser.generateAuthToken();
-            tempUserId = tempuser.id;
-            await tempuser.destroy();
-            const result = await exec()
-            expect(result.status).toBe(400);
-        });
     });
 
     describe('/profile/deleteProfile/:userId/:lang', () => {
