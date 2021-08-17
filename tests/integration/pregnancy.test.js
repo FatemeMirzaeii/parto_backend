@@ -1,6 +1,5 @@
 const request = require('supertest');
 const { user, user_profile, pregnancy } = require("../../models");
-const Pregnancy = require('../../models/Pregnancy');
 
 describe('pregnancy', () => {
     let server;
@@ -34,13 +33,13 @@ describe('pregnancy', () => {
         await usr.destroy();
     });
 
-    describe('/pregnancy/savePregnancyData/{userId}/{lang}', () => {
+    describe('/pregnancy/{userId}/{lang}', () => {
         let tempUserId;
         let tempToken;
         let dueDate = "2021-06-08";
         let state = 1;
         const exec = () => {
-            return request(server).post('/pregnancy/savePregnancyData/' + tempUserId + '/fa')
+            return request(server).post('/pregnancy/' + tempUserId + '/fa')
                 .send({
                     "dueDate": `${dueDate}`,
                     "abortion": 0,
@@ -84,12 +83,12 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('/pregnancy/getPregnancyData/:userId/:lang', () => {
+    describe('/pregnancy/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
 
         const exec = () => {
-            return request(server).get('/pregnancy/getPregnancyData/' + tempUserId + '/fa')
+            return request(server).get('/pregnancy/' + tempUserId + '/fa')
                 .set('x-auth-token', tempToken);
         }
 
@@ -151,13 +150,13 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('/pregnancy/setِDueDate/:userId/:lang', () => {
+    describe('/pregnancy/dueDate/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
         let dueDate = "2021-03-05";
 
         const exec = () => {
-            return request(server).post('/pregnancy/setDueDate/' + tempUserId + '/fa')
+            return request(server).post('/pregnancy/dueDate/' + tempUserId + '/fa')
                 .send({
                     "dueDate": `${dueDate}`
                 }).set('x-auth-token', tempToken);
@@ -180,13 +179,13 @@ describe('pregnancy', () => {
             expect(result.status).toBe(200);
         });
     });
-    describe('/pregnancy/setAbortionDate/:userId/:lang', () => {
+    describe('/pregnancy/abortionDate/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
         let abortionDate = "2020-12-05";
 
         const exec = () => {
-            return request(server).post('/pregnancy/setAbortionDate/' + tempUserId + '/fa')
+            return request(server).post('/pregnancy/abortionDate/' + tempUserId + '/fa')
                 .send({
                     "abortionDate": `${abortionDate}`
                 }).set('x-auth-token', tempToken);
@@ -211,12 +210,12 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('/pregnancy/syncPregnancyInfo/:userId/:syncTime/:lang', () => {
+    describe('/pregnancy/sync/:userId/:syncTime/:lang', () => {
         let tempUserId;
         let tempToken;
 
         const exec = () => {
-            return request(server).get('/pregnancy/syncPregnancyInfo/' + tempUserId + '/2020-11-01/fa')
+            return request(server).get('/pregnancy/sync/' + tempUserId + '/2020-11-01/fa')
                 .set('x-auth-token', tempToken);
         }
         // it('400',async () => {
@@ -234,12 +233,12 @@ describe('pregnancy', () => {
         });
     });
 
-    describe('post/pregnancy/syncPregnancyInfo/:userId/:lang', () => {
+    describe('post/pregnancy/sync/:userId/:lang', () => {
         let tempUserId;
         let tempToken;
         let state=1;
         const exec = () => {
-            return request(server).post('/pregnancy/syncPregnancyInfo/' + tempUserId + '/fa')
+            return request(server).post('/pregnancy/sync/' + tempUserId + '/fa')
                 .send({
                     "data": [{
                         "dueDate": "2021-06-01",

@@ -6,9 +6,8 @@ const translate = require("../../config/translate");
 const { user, user_tracking_option, user_profile, health_tracking_option } = require("../../models");
 const checkDateWithDateOnly = require("../../middleware/checkDateWithDateOnly");
 
-router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
+router.get("/lastPeriodDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -22,11 +21,23 @@ router.get("/getLastPeriodDate/:userId/:lang", auth, async (req, res) => {
       user_id: usrID,
     },
   });
-  if (uPeriod == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
-  return res.status(200).json({ data: uPeriod });
+  if (uPeriod == null) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("UERENOTFOUND", req.params.lang)
+    });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { uPeriod },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, res) => {
+router.put("/lastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, res) => {
 
   let uPeriod = await user_profile.findOne({
     where: {
@@ -34,9 +45,21 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req
     },
   });
 
-  if (uPeriod == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  if (uPeriod == null) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("UERENOTFOUND", req.params.lang)
+    });
   if (!checkDateWithDateOnly(req.params.lastPeriodDate)) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
 
   await user_profile.update(
@@ -48,12 +71,17 @@ router.put("/editLastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req
     }
   });
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
+router.get("/periodDays/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -70,17 +98,20 @@ router.get("/getUserAllPeriodDays/:userId/:lang", auth, async (req, res) => {
       }
     }
   })
-  res.status(200).json({ data: uPeriodDate });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { uPeriodDate },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
+router.put("/bleedingDays/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
   let deleted;
   //  deleleDate for delete user date
-  for(const element of req.body.deleteDate) {
-    console.log(element);
+  for (const element of req.body.deleteDate) {
     deleted = await user_tracking_option.destroy({
       where: {
         user_id: req.params.userId,
@@ -92,7 +123,7 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
 
   // add user period Date 
   const trackingOption = await health_tracking_option.findByPk(3);
-  for(const element2 of req.body.addDate) {
+  for (const element2 of req.body.addDate) {
     let dest = await user_tracking_option.destroy({
       where: {
         user_id: req.params.userId,
@@ -100,16 +131,21 @@ router.put("/setBleedingDays/:userId/:lang", auth, async (req, res) => {
         tracking_option_id: { [Op.or]: [1, 2, 3, 4] }
       }
     })
-    
-      let u = await user_tracking_option.create({
-        date: new Date(element2),
-      });
-      await u.setHealth_tracking_option(trackingOption)
+
+    let u = await user_tracking_option.create({
+      date: new Date(element2),
+    });
+    await u.setHealth_tracking_option(trackingOption)
       .then(u.setUser(usr).catch(async function (err) {
         await handleError(u, err);
       }))
   };
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-});
-
-module.exports = router;
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
+  });
+  module.exports = router;

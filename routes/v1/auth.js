@@ -10,7 +10,7 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 
 function checkPhone(phone) {
-  const regex = RegExp(/^(\98)9\d{9}$/g);
+  const regex = RegExp(/^(\98)9(0|1|2|3|9)\d{8}$/g);
   return regex.test(phone);
 }
 function checkEmail(email) {
@@ -18,19 +18,19 @@ function checkEmail(email) {
   return regex.test(email);
 }
 async function checkUserWithPhone(phone) {
-  let userExist =await user.findOne({
+  let userExist = await user.findOne({
     where: {
       phone: phone
     }
   })
-  if (await userExist== null) return null;
+  if (await userExist == null) return null;
   else return userExist;
 }
 async function checkUserWithEmail(email, pass) {
-  let userExist =await user.findOne({
+  let userExist = await user.findOne({
     where: {
       email: email,
-      password:pass
+      password: pass
     }
   })
   if (userExist == null) return null;
@@ -38,21 +38,35 @@ async function checkUserWithEmail(email, pass) {
   // if (!checkPass) return null;
   return userExist;
 }
-router.post("/verificationCode", async (req, res) => {
+router.post("/verificationCode/:lang", async (req, res) => {
   let flag = true;
   let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
   if (req.body.phone == "" || req.body.phone == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   console.log("lock", req.body.type == "lock");
   if (req.body.type != undefined && req.body.type == "lock") {
     code = Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\98)9\d{9}$/g);
+    const regex = RegExp(/^(\98)9(0|1|2|3|9)\d{8}$/g);
     let check = regex.test(req.body.phone);
 
-    if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
+    if (!check) {
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("INVALIDENTRY", req.params.lang)
+        });
+    }
     else {
       let userExist;
       if (req.body.type != undefined && req.body.type == "lock") {
@@ -81,7 +95,13 @@ router.post("/verificationCode", async (req, res) => {
 
         if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
           flag = false;
-          return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
+          return res
+            .status(409)
+            .json({
+              status: "error",
+              data: {},
+              message: "لطفا پس از  دو دقیقه دوباره درخواست دهید"
+            });
         }
         else if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
           for (const element of userExist) {
@@ -126,32 +146,37 @@ router.post("/verificationCode", async (req, res) => {
                 });
 
               }
-              console.log("userCode", code)
-              return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") }).end();
+              return res
+                .status(200)
+                .json({
+                  status: "success",
+                  data: {},
+                  message: await translate("SUCCESSFUL", req.params.lang)
+                });
             }
-            return res.status(status).json({ message: message });
+            return res
+              .status(status)
+              .json({
+                status: "error",
+                data: {},
+                message: message
+              });
           })
       }
     }
   }
-  // else{
-  //   const regex = RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})$/);
-  //   let check=regex.test(req.body.email); 
 
-  //   if (!check) return res.status(400).json({ message: await translate("INVALIDENTRY", "fa") });
-  //   else{
-  //     const subject='Verification Code for parto application ';
-  //     let text =`کد فعالسازی شما : ${code}  `;
-  //     const result=sendEmail('parto@parto.app',req.body.email,text,subject);
-  //     if(result=="ERROR") return res.status(502).json({message: await translate("SERVERERROR", "fa")});
-  //     else return res.status(200).json({data:{ message: await translate("SUCCESSFUL", "fa") , code:code}})
-  //   }
-  // }
 });
 
 router.post("/checkVerificationCode/:lang", async (req, res) => {
   if (req.body.code == "" || req.body.code == null || req.body.phone == "" || req.body.phone == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   let userExist;
   if (req.body.type != undefined && req.body.type == "lock") {
@@ -170,9 +195,14 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       }
     });
   }
-  // console.log("user Exist", userExist);
   if (userExist.length == 0) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   else {
     let createAt = new Date(userExist[userExist.length - 1].createdAt);
@@ -186,13 +216,24 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     else {
       console.log("code", userExist[userExist.length - 1].code)
       if (userExist[userExist.length - 1].code != req.body.code) {
-        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+        return res
+          .status(400)
+          .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+          });
       }
       for (const element of userExist) {
         await element.destroy();
       }
-      return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
-
+      return res
+        .status(200)
+        .json({
+          status: "success",
+          data: {},
+          message: await translate("SUCCESSFUL", req.params.lang)
+        });
     }
   }
 
@@ -203,7 +244,8 @@ router.post("/signIn/:lang", async (req, res) => {
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {
-    return res.status(400)
+    return res
+      .status(400)
       .json({
         status: "error",
         data: {},
@@ -211,18 +253,20 @@ router.post("/signIn/:lang", async (req, res) => {
       });
   }
 
-  if (req.body.phone != null) {
+  if (req.body.phone != null && req.body.phone != "") {
     if (!checkPhone(req.body.phone))
-      return res.status(400)
+      return res
+        .status(400)
         .json({
           status: "error",
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr =await checkUserWithPhone(req.body.phone);
-    
+    usr = await checkUserWithPhone(req.body.phone);
+
     if (usr == null)
-      return res.status(404)
+      return res
+        .status(404)
         .json({
           status: "error",
           data: {},
@@ -231,7 +275,8 @@ router.post("/signIn/:lang", async (req, res) => {
   }
   else {
     if (!checkEmail(req.body.email))
-      return res.status(400)
+      return res
+        .status(400)
         .json({
           status: "error",
           data: {},
@@ -239,7 +284,8 @@ router.post("/signIn/:lang", async (req, res) => {
         });
     usr = await checkUserWithEmail(req.body.email, req.body.password)
     if (usr == null)
-      return res.status(404)
+      return res
+        .status(404)
         .json({
           status: "error",
           data: {},
@@ -252,7 +298,9 @@ router.post("/signIn/:lang", async (req, res) => {
     version: req.body.version,
     login_date: Date.now(),
   });
-  return res.header("x-auth-token", token).status(200)
+  return res
+    .header("x-auth-token", token)
+    .status(200)
     .json({
       status: "success",
       data: { id: usr.id, userName: usr.name },
@@ -269,16 +317,24 @@ router.post("/logIn/:lang", async (req, res) => {
   if (req.body.phone == "" || req.body.phone == null) {
     return res
       .status(400)
-      .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   if (req.body.phone != "") {
-    const regex = RegExp(/^(\98)9\d{9}$/g);
+    const regex = RegExp(/^(\98)9(0|1|2|3|9)\d{8}$/g);
     let check = regex.test(req.body.phone);
     console.log("check", check);
     if (!check)
       return res
         .status(400)
-        .json({ message: await translate("INVALIDENTRY", "fa") });
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("INVALIDENTRY", req.params.lang)
+        });
 
     usr = await user.findOne({
       where: {
@@ -286,14 +342,6 @@ router.post("/logIn/:lang", async (req, res) => {
       },
     });
   }
-  // else{
-  //   usr = await user.findOne({
-  //     where: {
-  //       email: req.body.email,
-  //     },
-  //   });
-  // }
-
   if (usr == null) {
     if (req.body.imei != null && req.body.imei != "") {
       const regex = RegExp(/^\d{15}$/g);
@@ -301,14 +349,16 @@ router.post("/logIn/:lang", async (req, res) => {
       if (!check)
         return res
           .status(400)
-          .json({ message: await translate("INVALIDENTRY", req.params.lang) });
+          .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+          });
 
       usr = await user.create({
         name: null,
         phone: req.body.phone,
         version_type: null,
-        //email: req.body.email,
-        //password: hash,
         imei: req.body.imei,
       });
     } else {
@@ -336,8 +386,14 @@ router.post("/logIn/:lang", async (req, res) => {
       version: "android",
       login_date: Date.now(),
     });
-    return res.header("x-auth-token", token).status(200).json({ data: { id: usr.id, userName: usr.name, type: usr.version_type } });
-
+    return res
+      .header("x-auth-token", token)
+      .status(200)
+      .json({
+        status: "success",
+        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
   else {
     await usr.createUser_log({
@@ -355,7 +411,9 @@ router.post("/logIn/:lang", async (req, res) => {
       })
       .status(200)
       .json({
+        status: "success",
         data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
 });
@@ -364,7 +422,8 @@ router.post("/signUp/:lang", async (req, res) => {
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {
-    return res.status(400)
+    return res
+      .status(400)
       .json({
         status: "error",
         data: {},
@@ -378,17 +437,19 @@ router.post("/signUp/:lang", async (req, res) => {
     password: req.body.password
   }
   let usr;
-  if (req.body.phone != null) {
+  if (req.body.phone != null && req.body.phone != "") {
     if (!checkPhone(req.body.phone))
-      return res.status(400)
+      return res
+        .status(400)
         .json({
           status: "error",
           data: {},
           message: await translate("INVALIDENTRY", req.params.lang)
         });
-    usr =await checkUserWithPhone(req.body.phone);
+    usr = await checkUserWithPhone(req.body.phone);
     if (usr != null)
-      return res.status(409)
+      return res
+        .status(409)
         .json({
           status: "error",
           data: {},
@@ -396,9 +457,10 @@ router.post("/signUp/:lang", async (req, res) => {
         });
 
   }
-  if (req.body.email != null) {
+  if (req.body.email != null && req.body.email != "") {
     if (!checkEmail(req.body.email))
-      return res.status(400)
+      return res
+        .status(400)
         .json({
           status: "error",
           data: {},
@@ -406,7 +468,8 @@ router.post("/signUp/:lang", async (req, res) => {
         });
     usr = await checkUserWithEmail(req.body.email, req.body.password)
     if (usr != null)
-      return res.status(409)
+      return res
+        .status(409)
         .json({
           status: "error",
           data: {},
@@ -415,14 +478,16 @@ router.post("/signUp/:lang", async (req, res) => {
 
   }
 
-  usr = await user.create(request );
+  usr = await user.create(request);
   const token = await usr.generateAuthToken();
   await usr.createUser_log({
     i_p: req.header("x-forwarded-for"),
     version: req.body.version,
     login_date: Date.now(),
   });
-  return res.header("x-auth-token", token).status(200)
+  return res
+    .header("x-auth-token", token)
+    .status(200)
     .json({
       status: "success",
       data: { id: usr.id, userName: usr.name },
@@ -469,8 +534,10 @@ router.put("/changePassword/:lang", async (req, res) => {
     });
 });
 
-router.post("/v2/verificationCode/:lang", async (req, res) => {
-  if ((req.body.phone == "" || req.body.phone == null) && (req.body.email == "" || req.body.email == null)) {
+
+router.put("/forgetPassword/:lang", async (req, res) => {
+  let usr;
+  if (req.body.email == "" || req.body.email == null || req.body.newPassword == "" || req.body.newPassword == null) {
     return res.status(400)
       .json({
         status: "error",
@@ -478,188 +545,36 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
-  let flag = true;
-  let code = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-  let type = "login";
-  if (req.body.type != undefined && req.body.type == "lock") {
-    code = Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-    type = "lock";
-  }
 
-  let userExist;
-  let time;
-  if (req.body.phone != null && req.body.phone != "") {
-    time = (2 * 60 * 1000);
-    if (!checkPhone(req.body.phone))
-      return res.status(400)
-        .json({
-          status: "error",
-          data: {},
-          message: await translate("INVALIDENTRY", req.params.lang)
-        });
-    userExist = await verification_code.findAll({
-      where: {
-        phone: req.body.phone,
-        type: type
-      }
-    });
-  }
-  else {
-    time = (10 * 60 * 1000);
-    if (!checkEmail(req.body.email))
-      return res.status(400)
-        .json({
-          status: "error",
-          data: {},
-          message: await translate("INVALIDENTRY", req.params.lang)
-        });
-    userExist = await verification_code.findAll({
-      where: {
-        email: req.body.email,
-        type: type
-      }
-    });
-  }
-  console.log("exist", userExist);
-  if (userExist.length > 0) {
-    if (await getCreateTime(userExist) < time) {
-
-      flag = false;
-      return res.status(409)
-        .json({
-          status: "error",
-          data: {},
-          message: "دقیقه دوباره درخواست دهید " + time / 60000 + "لطفا پس از"
-        });
-    }
-    else if (await getCreateTime(userExist) > time) {
-      for (const element of userExist) {
-        await element.destroy();
-      }
-      flag = true;
-    }
-  }
-
-  if (flag == true) {
-
-    let template = "verificationCode";
-    if (type == "lock") template = "lockCode";
-    let result;
-    // send Email
-    if (req.body.phone != null) {
-      result = await sendSms(type, req.body.phone, code, template);
-      if (result == 200) {
-        await verification_code.create({
-          phone: req.body.phone,
-          code: code,
-          type: type
-        })
-      }
-    }
-    else {
-      let subject = ` Parto- ${template}  `;
-      let text = `کد فعالسازی شما : ${code}  `;
-      result = await sendEmail('parto@parto.email', req.body.email, text, subject);
-
-      await verification_code.create({
-        email: req.body.email,
-        code: code,
-        type: type
-      })
-
-    }
-    console.log("resultttttttttt", result);
-    if (result == 200) {
-      return res.status(200).json({
-        status: "success",
-        data: {},
-        message: await translate("SUCCESSFUL", req.params.lang)
-      });
-    }
-    else return res.status(502)
-      .json({
-        status: "error",
-        data: {},
-        message: await translate("SERVERERROR", req.params.lang)
-      });
-  }
-
-});
-
-router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
-  if (req.body.code == "" || req.body.code == null ||
-    ((req.body.phone == "" || req.body.phone == null) && (req.body.email == "" || req.body.email == null))) {
+  if (!checkEmail(req.body.email))
     return res.status(400)
       .json({
         status: "error",
         data: {},
         message: await translate("INVALIDENTRY", req.params.lang)
       });
-  }
-  let type = "login";
-  if (req.body.type != undefined && req.body.type == "lock") {
-    type = "lock";
-  }
-
-  let userExist;
-  let time;
-  if (req.body.phone != null) {
-    time = (2 * 60 * 1000);
-    userExist = await verification_code.findAll({
-      where: {
-        phone: req.body.phone,
-        type: type
-      }
-    });
-  }
-  else {
-    time = (10 * 60 * 1000);
-    userExist = await verification_code.findAll({
-      where: {
-        email: req.body.email,
-        type: type
-      }
-    });
-  }
-
-  if (userExist.length == 0) {
+  usr = await user.findOne({
+    where: {
+      email: req.body.email
+    }
+  })
+  if (usr == null)
     return res.status(404)
       .json({
         status: "error",
         data: {},
-        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+        message: await translate("UERENOTFOUND", req.params.lang)
       });
-  }
   else {
-    if (await getCreateTime(userExist) > time) {
-      console.log("time expier");
-      return res.status(408)
-        .json({
-          status: "error",
-          data: {},
-          message: await translate("TIMEOVER", req.params.lang)
-        });
-    }
-    else {
-      console.log("code", userExist[userExist.length - 1].code)
-      if (userExist[userExist.length - 1].code != req.body.code) {
-        return res.status(400)
-          .json({
-            status: "error",
-            data: {},
-            message: await translate("INVALIDCODE", req.params.lang)
-          });
-      }
-      for (const element of userExist) {
-        await element.destroy();
-      }
-    }
+    await usr.update({ password: req.body.newPassword });
   }
-  return res.status(200).json({
-    status: "success",
-    data: {},
-    message: await translate("SUCCESSFUL", req.params.lang)
-  });
+  return res.status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
+
 
 module.exports = router;

@@ -6,7 +6,7 @@ const router = express();
 // const checkDateWithDateOnly = require("../middleware/checkDateWithDateOnly");
 const { Op } = require("sequelize");
 
-router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
+router.post("/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -15,12 +15,24 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
   });
 
   if (uPregnantProfile != null && uPregnantProfile.pregnant == 0) {
-    return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
+    return res
+      .status(409)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("CONTRADICTION", req.params.lang)
+      });
   }
 
   if (req.body.dueDate == null && req.body.abortion == null && req.body.conceptionDate == null && req.body.pregnancyWeek == null
     && req.body.abortionDate == null && req.body.childrenNumber == null && req.body.kickCount == null) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   let request = {
     due_date: req.body.dueDate,
@@ -43,29 +55,59 @@ router.post("/savePregnancyData/:userId/:lang", auth, async (req, res) => {
 
   if (uExist == null) {
     if (req.body.state == 2 || req.body.state == 3) {
-      return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+      return res
+        .status(404)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+        });
     }
     else if (req.body.state == 1) {
       uExist = await pregnancy.create(request);
       await uExist.setUser(usr);
     }
     else {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("INVALIDENTRY", req.params.lang)
+        });
     }
   }
   else {
     if (req.body.state > 3) {
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("INVALIDENTRY", req.params.lang)
+        });
     }
     await uExist.update(request);
   }
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 });
 
-router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
+router.get("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null) return res
+    .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -80,15 +122,33 @@ router.get("/getPregnancyData/:userId/:lang", auth, async (req, res) => {
     },
   });
   if (userPregnant == null) {
-    return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res
+      .status(404)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+      });
   }
-  return res.status(200).json({ data: userPregnant });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: { userPregnant },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 });
 
 router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || req.body.state == null || req.body.state == "" || req.body.state == 1 || req.body.state > 3) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
 
   let uPregnant = await pregnancy.findOne({
@@ -123,12 +183,24 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
     }
   }
   else {
-    return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res
+      .status(404)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+      });
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 })
 
-router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
+router.post("/dueDate/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -137,7 +209,13 @@ router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
   });
 
   if (uPregnantProfile != null && uPregnantProfile.pregnant == 0) {
-    return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
+    return res
+      .status(409)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("CONTRADICTION", req.params.lang)
+      });
   }
   const uExist = await pregnancy.findOne({
     where: {
@@ -158,11 +236,16 @@ router.post("/setDueDate/:userId/:lang", auth, async (req, res) => {
       due_date: req.body.dueDate
     })
   }
-
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 });
 
-router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
+router.post("/abortionDate/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -171,7 +254,13 @@ router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
   });
 
   if (uPregnantProfile != null && uPregnantProfile.pregnant == 0) {
-    return res.status(409).json({ message: await translate("CONTRADICTION", req.params.lang) });
+    return res
+      .status(409)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("CONTRADICTION", req.params.lang)
+      });
   }
   let uExist = await pregnancy.findOne({
     where: {
@@ -195,13 +284,24 @@ router.post("/setAbortionDate/:userId/:lang", auth, async (req, res) => {
       state: 1
     })
   }
-
-  return res.status(200).json({ message: await translate("SUCCESSFUL", "fa") });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 });
 
-router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
+router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null) return res
+    .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
 
   let usrID;
   if (usr.partner_id != null) {
@@ -213,16 +313,22 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
   let userPregnancy = await pregnancy.findOne({
     where: {
       user_id: usrID,
-   }
+    }
   })
-  if (userPregnancy == null) return res.status(200).json({ data: userPregnancy });
+  if (userPregnancy == null) return res
+    .status(200)
+    .json({
+        status: "success",
+        data: { userPregnancy },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   let syncTime, pregnantUsre;
 
   if (req.params.syncTime == "null") {
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
-        }
+      }
     })
   }
   else {
@@ -233,7 +339,7 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
-        state:{[Op.in]:[1,3]},
+        state: { [Op.in]: [1, 3] },
         updatedAt: {
           [Op.gte]: new Date(milliseconds)
         }
@@ -241,16 +347,34 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
       orderBy: [['group', 'DESC']],
     })
   }
-  return res.status(200).json({ data: pregnantUsre });
+  return res
+    .status(200)
+    .json({
+        status: "success",
+        data: { pregnantUsre },
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
 })
 
-router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
+router.post("/sync/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null || req.body == null) return res
+    .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
   let result;
 
   if ((req.body.data).length == 0) {
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
   for (i = 0; i < req.body.data.length; i++) {
     if (req.body.data[i].state != null && req.body.data[i].state != "") {
@@ -278,14 +402,20 @@ router.post("/syncPregnancyInfo/:userId/:lang", auth, async (req, res) => {
           await pregnantUser.setUser(usr);
         }
       }
-      else{
+      else {
         if (request.state == 2 || request.state == 3) {
           await pregnantUser.update(request);
         }
       }
     }
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 
 })
 

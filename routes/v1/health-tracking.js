@@ -10,52 +10,51 @@ const moment = require("moment");
 
 
 
-router.get("/getCategories", auth, async (req, res) => {
-  const categories = await health_tracking_category.findAll();
-  res.status(200).json({ data: categories });
-});
+// router.get("/categories/:lang", auth, async (req, res) => {
+//   const categories = await health_tracking_category.findAll();
+//   res.status(200).json({ data: categories });
+// });
 
-router.post("/addCategory/:lang", auth, async (req, res) => {
-  const exists = await health_tracking_category.findOne({
-    where: {
-      title: req.body.title
-    }
-  });
-  if (exists) return res.status(400).json({ message: await translate("CATEGORYEXISTS", req.params.lang) });
-  const cat = await health_tracking_category.create({
-    title: req.body.title
-  });
-  res.status(200).json({ data: { id: cat.id, title: cat.title } });
-});
+// router.post("/category/:lang", auth, async (req, res) => {
+//   const exists = await health_tracking_category.findOne({
+//     where: {
+//       title: req.body.title
+//     }
+//   });
+//   if (exists) return res.status(400).json({ message: await translate("CATEGORYEXISTS", req.params.lang) });
+//   const cat = await health_tracking_category.create({
+//     title: req.body.title
+//   });
+//   res.status(200).json({ data: { id: cat.id, title: cat.title } });
+// });
 
-router.put("/editCategory/:lang/:id", auth, async (req, res) => {
-  const exists = await health_tracking_category.findByPk(req.params.id);
-  if (!exists) return res.status(404).json({ message: await translate("NOSUCHCATEGORY", req.params.lang) });
-  await health_tracking_category.update({
-    title: req.body.title
-  },
-    {
-      where: {
-        id: req.params.id
-      }
-    });
-  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
-});
+// router.put("/category/:lang/:id", auth, async (req, res) => {
+//   const exists = await health_tracking_category.findByPk(req.params.id);
+//   if (!exists) return res.status(404).json({ message: await translate("NOSUCHCATEGORY", req.params.lang) });
+//   await health_tracking_category.update({
+//     title: req.body.title
+//   },
+//     {
+//       where: {
+//         id: req.params.id
+//       }
+//     });
+//   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
+// });
 
-router.delete("/deleteCategory/:lang/:id", auth, async (req, res) => {
-  const exists = await health_tracking_category.findByPk(req.params.id);
-  if (!exists) return res.status(404).json({ message: await translate("NOSUCHCATEGORY", req.params.lang) });
-  await health_tracking_category.destroy({
-    where: {
-      id: req.params.id
-    }
-  });
-  res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
-});
+// router.delete("/category/:lang/:id", auth, async (req, res) => {
+//   const exists = await health_tracking_category.findByPk(req.params.id);
+//   if (!exists) return res.status(404).json({ message: await translate("NOSUCHCATEGORY", req.params.lang) });
+//   await health_tracking_category.destroy({
+//     where: {
+//       id: req.params.id
+//     }
+//   });
+//   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
+// });
 
 router.get("/userInfo/:userId/:date/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -102,20 +101,23 @@ router.get("/userInfo/:userId/:date/:lang", auth, checkDate, async (req, res) =>
         optionsTemp.icon = option[j].icon;
         optionsTemp.selected = userOption[j];
         optionList.push(optionsTemp);
-
       }
     }
     temp.options = optionList;
     data.push(temp);
   }
 
-  return res.status(200).json({ data: data });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { data },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
 router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
   let userOption, existDate;
   for (const element2 of req.body.deleted) {
     await user_tracking_option.destroy({
@@ -173,13 +175,17 @@ router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
         await handleError(userOption, err);
       }))
   }
-
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
+router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -193,7 +199,13 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       user_id: usrID
     }
   })
-  if (userOption == null) return res.status(200).json({ data: userOption });
+  if (userOption == null) return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    }); ({ data: userOption });
   console.log("userOption", userOption);
   let syncTime, existOption;
   if (req.params.syncTime == "null") {
@@ -221,14 +233,25 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
     })
 
   }
-  return res.status(200).json({ data: existOption });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { existOption },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
+router.post("/sync/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if ((req.body.data).length == 0) {
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
   let userOption, existData, optionIdExist;
   let error = 0;
@@ -340,17 +363,27 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
 
   }
   if (error == 1) {
-    return res.status(500).json({ message: await translate("SERVERERROR", req.params.lang) });
+    return res
+    .status(500)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("SERVERERROR", req.params.lang)
+    });
   }
   else {
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
-
 });
 
-router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
+router.get("/userHealthInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -369,15 +402,12 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
     ]
   })
   categoryAndOptions.sort(function (a, b) { return a.category_id - b.category_id });
-  console.log("cccccccc", categoryAndOptions.length);
   let result = [];
   let option = [];
   let j = 1;
 
   for (let i = 0; i < categoryAndOptions.length + 1; i++) {
-    console.log("iiiiiiiiiii", i);
     if (i == categoryAndOptions.length) {
-      console.log("eeeeeeeeeeeennnnnnnddddd", i);
       if (option.length != 0) {
         let temp = {};
         temp.categoryId = j;
@@ -425,12 +455,17 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
       }
     }
   }
-  return res.status(200).json({ data: result });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {result},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
-router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
+router.get("/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -469,19 +504,15 @@ router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
     let exist = false;
     for (let r of result) {
       if (i.date == r.date) {
-        console.log("is existtttt");
-        console.log("date", i.date);
-        exist = true;
+       exist = true;
       }
     }
     if (exist == false) {
-
       days.date = i.date;
       console.log("date1", i.date);
       let temp = [];
       let j;
       for (j of options) {
-
         let temp2 = {};
         for (let k of categoryAndOptions) {
 
@@ -501,8 +532,13 @@ router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
       result.push({ date: days.date, options: days.options });
     }
   }
-  return res.status(200).json({ data: result });
-
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {result},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    }); 
 });
 
 router.get("/healthTrackingIcon/:lang", async (req, res) => {
@@ -528,7 +564,13 @@ router.get("/healthTrackingIcon/:lang", async (req, res) => {
     data.push(temp);
   }
 
-  return res.status(200).json({ data: data });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {data},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
 module.exports = router;

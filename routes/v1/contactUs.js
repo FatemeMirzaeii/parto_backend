@@ -6,7 +6,7 @@ const sEmail = require("../../middleware/sendEmail");
 const logger = require("../../config/logger/logger");
 
 
-router.post("/email", async (req, res) => {
+router.post("/email/:lang", async (req, res) => {
   let name = req.body.name;
   let email = req.body.email;
   let message = req.body.message;
@@ -16,15 +16,23 @@ router.post("/email", async (req, res) => {
   let result;
   result = await sEmail(creds.USER, "info@parto.email", content, subject);
   console.log(result);
-  if (result == "ERROR") {
+  if (result == 500) {
     logger.error("SEND EMAIL FAILED-"+ result);
     return res
       .status(502)
-      .json({ message: await translate("SERVERERROR", "fa") });
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("SERVERERROR", req.params.lang)
+      });
   } else {
     return res
       .status(200)
-      .json({ message: await translate("SUCCESSFUL", "fa") });
+      .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
 });
 

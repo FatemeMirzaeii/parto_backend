@@ -15,13 +15,15 @@ router.get("/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (uProfile == null) return res.status(404)
+  if (uProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uProfile },
@@ -45,13 +47,15 @@ router.get("/periodInfo/:userId/:lang", auth, async (req, res) => {
       user_id: usrID,
     },
   });
-  if (uProfile == null) return res.status(404)
+  if (uProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uProfile },
@@ -67,13 +71,15 @@ router.get("/generalInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (uProfile == null) return res.status(404)
+  if (uProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uProfile },
@@ -83,7 +89,8 @@ router.get("/generalInfo/:userId/:lang", auth, async (req, res) => {
 
 router.put("/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
-  if (userProfil == null) return res.status(404)
+  if (userProfil == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
@@ -115,17 +122,19 @@ router.put("/:userId/:lang", auth, async (req, res) => {
       }
     });
 
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
-      data: { uProfile },
+      data: { userProfil },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
 
 router.put("/periodInfo/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
-  if (userProfil == null) return res.status(404)
+  if (userProfil == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
@@ -151,17 +160,19 @@ router.put("/periodInfo/:userId/:lang", auth, async (req, res) => {
       }
     });
 
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
-      data: { uProfile },
+      data: { userProfil },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
 
 router.put("/generalInfo/:userId/:lang", auth, async (req, res) => {
   let userProfil = await user_profile.findOne({ where: { user_id: req.params.userId } });
-  if (userProfil == null) return res.status(404)
+  if (userProfil == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
@@ -184,10 +195,11 @@ router.put("/generalInfo/:userId/:lang", auth, async (req, res) => {
       }
     });
 
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
-      data: { uProfile },
+      data: { userProfil },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -198,7 +210,8 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (uProfile == null) return res.status(404)
+  if (uProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
@@ -210,7 +223,8 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
     }
   });
 
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uProfile },
@@ -228,24 +242,28 @@ router.post("/:userId/:lang", auth, async (req, res) => {
     "blood_type": req.body.bloodType,
     "locked": req.body.isLock,
   }
+  let userProf = await user_profile.findOne({ where: { user_id: req.params.userId } });
+  if (userProf == null) {
+    userProf = await user_profile.create(request);
+    userProf.setUser(usr).catch(async function (err) {
+      let checkError = await handleError(usr, err);
+      if (!checkError) {
+        return res
+          .status(500)
+          .json({
+            status: "error",
+            data: {},
+            message: await translate("SERVERERROR", req.params.lang)
+          });
+      }
+    })
+  }
 
-  let userProf = await user_profile.create(request);
-  userProf.setUser(usr).catch(async function (err) {
-    let checkError = await handleError(usr, err);
-    if (!checkError) {
-      return res.status(500)
-        .json({
-          status: "error",
-          data: {},
-          message: await translate("SERVERERROR", req.params.lang)
-        });
-    }
-  })
-
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
-      data: { uProfile },
+      data: { userProf },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -257,13 +275,15 @@ router.get("/pregnancyMode/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (uPregnantProfile == null) return res.status(404)
+  if (uPregnantProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uPregnantProfile },
@@ -286,13 +306,15 @@ router.get("/userStatus/:userId/:lang", auth, async (req, res) => {
       user_id: usrID,
     },
   });
-  if (uPregnantProfile == null) return res.status(404)
+  if (uPregnantProfile == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { uPregnantProfile },
@@ -306,7 +328,8 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (uPregnantProfile == null) return res.status(400)
+  if (uPregnantProfile == null) return res
+    .status(400)
     .json({
       status: "error",
       data: {},
@@ -321,14 +344,16 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
         },
       }
     );
-    return res.status(200)
+    return res
+      .status(200)
       .json({
         status: "success",
         data: {},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
-  else return res.status(400)
+  else return res
+    .status(400)
     .json({
       status: "error",
       data: {},
@@ -343,13 +368,15 @@ router.get("/lockStatus/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     },
   });
-  if (useLock == null) return res.status(404)
+  if (useLock == null) return res
+    .status(404)
     .json({
       status: "error",
       data: {},
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { useLock },
@@ -357,13 +384,14 @@ router.get("/lockStatus/:userId/:lang", auth, async (req, res) => {
     });
 });
 
-router.put("/setLock/:userId/:lang", auth, async (req, res) => {
+router.put("/lockStatus/:userId/:lang", auth, async (req, res) => {
   const uProfile = await user_profile.findOne({
     where: {
       user_id: req.params.userId,
     },
   });
-  if (uProfile == null) return res.status(400)
+  if (uProfile == null) return res
+    .status(400)
     .json({
       status: "error",
       data: {},
@@ -377,14 +405,16 @@ router.put("/setLock/:userId/:lang", auth, async (req, res) => {
         },
       });
 
-    return res.status(200)
+    return res
+      .status(200)
       .json({
         status: "success",
         data: {},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
-  else return res.status(400)
+  else return res
+    .status(400)
     .json({
       status: "error",
       data: {},
@@ -392,16 +422,10 @@ router.put("/setLock/:userId/:lang", auth, async (req, res) => {
     });
 });
 
-router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400)
-    .json({
-      status: "error",
-      data: {},
-      message: await translate("INVALIDENTRY", req.params.lang)
-    });
+router.post("/lastSyncTime/:userId/:lang", auth, async (req, res) => {
   if (req.body.lastSyncTime == null || req.body.lastSyncTime == "") {
-    return res.status(400)
+    return res
+      .status(400)
       .json({
         status: "error",
         data: {},
@@ -409,7 +433,8 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
       });
   }
   if (!checkDate(req.body.lastSyncTime)) {
-    return res.status(400)
+    return res
+      .status(400)
       .json({
         status: "error",
         data: {},
@@ -437,7 +462,8 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
         },
       });
   }
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: {},
@@ -446,15 +472,8 @@ router.post("/setLastSyncTime/:userId/:lang", auth, async (req, res) => {
 
 })
 
-router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
+router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400)
-    .json({
-      status: "error",
-      data: {},
-      message: await translate("INVALIDENTRY", req.params.lang)
-    });
-
   let usrID = req.params.userId;
   if (usr.partner_id != null) {
     usrID = usr.partner_id
@@ -465,7 +484,8 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
       user_id: usrID
     }
   })
-  if (userProf == null) return res.status(200)
+  if (userProf == null) return res
+    .status(200)
     .json({
       status: "success",
       data: { userProf },
@@ -494,7 +514,8 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
       orderBy: [['group', 'DESC']],
     })
   }
-  return res.status(200)
+  return res
+    .status(200)
     .json({
       status: "success",
       data: { usrProfile },
@@ -502,15 +523,8 @@ router.get("/syncProfile/:userId/:syncTime/:lang", auth, async (req, res) => {
     });
 })
 
-router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
-
+router.post("/sync/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400)
-    .json({
-      status: "error",
-      data: {},
-      message: await translate("INVALIDENTRY", req.params.lang)
-    });
   let uProfile = await user_profile.findOne({
     where: {
       user_id: req.params.userId,
@@ -519,7 +533,8 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
 
   console.log("data", req.body.data[0]);
   if ((req.body.data).length == 0) {
-    return res.status(200)
+    return res
+      .status(200)
       .json({
         status: "success",
         data: {},
@@ -544,18 +559,7 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       "pregnant": req.body.data[0].pregnant,
       "avg_sleeping_hour": req.body.data[0].avg_sleeping_hour
     }
-    // console.log("request", request.last_period_date == null);
-    // if (moment(request.birthdate, "YYYY-MM-DD", true).isValid() == false || request.birthdate == null) {
-    //   request.birthdate = undefined;
-    // }
-    // if (moment(request.last_period_date, "YYYY-MM-DD", true).isValid() == false  || request.last_period_date==null) {
-    //   request.last_period_date = undefined;
-    //   console.log("request", request.last_period_date);
-    // }
-    // if (moment(request.last_sync_time, "YYYY-MM-DD", true).isValid() == false || request.last_sync_time == null) {
-    //   request.last_sync_time = undefined;
-    // }
-    console.log("uprofile", uProfile != null)
+
     if (uProfile != null) {
 
       await uProfile.update(request);
@@ -565,7 +569,8 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
       await uProfile.setUser(usr).catch(async function (err) {
         let checkError = await handleError(uProfile, err);
         if (!checkError) {
-          return res.status(500)
+          return res
+            .status(500)
             .json({
               status: "error",
               data: {},
@@ -574,7 +579,8 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
         }
       })
     }
-    return res.status(200)
+    return res
+      .status(200)
       .json({
         status: "success",
         data: {},
@@ -585,12 +591,15 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
 })
 
 router.post("/:userId/image/:lang", auth, async (req, res) => {
-
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-
   if (!req.files)
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
 
   let uProfile = await user_profile.findOne({
     where: {
@@ -608,7 +617,13 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
   if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/gif" || file.mimetype == "image/svg+xml") {
     file.mv('images/' + 'image-' + req.params.userId + '-' + file.name, async function (err) {
       if (err)
-        return res.status(500).send(err);
+        return res
+          .status(500)
+          .json({
+            status: "error",
+            data: {},
+            message: err
+          });
       else {
         let image = { image: userImage };
         if (uProfile != null) {
@@ -620,23 +635,36 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
         }
       }
     });
-    return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        data: {},
+        message: await translate("SUCCESSFUL", req.params.lang)
+      });
   }
   else {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
 
 });
 
 router.get("/:userId/image/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-  let uProfile = await user_profile.findOne({
-    where: {
-      user_id: req.params.userId,
-    },
-  });
-  if (uProfile == null || uProfile.image == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+
+  if (uProfile == null || uProfile.image == null) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+    });
+
   var mime = {
     gif: 'image/gif',
     jpg: 'image/jpeg',
@@ -652,16 +680,19 @@ router.get("/:userId/image/:lang", auth, async (req, res) => {
     res.set('Content-Type', type);
     s.pipe(res);
   });
-  s.on('error', function () {
+  s.on('error', async function () {
     res.set('Content-Type', 'text/plain');
-    return res.status(404).json({ message: translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res
+      .status(404)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+      });
   });
 })
 
 router.delete("/:userId/image/:lang", auth, async (req, res) => {
-
-  let usr = await user.findByPk(req.params.userId);
-  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
   let uProfile = await user_profile.findOne({
     where: {
@@ -673,23 +704,22 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
     fs.unlinkSync('images/' + uProfile.image);
     await uProfile.update({ image: null });
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "successful",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 
 });
 
 router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findOne({ where: { id: req.params.userId } });
-  if (usr == null)
-    return res.status(404)
-      .json({
-        status: "error",
-        data: {},
-        message: await translate("INFORMATIONNOTFOUND", req.params.lang)
-      });
-
+  let usr = await user.findByPk(req.params.userId);
   if ((req.body.phone == undefined || req.body.phone == "") &&
     ((req.body.email == undefined || req.body.email == "") || (req.body.password == undefined || req.body.password == ""))) {
-    return res.status(400)
+    return res
+      .status(400)
       .json({
         status: "error",
         data: {},
@@ -697,7 +727,8 @@ router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
       });
   }
   if (usr.email == req.body.email || usr.phone == req.body.phone) {
-    return res.status(409)
+    return res
+      .status(409)
       .json({
         status: "error",
         data: {},
@@ -716,11 +747,13 @@ router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
         id: req.params.userId
       }
     });
-  return res.status(200).json({
-    status: "success",
-    data: {},
-    message: await translate("SUCCESSFUL", req.params.lang)
-  });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
 module.exports = router;

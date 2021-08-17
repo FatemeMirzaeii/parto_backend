@@ -33,6 +33,7 @@ const message1= require("./routes/v1/message");
 // v2
 const healthTracking2 = require("./routes/v2/health-tracking");
 const user2 = require("./routes/v2/user");
+const auth2 = require("./routes/v2/auth");
 
 
 const developmentApp = express();
@@ -73,13 +74,14 @@ developmentApp.use("/profile", authenticatedLimiter);
 developmentApp.use("/payment", authenticatedLimiter);
 developmentApp.use("/message", authenticatedLimiter);
 // v2
+developmentApp.use("/v2/auth", authenticatedLimiter);
 developmentApp.use("/v2/healthTracking", authenticatedLimiter);
 developmentApp.use("/v2/user", authenticatedLimiter);
 
 
 const unauthenticatedLimiter = rateLimit({
   windowMs: 2*60 * 1000, // 2 minet window
-  max: 20, // start blocking after 1 requests
+  max: 30, // start blocking after 30 requests
   message:
   { message: "تعداد درخواست های شما در چند دقیقه گذشته بیش از حد مجاز بوده است، لطفا پس از چند دقیقه دوباره امتحان کنید "},
   headers: true,
@@ -109,6 +111,7 @@ developmentApp.use("/message", message1);
 // v2 
 developmentApp.use("/v2/healthTracking", healthTracking2);
 developmentApp.use("/v2/user", user2);
+developmentApp.use("/v2/auth", auth2);
 
 developmentApp.use(error);
 

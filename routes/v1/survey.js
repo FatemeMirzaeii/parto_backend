@@ -55,7 +55,6 @@ function authentication(req) {
   else return "200";
 };
 
-
 router.get("/question/:lang", async (req, res) => {
   let posetiveQuestion = await survey_answers.findAll({
     attributes: ['id', 'question'],
@@ -70,13 +69,24 @@ router.get("/question/:lang", async (req, res) => {
     }
   });
 
-  res.status(200).json({ posetiveQuestion: posetiveQuestion, negativeQuestion: negativeQuestion });
-
+  return res
+  .status(200)
+  .json({
+    status: "success",
+    data: { posetiveQuestion: posetiveQuestion, negativeQuestion: negativeQuestion },
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
 });
 
 router.post("/answers/:lang", async (req, res) => {
 
-  if (!req.body.rate || req.body.rate == 0) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (!req.body.rate || req.body.rate == 0) return res
+  .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
 
   if (req.body.IMEi != null && req.body.IMEi != "") {
     let usrSurvey = await user_answer_survey.findOne({
@@ -102,13 +112,23 @@ router.post("/answers/:lang", async (req, res) => {
   }
 
   else if (req.body.userId != null && req.body.userId != 0) {
-    let usr = await user.findByPk(req.body.userId);
-    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (authentication(req) == "401") {
-      return res.status(401).json({ message: await translate("NOPERMISSION", req.params.lang) });
+      return res
+      .status(401)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("NOPERMISSION", req.params.lang)
+      });
     }
     else if (authentication(req) == "400") {
-      return res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+      return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDTOKEN", req.params.lang)
+      });
     }
 
     let usrSurvey = await user_answer_survey.findOne({
@@ -133,8 +153,21 @@ router.post("/answers/:lang", async (req, res) => {
     }
   }
   else {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+    .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDTOKEN", req.params.lang)
+    });
   }
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+  .status(200)
+  .json({
+    status: "success",
+    data: {},
+    message: await translate("SUCCESSFUL", req.params.lang)
+  });
 });
+
 module.exports = router;

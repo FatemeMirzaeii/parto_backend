@@ -42,11 +42,11 @@ describe('profile', () => {
 
     });
 
-    describe('/profile/getProfile/:userId/:lang', () => {
+    describe('/profile/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).get('/profile/getProfile/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
         it('should be return 200 and article content if article id is exist in database', async () => {
@@ -57,11 +57,11 @@ describe('profile', () => {
 
         });
     });
-    describe('/profile/getPeriodInfo/:userId/:lang', () => {
+    describe('/profile/periodInfo/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).get('/profile/getPeriodInfo/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/periodInfo/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
         it('should be return 200 and article content if article id is exist in database', async () => {
@@ -72,11 +72,11 @@ describe('profile', () => {
 
         });
     });
-    describe('/profile/getGeneralInfo/:userId/:lang', () => {
+    describe('/profile/generalInfo/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).get('/profile/getGeneralInfo/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/generalInfo/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
 
@@ -88,11 +88,11 @@ describe('profile', () => {
 
         });
     });
-    describe('/profile/editProfile/:userId/:lang', () => {
+    describe('/profile/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).put('/profile/editProfile/' + tempUserId + '/fa')
+            return request(server).put('/profile/' + tempUserId + '/fa')
                 .send({
                     "birthdate": "1377-05-08",
                     "cycleLength": 30,
@@ -122,11 +122,11 @@ describe('profile', () => {
 
         });
     });
-    describe('/profile/editPeriodInfo/:userId/:lang', () => {
+    describe('/profile/periodInfo/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).put('/profile/editPeriodInfo/' + tempUserId + '/fa')
+            return request(server).put('/profile/periodInfo/' + tempUserId + '/fa')
                 .send({
                     "cycleLength": 30,
                     "periodLength": 8,
@@ -156,11 +156,11 @@ describe('profile', () => {
 
         });
     });
-    describe('/profile/editGeneralInfo/:userId/:lang', () => {
+    describe('/profile/generalInfo/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).put('/profile/editGeneralInfo/' + tempUserId + '/fa')
+            return request(server).put('/profile/generalInfo/' + tempUserId + '/fa')
                 .send({
                     "birthdate": "1377-05-08",
                     "sleepingHour": 9,
@@ -210,11 +210,11 @@ describe('profile', () => {
         });
     });
 
-    describe('get/profile/getUserStatus/:userId/:lang', () => {
+    describe('get/profile/userStatus/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).get('/profile/getUserStatus/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/userStatus/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
         it('return 200 ', async () => {
@@ -234,12 +234,12 @@ describe('profile', () => {
         });
     });
 
-    describe('put/profile/updateUserStatus/:userId/:lang', () => {
+    describe('put/profile/userStatus/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         let pregnant;
         const exec = () => {
-            return request(server).put('/profile/updateUserStatus/' + tempUserId + '/fa')
+            return request(server).put('/profile/userStatus/' + tempUserId + '/fa')
                 .send({ "pregnant": `${pregnant}`, "pregnancyTry": 0 })
                 .set('x-auth-token', tempToken);
         }
@@ -286,12 +286,12 @@ describe('profile', () => {
 
     });
 
-    describe('put/profile/setLock/:userId/:lang', () => {
+    describe('put/profile/lockStatus/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         let isLock;
         const exec = () => {
-            return request(server).put('/profile/setLock/' + tempUserId + '/fa')
+            return request(server).put('/profile/lockStatus/' + tempUserId + '/fa')
                 .send({ "isLock": `${isLock}` })
                 .set('x-auth-token', tempToken);
         }
@@ -323,12 +323,12 @@ describe('profile', () => {
         });
     });
 
-    describe('post/profile/setLastSyncTime/:userId/:lang', () => {
+    describe('post/profile/lastSyncTime/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         let lastSyncTime;
         const exec = () => {
-            return request(server).post('/profile/setLastSyncTime/' + tempUserId + '/fa')
+            return request(server).post('/profile/lastSyncTime/' + tempUserId + '/fa')
                 .send({ "lastSyncTime": `${lastSyncTime}` })
                 .set('x-auth-token', tempToken);
         }
@@ -350,11 +350,11 @@ describe('profile', () => {
         });
     });
 
-    describe('post/profile/syncProfile/:userId/:lang', () => {
+    describe('post/profile/sync/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const execWithData = () => {
-            return request(server).post('/profile/syncProfile/' + tempUserId + '/fa')
+            return request(server).post('/profile/sync/' + tempUserId + '/fa')
                 .send({
                     "data": [
                         {
@@ -379,7 +379,7 @@ describe('profile', () => {
                 .set('x-auth-token', tempToken);
         }
         const execWithoutData = () => {
-            return request(server).post('/profile/syncProfile/' + tempUserId + '/fa')
+            return request(server).post('/profile/sync/' + tempUserId + '/fa')
                 .send({ "data": [] })
                 .set('x-auth-token', tempToken);
         }
@@ -408,12 +408,12 @@ describe('profile', () => {
         });
     });
 
-    describe('get/profile/syncProfile/:userId/:lang', () => {
+    describe('get/profile/sync/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         let syncTime;
         const exec = () => {
-            return request(server).get('/profile/syncProfile/' + tempUserId + '/' + syncTime + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/profile/sync/' + tempUserId + '/' + syncTime + '/fa').set('x-auth-token', tempToken);
         }
         it('return 200 - with syncTime', async () => {
             tempToken = token;
@@ -428,16 +428,17 @@ describe('profile', () => {
             tempUserId = userId;
             syncTime = null;
             const result = await exec();
+            console.log ("rrrrrr",result);
             expect(result.status).toBe(200);
         });
 
     });
 
-    describe('/profile/deleteProfile/:userId/:lang', () => {
+    describe('/profile/:userId/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).delete('/profile/deleteProfile/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).delete('/profile/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
         it('should be return 200 and article content if article id is exist in database', async () => {

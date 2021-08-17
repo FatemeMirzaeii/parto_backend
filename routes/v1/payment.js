@@ -175,10 +175,21 @@ async function checkBankInfo(authority, orderId) {
 router.post("/purchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
-    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let serv = await service.findByPk(req.body.serviceId);
-    if (serv == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    if (req.body.method == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (serv == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
+    if (req.body.method == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
 
     let wall = await createWallet(usr);
     let inv = await createInvoice(serv, usr, req.body.method);
@@ -198,20 +209,38 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
         }
         else if (tBank.status == "UnSuccess") {
             await updateInvoice(inv, 'UnSuccess');
-            return res.status(405).json({ message: "مشکلی در ایجاد تراکنش بوجود آمد" });//
+            return res
+                .status(405)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: "مشکلی در ایجاد تراکنش بوجود آمد"
+                });
         }
     }
     else if (req.body.method == 'wallet') {
         console.log("methodeeeeeeee wallet", await checkWallet(usr, amount));
         if (await checkWallet(usr, amount) == false) {
             await updateInvoice(inv, 'UnSuccess');
-            return res.status(400).json({ message: "موجودی کافی نیست" });
+            return res
+                .status(400)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: "موجودی کافی نیست"
+                });
         }
         else {
             await setTransaction(wall, inv, req.body.method, amount, "");
             await updateInvoice(inv, 'Success');
             await decreaseWallet(wall, amount);
-            return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
+            return res
+                .status(200)
+                .json({
+                    status: "success",
+                    data: {},
+                    message: "خرید با موفقیت انجام شد "
+                });
         }
     }
 })
@@ -219,9 +248,21 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
 router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
-    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (usr == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
     if (req.body.authority == null || req.body.orderId == null || req.body.status == null) {
-        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+        return res
+            .status(400)
+            .json({
+                status: "error",
+                data: {},
+                message: await translate("INVALIDENTRY", req.params.lang)
+            });
     }
     let tBank = await bank_receipt.findOne({
         where: {
@@ -240,43 +281,91 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             if (tBankVerify.status == "Success") {
                 await updateInvoice(inv, 'Success');
                 await increaseWallet(wall, serv);
-                return res.status(200).json({ message: "پرداخت با موفقیت انجام شد " });
+                return res
+                    .status(200)
+                    .json({
+                        status: "success",
+                        data: {},
+                        message: "پرداخت با موفقیت انجام شد "
+                    });
             }
             else {
                 await updateInvoice(inv, 'UnSuccess');
-                return res.status(400).json({ message: " پرداخت تایید و کامل نشد " });
+                return res
+                    .status(400)
+                    .json({
+                        status: "error",
+                        data: {},
+                        message: " پرداخت تایید و کامل نشد "
+                    });
             }
 
         }
         else if (req.body.status == 5 || req.body.status == 6) {
             await updateInvoice(inv, 'UnSuccess');
             await tBank.update({ status: 'Reversed' });
-            return res.status(406).json({ message: " بازگشت به پرداخت کننده " });
+            return res
+                .status(406)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: " بازگشت به پرداخت کننده "
+                });
         }
         else if (req.body.status == 7) {
             await updateInvoice(inv, 'UnSuccess');
             await tBank.update({ status: 'Cancel' });
-            return res.status(406).json({ message: " انصراف از پرداخت " });
+            return res
+                .status(406)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: " انصراف از پرداخت "
+                });
         }
         else if (req.body.status == 8) {
             await updateInvoice(inv, 'wating to pay');
             await tBank.update({ status: 'Waiting' });
-            return res.status(406).json({ message: " به درگاه پرداخت منتقل شد " });
+            return res
+                .status(406)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: " به درگاه پرداخت منتقل شد "
+                });
         }
         else if (req.body.status == 100 || req.body.status == 101 || req.body.status == 200) {
             await updateInvoice(inv, 'UnSuccess');
             await tBank.update({ status: 'Success' });
-            return res.status(406).json({ message: " پرداخت قبلا با موفقیت انجام شده است " });
+            return res
+                .status(406)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: " پرداخت قبلا با موفقیت انجام شده است "
+                });
         }
         else {
             logger.info("calback status error", req.body.status);
             await updateInvoice(inv, 'UnSuccess');
             await tBank.update({ status: 'UnSuccess' });
-            return res.status(406).json({ message: " پرداخت ناموفق " });
+            return res
+                .status(406)
+                .json({
+                    status: "error",
+                    data: {},
+                    message: " پرداخت ناموفق "
+                });
         }
     }
     else {
-        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+        return res
+            .status(400)
+            .json({
+                status: "error",
+                data: {},
+                message: await translate("INVALIDENTRY", req.params.lang)
+            });
     }
 
 })
@@ -284,7 +373,13 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
 router.get("/credit/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
-    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (usr == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
     let accountCredit = await wallet.findOne({
         attributes: ['user_id', 'remaining'],
         where: {
@@ -294,7 +389,13 @@ router.get("/credit/:userId/:lang", auth, async (req, res) => {
     if (accountCredit == null) {
         accountCredit = await createWallet(usr);
     }
-    return res.status(200).json({ data: { remaining: accountCredit.remaining } })
+    return res
+        .status(200)
+        .json({
+            status: "success",
+            data: { remaining: accountCredit.remaining },
+            message: await translate("SUCCESSFUL", req.params.lang)
+        })
 })
 
 router.get("/services/:lang", async (req, res) => {
@@ -303,13 +404,25 @@ router.get("/services/:lang", async (req, res) => {
         attributes: ['id', 'name', 'price']
     });
 
-    return res.status(200).json({ data: { services } })
+    return res
+        .status(200)
+        .json({
+            status: "success",
+            data: { services },
+            message: await translate("SUCCESSFUL", req.params.lang)
+        })
 })
 
 router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
-    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (usr == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
     let accountHistory = await transaction.findAll({
 
         include: [
@@ -336,7 +449,13 @@ router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
     })
 
     if (accountHistory.length == 0) {
-        return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) })
+        return res
+            .status(404)
+            .json({
+                status: "error",
+                data: {},
+                message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+            })
     }
     let list = [];
     for (i = 0; i < accountHistory.length; i++) {
@@ -349,11 +468,23 @@ router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
 
         list.push(temp);
     }
-    return res.status(200).json({ data: list })
+    return res
+        .status(200)
+        .json({
+            status: "success",
+            data: { data: list },
+            message: await translate("SUCCESSFUL", req.params.lang)
+        })
 })
 router.get("/services/:serviceId/price/:lang", async (req, res) => {
 
-    if (req.params.serviceId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    if (req.params.serviceId == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: {},
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
     let services = await service.findOne({
         attributes: ['price'],
         where: {
@@ -363,19 +494,18 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
     if (services == null) {
         return res
             .status(404)
-            .json(
-                {
-                    status: "error",
-                    data: {},
-                    message: await translate("INFORMATIONNOTFOUND", req.params.lang)
-                });
+            .json({
+                status: "error",
+                data: {},
+                message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+            });
     }
     return res
         .status(200)
         .json(
             {
                 status: "success",
-                data: {price:services.price },
+                data: { price: services.price },
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })

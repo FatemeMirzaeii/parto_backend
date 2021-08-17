@@ -45,11 +45,11 @@ describe('cycle', () => {
         await usr.destroy();
     });
 
-    describe('/getLastPeriodDate/:userId/:lang', () => {
+    describe('/lastPeriodDate/:userId/:lang', () => {
         let tempToken = token;
         let tempUserId = userId;
         const exec = () => {
-            return request(server).get('/cycle/getLastPeriodDate/' + tempUserId + '/fa')
+            return request(server).get('/cycle/lastPeriodDate/' + tempUserId + '/fa')
                 .set('x-auth-token', tempToken);
         }
 
@@ -71,11 +71,11 @@ describe('cycle', () => {
         });
     });
 
-    describe('/editLastPeriodDate/:userId/:lastPeriodDate/:lang', () => {
+    describe('/lastPeriodDate/:userId/:lastPeriodDate/:lang', () => {
         let tempToken;
         let tempUserId;
         const exec = () => {
-            return request(server).put('/cycle/editLastPeriodDate/' + tempUserId + '/2020-02-02/fa').set('x-auth-token', tempToken);
+            return request(server).put('/cycle/lastPeriodDate/' + tempUserId + '/2020-02-02/fa').set('x-auth-token', tempToken);
         }
 
         it('return 200 if every things ok', async () => {
@@ -86,12 +86,12 @@ describe('cycle', () => {
         });
     });
 
-    describe('/setBleedingDays/:userId/:lang', () => {
+    describe('/bleedingDays/:userId/:lang', () => {
         let tempToken = token;
         let tempUserId = userId;
 
         const exec = () => {
-            return request(server).put('/cycle/setBleedingDays/' + tempUserId + '/fa')
+            return request(server).put('/cycle/bleedingDays/' + tempUserId + '/fa')
                 .send({ "deleteDate": [], "addDate": ["2022-08-10", "2020-08-10"] })
                 .set('x-auth-token', tempToken);
         }
@@ -105,12 +105,12 @@ describe('cycle', () => {
         });
     });
 
-    describe('/getUserAllPeriodDays/:userId/:lang', () => {
+    describe('/periodDays/:userId/:lang', () => {
         let tempToken = token;
         let tempUserId = userId;
 
         const exec = () => {
-            return request(server).get('/cycle/getUserAllPeriodDays/' + tempUserId + '/fa').set('x-auth-token', tempToken);
+            return request(server).get('/cycle/periodDays/' + tempUserId + '/fa').set('x-auth-token', tempToken);
         }
 
         it('return 200 if every things ok', async () => {

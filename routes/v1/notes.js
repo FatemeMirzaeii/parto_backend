@@ -7,35 +7,71 @@ const handleError = require("../../middleware/handleMysqlError");
 const { Op } = require("sequelize");
 
 router.get("/:userId/:noteId/:lang", auth, async (req, res) => {
-  
+
   const nt = await note.findOne({
     attributes: ['id', 'title', 'content', ['note_date', 'noteDate']],
     where: {
       id: req.params.noteId,
     },
   });
-  if (nt == null) return res.status(404).json({ message: await translate("NONOTES", req.params.lang) });
-  return res.status(200).json({ data: nt });
+  if (nt == null) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("NONOTES", req.params.lang)
+    });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { nt },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 router.get("/:userId/:lang", auth, async (req, res) => {
-  
+
   const nt = await note.findAll({
     attributes: ['id', 'title', 'content', ['note_date', 'noteDate']],
     where: {
       user_id: req.params.userId
     },
   });
-  if (nt.length == 0) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+  if (nt.length == 0) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+    });
 
-  return res.status(200).json({ data: nt });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { nt },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 router.post("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (req.body.noteDate == null  || req.body.noteDate == "") {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body.noteDate == null || req.body.noteDate == "") {
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   if ((req.body.content == null || req.body.content == "") && (req.body.title == null || req.body.title == "")) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
 
   let nt = await note.findOne({
@@ -46,7 +82,13 @@ router.post("/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     },
   });
-  if (nt != null) return res.status(200).json({ data: { noteId: nt.id } });
+  if (nt != null) return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { noteId: nt.id },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
   let request = {
     title: req.body.title,
     content: req.body.content,
@@ -56,22 +98,45 @@ router.post("/:userId/:lang", auth, async (req, res) => {
   let newNote;
   newNote = await note.create(request);
   if (newNote != null) {
-    await newNote.setUser(usr).catch(async function (err) {
+    await newNote.setUser(usr).h(async function (err) {
       let result2 = await handleError(newNote, err);
       if (!result2) error = 1;
-      return res.status(502);
+      return res
+        .status(502)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("SERVERERROR", req.params.lang)
+        });
     })
   }
-  return res.status(200).json({ data: { noteId: newNote.id } });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { noteId: newNote.id },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
-
 router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (req.body.noteDate == null || req.body.noteDate == undefined || req.body.noteDate == "") {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   if ((req.body.content == null || req.body.content == undefined || req.body.content == "") && (req.body.title == null || req.body.title == undefined || req.body.title == "")) {
-    return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    return res
+      .status(400)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("INVALIDENTRY", req.params.lang)
+      });
   }
   let request = {
     title: req.body.title,
@@ -83,38 +148,59 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
       id: req.params.noteId,
     },
   });
-  if (nt == null) return res.status(404).json({ message: await translate("NONOTES", req.params.lang) });
+  if (nt == null) return res
+    .status(404)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("NONOTES", req.params.lang)
+    });
   else await nt.update(request);
 
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
-
 router.delete("/:userId/:noteId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  
+
   const nt = await note.destroy({
     where: {
       id: req.params.noteId,
       user_id: req.params.userId
     },
   });
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
-
 router.delete("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  
+
   const nt = await note.destroy({
     where: {
       user_id: req.params.userId,
     },
   });
-  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: {},
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
-
-router.get("/syncNote/:userId/:syncTime/:lang", auth, async (req, res) => {
+router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  
+
   let syncTime, uNote;
   if (req.params.syncTime == "null" || req.params.syncTime == undefined) {
     uNote = await note.findAll({
@@ -141,12 +227,23 @@ router.get("/syncNote/:userId/:syncTime/:lang", auth, async (req, res) => {
     })
 
   }
-  return res.status(200).json({ data: uNote });
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { uNote },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
-
-router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
+router.post("/sync/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if ( req.body == undefined) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (req.body == undefined) return res
+    .status(400)
+    .json({
+      status: "error",
+      data: {},
+      message: await translate("INVALIDENTRY", req.params.lang)
+    });
 
   let uNote = {};
   let result = [];
@@ -190,17 +287,26 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
         await uNote.setUser(usr).catch(async function (err) {
           let result2 = await handleError(uNote, err);
           if (!result2) error = 1;
-          return res.status(502);
+          return res
+            .status(502)
+            .json({
+              status: "error",
+              data: {},
+              message: await translate("SERVERERROR", req.params.lang)
+            });
         })
       }
 
       result.push({ id: uNote.id, title: uNote.title, content: uNote.title, noteDate: uNote.note_date, updatedAt: uNote.updatedAt });
     }
-
   }
-
-  return res.status(200).json([{ message: await translate("SUCCESSFUL", req.params.lang) }, { data: result }]);
-
+  return res
+    .status(200)
+    .json({
+      status: "success",
+      data: { result },
+      message: await translate("SUCCESSFUL", req.params.lang)
+    });
 });
 
 module.exports = router;

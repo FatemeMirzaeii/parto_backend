@@ -6,7 +6,7 @@ describe('contactUs', () => {
     describe('/Email', () => {
         let email="zzand7755@gmail.com";
         const exec=()=>{
-           return request(server).post('/contactUs/email')
+           return request(server).post('/contactUs/email/fa')
            .send({"name":"zahra","email":`${email}`,"message":"صرفا براي تست","title":"تست ايميل كاربر"});
         }
         it('return 200',async () => {

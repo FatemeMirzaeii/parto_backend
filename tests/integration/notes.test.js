@@ -177,12 +177,12 @@ describe('note', () => {
         });
     });
 
-    describe('POST-/note/syncNote/:userId/:lang', () => {
+    describe('POST-/note/sync/:userId/:lang', () => {
         let tempToken = token;
         let tempUserId = userId;
         
         const exec = () => {
-            return request(server).post('/notes/syncNote/' + tempUserId + '/fa')
+            return request(server).post('/notes/sync/' + tempUserId + '/fa')
                 .send({
                     "data": [
                         {
@@ -221,12 +221,12 @@ describe('note', () => {
         });
     });
 
-    describe('GET-/note/syncNote/:userId/:syncTime/:lang', () => {
+    describe('GET-/note/sync/:userId/:syncTime/:lang', () => {
         let tempToken = token;
         let tempUserId = userId;
         let tempSyncTime= new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''); 
         const exec = () => {
-            return request(server).get('/notes/syncNote/' + tempUserId +'/'+tempSyncTime+ '/fa')
+            return request(server).get('/notes/sync/' + tempUserId +'/'+tempSyncTime+ '/fa')
                 .set('x-auth-token', tempToken);
         }
 

@@ -107,13 +107,13 @@ describe('health-tracking', () => {
 
   });
 
-  describe('get-/syncUserInfo/:userId/:syncTime/:lang', () => {
+  describe('get-/sync/:userId/:syncTime/:lang', () => {
 
     let tempUserId = userId;
     let TempToken = token;
     let syncTime;
     const exec = () => {
-      return request(server).get('/healthTracking//syncUserInfo/' + tempUserId + '/' + syncTime + '/fa')
+      return request(server).get('/healthTracking/sync/' + tempUserId + '/' + syncTime + '/fa')
         .set('x-auth-token', TempToken);
     }
 
@@ -146,19 +146,19 @@ describe('health-tracking', () => {
 
   });
 
-  describe('post-/syncUserInfo/:userId/:lang', () => {
+  describe('post-/sync/:userId/:lang', () => {
 
     let tempUserId = userId;
     let TempToken = token;
     let data;
     let state;
     const execWithNullData = () => {
-      return request(server).post('/healthTracking/syncUserInfo/' + tempUserId + '/fa')
+      return request(server).post('/healthTracking/sync/' + tempUserId + '/fa')
         .send({ "data": `${data}` })
         .set('x-auth-token', TempToken);
     }
     const execWithData = () => {
-      return request(server).post('/healthTracking/syncUserInfo/' + tempUserId + '/fa')
+      return request(server).post('/healthTracking/sync/' + tempUserId + '/fa')
         .send(
           {
             "data": [
