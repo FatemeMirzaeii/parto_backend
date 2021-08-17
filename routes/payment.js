@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express();
-const { user, transaction, bank_receipt, invoice, service, wallet } = require("../models");
+const { user, transaction, bank_receipt, invoice, service, wallet, discount_per_service } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../config/logger/logger");
+const e = require("express");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -299,11 +300,32 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
 
 router.get("/v1/services/:lang", async (req, res) => {
 
-    let services = await service.findAll({
-        attributes: ['id', 'name', 'price']
+    let services = await discount_per_service.findAll({
+        attributes: ['service_id', 'discount_value', 'discount_type', 'status'],
+        include: [
+            {
+                model: service,
+                required: true,
+                attributes: ['id', 'name', 'price']
+
+            }
+        ]
+    })
+    let result = []
+    services.forEach(element => {
+        let temp = {};
+        temp.id = element.service.id;
+        temp.name = element.service.name;
+        temp.price = element.service.price;
+
+        if (element.status == 'Active') {
+            temp.discount_value = element.discount_value;
+            temp.discount_type = element.discount_type;
+        }
+        result.push(temp);
     });
 
-    return res.status(200).json({ data: { services } })
+    return res.status(200).json({ data:  result  })
 })
 
 router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
@@ -375,7 +397,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
         .json(
             {
                 status: "success",
-                data: {price:services.price },
+                data: { price: services.price },
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
