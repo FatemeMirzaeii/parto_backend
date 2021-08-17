@@ -319,8 +319,8 @@ router.get("/v1/services/:lang", async (req, res) => {
         temp.price = element.service.price;
 
         if (element.status == 'Active') {
-            temp.discount_value = element.discount_value;
-            temp.discount_type = element.discount_type;
+            temp.discountValue = element.discount_value;
+            temp.discountType = element.discount_type;
         }
         result.push(temp);
     });
