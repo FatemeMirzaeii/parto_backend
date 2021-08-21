@@ -174,6 +174,7 @@ async function checkBankInfo(authority, orderId) {
 }
 
 router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
+    //Todo change discunt and add discinnt type and discunt value
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -325,7 +326,7 @@ router.get("/v1/services/:lang", async (req, res) => {
         result.push(temp);
     });
 
-    return res.status(200).json({ data:  result  })
+    return res.status(200).json({ data: {services:result} })
 })
 
 router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
