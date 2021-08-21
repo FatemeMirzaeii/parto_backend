@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express();
-const { user, transaction, bank_receipt, invoice, service, wallet } = require("../models");
+const { user, transaction, bank_receipt, invoice, service, wallet, discount_per_service } = require("../models");
 const auth = require("../middleware/auth");
 const translate = require("../config/translate");
 const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../config/logger/logger");
+const e = require("express");
 
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
@@ -173,6 +174,7 @@ async function checkBankInfo(authority, orderId) {
 }
 
 router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
+    //Todo change discunt and add discinnt type and discunt value
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -299,11 +301,32 @@ router.get("/v1/credit/:userId/:lang", auth, async (req, res) => {
 
 router.get("/v1/services/:lang", async (req, res) => {
 
-    let services = await service.findAll({
-        attributes: ['id', 'name', 'price']
+    let services = await discount_per_service.findAll({
+        attributes: ['service_id', 'discount_value', 'discount_type', 'status'],
+        include: [
+            {
+                model: service,
+                required: true,
+                attributes: ['id', 'name', 'price']
+
+            }
+        ]
+    })
+    let result = []
+    services.forEach(element => {
+        let temp = {};
+        temp.id = element.service.id;
+        temp.name = element.service.name;
+        temp.price = element.service.price;
+
+        if (element.status == 'Active') {
+            temp.discountValue = element.discount_value;
+            temp.discountType = element.discount_type;
+        }
+        result.push(temp);
     });
 
-    return res.status(200).json({ data: { services } })
+    return res.status(200).json({ data: {services:result} })
 })
 
 router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
@@ -375,7 +398,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
         .json(
             {
                 status: "success",
-                data: {price:services.price },
+                data: { price: services.price },
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })

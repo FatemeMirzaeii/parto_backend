@@ -496,8 +496,8 @@ router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
         message: await translate("INFORMATIONNOTFOUND", req.params.lang)
       });
 
-  if ((req.body.phone == undefined || req.body.phone == "") && 
-  ((req.body.email == undefined || req.body.email == "")|| (req.body.password==undefined || req.body.password=="") )) {
+  if ((req.body.phone == undefined || req.body.phone == "") &&
+    ((req.body.email == undefined || req.body.email == "") || (req.body.password == undefined || req.body.password == ""))) {
     return res.status(400)
       .json({
         status: "error",
@@ -505,8 +505,36 @@ router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
-  if(usr.email==req.body.email || usr.phone== req.body.phone ){
+  if (usr.email == req.body.email || usr.phone == req.body.phone) {
     return res.status(409)
+      .json({
+        status: "error",
+        data: {},
+        message: await translate("EXISTS", req.params.lang)
+      });
+  }
+  if (req.body.email != undefined && req.body.email != "") {
+    let emailExist = await user.findAll({
+      where: {
+        email: req.body.email
+      }
+    })
+    if (emailExist.length > 0)
+      return res.status(409)
+        .json({
+          status: "error",
+          data: {},
+          message: await translate("EXISTS", req.params.lang)
+        });
+  }
+  else {
+    let phoneExist = await user.findAll({
+      where: {
+        phone: req.body.phone
+      }
+    })
+    if (phoneExist.length > 0)
+      return res.status(409)
         .json({
           status: "error",
           data: {},
@@ -516,7 +544,7 @@ router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
   let request = {
     "phone": req.body.phone,
     "email": req.body.email,
-    "password":req.body.password
+    "password": req.body.password
   }
 
   await usr.update(request,

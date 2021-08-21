@@ -23,6 +23,8 @@ testing_parto:
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     # - npx sequelize-cli db:migrate
     # - npx sequelize-cli db:seed:all
+    
+    #   -  npx sequelize db:seed --seed 20210817073746-discount_per_service.js
     # - npm test
     - echo "testing succsecfull  "
   only:
@@ -58,7 +60,7 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     - npx sequelize-cli db:migrate
-    # - npx sequelize db:seed --seed 20210509195107-message_category.js
+    -  npx sequelize db:seed --seed 20210817073746-discount_per_service.js
     - pm2 startOrRestart ecosystem.config.js --only "app"
     - echo "Deploy to production server Successful"
     #- pm2 logs
