@@ -1,8 +1,8 @@
 {
   "development": {
     "database": "parto_Test",
-    "username": "administrator",
-    "password": "P@rto2020",
+    "username": "root",
+    "password": "",
     "host": "localhost",
     "dialect": "mysql",
     "dialectOptions": {
