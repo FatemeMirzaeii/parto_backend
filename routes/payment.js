@@ -48,7 +48,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             json: true,
         };
     }
-    else if(OS == "PWA"){
+    else {
         options = {
             method: 'POST',
             url: config.url,
@@ -218,26 +218,23 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     // call calculateDiscount function 
     let amount = serv.price;
     let discount = 0;
-    let { disValue, disType } = await calculateDiscount(req.body.serviceId, req.params.userId);
-    if (disValue != null || disValue != undefined) {
-
-        // if (disValue != req.body.discount) {
-        //     return res.status(409).json({ message: " مقدار تخفیف وارد شده با تخفیف‌های مجاز مغایرت دارد " });
-        // }
-        if (disType == "Percent") {
-            amount = serv.price - (serv.price * (disValue / 100));
-        } else if (disType == "Rials") {
-            amount = serv.price - disValue;
+    let dis = await calculateDiscount(req.body.serviceId, req.params.userId);
+    console.log("heeeer",dis);
+    if (dis!= undefined ) {
+        if (dis.type  == "Percent") {
+            amount = serv.price - (serv.price * (dis.value / 100));
+        } else if (dis.type  == "Rials") {
+            amount = serv.price - dis.value;
         }
-
-        discount = disValue;
+        discount = dis.value;
     }
-
+    console.log("heeeer",amount);
     if (req.body.method == 'gateway') {
         let OS = "PWA"
         if (req.body.appOS != undefined && req.body.appOS == "android") {
             OS = "android"
         }
+        console.log("OS",OS);
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay', OS);
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
@@ -260,6 +257,9 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             await decreaseWallet(wall, amount);
             return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
         }
+    }
+    else {
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
 })
 
