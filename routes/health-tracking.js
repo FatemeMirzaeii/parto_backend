@@ -216,7 +216,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
           [Op.gte]: new Date(milliseconds),
         }
       },
-      orderBy: [['group', 'DESC']],
+      userOptionBy: [['group', 'DESC']],
     })
 
   }
@@ -691,7 +691,7 @@ router.get("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res
           [Op.gte]: new Date(milliseconds),
         }
       },
-      orderBy: [['group', 'DESC']],
+      userOptionBy: [['group', 'DESC']],
     })
     existCategory = await user_tracking_category.findAll({
       attributes: ['tracking_category_id', 'date', 'value'],
@@ -701,7 +701,7 @@ router.get("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res
           [Op.gte]: new Date(milliseconds),
         }
       },
-      orderBy: [['group', 'DESC']],
+      userOptionBy: [['group', 'DESC']],
     });
 
   }
@@ -1030,6 +1030,90 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
         let result3 = await handleError(userCategory, err);
         if (!result3) error = 1;
         return;
+      }
+    }
+  }
+  return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
+});
+
+router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
+  let usr = await user.findByPk(req.params.userId);
+  if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+
+  let userOption, userCategory;
+
+  if (req.body.status == 0) {
+    if (req.body.hasValue == 0) {
+      await user_tracking_option.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: req.body.date,
+          tracking_option_id: req.body.trackingOptionId
+        }
+      })
+    }
+    else if (req.body.hasValue == 1) {
+      await user_tracking_category.destroy({
+        where: {
+          user_id: req.params.userId,
+          date: req.body.date,
+          tracking_category_id: req.body.categoryId
+        }
+      })
+    }
+  }
+
+  else if (req.body.status == 1 && req.body.hasValue == 0) {
+    userOption = await user_tracking_option.findOne({
+      where: {
+        user_id: req.params.userId,
+        date: req.body.date,
+        tracking_option_id:req.body.trackingOptionId
+      }
+    })
+    if (userOption!= null) {
+      await userOption.destroy();
+    }
+    let trackingOption = await health_tracking_option.findByPk(req.body.trackingOptionId);
+
+    try {
+      userOption = await user_tracking_option.create({
+        date: req.body.date,
+      });
+      await userOption.setUser(usr);
+      await userOption.setHealth_tracking_option(trackingOption);
+      userOption.save();
+    } catch (err) {
+      let result3 = await handleError(userOption, err);
+      if (!result3) error = 1;
+
+    }
+  }
+
+  else if (req.body.status == 1 && req.body.hasValue == 1) {
+    existDate = await user_tracking_category.findOne({
+      where: {
+        user_id: req.params.userId,
+        date: req.body.date,
+        tracking_category_id: req.body.categoryId
+      }
+    })
+    if (existDate != null) {
+      await existDate.update({ value: req.body.value });
+    }
+    else {
+      try {
+        let trackingCategory = await health_tracking_category.findByPk(req.body.categoryId);
+        userCategory = await user_tracking_category.create({
+          date: req.body.date,
+          value: req.body.value,
+        });
+        await userCategory.setHealth_tracking_category(trackingCategory);
+        await userCategory.setUser(usr);
+
+      } catch (err) {
+        let result3 = await handleError(userCategory, err);
+        if (!result3) error = 1;
       }
     }
   }

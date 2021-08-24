@@ -9,6 +9,17 @@ const request = require("request-promise");
 const logger = require("../config/logger/logger");
 const e = require("express");
 
+async function calculateDiscount(serviceId, userId) {
+    let dPerService = await discount_per_service.findOne({
+        attributes: [`id`, `status`, `discount_type`, `discount_value`, `number_of_discount`, `start_time`, `end_time`],
+        where: {
+            service_id: serviceId
+        }
+    })
+    // add discount_per_user and another fuecher
+    if (dPerService.status == "Active")
+        return { value: dPerService.discount_value, type: dPerService.discount_type };
+}
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
         method: method,
@@ -18,27 +29,48 @@ async function createInvoice(tService, tUser, method) {
     await inv.setUser(tUser);
     return await inv;
 }
-async function bankPayment(amount, tUser, tInvoice, gateway) {
-    let options = {
-        method: 'POST',
-        url: config.url,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': config.key,
-            'X-SANDBOX': 0
-        },
-        body: {
-            'order_id': (tUser.id + tInvoice.id).toString(),
-            'amount': amount,
-            'callback': 'https://my.parto.app/payment/callback', // 'https://example.com/callback',
-        },
-        json: true,
-    };
+async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
+    let options = {};
+    if (OS == "android"){
+        options = {
+            method: 'POST',
+            url: config.url,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': config.key,
+                'X-SANDBOX': 0
+            },
+            body: {
+                'order_id': (tUser.id + tInvoice.id).toString(),
+                'amount': amount,
+                'callback': 'https://test.parto.app/payment/callback-app', 
+            },
+            json: true,
+        };
+    }
+    else {
+        options = {
+            method: 'POST',
+            url: config.url,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': config.key,
+                'X-SANDBOX': 0
+            },
+            body: {
+                'order_id': (tUser.id + tInvoice.id).toString(),
+                'amount': amount,
+                'callback': 'https://test.parto.app/payment/callback', 
+            },
+            json: true,
+        };
+    }
     let tBank = await bank_receipt.create({
         order_id: (tUser.id + tInvoice.id).toString(),
         gateway: gateway
     });
-    let result
+    console.log("option", options);
+    let result;
     try {
         result = await request(options);
         if (result.id) {
@@ -184,16 +216,27 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
 
     let wall = await createWallet(usr);
     let inv = await createInvoice(serv, usr, req.body.method);
-
+    // call calculateDiscount function 
     let amount = serv.price;
     let discount = 0;
-    if (req.body.discount != null || req.body.discount != undefined) {
-        amount = serv.price - (serv.price * (req.body.discount / 100));
-        discount = req.body.discount;
+    let dis = await calculateDiscount(req.body.serviceId, req.params.userId);
+    console.log("heeeer",dis);
+    if (dis!= undefined ) {
+        if (dis.type  == "Percent") {
+            amount = serv.price - (serv.price * (dis.value / 100));
+        } else if (dis.type  == "Rials") {
+            amount = serv.price - dis.value;
+        }
+        discount = dis.value;
     }
-
+    console.log("heeeer",amount);
     if (req.body.method == 'gateway') {
-        let tBank = await bankPayment(amount, usr, inv, 'ID_pay');
+        let OS = "PWA"
+        if (req.body.appOS != undefined && req.body.appOS == "android") {
+            OS = "android"
+        }
+        console.log("OS",OS);
+        let tBank = await bankPayment(amount, usr, inv, 'ID_pay', OS);
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
             return res.status(200).json({ data: { link: tBank.gateway_link, authority: tBank.authority, orderId: tBank.order_id } });
@@ -215,6 +258,9 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             await decreaseWallet(wall, amount);
             return res.status(200).json({ message: "خرید با موفقیت انجام شد " });
         }
+    }
+    else {
+        return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     }
 })
 
@@ -326,7 +372,7 @@ router.get("/v1/services/:lang", async (req, res) => {
         result.push(temp);
     });
 
-    return res.status(200).json({ data: {services:result} })
+    return res.status(200).json({ data: { services: result } })
 })
 
 router.get("/v1/:userId/accountHistory/:lang", auth, async (req, res) => {
