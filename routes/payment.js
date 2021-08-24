@@ -31,7 +31,24 @@ async function createInvoice(tService, tUser, method) {
 }
 async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
     let options = {};
-    if (OS == "android"){
+    // if (OS == "android"){
+    //     options = {
+    //         method: 'POST',
+    //         url: config.url,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-API-KEY': config.key,
+    //             'X-SANDBOX': 0
+    //         },
+    //         body: {
+    //             'order_id': (tUser.id + tInvoice.id).toString(),
+    //             'amount': amount,
+    //             'callback': 'https://test.parto.app/payment/callback-app', 
+    //         },
+    //         json: true,
+    //     };
+    // }
+    // else {
         options = {
             method: 'POST',
             url: config.url,
@@ -43,33 +60,17 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             body: {
                 'order_id': (tUser.id + tInvoice.id).toString(),
                 'amount': amount,
-                'callback': 'https://test.parto.app/payment/callback-app', // 'https://example.com/callback',
+                'callback': 'https://test.parto.app/payment/callback', 
             },
             json: true,
         };
-    }
-    else {
-        options = {
-            method: 'POST',
-            url: config.url,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-API-KEY': config.key,
-                'X-SANDBOX': 0
-            },
-            body: {
-                'order_id': (tUser.id + tInvoice.id).toString(),
-                'amount': amount,
-                'callback': 'https://test.parto.app/payment/callback', // 'https://example.com/callback',
-            },
-            json: true,
-        };
-    }
+    // }
     let tBank = await bank_receipt.create({
         order_id: (tUser.id + tInvoice.id).toString(),
         gateway: gateway
     });
-    let result
+    console.log("option", options);
+    let result;
     try {
         result = await request(options);
         if (result.id) {
