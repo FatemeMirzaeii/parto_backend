@@ -1095,11 +1095,11 @@ router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) =>
       where: {
         user_id: req.params.userId,
         date: req.body.date,
-        tracking_category_id: element3.categoryId
+        tracking_category_id: req.body.categoryId
       }
     })
     if (existDate != null) {
-      await existDate.update({ value: element3.value });
+      await existDate.update({ value: req.body.value });
     }
     else {
       try {
@@ -1107,8 +1107,6 @@ router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) =>
         userCategory = await user_tracking_category.create({
           date: req.body.date,
           value: req.body.value,
-          user_id: usr,
-          tracking_category_id: trackingCategory
         });
         await userCategory.setHealth_tracking_category(trackingCategory);
         await userCategory.setUser(usr);
