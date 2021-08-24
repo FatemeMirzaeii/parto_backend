@@ -60,7 +60,7 @@ deploy_prod_parto:
     - npm install
     - PORT=2218
     - npx sequelize-cli db:migrate
-    -  npx sequelize db:seed --seed 20210817073746-discount_per_service.js
+    # -  npx sequelize db:seed --seed 20210817073746-discount_per_service.js
     - pm2 startOrRestart ecosystem.config.js --only "app"
     - echo "Deploy to production server Successful"
     #- pm2 logs

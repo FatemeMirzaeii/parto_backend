@@ -43,7 +43,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             body: {
                 'order_id': (tUser.id + tInvoice.id).toString(),
                 'amount': amount,
-                'callback': 'https://test.parto.app/payment/callback-app', 
+                'callback': 'https://api.parto.app/payment/callback-app', 
             },
             json: true,
         };
@@ -60,7 +60,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             body: {
                 'order_id': (tUser.id + tInvoice.id).toString(),
                 'amount': amount,
-                'callback': 'https://test.parto.app/payment/callback', 
+                'callback': 'https://api.parto.app/payment/callback', 
             },
             json: true,
         };
