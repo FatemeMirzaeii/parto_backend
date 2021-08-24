@@ -31,24 +31,24 @@ async function createInvoice(tService, tUser, method) {
 }
 async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
     let options = {};
-    // if (OS == "android"){
-    //     options = {
-    //         method: 'POST',
-    //         url: config.url,
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-API-KEY': config.key,
-    //             'X-SANDBOX': 0
-    //         },
-    //         body: {
-    //             'order_id': (tUser.id + tInvoice.id).toString(),
-    //             'amount': amount,
-    //             'callback': 'https://test.parto.app/payment/callback-app', 
-    //         },
-    //         json: true,
-    //     };
-    // }
-    // else {
+    if (OS == "android"){
+        options = {
+            method: 'POST',
+            url: config.url,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': config.key,
+                'X-SANDBOX': 0
+            },
+            body: {
+                'order_id': (tUser.id + tInvoice.id).toString(),
+                'amount': amount,
+                'callback': 'https://test.parto.app/payment/callback-app', 
+            },
+            json: true,
+        };
+    }
+    else {
         options = {
             method: 'POST',
             url: config.url,
@@ -64,7 +64,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             },
             json: true,
         };
-    // }
+    }
     let tBank = await bank_receipt.create({
         order_id: (tUser.id + tInvoice.id).toString(),
         gateway: gateway
