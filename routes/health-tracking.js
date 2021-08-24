@@ -1064,67 +1064,23 @@ router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) =>
   }
 
   else if (req.body.status == 1 && req.body.hasValue == 0) {
-    console.log("hearrrrrr")
-    // if (req.body.hasMultipleChoice == 0) {
-    // existDate = await user_tracking_option.findOne({
-    //   where: {
-    //     user_id: req.params.userId,
-    //     date: req.body.date
-    //   }
-    // })
-    // console.log("okkkkkkk");
-    // if (existDate != null) {
-    //   //find options in category
-    //   let options = await health_tracking_option.findAll({
-    //     attributes: ['id'],
-    //     where: {
-    //       category_id: element.categoryId
-    //     }
-    //   });
-
-    //find all for that option in helthTracing 
-    // let optionArray = [];
-    // for (j = 0; j < options.length; j++) {
-    //   optionArray.push(options[j].id);
-    // }
-
-    // existData = await user_tracking_option.findOne({
-    //   where: {
-    //     user_id: req.params.userId,
-    //     date: req.body.date,
-    //     tracking_option_id: { [Op.in]: optionArray }
-    //   }
-    // })
-    // console.log("existData", existDate)
-    //     if (await existData != null) {
-    //       await existData.destroy();
-    //     }
-
-    //   }
-    // }
-
     try {
-      console.log("uuuuu",usr)
       let trackingOption = await health_tracking_option.findByPk(req.body.trackingOptionId);
-      console.log("leeeee",trackingOption);
       userOption = await user_tracking_option.create({
         date: req.body.date,
-        // user_id: usr,
-        // tracking_option_id: trackingOption
-
       });
-      // if (userOption != null) {
-      //   await userOption.setHealth_tracking_option(trackingOption).catch(async function (err) {
-      //     let result = await handleError(userOption, err);
-      //     if (!result) error = 1;
-      //     return;
-      //   })
-      //   await userOption.setUser(usr).catch(async function (err) {
-      //     let result2 = await handleError(userOption, err);
-      //     if (!result2) error = 1;
-      //     return;
-      //   })
-      // }
+      if (userOption != null) {
+        await userOption.setHealth_tracking_option(trackingOption).catch(async function (err) {
+          let result = await handleError(userOption, err);
+          if (!result) error = 1;
+          return;
+        })
+        await userOption.setUser(usr).catch(async function (err) {
+          let result2 = await handleError(userOption, err);
+          if (!result2) error = 1;
+          return;
+        })
+      }
     } catch (err) {
       let result3 = await handleError(userOption, err);
       if (!result3) error = 1;

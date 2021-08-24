@@ -11,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
 
   UserTrackingOption.associate = function (models) {
     UserTrackingOption.belongsTo(models.user, {
+      // as: 'user_id',
       //foreignKey: "user_id",
       onDelete: "RESTRICT",
     });
     UserTrackingOption.belongsTo(models.health_tracking_option, {
-      foreignKey: "tracking_option_id",
+
+      // as: "tracking_option_id",
       onDelete: "RESTRICT",
     })
   };
