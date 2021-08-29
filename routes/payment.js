@@ -31,7 +31,7 @@ async function createInvoice(tService, tUser, method) {
 }
 async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
     let options = {};
-    if (OS == "android"){
+    if (OS == "android") {
         options = {
             method: 'POST',
             url: config.url,
@@ -219,23 +219,23 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     // call calculateDiscount function 
     let amount = serv.price;
     let discount = 0;
-    let dis = await calculateDiscount(req.body.serviceId, req.params.userId);
-    console.log("heeeer",dis);
-    if (dis!= undefined ) {
-        if (dis.type  == "Percent") {
-            amount = serv.price - (serv.price * (dis.value / 100));
-        } else if (dis.type  == "Rials") {
-            amount = serv.price - dis.value;
-        }
-        discount = dis.value;
-    }
-    console.log("heeeer",amount);
+
     if (req.body.method == 'gateway') {
+        let dis = await calculateDiscount(req.body.serviceId, req.params.userId);
+        if (dis != undefined) {
+            if (dis.type == "Percent") {
+                amount = serv.price - (serv.price * (dis.value / 100));
+            } else if (dis.type == "Rials") {
+                amount = serv.price - dis.value;
+            }
+            discount = dis.value;
+        }
+        console.log("heeeer", amount);
         let OS = "PWA"
         if (req.body.appOS != undefined && req.body.appOS == "android") {
             OS = "android"
         }
-        console.log("OS",OS);
+        console.log("OS", OS);
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay', OS);
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
