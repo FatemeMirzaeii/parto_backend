@@ -196,12 +196,13 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
 
     let amount = serv.price;
     let discount = 0;
-    if (req.body.discount != null || req.body.discount != undefined) {
-        amount = serv.price - (serv.price * (req.body.discount / 100));
-        discount = req.body.discount;
-    }
-
+    
     if (req.body.method == 'gateway') {
+        if (req.body.discount != null || req.body.discount != undefined) {
+            amount = serv.price - (serv.price * (req.body.discount / 100));
+            discount = req.body.discount;
+        }
+    
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay');
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
