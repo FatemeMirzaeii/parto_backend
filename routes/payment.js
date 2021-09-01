@@ -448,4 +448,48 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
+router.post("/invoice/userId/:lang", async (req, res) => {
+    if (req.body.orderId == null || req.body.authority == null || req.body.orderId == "" || req.body.authority == ""){
+        return res
+            .status(400)
+            .json(
+                {
+                    status: "error",
+                    data: {},
+                    message: await translate("INVALIDENTRY", req.params.lang)
+                });
+    }
+    let userId = await bank_receipt.findOne({
+
+        include: [
+            {
+                model: invoice,
+                required: true,
+            }
+        ],
+        where: {
+            authority: req.body.authority,
+            order_id: req.body.orderId
+        }
+
+    })
+    if (userId == null || userId == undefined) {
+        return res
+            .status(404)
+            .json(
+                {
+                    status: "error",
+                    data: {},
+                    message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+                });
+    }
+    return res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                data: { userId: userId.invoice.user_id },
+                message: await translate("SUCCESSFUL", req.params.lang)
+            });
+})
 module.exports = router;
