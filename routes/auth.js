@@ -146,7 +146,7 @@ router.post("/signIn/:lang", async (req, res) => {
     return res.header("x-auth-token", token).status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type , phone:usr.phone , email:usr.email},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 
@@ -163,7 +163,7 @@ router.post("/signIn/:lang", async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type , phone:usr.phone , email:usr.email},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
