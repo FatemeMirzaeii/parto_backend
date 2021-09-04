@@ -264,7 +264,7 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
     }
 })
 
-router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
+router.post("/v1/verifyPurchase/:userId/:lang", async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
