@@ -53,7 +53,7 @@ const moment = require("moment");
 //   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 // });
 
-router.get("/userInfo/:userId/:date/:lang", auth, checkDate, async (req, res) => {
+router.get("/userData/:userId/:date/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -116,7 +116,7 @@ router.get("/userInfo/:userId/:date/:lang", auth, checkDate, async (req, res) =>
     });
 });
 
-router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
+router.post("/userTrackingOption/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let userOption, existDate;
   for (const element2 of req.body.deleted) {
@@ -382,7 +382,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
   }
 });
 
-router.get("/userHealthInfo/:userId/:lang", auth, async (req, res) => {
+router.get("/userTrackingOption/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -464,7 +464,7 @@ router.get("/userHealthInfo/:userId/:lang", auth, async (req, res) => {
     });
 });
 
-router.get("/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
+router.get("/userTrackingOption/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -541,7 +541,7 @@ router.get("/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
     }); 
 });
 
-router.get("/healthTrackingIcon/:lang", async (req, res) => {
+router.get("/healthTrackingCategoryAndOption/:lang", async (req, res) => {
 
   let i, option;
   let data = [];

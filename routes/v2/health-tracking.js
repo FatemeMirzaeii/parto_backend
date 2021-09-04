@@ -8,7 +8,7 @@ const { Op} = require("sequelize");
 const handleError = require("../../middleware/handleMysqlError");
 
 
-router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
+router.get("/userTrackingOption/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -123,7 +123,7 @@ router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
 
 });
 
-router.get("/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) => {
+router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -193,7 +193,7 @@ router.get("/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) =
       });
 });
 
-router.post("/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) => {
+router.post("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if ((req.body.data).length == 0) {
@@ -378,7 +378,7 @@ router.post("/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, res) 
 
 });
 
-router.post("/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
+router.post("/userTrackingOption/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 
