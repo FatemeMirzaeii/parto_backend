@@ -65,6 +65,8 @@ async function getCreateTime(userExist) {
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {
@@ -170,6 +172,8 @@ router.post("/signIn/:lang", async (req, res) => {
 });
 
 router.post("/signUp/:lang", async (req, res) => {
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {
