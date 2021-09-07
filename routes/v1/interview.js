@@ -47,8 +47,8 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     "last_period_date": req.body.lastPeriodDate,
   }
   console.log("request", request);
-  if (request.lastPeriodDate == null) {
-    request.lastPeriodDate = undefined;
+  if (request.last_period_date == null) {
+    request.last_period_date = undefined;
   }
   let uProfile = await user_profile.create(request).catch(async function (err) {
     let checkError = await handleError(uProfile, err);
@@ -143,8 +143,8 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
     "conception_date": req.body.conceptionDate,
     "state": 1
   }
-  if (requestPreg.conceptionDate == null) {
-    requestPreg.conceptionDate = undefined;
+  if (requestPreg.conception_date == null) {
+    requestPreg.conception_date = undefined;
   }
   if (requestPreg.due_date == null) {
     requestPreg.due_date = undefined;
