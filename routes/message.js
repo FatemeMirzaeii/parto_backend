@@ -121,7 +121,7 @@ router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
 
-router.post("/v1/status/:userId/:lang", auth, async (req, res) => {
+router.post("/status/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     if (req.body.status == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
@@ -148,6 +148,19 @@ router.post("/v1/status/:userId/:lang", auth, async (req, res) => {
     }
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 });
+router.get("/status/:userId/:categoryId/:lang", auth, async (req, res) => {
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    let sta = await message_info.findOne({
+        where: {
+            user_id: req.params.userId,
+            category_id: req.params.categoryId
+        }
+    });
+    if (sta == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
+    return res.status(200).json({ data: { status: sta.status} });
+});
+
 router.post("/v1/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     let category = await message_category.findByPk(req.body.categoryId);
