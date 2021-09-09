@@ -134,7 +134,7 @@ router.post("/status/:userId/:lang", auth, async (req, res) => {
     if (sta != null) await sta.update({ status: req.body.status });
     else {
         let category = await message_category.findByPk(req.body.categoryId);
-        sta = await message_info.create({ status: req.body.status });
+        sta = await message_info.create({ status: req.body.status, total_question:0 });
         await sta.setUser(usr).catch(async function (err) {
             let result2 = await handleError(sta, err);
             if (!result2) error = 1;
