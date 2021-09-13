@@ -80,7 +80,7 @@ router.put("/lastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, re
     });
 });
 
-router.get("/periodDays/:userId/:lang", auth, async (req, res) => {
+router.get("/bleedingDays/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -147,5 +147,5 @@ router.put("/bleedingDays/:userId/:lang", auth, async (req, res) => {
       data: {},
       message: await translate("SUCCESSFUL", req.params.lang)
     });
-  });
-  module.exports = router;
+});
+module.exports = router;

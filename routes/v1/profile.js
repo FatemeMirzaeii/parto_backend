@@ -66,7 +66,7 @@ router.get("/periodInfo/:userId/:lang", auth, async (req, res) => {
 router.get("/generalInfo/:userId/:lang", auth, async (req, res) => {
 
   const uProfile = await user_profile.findOne({
-    attributes: ['user_id', 'height', 'weight', 'avg_sleeping_hour', 'blood_type', 'locked', 'birthdate'],
+    attributes: ['height', 'weight', 'avg_sleeping_hour', 'blood_type', 'locked', 'birthdate'],
     where: {
       user_id: req.params.userId,
     },
@@ -329,11 +329,11 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
     },
   });
   if (uPregnantProfile == null) return res
-    .status(400)
+    .status(404)
     .json({
       status: "error",
       data: {},
-      message: await translate("INVALIDENTRY", req.params.lang)
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   console.log("pregnant", req.body.pregnant);
   if ((req.body.pregnant == 0 || req.body.pregnant == 1) && (req.body.pregnancyTry == 0 || req.body.pregnancyTry == 1)) {
@@ -391,11 +391,11 @@ router.put("/lockStatus/:userId/:lang", auth, async (req, res) => {
     },
   });
   if (uProfile == null) return res
-    .status(400)
+    .status(404)
     .json({
       status: "error",
       data: {},
-      message: await translate("INVALIDENTRY", req.params.lang)
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   if (req.body.isLock == 0 || req.body.isLock == 1) {
     await user_profile.update({ locked: req.body.isLock },
@@ -714,46 +714,46 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 
 });
 
-router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  if ((req.body.phone == undefined || req.body.phone == "") &&
-    ((req.body.email == undefined || req.body.email == "") || (req.body.password == undefined || req.body.password == ""))) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        data: {},
-        message: await translate("INVALIDENTRY", req.params.lang)
-      });
-  }
-  if (usr.email == req.body.email || usr.phone == req.body.phone) {
-    return res
-      .status(409)
-      .json({
-        status: "error",
-        data: {},
-        message: await translate("EXISTS", req.params.lang)
-      });
-  }
-  let request = {
-    "phone": req.body.phone,
-    "email": req.body.email,
-    "password": req.body.password
-  }
+// router.put("/accountInfo/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   if ((req.body.phone == undefined || req.body.phone == "") &&
+//     ((req.body.email == undefined || req.body.email == "") || (req.body.password == undefined || req.body.password == ""))) {
+//     return res
+//       .status(400)
+//       .json({
+//         status: "error",
+//         data: {},
+//         message: await translate("INVALIDENTRY", req.params.lang)
+//       });
+//   }
+//   if (usr.email == req.body.email || usr.phone == req.body.phone) {
+//     return res
+//       .status(409)
+//       .json({
+//         status: "error",
+//         data: {},
+//         message: await translate("EXISTS", req.params.lang)
+//       });
+//   }
+//   let request = {
+//     "phone": req.body.phone,
+//     "email": req.body.email,
+//     "password": req.body.password
+//   }
 
-  await usr.update(request,
-    {
-      where: {
-        id: req.params.userId
-      }
-    });
-  return res
-    .status(200)
-    .json({
-      status: "success",
-      data: {},
-      message: await translate("SUCCESSFUL", req.params.lang)
-    });
-});
+//   await usr.update(request,
+//     {
+//       where: {
+//         id: req.params.userId
+//       }
+//     });
+//   return res
+//     .status(200)
+//     .json({
+//       status: "success",
+//       data: {},
+//       message: await translate("SUCCESSFUL", req.params.lang)
+//     });
+// });
 
 module.exports = router;
