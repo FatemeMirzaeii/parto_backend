@@ -7,9 +7,8 @@ const handleError = require("../../middleware/handleMysqlError");
 const { Op } = require("sequelize");
 
 router.get("/:userId/:noteId/:lang", auth, async (req, res) => {
-
-  const nt = await note.findOne({
-    attributes: ['id', 'title', 'content', ['note_date', 'noteDate']],
+  let nt = await note.findOne({
+    attributes: ['id', 'title', 'content', 'note_date'],
     where: {
       id: req.params.noteId,
     },
@@ -18,14 +17,15 @@ router.get("/:userId/:noteId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("NONOTES", req.params.lang)
     });
+  console.log("nt", nt.id)
   return res
     .status(200)
     .json({
       status: "success",
-      data: { nt },
+      data: { title: nt.title, content: nt.content, noteDate: nt.note_date },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -41,7 +41,7 @@ router.get("/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
 
@@ -49,7 +49,7 @@ router.get("/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: { nt },
+      data: { notes:nt },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -60,7 +60,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -69,7 +69,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -98,14 +98,14 @@ router.post("/:userId/:lang", auth, async (req, res) => {
   let newNote;
   newNote = await note.create(request);
   if (newNote != null) {
-    await newNote.setUser(usr).h(async function (err) {
+    await newNote.setUser(usr).catch(async function (err) {
       let result2 = await handleError(newNote, err);
       if (!result2) error = 1;
       return res
         .status(502)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("SERVERERROR", req.params.lang)
         });
     })
@@ -125,7 +125,7 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -134,7 +134,7 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -152,7 +152,7 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("NONOTES", req.params.lang)
     });
   else await nt.update(request);
@@ -161,7 +161,7 @@ router.put("/:userId/:noteId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -178,7 +178,7 @@ router.delete("/:userId/:noteId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -194,7 +194,7 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -241,7 +241,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
 
@@ -291,7 +291,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
             .status(502)
             .json({
               status: "error",
-              data: {},
+              data: null,
               message: await translate("SERVERERROR", req.params.lang)
             });
         })
