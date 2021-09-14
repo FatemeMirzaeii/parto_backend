@@ -180,14 +180,14 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     if (req.body.method == null) return res
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
 
@@ -214,7 +214,7 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
                 .status(405)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: "مشکلی در ایجاد تراکنش بوجود آمد"
                 });
         }
@@ -227,7 +227,7 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
                 .status(400)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: "موجودی کافی نیست"
                 });
         }
@@ -239,7 +239,7 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
                 .status(200)
                 .json({
                     status: "success",
-                    data: {},
+                   data: null,
                     message: "خرید با موفقیت انجام شد "
                 });
         }
@@ -253,7 +253,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     if (req.body.authority == null || req.body.orderId == null || req.body.status == null) {
@@ -261,7 +261,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+               data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     }
@@ -286,7 +286,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                     .status(200)
                     .json({
                         status: "success",
-                        data: {},
+                       data: null,
                         message: "پرداخت با موفقیت انجام شد "
                     });
             }
@@ -296,7 +296,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                     .status(400)
                     .json({
                         status: "error",
-                        data: {},
+                       data: null,
                         message: " پرداخت تایید و کامل نشد "
                     });
             }
@@ -309,7 +309,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                 .status(406)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: " بازگشت به پرداخت کننده "
                 });
         }
@@ -320,7 +320,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                 .status(406)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: " انصراف از پرداخت "
                 });
         }
@@ -331,7 +331,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                 .status(406)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: " به درگاه پرداخت منتقل شد "
                 });
         }
@@ -342,7 +342,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                 .status(406)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: " پرداخت قبلا با موفقیت انجام شده است "
                 });
         }
@@ -354,7 +354,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
                 .status(406)
                 .json({
                     status: "error",
-                    data: {},
+                   data: null,
                     message: " پرداخت ناموفق "
                 });
         }
@@ -364,7 +364,7 @@ router.post("/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+               data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     }
@@ -378,7 +378,7 @@ router.get("/credit/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     let accountCredit = await wallet.findOne({
@@ -414,14 +414,14 @@ router.get("/services/:lang", async (req, res) => {
         })
 })
 
-router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
+router.get("/accountHistory/:userId/:lang", auth, async (req, res) => {
 
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     let accountHistory = await transaction.findAll({
@@ -454,7 +454,7 @@ router.get("/:userId/accountHistory/:lang", auth, async (req, res) => {
             .status(404)
             .json({
                 status: "error",
-                data: {},
+               data: null,
                 message: await translate("INFORMATIONNOTFOUND", req.params.lang)
             })
     }
@@ -483,7 +483,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+           data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     let services = await service.findOne({
@@ -497,7 +497,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
             .status(404)
             .json({
                 status: "error",
-                data: {},
+               data: null,
                 message: await translate("INFORMATIONNOTFOUND", req.params.lang)
             });
     }

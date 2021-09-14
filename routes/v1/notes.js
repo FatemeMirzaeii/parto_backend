@@ -231,7 +231,7 @@ router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: { uNote },
+      data: { notes:uNote },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -247,7 +247,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
 
   let uNote = {};
   let result = [];
-  for (const element of req.body.data) {
+  for (const element of req.body.notes) {
     //delete note
     if (element.state == 3) {
       await note.destroy({
@@ -297,14 +297,14 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
         })
       }
 
-      result.push({ id: uNote.id, title: uNote.title, content: uNote.title, noteDate: uNote.note_date, updatedAt: uNote.updatedAt });
+      result.push({ id: uNote.id, title: uNote.title, content: uNote.content, noteDate: uNote.note_date, updatedAt: uNote.updatedAt });
     }
   }
   return res
     .status(200)
     .json({
       status: "success",
-      data: { result },
+      data: { notes:result },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
