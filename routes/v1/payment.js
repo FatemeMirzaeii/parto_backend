@@ -8,6 +8,18 @@ const handleError = require("../../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../../config/logger/logger");
 
+async function calculateDiscount(serviceId, userId) {
+    let dPerService = await discount_per_service.findOne({
+        attributes: [`id`, `status`, `discount_type`, `discount_value`, `number_of_discount`, `start_time`, `end_time`],
+        where: {
+            service_id: serviceId
+        }
+    })
+    // add discount_per_user and another fuecher
+    if (dPerService.status == "Active")
+        return { value: dPerService.discount_value, type: dPerService.discount_type };
+}
+
 async function createInvoice(tService, tUser, method) {
     let inv = await invoice.create({
         method: method,
@@ -198,12 +210,22 @@ router.post("/purchase/:userId/:lang", auth, async (req, res) => {
     let discount = 0;
     
     if (req.body.method == 'gateway') {
-        if (req.body.discount != null || req.body.discount != undefined) {
-            amount = serv.price - (serv.price * (req.body.discount / 100));
-            discount = req.body.discount;
+        let dis = await calculateDiscount(req.body.serviceId, req.params.userId);
+        if (dis != undefined) {
+            if (dis.type == "Percent") {
+                amount = serv.price - (serv.price * (dis.value / 100));
+            } else if (dis.type == "Rials") {
+                amount = serv.price - dis.value;
+            }
+            discount = dis.value;
         }
-    
-        let tBank = await bankPayment(amount, usr, inv, 'ID_pay');
+        console.log("heeeer", amount);
+        let OS = "PWA"
+        if (req.body.appOS != undefined && req.body.appOS == "android") {
+            OS = "android"
+        }
+        console.log("OS", OS);
+        let tBank = await bankPayment(amount, usr, inv, 'ID_pay', OS);
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
             return res.status(200).json({ data: { link: tBank.gateway_link, authority: tBank.authority, orderId: tBank.order_id } });
@@ -401,15 +423,36 @@ router.get("/credit/:userId/:lang", auth, async (req, res) => {
 
 router.get("/services/:lang", async (req, res) => {
 
-    let services = await service.findAll({
-        attributes: ['id', 'name', 'price']
+    let services = await discount_per_service.findAll({
+        attributes: ['service_id', 'discount_value', 'discount_type', 'status'],
+        include: [
+            {
+                model: service,
+                required: true,
+                attributes: ['id', 'name', 'price']
+
+            }
+        ]
+    })
+    let result = []
+    services.forEach(element => {
+        let temp = {};
+        temp.id = element.service.id;
+        temp.name = element.service.name;
+        temp.price = element.service.price;
+
+        if (element.status == 'Active') {
+            temp.discountValue = element.discount_value;
+            temp.discountType = element.discount_type;
+        }
+        result.push(temp);
     });
 
     return res
         .status(200)
         .json({
             status: "success",
-            data: { services },
+            data: { services:result },
             message: await translate("SUCCESSFUL", req.params.lang)
         })
 })
@@ -510,4 +553,49 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
+router.post("/invoice/userId/:lang", async (req, res) => {
+    if (req.body.orderId == null || req.body.authority == null || req.body.orderId == "" || req.body.authority == ""){
+        return res
+            .status(400)
+            .json(
+                {
+                    status: "error",
+                    data: {},
+                    message: await translate("INVALIDENTRY", req.params.lang)
+                });
+    }
+    let userId = await bank_receipt.findOne({
+
+        include: [
+            {
+                model: invoice,
+                required: true,
+            }
+        ],
+        where: {
+            authority: req.body.authority,
+            order_id: req.body.orderId
+        }
+
+    })
+    if (userId == null || userId == undefined) {
+        return res
+            .status(404)
+            .json(
+                {
+                    status: "error",
+                    data: {},
+                    message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+                });
+    }
+    return res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                data: { userId: userId.invoice.user_id },
+                message: await translate("SUCCESSFUL", req.params.lang)
+            });
+})
+
 module.exports = router;

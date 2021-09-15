@@ -47,7 +47,7 @@ router.get("/goftinoId/:userId/:lang", auth, async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: { gId },
+            data: {information:gId },
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 
