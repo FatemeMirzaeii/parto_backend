@@ -17,7 +17,7 @@ router.get("/info/:userId/:categoryId/:lang", auth, async (req, res) => {
         .status(404)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INFORMATIONNOTFOUND", req.params.lang)
         });
     return res
@@ -40,7 +40,7 @@ router.get("/goftinoId/:userId/:lang", auth, async (req, res) => {
         .status(404)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INFORMATIONNOTFOUND", req.params.lang)
         });
     return res
@@ -83,7 +83,7 @@ router.get("/messageCategory/:lang", async (req, res) => {
         .status(404)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INFORMATIONNOTFOUND", req.params.lang)
         });
     return res
@@ -100,7 +100,7 @@ router.post("/goftinoId/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     let sta = await message_info.findOne({
@@ -133,7 +133,7 @@ router.post("/goftinoId/:userId/:lang", auth, async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: {},
+            data: null,
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 });
@@ -143,7 +143,7 @@ router.post("/status/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     let sta = await message_info.findOne({
@@ -171,7 +171,7 @@ router.post("/status/:userId/:lang", auth, async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: {},
+            data: null,
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 });
@@ -182,7 +182,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
     if (req.body.senderId == null || req.body.receiverId == null || req.body.content == null || req.body.type == null) {
@@ -190,7 +190,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     };
@@ -200,7 +200,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     }
@@ -239,7 +239,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: {},
+            data: null,
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 })
@@ -250,7 +250,7 @@ router.get("/:userId/:categoryId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
         });
 
