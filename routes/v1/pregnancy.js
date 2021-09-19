@@ -19,7 +19,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
       .status(409)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("CONTRADICTION", req.params.lang)
       });
   }
@@ -30,7 +30,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -59,7 +59,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
         .status(404)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INFORMATIONNOTFOUND", req.params.lang)
         });
     }
@@ -72,7 +72,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     }
@@ -83,7 +83,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     }
@@ -94,7 +94,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 });
@@ -105,7 +105,7 @@ router.get("/:userId/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
   let usrID;
@@ -126,7 +126,7 @@ router.get("/:userId/:lang", auth, async (req, res) => {
       .status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INFORMATIONNOTFOUND", req.params.lang)
       });
   }
@@ -146,7 +146,7 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -187,7 +187,7 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
       .status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INFORMATIONNOTFOUND", req.params.lang)
       });
   }
@@ -195,7 +195,7 @@ router.post("/endPregnancy/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 })
@@ -213,7 +213,7 @@ router.post("/dueDate/:userId/:lang", auth, async (req, res) => {
       .status(409)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("CONTRADICTION", req.params.lang)
       });
   }
@@ -240,7 +240,7 @@ router.post("/dueDate/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 });
@@ -258,7 +258,7 @@ router.post("/abortionDate/:userId/:lang", auth, async (req, res) => {
       .status(409)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("CONTRADICTION", req.params.lang)
       });
   }
@@ -288,7 +288,7 @@ router.post("/abortionDate/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 });
@@ -299,7 +299,7 @@ router.get("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
 
@@ -362,7 +362,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
   let result;
@@ -372,7 +372,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -413,7 +413,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 

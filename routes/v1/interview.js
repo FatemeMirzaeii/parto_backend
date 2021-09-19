@@ -23,7 +23,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     .status(409)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("EXISTS", req.params.lang)
     });
 
@@ -32,7 +32,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -57,7 +57,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
         .status(500)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("SERVERERROR", req.params.lang)
         });
     }
@@ -69,7 +69,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
         .status(500)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("SERVERERROR", req.params.lang)
         });
     }
@@ -78,7 +78,7 @@ router.post("/ordinaryUser/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -95,7 +95,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
     .status(409)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("EXISTS", req.params.lang)
     });
   if (req.body.lastPeriodDate == null) {
@@ -103,7 +103,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -112,7 +112,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -132,7 +132,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
         .status(500)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("SERVERERROR", req.params.lang)
         });
     }
@@ -157,7 +157,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
         .status(500)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("SERVERERROR", req.params.lang)
         });
     }
@@ -167,7 +167,7 @@ router.post("/pregnantUser/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });

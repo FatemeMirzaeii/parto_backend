@@ -22,7 +22,7 @@ router.post("/email/:lang", async (req, res) => {
       .status(502)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("SERVERERROR", req.params.lang)
       });
   } else {
@@ -30,7 +30,7 @@ router.post("/email/:lang", async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }

@@ -53,7 +53,7 @@ const moment = require("moment");
 //   res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) }); //todo: add key
 // });
 
-router.get("/userData/:userId/:date/:lang", auth, checkDate, async (req, res) => {
+router.get("/:userId/:date/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -111,12 +111,12 @@ router.get("/userData/:userId/:date/:lang", auth, checkDate, async (req, res) =>
     .status(200)
     .json({
       status: "success",
-      data: { data },
+      data: {userTrackingOptions:data },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
 
-router.post("/userTrackingOption/:userId/:lang", auth, checkDate, async (req, res) => {
+router.post("/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let userOption, existDate;
   for (const element2 of req.body.deleted) {
@@ -382,89 +382,89 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
   }
 });
 
-router.get("/userTrackingOption/:userId/:lang", auth, async (req, res) => {
-  let usr = await user.findByPk(req.params.userId);
-  let usrID;
-  if (usr.partner_id != null) {
-    usrID = usr.partner_id
-  }
-  else {
-    usrID = usr.id
-  }
-  let categoryAndOptions = await health_tracking_option.findAll({
-    attributes: ['id', 'category_id', 'title'],
-    include: [
-      {
-        model: health_tracking_category,
-        required: true,
-        attributes: ['id', 'title', 'color']
-      }
-    ]
-  })
-  categoryAndOptions.sort(function (a, b) { return a.category_id - b.category_id });
-  let result = [];
-  let option = [];
-  let j = 1;
+// router.get("/userTrackingOption/:userId/:lang", auth, async (req, res) => {
+//   let usr = await user.findByPk(req.params.userId);
+//   let usrID;
+//   if (usr.partner_id != null) {
+//     usrID = usr.partner_id
+//   }
+//   else {
+//     usrID = usr.id
+//   }
+//   let categoryAndOptions = await health_tracking_option.findAll({
+//     attributes: ['id', 'category_id', 'title'],
+//     include: [
+//       {
+//         model: health_tracking_category,
+//         required: true,
+//         attributes: ['id', 'title', 'color']
+//       }
+//     ]
+//   })
+//   categoryAndOptions.sort(function (a, b) { return a.category_id - b.category_id });
+//   let result = [];
+//   let option = [];
+//   let j = 1;
 
-  for (let i = 0; i < categoryAndOptions.length + 1; i++) {
-    if (i == categoryAndOptions.length) {
-      if (option.length != 0) {
-        let temp = {};
-        temp.categoryId = j;
-        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
-        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
-        temp.option = option;
-        result.push(temp);
-      }
-      break;
-    }
+//   for (let i = 0; i < categoryAndOptions.length + 1; i++) {
+//     if (i == categoryAndOptions.length) {
+//       if (option.length != 0) {
+//         let temp = {};
+//         temp.categoryId = j;
+//         temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+//         temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+//         temp.option = option;
+//         result.push(temp);
+//       }
+//       break;
+//     }
 
-    if (categoryAndOptions[i].category_id != j) {
-      if (option.length != 0) {
-        let temp = {};
-        temp.categoryId = j;
-        temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
-        temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
-        temp.option = option;
-        result.push(temp);
-      }
-      option = [];
-      j++
-    }
+//     if (categoryAndOptions[i].category_id != j) {
+//       if (option.length != 0) {
+//         let temp = {};
+//         temp.categoryId = j;
+//         temp.categoryTitle = categoryAndOptions[i - 1].health_tracking_category.title;
+//         temp.categoryColor = categoryAndOptions[i - 1].health_tracking_category.color;
+//         temp.option = option;
+//         result.push(temp);
+//       }
+//       option = [];
+//       j++
+//     }
 
-    if (categoryAndOptions[i].category_id == j) {
-      let temp = await user_tracking_option.findAll({
-        attributes: ['date'],
-        where: {
-          user_id: usrID,
-          tracking_option_id: categoryAndOptions[i].id
-        }
-      })
-      console.log("temp", temp.length > 0);
-      console.log("j", j);
-      if (temp.length > 0) {
-        let tOption = {};
-        tOption.trackingOptionId = categoryAndOptions[i].id;
-        tOption.title = categoryAndOptions[i].title;
-        let dateArray = [];
-        temp.forEach(d => {
-          dateArray.push(d.date);
-        })
-        tOption.date = dateArray;
-        option.push(tOption);
-      }
-    }
-  }
-  return res
-    .status(200)
-    .json({
-      status: "success",
-      data: {result},
-      message: await translate("SUCCESSFUL", req.params.lang)
-    });
-});
+//     if (categoryAndOptions[i].category_id == j) {
+//       let temp = await user_tracking_option.findAll({
+//         attributes: ['date'],
+//         where: {
+//           user_id: usrID,
+//           tracking_option_id: categoryAndOptions[i].id
+//         }
+//       })
+//       console.log("temp", temp.length > 0);
+//       console.log("j", j);
+//       if (temp.length > 0) {
+//         let tOption = {};
+//         tOption.trackingOptionId = categoryAndOptions[i].id;
+//         tOption.title = categoryAndOptions[i].title;
+//         let dateArray = [];
+//         temp.forEach(d => {
+//           dateArray.push(d.date);
+//         })
+//         tOption.date = dateArray;
+//         option.push(tOption);
+//       }
+//     }
+//   }
+//   return res
+//     .status(200)
+//     .json({
+//       status: "success",
+//       data: {result},
+//       message: await translate("SUCCESSFUL", req.params.lang)
+//     });
+// });
 
-router.get("/userTrackingOption/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
+router.get("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   let usrID;
   if (usr.partner_id != null) {
@@ -536,12 +536,12 @@ router.get("/userTrackingOption/dataAnalysisByDate/:userId/:lang", auth, async (
     .status(200)
     .json({
       status: "success",
-      data: {result},
+      data: {userTrackingOptions:result},
       message: await translate("SUCCESSFUL", req.params.lang)
     }); 
 });
 
-router.get("/healthTrackingCategoryAndOption/:lang", async (req, res) => {
+router.get("/categoryAndOptions/:lang", async (req, res) => {
 
   let i, option;
   let data = [];
@@ -568,7 +568,7 @@ router.get("/healthTrackingCategoryAndOption/:lang", async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {data},
+      data: {categoryAndOptions:data},
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });

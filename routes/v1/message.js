@@ -47,7 +47,7 @@ router.get("/goftinoId/:userId/:lang", auth, async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: {information:gId },
+            data: { information: gId },
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 
@@ -155,7 +155,7 @@ router.post("/status/:userId/:lang", auth, async (req, res) => {
     if (sta != null) await sta.update({ status: req.body.status });
     else {
         let category = await message_category.findByPk(req.body.categoryId);
-        sta = await message_info.create({ status: req.body.status });
+        sta = await message_info.create({ status: req.body.status, total_question: 0 });
         await sta.setUser(usr).catch(async function (err) {
             let result2 = await handleError(sta, err);
             if (!result2) error = 1;
@@ -172,6 +172,36 @@ router.post("/status/:userId/:lang", auth, async (req, res) => {
         .json({
             status: "success",
             data: null,
+            message: await translate("SUCCESSFUL", req.params.lang)
+        });
+});
+router.get("/status/:userId/:categoryId/:lang", auth, async (req, res) => {
+    let usr = await user.findByPk(req.params.userId);
+    if (usr == null) return res
+        .status(400)
+        .json({
+            status: "error",
+            data: null,
+            message: await translate("INVALIDENTRY", req.params.lang)
+        });
+    let sta = await message_info.findOne({
+        where: {
+            user_id: req.params.userId,
+            category_id: req.params.categoryId
+        }
+    });
+    if (sta == null) return res
+        .status(404)
+        .json({
+            status: "success",
+            data: null,
+            message: await translate("INFORMATIONNOTFOUND", req.params.lang)
+        });
+    return res
+        .status(200)
+        .json({
+            status: "success",
+            data: { status: sta.status },
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 });

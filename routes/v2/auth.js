@@ -75,7 +75,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     }
@@ -96,7 +96,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
                 .status(400)
                 .json({
                     status: "error",
-                    data: {},
+                    data: null,
                     message: await translate("INVALIDENTRY", req.params.lang)
                 });
         userExist = await verification_code.findAll({
@@ -113,7 +113,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
                 .status(400)
                 .json({
                     status: "error",
-                    data: {},
+                    data: null,
                     message: await translate("INVALIDENTRY", req.params.lang)
                 });
         userExist = await verification_code.findAll({
@@ -132,7 +132,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
                 .status(409)
                 .json({
                     status: "error",
-                    data: {},
+                    data: null,
                     message: "دقیقه دوباره درخواست دهید " + time / 60000 + "لطفا پس از"
                 });
         }
@@ -178,7 +178,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
                 .status(200)
                 .json({
                     status: "success",
-                    data: {},
+                    data: null,
                     message: await translate("SUCCESSFUL", req.params.lang)
                 });
         }
@@ -186,7 +186,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
             .status(502)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("SERVERERROR", req.params.lang)
             });
     }
@@ -200,7 +200,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
             .status(400)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("INVALIDENTRY", req.params.lang)
             });
     }
@@ -235,7 +235,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
             .status(404)
             .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: await translate("INFORMATIONNOTFOUND", req.params.lang)
             });
     }
@@ -246,7 +246,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
                 .status(408)
                 .json({
                     status: "error",
-                    data: {},
+                    data: null,
                     message: await translate("TIMEOVER", req.params.lang)
                 });
         }
@@ -257,7 +257,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
                     .status(400)
                     .json({
                         status: "error",
-                        data: {},
+                        data: null,
                         message: await translate("INVALIDCODE", req.params.lang)
                     });
             }
@@ -270,7 +270,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
         .status(200)
         .json({
             status: "success",
-            data: {},
+            data: null,
             message: await translate("SUCCESSFUL", req.params.lang)
         });
 });

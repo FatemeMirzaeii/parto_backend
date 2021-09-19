@@ -8,7 +8,7 @@ const { Op} = require("sequelize");
 const handleError = require("../../middleware/handleMysqlError");
 
 
-router.get("/userTrackingOption/dataAnalysisByDate/:userId/:lang", auth, async (req, res) => {
+router.get("/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
@@ -378,7 +378,7 @@ router.post("/sync/:userId/:syncTime/:lang", auth, async (req, res) => {
 
 });
 
-router.post("/userTrackingOption/:userId/:lang", auth, checkDate, async (req, res) => {
+router.post("/:userId/:lang", auth, checkDate, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
 

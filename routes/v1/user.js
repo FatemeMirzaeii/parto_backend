@@ -19,7 +19,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -32,7 +32,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -42,7 +42,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
       .status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("PARTNERNOTFOUND", req.params.lang)
       });
   }
@@ -52,7 +52,7 @@ router.post("/partnerVerificationCode/:userId/:lang", auth, async (req, res) => 
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
@@ -75,7 +75,7 @@ router.put("/versionType/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -84,7 +84,7 @@ router.put("/versionType/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -93,7 +93,7 @@ router.put("/versionType/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
@@ -105,7 +105,7 @@ router.post("/versionType/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -115,7 +115,7 @@ router.post("/versionType/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
@@ -168,7 +168,7 @@ router.put("/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })
@@ -210,7 +210,7 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 })

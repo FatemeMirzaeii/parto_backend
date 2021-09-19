@@ -25,14 +25,14 @@ router.get("/lastPeriodDate/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
-      message: await translate("UERENOTFOUND", req.params.lang)
+      data: null,
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
     .status(200)
     .json({
       status: "success",
-      data: { uPeriod },
+      data: { lastPeriodDate:uPeriod.last_period_date },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -49,15 +49,15 @@ router.put("/lastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, re
     .status(404)
     .json({
       status: "error",
-      data: {},
-      message: await translate("UERENOTFOUND", req.params.lang)
+      data: null,
+      message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   if (!checkDateWithDateOnly(req.params.lastPeriodDate)) {
     return res
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -75,7 +75,7 @@ router.put("/lastPeriodDate/:userId/:lastPeriodDate/:lang", auth, async (req, re
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -90,7 +90,7 @@ router.get("/bleedingDays/:userId/:lang", auth, async (req, res) => {
     usrID = usr.id
   }
   let uPeriodDate = await user_tracking_option.findAll({
-    attributes: ['date', 'tracking_option_id'],
+    attributes: ['date', ['tracking_option_id','trackinOptionId']],
     where: {
       user_id: usrID,
       tracking_option_id: {
@@ -102,7 +102,7 @@ router.get("/bleedingDays/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: { uPeriodDate },
+      data: {bleedingDays:uPeriodDate },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -144,7 +144,7 @@ router.put("/bleedingDays/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });

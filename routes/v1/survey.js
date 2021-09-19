@@ -84,7 +84,7 @@ router.post("/answers/:lang", async (req, res) => {
   .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
 
@@ -117,7 +117,7 @@ router.post("/answers/:lang", async (req, res) => {
       .status(401)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("NOPERMISSION", req.params.lang)
       });
     }
@@ -126,7 +126,7 @@ router.post("/answers/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDTOKEN", req.params.lang)
       });
     }
@@ -157,7 +157,7 @@ router.post("/answers/:lang", async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDTOKEN", req.params.lang)
     });
   }
@@ -165,7 +165,7 @@ router.post("/answers/:lang", async (req, res) => {
   .status(200)
   .json({
     status: "success",
-    data: {},
+    data: null,
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });

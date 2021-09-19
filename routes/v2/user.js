@@ -53,7 +53,7 @@ router.put("/:userId/:lang", auth, async (req, res) => {
   return res.status(200)
   .json({
     status: "success",
-    data: {},
+    data:{},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 })
@@ -106,7 +106,7 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
   return res.status(200)
   .json({
     status: "success",
-    data: {},
+    data:{},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 })

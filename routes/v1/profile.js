@@ -19,7 +19,7 @@ router.get("/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
@@ -51,7 +51,7 @@ router.get("/periodInfo/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
@@ -75,7 +75,7 @@ router.get("/generalInfo/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
@@ -93,7 +93,7 @@ router.put("/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
 
@@ -137,7 +137,7 @@ router.put("/periodInfo/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
 
@@ -175,7 +175,7 @@ router.put("/generalInfo/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
 
@@ -214,7 +214,7 @@ router.delete("/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   await user_profile.destroy({
@@ -252,7 +252,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
           .status(500)
           .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("SERVERERROR", req.params.lang)
           });
       }
@@ -268,7 +268,7 @@ router.post("/:userId/:lang", auth, async (req, res) => {
     });
 });
 
-router.get("/pregnancyMode/:userId/:lang", auth, async (req, res) => {
+router.get("/pregnant/:userId/:lang", auth, async (req, res) => {
   const uPregnantProfile = await user_profile.findOne({
     attributes: ['pregnant'],
     where: {
@@ -279,14 +279,14 @@ router.get("/pregnancyMode/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
     .status(200)
     .json({
       status: "success",
-      data: { uPregnantProfile },
+      data: { pregnant:uPregnantProfile.pregnant },
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -310,7 +310,7 @@ router.get("/userStatus/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
@@ -332,7 +332,7 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   console.log("pregnant", req.body.pregnant);
@@ -348,7 +348,7 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -356,7 +356,7 @@ router.put("/userStatus/:userId/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
 });
@@ -372,7 +372,7 @@ router.get("/lockStatus/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   return res
@@ -394,7 +394,7 @@ router.put("/lockStatus/:userId/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
   if (req.body.isLock == 0 || req.body.isLock == 1) {
@@ -409,7 +409,7 @@ router.put("/lockStatus/:userId/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -417,7 +417,7 @@ router.put("/lockStatus/:userId/:lang", auth, async (req, res) => {
     .status(400)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INVALIDENTRY", req.params.lang)
     });
 });
@@ -428,7 +428,7 @@ router.post("/lastSyncTime/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -437,7 +437,7 @@ router.post("/lastSyncTime/:userId/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -466,7 +466,7 @@ router.post("/lastSyncTime/:userId/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 
@@ -537,7 +537,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -573,7 +573,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
             .status(500)
             .json({
               status: "error",
-              data: {},
+              data: null,
               message: await translate("SERVERERROR", req.params.lang)
             });
         }
@@ -583,7 +583,7 @@ router.post("/sync/:userId/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -597,7 +597,7 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
 
@@ -621,7 +621,7 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
           .status(500)
           .json({
             status: "error",
-            data: {},
+            data: null,
             message: err
           });
       else {
@@ -639,7 +639,7 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: {},
+        data: null,
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -648,7 +648,7 @@ router.post("/:userId/image/:lang", auth, async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -661,7 +661,7 @@ router.get("/:userId/image/:lang", auth, async (req, res) => {
     .status(404)
     .json({
       status: "error",
-      data: {},
+      data: null,
       message: await translate("INFORMATIONNOTFOUND", req.params.lang)
     });
 
@@ -686,7 +686,7 @@ router.get("/:userId/image/:lang", auth, async (req, res) => {
       .status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INFORMATIONNOTFOUND", req.params.lang)
       });
   });
@@ -708,7 +708,7 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
     .status(200)
     .json({
       status: "successful",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 
@@ -722,7 +722,7 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 //       .status(400)
 //       .json({
 //         status: "error",
-//         data: {},
+//         data: null,
 //         message: await translate("INVALIDENTRY", req.params.lang)
 //       });
 //   }
@@ -731,7 +731,7 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 //       .status(409)
 //       .json({
 //         status: "error",
-//         data: {},
+//         data: null,
 //         message: await translate("EXISTS", req.params.lang)
 //       });
 //   }
@@ -751,7 +751,7 @@ router.delete("/:userId/image/:lang", auth, async (req, res) => {
 //     .status(200)
 //     .json({
 //       status: "success",
-//       data: {},
+//       data: null,
 //       message: await translate("SUCCESSFUL", req.params.lang)
 //     });
 // });

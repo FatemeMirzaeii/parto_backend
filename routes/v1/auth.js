@@ -46,7 +46,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -63,7 +63,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     }
@@ -99,7 +99,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
             .status(409)
             .json({
               status: "error",
-              data: {},
+              data: null,
               message: "لطفا پس از  دو دقیقه دوباره درخواست دهید"
             });
         }
@@ -150,7 +150,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
                 .status(200)
                 .json({
                   status: "success",
-                  data: {},
+                  data: null,
                   message: await translate("SUCCESSFUL", req.params.lang)
                 });
             }
@@ -158,7 +158,7 @@ router.post("/verificationCode/:lang", async (req, res) => {
               .status(status)
               .json({
                 status: "error",
-                data: {},
+                data: null,
                 message: message
               });
           })
@@ -174,7 +174,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -200,7 +200,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -220,7 +220,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
           .status(400)
           .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
           });
       }
@@ -231,7 +231,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
         .status(200)
         .json({
           status: "success",
-          data: {},
+          data: null,
           message: await translate("SUCCESSFUL", req.params.lang)
         });
     }
@@ -248,7 +248,7 @@ router.post("/signIn/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -259,7 +259,7 @@ router.post("/signIn/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     usr = await checkUserWithPhone(req.body.phone);
@@ -269,7 +269,7 @@ router.post("/signIn/:lang", async (req, res) => {
         .status(404)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("UERENOTFOUND", req.params.lang)
         });
   }
@@ -279,7 +279,7 @@ router.post("/signIn/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     usr = await checkUserWithEmail(req.body.email, req.body.password)
@@ -288,7 +288,7 @@ router.post("/signIn/:lang", async (req, res) => {
         .status(404)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("UERENOTFOUND", req.params.lang)
         });
   }
@@ -319,7 +319,7 @@ router.post("/logIn/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -332,7 +332,7 @@ router.post("/logIn/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
 
@@ -351,7 +351,7 @@ router.post("/logIn/:lang", async (req, res) => {
           .status(400)
           .json({
             status: "error",
-            data: {},
+            data: null,
             message: await translate("INVALIDENTRY", req.params.lang)
           });
 
@@ -426,7 +426,7 @@ router.post("/signUp/:lang", async (req, res) => {
       .status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -443,7 +443,7 @@ router.post("/signUp/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     usr = await checkUserWithPhone(req.body.phone);
@@ -452,7 +452,7 @@ router.post("/signUp/:lang", async (req, res) => {
         .status(409)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("EXISTS", req.params.lang)
         });
 
@@ -463,7 +463,7 @@ router.post("/signUp/:lang", async (req, res) => {
         .status(400)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("INVALIDENTRY", req.params.lang)
         });
     usr = await checkUserWithEmail(req.body.email, req.body.password)
@@ -472,7 +472,7 @@ router.post("/signUp/:lang", async (req, res) => {
         .status(409)
         .json({
           status: "error",
-          data: {},
+          data: null,
           message: await translate("EXISTS", req.params.lang)
         });
 
@@ -503,7 +503,7 @@ router.put("/changePassword/:lang", async (req, res) => {
     return res.status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -512,7 +512,7 @@ router.put("/changePassword/:lang", async (req, res) => {
     return res.status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   usr = await checkUserWithEmail(req.body.email, req.body.password);
@@ -520,7 +520,7 @@ router.put("/changePassword/:lang", async (req, res) => {
     return res.status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("UERENOTFOUND", req.params.lang)
       });
   else {
@@ -529,7 +529,7 @@ router.put("/changePassword/:lang", async (req, res) => {
   return res.status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
@@ -541,7 +541,7 @@ router.put("/forgetPassword/:lang", async (req, res) => {
     return res.status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   }
@@ -550,7 +550,7 @@ router.put("/forgetPassword/:lang", async (req, res) => {
     return res.status(400)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("INVALIDENTRY", req.params.lang)
       });
   usr = await user.findOne({
@@ -562,7 +562,7 @@ router.put("/forgetPassword/:lang", async (req, res) => {
     return res.status(404)
       .json({
         status: "error",
-        data: {},
+        data: null,
         message: await translate("UERENOTFOUND", req.params.lang)
       });
   else {
@@ -571,7 +571,7 @@ router.put("/forgetPassword/:lang", async (req, res) => {
   return res.status(200)
     .json({
       status: "success",
-      data: {},
+      data: null,
       message: await translate("SUCCESSFUL", req.params.lang)
     });
 });
