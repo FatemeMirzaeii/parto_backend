@@ -58,7 +58,7 @@ async function sendSms(type, phone, code, template) {
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
   let milliseconds = Date.parse(createDate);
-  milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
   return new Date() - new Date(milliseconds);
 }
 
@@ -320,7 +320,7 @@ router.post("/verificationCode", async (req, res) => {
 
         let createAt = new Date(userExist[userExist.length - 1].createdAt);
         let milliseconds = Date.parse(createAt);
-        milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+        milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
         if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
           flag = false;
@@ -420,7 +420,7 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
   else {
     let createAt = new Date(userExist[userExist.length - 1].createdAt);
     let milliseconds = Date.parse(createAt);
-    milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
     if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
       console.log("time expier");
