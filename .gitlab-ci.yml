@@ -14,6 +14,7 @@ testing_parto:
   stage: test
   variables:
     NODE_ENV: "test"
+    GIT_SSL_NO_VERIFY: "1"
   script:
     - echo "testing Parto..."
     - echo $NODE_ENV
@@ -55,6 +56,7 @@ deploy_prod_parto:
   variables:
     NODE_ENV: "production"
     NODE_PORT: 2218
+    GIT_SSL_NO_VERIFY: "1"
   script:
     - echo "Deploy to production server ..."
     - npm install
