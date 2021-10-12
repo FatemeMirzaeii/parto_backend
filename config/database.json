@@ -10,7 +10,7 @@
       "typeCast": true,
       "timezone": "+00:00"
     },
-    "timezone": "+04:30"
+    "timezone": "Asia/Tehran"
   },
   "test": {
     "database": "parto_Test",
@@ -22,7 +22,7 @@
       "typeCast": true,
       "timezone": "+00:00"
     },
-    "timezone": "+04:30"
+    "timezone": "Asia/Tehran"
   },
   "production": {
     "database": "parto",
@@ -35,6 +35,6 @@
       "typeCast": true,
       "timezone": "+00:00"
     },
-    "timezone": "+04:30"
+    "timezone": "Asia/Tehran"
   }
 }
