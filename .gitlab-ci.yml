@@ -58,6 +58,7 @@ deploy_prod_parto:
   variables:
     NODE_ENV: "production"
     NODE_PORT: 2218
+    GIT_SSL_NO_VERIFY: "1"
   script:
     - echo "Deploy to production server ..."
     - npm install
