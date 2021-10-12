@@ -1,5 +1,5 @@
 const express = require("express");
-const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey,note , user_tracking_category} = require("../models");
+const { user, user_log, user_profile, user_tracking_option, pregnancy, user_answer_survey,note , user_tracking_category,message_info,message} = require("../models");
 const router = express.Router();
 const translate = require("../config/translate");
 const auth = require("../middleware/auth");
@@ -78,9 +78,20 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
+  await user_tracking_category.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
   await pregnancy.destroy({
     where: {
       user_id: req.params.userId,
+    }
+  })
+  
+  await note.destroy({
+    where: {
+      user_id: req.params.userId
     }
   })
 
@@ -105,6 +116,23 @@ router.delete("/deleteUserInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
+  await user_answer_survey.destroy({
+    where: {
+      userId: req.params.userId
+    }
+  })
+  await message_info.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  });
+
+  await message.destroy({
+    where: {
+      receiver_id: req.params.userId
+    }
+  })
+  
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
@@ -116,7 +144,18 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
+  await user_tracking_category.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
   await pregnancy.destroy({
+    where: {
+      user_id: req.params.userId,
+    }
+  })
+
+  await note.destroy({
     where: {
       user_id: req.params.userId,
     }
@@ -133,7 +172,18 @@ router.delete("/v1/user/:userId/:lang", auth, async (req, res) => {
       userId: req.params.userId
     }
   })
-  
+  await message_info.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  });
+
+  await message.destroy({
+    where: {
+      receiver_id: req.params.userId
+    }
+  })
+
   await user_log.destroy({
     where: {
       user_id: req.params.userId
@@ -163,9 +213,10 @@ router.delete("/v2/userInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  await pregnancy.destroy({
+  
+  await note.destroy({
     where: {
-      user_id: req.params.userId,
+      user_id: req.params.userId
     }
   })
 
@@ -190,6 +241,23 @@ router.delete("/v2/userInfo/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId
     }
   })
+  await user_answer_survey.destroy({
+    where: {
+      userId: req.params.userId
+    }
+  })
+  await message_info.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  });
+
+  await message.destroy({
+    where: {
+      receiver_id: req.params.userId
+    }
+  })
+  
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
 router.delete("/v2/user/:userId/:lang", auth, async (req, res) => {
@@ -211,16 +279,16 @@ router.delete("/v2/user/:userId/:lang", auth, async (req, res) => {
       user_id: req.params.userId,
     }
   })
-  
+
   await note.destroy({
     where: {
       user_id: req.params.userId,
     }
   })
   
-  await user_profile.destroy({
+  await note.destroy({
     where: {
-      user_id: req.params.userId
+      user_id: req.params.userId,
     }
   })
 
@@ -229,7 +297,18 @@ router.delete("/v2/user/:userId/:lang", auth, async (req, res) => {
       userId: req.params.userId
     }
   })
-  
+  await message_info.destroy({
+    where: {
+      user_id: req.params.userId
+    }
+  });
+
+  await message.destroy({
+    where: {
+      receiver_id: req.params.userId
+    }
+  })
+
   await user_log.destroy({
     where: {
       user_id: req.params.userId
@@ -240,6 +319,5 @@ router.delete("/v2/user/:userId/:lang", auth, async (req, res) => {
 
   return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
 })
-
 
 module.exports = router;

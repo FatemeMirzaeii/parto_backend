@@ -57,13 +57,18 @@ async function sendSms(type, phone, code, template) {
 
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
+  // let milliseconds = Date.parse(createDate);
+  // milliseconds = milliseconds - (((4 * 60) + 30) * 60 * 1000);
+  // return new Date() - new Date(milliseconds);
   let milliseconds = Date.parse(createDate);
-  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-  return new Date() - new Date(milliseconds);
+  let  d = new Date(); /* midnight in China on April 13th */
+  return d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })- new Date(milliseconds);
 }
 
 router.post("/signIn/:lang", async (req, res) => {
   let usr;
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {
@@ -145,7 +150,7 @@ router.post("/signIn/:lang", async (req, res) => {
     return res.header("x-auth-token", token).status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type , phone:usr.phone , email:usr.email},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 
@@ -162,13 +167,15 @@ router.post("/signIn/:lang", async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type , phone:usr.phone , email:usr.email},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
 });
 
 router.post("/signUp/:lang", async (req, res) => {
+  const patt1 = RegExp('127.0.0.1*');
+  const patt2 = RegExp('localhost*');
   if ((req.body.phone == "" || req.body.phone == null) &&
     (req.body.email == "" || req.body.email == null || req.body.password == "" || req.body.password == null) ||
     req.body.version == "" || req.body.version == null) {

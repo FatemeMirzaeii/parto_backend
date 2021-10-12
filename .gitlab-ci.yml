@@ -14,11 +14,12 @@ testing_parto:
   stage: test
   variables:
     NODE_ENV: "test"
+    GIT_SSL_NO_VERIFY: "1"
   script:
     - echo "testing Parto..."
     - echo $NODE_ENV
     - npm install
-    - pm2 stop development.js
+    # - pm2 stop development.js
     # - npx sequelize-cli db:drop --charset utf8mb4 --collate utf8mb4_persian_ci 
     # - npx sequelize-cli db:create --charset utf8mb4 --collate utf8mb4_persian_ci
     # - npx sequelize-cli db:migrate
@@ -34,6 +35,7 @@ deploy_staging_parto:
   stage: deploy
   variables:
     NODE_ENV: "test"
+    GIT_SSL_NO_VERIFY: "1"
     NODE_PORT: 2216
   environment:
     name: staging
@@ -45,6 +47,7 @@ deploy_staging_parto:
     # - pm2 start development.js
     - pm2 startOrRestart ecosystem.config.js --only "development"
     - echo "deploy_staging succesfull"
+
     # - pm2 logs
 
   only:
@@ -68,6 +71,6 @@ deploy_prod_parto:
   environment:
     name: production
     url: https://api.parto.app
-  when: manual
+  # when: manual
   only:
     - master
