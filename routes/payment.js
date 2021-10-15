@@ -130,7 +130,7 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment- UnSuccess. result :", result.status);
+            logger.info("bank verify payment- UnSuccess. result :", result);
             await tBank.update({ status: 'UnSuccess' });
         }
 
@@ -448,10 +448,7 @@ router.get("/services/:serviceId/price/:lang", async (req, res) => {
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
-<<<<<<< HEAD
 
-=======
->>>>>>> test
 router.post("/invoice/userId/:lang", async (req, res) => {
     if (req.body.orderId == null || req.body.authority == null || req.body.orderId == "" || req.body.authority == ""){
         return res
@@ -496,8 +493,5 @@ router.post("/invoice/userId/:lang", async (req, res) => {
                 message: await translate("SUCCESSFUL", req.params.lang)
             });
 })
-<<<<<<< HEAD
 
-=======
->>>>>>> test
 module.exports = router;
