@@ -7,10 +7,9 @@
     "dialect": "mysql",
     "dialectOptions": {
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+00:00"
+      "typeCast": true
     },
-    "timezone": "+03:30"
+    "timezone": "Asia/Tehran"
   },
   "test": {
     "database": "parto_Test",
@@ -19,10 +18,9 @@
     "dialect": "mysql",
     "dialectOptions": {
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+00:00"
+      "typeCast": true
     },
-    "timezone": "+03:30"
+    "timezone": "Asia/Tehran"
   },
   "production": {
     "database": "parto",
