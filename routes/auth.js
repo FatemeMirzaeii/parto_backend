@@ -673,8 +673,8 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
   milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
   let millisecond = Date.parse(createDate);
-  let d = new Date(); /* midnight in China on April 13th */
-  
+  let d = new Date(); 
+
   if (userExist.length > 0) {
     if (await getCreateTime(userExist) < time) {
 
@@ -727,7 +727,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
 
       return res.status(200).json({
         status: "success",
-        data: { data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(millisecond) },
+        data: {createDate:createDate,nDate:new Date(),nm:new Date(milliseconds), data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(millisecond) },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
