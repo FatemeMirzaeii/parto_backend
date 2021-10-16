@@ -667,7 +667,14 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       }
     });
   }
-  console.log("exist", userExist);
+  //testtttttttttttttttttttttttttt
+  let createDate = new Date(userExist[userExist.length - 1].createdAt);
+  let milliseconds = Date.parse(createDate);
+  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+
+  let millisecond = Date.parse(createDate);
+  let d = new Date(); /* midnight in China on April 13th */
+  
   if (userExist.length > 0) {
     if (await getCreateTime(userExist) < time) {
 
@@ -716,16 +723,11 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
 
     }
     if (result == 200) {
-      let createDate = new Date(userExist[userExist.length - 1].createdAt);
-      let milliseconds = Date.parse(createDate);
-      milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-      
-      let millisecond = Date.parse(createDate);
-      let d = new Date(); /* midnight in China on April 13th */
-       
+
+
       return res.status(200).json({
         status: "success",
-        data: {data1:new Date() - new Date(milliseconds), data2:d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(millisecond)},
+        data: { data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(millisecond) },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
