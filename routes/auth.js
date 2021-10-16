@@ -727,7 +727,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
 
       return res.status(200).json({
         status: "success",
-        data: {createDate:createDate,nDate:new Date(),nm:new Date(milliseconds), data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(millisecond) },
+        data: {createDate:createDate,nDate:new Date(),nm:new Date(milliseconds), data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })},
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
