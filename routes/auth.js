@@ -779,12 +779,10 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
   }
   else {
     if (await getCreateTime(userExist) > time) {
-      console.log("time expier");
-      let data=await getCreateTime(userExist)
       return res.status(408)
         .json({
           status: "error",
-          data: {data},
+          data: {},
           message: await translate("TIMEOVER", req.params.lang)
         });
     }
@@ -803,9 +801,10 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       }
     }
   }
+  let data=await getCreateTime(userExist)
   return res.status(200).json({
     status: "success",
-    data: {},
+    data: {data},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });
