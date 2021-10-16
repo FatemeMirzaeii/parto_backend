@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 const Kavenegar = require('kavenegar');
 const useragent = require('useragent');
 const bcrypt = require("bcrypt");
+const moment = require("moment-timezone")
 
 function checkPhone(phone) {
   const regex = RegExp(/^(\98)9\d{9}$/g);
@@ -58,12 +59,14 @@ async function sendSms(type, phone, code, template) {
 
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
-  // let milliseconds = Date.parse(createDate);
-  // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-  // return new Date() - new Date(milliseconds);
   let milliseconds = Date.parse(createDate);
-  let d = new Date(); /* midnight in China on April 13th */
-  return d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }) - new Date(milliseconds);
+  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+  return new Date() - new Date(milliseconds);
+  // let milliseconds = Date.parse(createDate);
+  // let d = new Date(); /* midnight in China on April 13th */
+  // data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }),
+  // time: moment(d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })).format('YYYY-MM-DD HH:MM:SS'),d: moment(createDate).format('YYYY-MM-DD HH:MM:SS')
+
 }
 
 router.post("/signIn/:lang", async (req, res) => {
@@ -667,13 +670,6 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       }
     });
   }
-  //testtttttttttttttttttttttttttt
-  let createDate = new Date(userExist[userExist.length - 1].createdAt);
-  let milliseconds = Date.parse(createDate);
-  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-
-  let millisecond = Date.parse(createDate);
-  let d = new Date(); 
 
   if (userExist.length > 0) {
     if (await getCreateTime(userExist) < time) {
@@ -722,12 +718,13 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       })
 
     }
+    
     if (result == 200) {
 
 
       return res.status(200).json({
         status: "success",
-        data: {createDate:createDate,nDate:new Date(),nm:new Date(milliseconds), data1: new Date() - new Date(milliseconds), data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })},
+        data: { },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
