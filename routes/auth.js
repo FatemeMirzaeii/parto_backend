@@ -60,7 +60,7 @@ async function sendSms(type, phone, code, template) {
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
   // let milliseconds = Date.parse(createDate);
-  let difrent = moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))-moment(createDate.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))
+  let difrent = moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))-createDate
   // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
   return difrent;
 }
@@ -807,7 +807,7 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
   let data = await getCreateTime(userExist)
   return res.status(200).json({
     status: "success",
-    data: { data:data,now: moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' })),created:  moment(createDate.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))},
+    data: { data:data,now: moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' })),created: createDate},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });
