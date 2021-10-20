@@ -802,10 +802,12 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       }
     }
   }
+  let createDate = new Date(userExist[userExist.length - 1].createdAt);
+  
   let data = await getCreateTime(userExist)
   return res.status(200).json({
     status: "success",
-    data: { data },
+    data: { data:data,now: moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' })),created:  moment(createDate.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });
