@@ -59,14 +59,10 @@ async function sendSms(type, phone, code, template) {
 
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
-  let milliseconds = Date.parse(createDate);
-  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-  return new Date() - new Date(milliseconds);
   // let milliseconds = Date.parse(createDate);
-  // let d = new Date(); /* midnight in China on April 13th */
-  // data2: d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }),
-  // time: moment(d.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })).format('YYYY-MM-DD HH:MM:SS'),d: moment(createDate).format('YYYY-MM-DD HH:MM:SS')
-
+  let difrent = moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))-moment(createDate.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))
+  // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+  return difrent;
 }
 
 router.post("/signIn/:lang", async (req, res) => {
