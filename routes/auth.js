@@ -325,15 +325,15 @@ router.post("/verificationCode", async (req, res) => {
       console.log("userExist", userExist);
       if (userExist.length > 0) {
 
-        let createAt = new Date(userExist[userExist.length - 1].createdAt);
-        let milliseconds = Date.parse(createAt);
-        milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+        // let createAt = new Date(userExist[userExist.length - 1].createdAt);
+        // let milliseconds = Date.parse(createAt);
+        // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
-        if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
+        if (getCreateTime(userExist) < (2 * 60 * 1000)) {
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
-        else if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+        else if (getCreateTime(userExist) > (2 * 60 * 1000)) {
           for (const element of userExist) {
             await element.destroy();
           }
@@ -425,11 +425,11 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
-    let createAt = new Date(userExist[userExist.length - 1].createdAt);
-    let milliseconds = Date.parse(createAt);
-    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+    // let createAt = new Date(userExist[userExist.length - 1].createdAt);
+    // let milliseconds = Date.parse(createAt);
+    // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
-    if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+    if (getCreateTime(userExist) > (2 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }

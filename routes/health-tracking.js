@@ -180,6 +180,8 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
   if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   let usrID;
+  let localTime;
+  let milliseconds
   if (usr.partner_id != null) {
     usrID = usr.partner_id
   }
@@ -205,7 +207,8 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
   }
   else {
     syncTime = new Date(req.params.syncTime);
-    let milliseconds = Date.parse(syncTime);
+    localTime=moment(syncTime.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))
+    milliseconds = Date.parse(syncTime);
     milliseconds = milliseconds - ((3 * 60 + 30) * 60 * 1000);
     console.log("syncTime", syncTime);
     existOption = await user_tracking_option.findAll({
@@ -213,14 +216,14 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
       where: {
         user_id: usrID,
         updatedAt: {
-          [Op.gte]: new Date(milliseconds),
+          [Op.gte]: new Date(localTime),
         }
       },
       userOptionBy: [['group', 'DESC']],
     })
 
   }
-  return res.status(200).json({ data: existOption });
+  return res.status(200).json({ data: existOption , localtime:localTime, mili: new Date(milliseconds)});
 });
 
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
