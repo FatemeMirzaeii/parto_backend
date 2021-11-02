@@ -134,7 +134,6 @@ router.get("/syncNote/:userId/:syncTime/:lang", auth, async (req, res) => {
   else {
     syncTime = new Date(req.params.syncTime);
     let localTime=moment(syncTime.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))
-    console.log("syncTime", syncTime);
     uNote = await note.findAll({
       attributes: ['id', 'title', 'content', ['note_date', 'noteDate'], 'updatedAt'],
       where: {
@@ -163,7 +162,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
         where: {
           title: element.title,
           content: element.content,
-          note_date: element.noteDate,
+          note_date: element.date,
           user_id: req.params.userId
         }
       })
@@ -173,7 +172,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
       let request = {
         title: element.title,
         content: element.content,
-        note_date: element.noteDate,
+        note_date: element.date,
       }
       uNote = await note.findOne({
         where: {
@@ -189,7 +188,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
         {
           title: element.title,
           content: element.content,
-          note_date: element.noteDate,
+          note_date: element.date,
         }
       );
       if (uNote != null) {
