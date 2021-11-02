@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 const Kavenegar = require('kavenegar');
 const useragent = require('useragent');
 const bcrypt = require("bcrypt");
-const moment = require("moment-timezone")
+const moment = require("moment")
 
 function checkPhone(phone) {
   const regex = RegExp(/^(\98)9\d{9}$/g);
