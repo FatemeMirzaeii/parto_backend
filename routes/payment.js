@@ -7,7 +7,6 @@ const config = require('../middleware/IDPay_config');
 const handleError = require("../middleware/handleMysqlError");
 const request = require("request-promise");
 const logger = require("../config/logger/logger");
-const e = require("express");
 
 async function calculateDiscount(serviceId, userId) {
     let dPerService = await discount_per_service.findOne({
@@ -69,7 +68,7 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
         order_id: (tUser.id + tInvoice.id).toString(),
         gateway: gateway
     });
-    console.log("option", options);
+    
     let result;
     try {
         result = await request(options);
@@ -82,13 +81,13 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
         }
         else {
             logger.info("bank payment error", result);
-            await tBank.update({ status: 'UnSuccess' })
+            await tBank.update({ status: 'UnSuccess' });
         }
         await tBank.setInvoice(tInvoice);
     } catch (err) {
         logger.info("bank payment error", err);
-        await tBank.update({ status: 'UnSuccess' })
-        await tBank.setInvoice(tInvoice);
+        //await tBank.update({ status: 'UnSuccess' });
+        //  await tBank.setInvoice(tInvoice);
 
     }
     return await tBank;
@@ -116,12 +115,10 @@ async function bankVerify(authority, orderId) {
         }
     })
 
-    console.log("bank verify options", options.body);
     let result;
     try {
 
         result = await request(options);
-        console.log("result", result)
         logger.info("bank result", result);
         if (result.status == 100) {
             await tBank.update({
@@ -136,7 +133,7 @@ async function bankVerify(authority, orderId) {
 
     } catch (err) {
         logger.info("bank verify payment error", err);
-        await tBank.update({ status: 'UnSuccess' });
+        // await tBank.update({ status: 'UnSuccess' });
     }
     return await tBank;
 }
@@ -216,7 +213,6 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
 
     let wall = await createWallet(usr);
     let inv = await createInvoice(serv, usr, req.body.method);
-    // call calculateDiscount function 
     let amount = serv.price;
     let discount = 0;
 
@@ -230,12 +226,12 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
             }
             discount = dis.value;
         }
-        console.log("heeeer", amount);
+        
         let OS = "PWA"
         if (req.body.appOS != undefined && req.body.appOS == "android") {
             OS = "android"
         }
-        console.log("OS", OS);
+        
         let tBank = await bankPayment(amount, usr, inv, 'ID_pay', OS);
         if (tBank.status == "Waiting") {
             await setTransaction(wall, inv, "gateway", amount, `discount:${discount}`);
@@ -247,7 +243,6 @@ router.post("/v1/purchase/:userId/:lang", auth, async (req, res) => {
         }
     }
     else if (req.body.method == 'wallet') {
-        console.log("methodeeeeeeee wallet", await checkWallet(usr, amount));
         if (await checkWallet(usr, amount) == false) {
             await updateInvoice(inv, 'UnSuccess');
             return res.status(400).json({ message: "موجودی کافی نیست" });

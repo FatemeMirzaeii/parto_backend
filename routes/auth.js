@@ -7,6 +7,7 @@ const auth = require("../middleware/auth");
 const Kavenegar = require('kavenegar');
 const useragent = require('useragent');
 const bcrypt = require("bcrypt");
+const moment = require("moment-timezone")
 
 function checkPhone(phone) {
   const regex = RegExp(/^(\98)9\d{9}$/g);
@@ -57,9 +58,10 @@ async function sendSms(type, phone, code, template) {
 
 async function getCreateTime(userExist) {
   let createDate = new Date(userExist[userExist.length - 1].createdAt);
-  let milliseconds = Date.parse(createDate);
-  milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
-  return new Date() - new Date(milliseconds);
+  // let milliseconds = Date.parse(createDate);
+  let difrent = moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))-createDate
+  // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+  return difrent;
 }
 
 router.post("/signIn/:lang", async (req, res) => {
@@ -145,7 +147,7 @@ router.post("/signIn/:lang", async (req, res) => {
     return res.header("x-auth-token", token).status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type, phone: usr.phone, email: usr.email },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
 
@@ -162,7 +164,7 @@ router.post("/signIn/:lang", async (req, res) => {
       .status(200)
       .json({
         status: "success",
-        data: { id: usr.id, userName: usr.name, type: usr.version_type },
+        data: { id: usr.id, userName: usr.name, type: usr.version_type, phone: usr.phone, email: usr.email },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
   }
@@ -318,15 +320,15 @@ router.post("/verificationCode", async (req, res) => {
       console.log("userExist", userExist);
       if (userExist.length > 0) {
 
-        let createAt = new Date(userExist[userExist.length - 1].createdAt);
-        let milliseconds = Date.parse(createAt);
-        milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+        // let createAt = new Date(userExist[userExist.length - 1].createdAt);
+        // let milliseconds = Date.parse(createAt);
+        // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
-        if (new Date() - new Date(milliseconds) < (2 * 60 * 1000)) {
+        if (getCreateTime(userExist) < (2 * 60 * 1000)) {
           flag = false;
           return res.status(409).json({ message: "لطفا پس از  دو دقیقه دوباره درخواست دهید" });
         }
-        else if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+        else if (getCreateTime(userExist) > (2 * 60 * 1000)) {
           for (const element of userExist) {
             await element.destroy();
           }
@@ -418,11 +420,11 @@ router.post("/checkVerificationCode/:lang", async (req, res) => {
     return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   }
   else {
-    let createAt = new Date(userExist[userExist.length - 1].createdAt);
-    let milliseconds = Date.parse(createAt);
-    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+    // let createAt = new Date(userExist[userExist.length - 1].createdAt);
+    // let milliseconds = Date.parse(createAt);
+    // milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
 
-    if (new Date() - new Date(milliseconds) > (2 * 60 * 1000)) {
+    if (getCreateTime(userExist) > (2 * 60 * 1000)) {
       console.log("time expier");
       return res.status(408).json({ message: await translate("TIMEOVER", req.params.lang) }).end();
     }
@@ -671,7 +673,7 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       }
     });
   }
-  console.log("exist", userExist);
+
   if (userExist.length > 0) {
     if (await getCreateTime(userExist) < time) {
 
@@ -719,11 +721,13 @@ router.post("/v2/verificationCode/:lang", async (req, res) => {
       })
 
     }
-    console.log("resultttttttttt", result);
+    
     if (result == 200) {
+
+
       return res.status(200).json({
         status: "success",
-        data: {},
+        data: { },
         message: await translate("SUCCESSFUL", req.params.lang)
       });
     }
@@ -783,7 +787,6 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
   }
   else {
     if (await getCreateTime(userExist) > time) {
-      console.log("time expier");
       return res.status(408)
         .json({
           status: "error",
@@ -806,9 +809,12 @@ router.post("/v2/checkVerificationCode/:lang", async (req, res) => {
       }
     }
   }
+  let createDate = new Date(userExist[userExist.length - 1].createdAt);
+  
+  let data = await getCreateTime(userExist)
   return res.status(200).json({
     status: "success",
-    data: {},
+    data: { data:data,now: moment(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tehran' })),created: createDate},
     message: await translate("SUCCESSFUL", req.params.lang)
   });
 });

@@ -227,15 +227,14 @@ router.get("/syncPregnancyInfo/:userId/:syncTime/:lang", auth, async (req, res) 
   }
   else {
     syncTime = new Date(req.params.syncTime);
-    let milliseconds = Date.parse(syncTime);
-    milliseconds = milliseconds - (((3 * 60) + 30) * 60 * 1000);
+    let localTime=moment(syncTime.toLocaleString('en-US', { timeZone: 'Asia/Tehran' }))
 
     pregnantUsre = await pregnancy.findAll({
       where: {
         user_id: usrID,
         state:{[Op.in]:[1,3]},
         updatedAt: {
-          [Op.gte]: new Date(milliseconds)
+          [Op.gte]: new Date(localTime)
         }
       },
       orderBy: [['group', 'DESC']],
