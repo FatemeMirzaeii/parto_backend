@@ -237,7 +237,8 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         return;
       })
       // check date  ****moment(element.date, "YYYY-MM-DD", true).isValid() 
-      if (element.date != undefined && element.date !="" &&  (optionIdExist != null || optionIdExist != undefined)) {
+      if (element.date != undefined && element.date !="" && moment(element.date, "YYYY-MM-DD", true).isValid() &&
+       (optionIdExist != null || optionIdExist != undefined)) {
 
         if (element.state == 2) {
           await user_tracking_option.destroy({
