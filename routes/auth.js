@@ -6,7 +6,6 @@ const sendEmail = require("../middleware/sendEmail");
 const auth = require("../middleware/auth");
 const Kavenegar = require('kavenegar');
 const useragent = require('useragent');
-const bcrypt = require("bcrypt");
 const moment = require("moment")
 
 function checkPhone(phone) {

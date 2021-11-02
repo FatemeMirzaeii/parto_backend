@@ -92,7 +92,6 @@ router.get("/v1/messageCategory/:lang", async (req, res) => {
 router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    logger.info("goftinoId",req.body.goftinoId);
     if (req.body.goftinoId == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let sta = await message_info.findOne({
         where: {
@@ -126,7 +125,6 @@ router.post("/v1/goftinoId/:userId/:lang", auth, async (req, res) => {
 router.post("/status/:userId/:lang", auth, async (req, res) => {
     let usr = await user.findByPk(req.params.userId);
     if (usr == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    logger.info("goftino status",req.body.status);
     if (req.body.status == null || req.body.categoryId == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
     let sta = await message_info.findOne({
         where: {
