@@ -223,7 +223,7 @@ router.get("/syncUserInfo/:userId/:syncTime/:lang", auth, async (req, res) => {
 
 router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
   let usr = await user.findByPk(req.params.userId);
-  if (usr == null || req.body == null) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+  if (usr == null || req.body == null || req.body==undefined) return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
   if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
@@ -236,7 +236,7 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
       error = 1;
       return;
     })
-
+    // check date 
     if (optionIdExist != null || optionIdExist != undefined) {
 
       if (element.state == 2) {
@@ -366,15 +366,12 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
     ]
   })
   categoryAndOptions.sort(function (a, b) { return a.category_id - b.category_id });
-  console.log("cccccccc", categoryAndOptions.length);
   let result = [];
   let option = [];
   let j = 1;
 
   for (let i = 0; i < categoryAndOptions.length + 1; i++) {
-    console.log("iiiiiiiiiii", i);
     if (i == categoryAndOptions.length) {
-      console.log("eeeeeeeeeeeennnnnnnddddd", i);
       if (option.length != 0) {
         let temp = {};
         temp.categoryId = j;
@@ -407,8 +404,6 @@ router.get("/getUserHealthInfo/:userId/:lang", auth, async (req, res) => {
           tracking_option_id: categoryAndOptions[i].id
         }
       })
-      console.log("temp", temp.length > 0);
-      console.log("j", j);
       if (temp.length > 0) {
         let tOption = {};
         tOption.trackingOptionId = categoryAndOptions[i].id;
@@ -466,15 +461,12 @@ router.get("/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
     let exist = false;
     for (let r of result) {
       if (i.date == r.date) {
-        console.log("is existtttt");
-        console.log("date", i.date);
         exist = true;
       }
     }
     if (exist == false) {
 
       days.date = i.date;
-      console.log("date1", i.date);
       let temp = [];
       let j;
       for (j of options) {
@@ -587,16 +579,12 @@ router.get("/v2/analysisDataByDate/:userId/:lang", auth, async (req, res) => {
     let exist = false;
     for (let r of result) {
       if (i.date == r.date) {
-        console.log("is existtttt");
-        console.log("date", i.date);
         exist = true;
       }
     }
     if (exist == false) {
 
       days.date = i.date;
-      console.log("date1", i.date);
-      console.log("value", i.value);
       let temp = [];
       let j;
       for (j of options) {
@@ -722,12 +710,8 @@ router.post("/v2/:userId/syncUserTracking/:syncTime/:lang", auth, async (req, re
   }
   let userOption, existData, optionIdExist;
   let error = 0;
-  console.log("nonDescriptive", req.body.nonDescriptive);
-
   for (const element of req.body.nonDescriptive) {
     optionIdExist = await health_tracking_option.findByPk(element.tracking_option_id).catch(async function (err) {
-      console.log("ERR- health_tracking_option.findByPk(element.tracking_option_id)", err);
-      console.log(optionIdExist);
       error = 1;
       return;
     })
