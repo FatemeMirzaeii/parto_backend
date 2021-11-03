@@ -8,7 +8,17 @@ const { Op } = require("sequelize");
 const handleError = require("../middleware/handleMysqlError");
 const moment = require("moment");
 
+fixNumbers = function (str) {
+  
+    let persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+    let arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
 
+  for (i = 0; i < 10; i++) {
+      str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
+    }
+  
+  return str;
+};
 router.get("/getCategories", auth, async (req, res) => {
   const categories = await health_tracking_category.findAll();
   res.status(200).json({ data: categories });
@@ -977,8 +987,12 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
       return;
     }
   }
-
   for (const element3 of req.body.withValue) {
+    let value=fixNumbers(element3.value);
+    if((element3.categoryId==9 && (parseInt(value, 10)<20 || parseInt(value, 10)>300) )|| 
+    (element3.categoryId==10 && (parseInt(value, 10)<34 || parseInt(value, 10)>42) )){
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
     existDate = await user_tracking_category.findOne({
       where: {
         user_id: req.params.userId,
@@ -987,14 +1001,14 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
       }
     })
     if (existDate != null) {
-      await existDate.update({ value: element3.value });
+      await existDate.update({ value: value });
     }
     else {
       try {
         let trackingCategory = await health_tracking_category.findByPk(element3.categoryId);
         userCategory = await user_tracking_category.create({
           date: req.body.date,
-          value: element3.value
+          value:value
         });
         if (userCategory != null) {
           await userCategory.setHealth_tracking_category(trackingCategory).catch(async function (err) {

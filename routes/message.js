@@ -69,7 +69,6 @@ router.get("/v1/totalQuestion/:userId/:lang", auth, async (req, res) => {
             user_id: req.params.userId,
         }
     });
-    console.log("sta.length", sta.length)
     if (sta.length > 0) {
         for (j = 0; j < sta.length; j++) {
             totalQuestion = totalQuestion + sta[j].total_question
@@ -83,7 +82,6 @@ router.get("/v1/messageCategory/:lang", async (req, res) => {
     let cat = await message_category.findAll({
         attributes: [['id', 'categoryId'], 'name']
     });
-    console.log("cat", cat)
     if (cat == null) return res.status(404).json({ message: await translate("INFORMATIONNOTFOUND", req.params.lang) });
     return res.status(200).json({ data: cat });
 

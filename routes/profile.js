@@ -340,7 +340,6 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     },
   });
 
-  console.log("data", req.body.data[0]);
   if ((req.body.data).length == 0) {
     return res.status(200).json({ message: await translate("SUCCESSFUL", req.params.lang) });
   }
@@ -373,7 +372,6 @@ router.post("/syncProfile/:userId/:lang", auth, async (req, res) => {
     // if (moment(request.last_sync_time, "YYYY-MM-DD", true).isValid() == false || request.last_sync_time == null) {
     //   request.last_sync_time = undefined;
     // }
-    console.log("uprofile", uProfile != null)
     if (uProfile != null) {
 
       await uProfile.update(request);
