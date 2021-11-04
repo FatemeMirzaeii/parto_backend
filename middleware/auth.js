@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
   });
 
   if (verification == false) {
-    return res.status(400).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
+    return res.status(401).json({ message: await translate("INVALIDTOKEN", req.params.lang) });
   }
   else return next();
 
