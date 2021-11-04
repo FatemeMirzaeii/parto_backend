@@ -80,12 +80,12 @@ async function bankPayment(amount, tUser, tInvoice, gateway, OS) {
             })
         }
         else {
-            logger.info("bank payment error", result);
+            logger.info("payment.js -bank payment error", result);
             await tBank.update({ status: 'UnSuccess' });
         }
         await tBank.setInvoice(tInvoice);
     } catch (err) {
-        logger.info("bank payment error", err);
+        logger.info("payment.js -bank payment error", err);
         //await tBank.update({ status: 'UnSuccess' });
         //  await tBank.setInvoice(tInvoice);
 
@@ -119,7 +119,7 @@ async function bankVerify(authority, orderId) {
     try {
 
         result = await request(options);
-        logger.info("bank result", result);
+        logger.info("payment.js -bank result", result);
         if (result.status == 100) {
             await tBank.update({
                 status: 'Success',
@@ -127,12 +127,12 @@ async function bankVerify(authority, orderId) {
             })
         }
         else {
-            logger.info("bank verify payment- UnSuccess. result :", result.status);
+            logger.info("payment.js -bank verify payment- UnSuccess. result :", result);
             await tBank.update({ status: 'UnSuccess' });
         }
 
     } catch (err) {
-        logger.info("bank verify payment error", err);
+        logger.info("payment.js -bank verify payment error", err);
         // await tBank.update({ status: 'UnSuccess' });
     }
     return await tBank;
@@ -312,7 +312,7 @@ router.post("/v1/verifyPurchase/:userId/:lang", auth, async (req, res) => {
             return res.status(406).json({ message: " پرداخت قبلا با موفقیت انجام شده است " });
         }
         else {
-            logger.info("calback status error", req.body.status);
+            logger.info("payment.js -calback status error", req.body.status);
             await updateInvoice(inv, 'UnSuccess');
             await tBank.update({ status: 'UnSuccess' });
             return res.status(406).json({ message: " پرداخت ناموفق " });
