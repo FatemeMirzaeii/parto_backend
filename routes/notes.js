@@ -158,7 +158,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
   let result = [];
   for (const element of req.body.data) {
     //delete note
-    if (element.state == 3) {
+    if (element.state == 2) {
       await note.destroy({
         where: {
           id: element.id
@@ -166,20 +166,20 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
       })
     }
     //update note
-    else if (element.state == 2) {
+    else if (element.state == 1 && element.id != undefined && element.id > 0) {
       let request = {
         title: element.title,
         content: element.content,
         note_date: element.date,
       }
-      if (element.id != undefined) {
-        uNote = await note.findOne({
-          where: {
-            id: element.id
-          },
-        });
-        if (uNote != null) { await uNote.update(request); }
-      }
+
+      uNote = await note.findOne({
+        where: {
+          id: element.id
+        },
+      });
+      if (uNote != null) { await uNote.update(request); }
+
 
     }
     //add note

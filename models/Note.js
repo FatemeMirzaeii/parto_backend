@@ -3,9 +3,9 @@ module.exports = (sequelize, DataTypes) => {
   const Note = sequelize.define('note', {
     title: {
       type: DataTypes.STRING,
-      validate: {
-        max: 1024,
-      },
+      // validate: {
+      //   len: [0, 20],
+      // },
     },
     content: {
       type: DataTypes.STRING,

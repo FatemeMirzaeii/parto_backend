@@ -17,7 +17,7 @@ router.post("/email", async (req, res) => {
   result = await sEmail(creds.USER, "info@parto.email", content, subject);
   console.log(result);
   if (result == "ERROR") {
-    logger.error("SEND EMAIL FAILED-"+ result);
+    logger.error("cotactUs.js -SEND EMAIL FAILED-"+ result);
     return res
       .status(502)
       .json({ message: await translate("SERVERERROR", "fa") });
