@@ -159,14 +159,23 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
   for (const element of req.body.data) {
     //delete note
     if (element.state == 2) {
+      let request = {
+        id: element.id,
+        title: element.title,
+        content: element.content,
+        note_date: element.date,
+      }
       await note.destroy({
         where: {
-          id: element.id
+          id: element.id,
+          // title: element.title,
+          // content: element.content,
+          // note_date: element.date
         }
       })
     }
     //update note
-    else if (element.state == 1 && element.id != undefined && element.id > 0) {
+    else if (element.state == 1 && element.id != undefined ) {
       let request = {
         title: element.title,
         content: element.content,
@@ -178,9 +187,10 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
           id: element.id
         },
       });
-      if (uNote != null) { await uNote.update(request); }
-
-
+      if (uNote != null) {
+         await uNote.update(request); 
+         result.push({ id: uNote.id, title: uNote.title, content: uNote.title,date: uNote.note_date, updatedAt: uNote.updatedAt });
+        }
     }
     //add note
     else if (element.state == 1) {
@@ -200,7 +210,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
         })
       }
 
-      result.push({ id: uNote.id, title: uNote.title, content: uNote.title, noteDate: uNote.note_date, updatedAt: uNote.updatedAt });
+      result.push({ id: uNote.id, title: uNote.title, content: uNote.title, date: uNote.note_date, updatedAt: uNote.updatedAt });
     }
 
   }
