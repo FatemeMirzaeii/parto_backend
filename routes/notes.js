@@ -167,10 +167,9 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
       }
       await note.destroy({
         where: {
-          id: element.id,
-          // title: element.title,
-          // content: element.content,
-          // note_date: element.date
+          title: element.title,
+          content: element.content,
+          note_date: element.date
         }
       })
     }
