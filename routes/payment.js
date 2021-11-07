@@ -119,15 +119,16 @@ async function bankVerify(authority, orderId) {
     try {
 
         result = await request(options);
-        logger.info("payment.js -bank result", result);
+        
         if (result.status == 100) {
+            logger.info("payment.js -bank result", result);
             await tBank.update({
                 status: 'Success',
                 meta_data: JSON.stringify(result)
             })
         }
         else {
-            logger.info("payment.js -bank verify payment- UnSuccess. result :", result);
+            logger.info("payment.js -bank verify payment- UnSuccess. result :", result.error_message);
             await tBank.update({ status: 'UnSuccess' });
         }
 

@@ -188,7 +188,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
       });
       if (uNote != null) {
          await uNote.update(request); 
-         result.push({ id: uNote.id, title: uNote.title, content: uNote.title,date: uNote.note_date, updatedAt: uNote.updatedAt });
+         result.push({ id: uNote.id, title: uNote.title, content: uNote.content,date: uNote.note_date, updatedAt: uNote.updatedAt });
         }
     }
     //add note
@@ -209,7 +209,7 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
         })
       }
 
-      result.push({ id: uNote.id, title: uNote.title, content: uNote.title, date: uNote.note_date, updatedAt: uNote.updatedAt });
+      result.push({ id: uNote.id, title: uNote.title, content: uNote.content, date: uNote.note_date, updatedAt: uNote.updatedAt });
     }
 
   }

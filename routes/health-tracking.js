@@ -9,14 +9,14 @@ const handleError = require("../middleware/handleMysqlError");
 const moment = require("moment");
 
 fixNumbers = function (str) {
-  
-    let persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
-    let arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+
+  let persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+  let arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
 
   for (i = 0; i < 10; i++) {
-      str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
-    }
-  
+    str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
+  }
+
   return str;
 };
 router.get("/getCategories", auth, async (req, res) => {
@@ -247,8 +247,8 @@ router.post("/syncUserInfo/:userId/:lang", auth, async (req, res) => {
         return;
       })
       // check date  ****moment(element.date, "YYYY-MM-DD", true).isValid() 
-      if (element.date != undefined && element.date !="" && moment(element.date, "YYYY-MM-DD", true).isValid()
-      &&  (optionIdExist != null || optionIdExist != undefined)) {
+      if (element.date != undefined && element.date != "" && moment(element.date, "YYYY-MM-DD", true).isValid()
+        && (optionIdExist != null || optionIdExist != undefined)) {
 
         if (element.state == 2) {
           await user_tracking_option.destroy({
@@ -925,7 +925,6 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
   }
 
   for (const element of req.body.selected) {
-    console.log("hasM", element.hasMultipleChoice)
     if (element.hasMultipleChoice == 0) {
       existDate = await user_tracking_option.findOne({
         where: {
@@ -933,7 +932,6 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
           date: req.body.date
         }
       })
-      console.log("okkkkkkk");
       if (existDate != null) {
         //find options in category
         let options = await health_tracking_option.findAll({
@@ -956,7 +954,6 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
             tracking_option_id: { [Op.in]: optionArray }
           }
         })
-        console.log("existData", existDate)
         if (await existData != null) {
           await existData.destroy();
         }
@@ -988,44 +985,45 @@ router.post("/v2/userInfo/:userId/:lang", auth, checkDate, async (req, res) => {
     }
   }
   for (const element3 of req.body.withValue) {
-    let value=fixNumbers(element3.value);
-    if((element3.categoryId==9 && (parseInt(value, 10)<20 || parseInt(value, 10)>300) )|| 
-    (element3.categoryId==10 && (parseInt(value, 10)<34 || parseInt(value, 10)>42) )){
-      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
-    }
-    existDate = await user_tracking_category.findOne({
-      where: {
-        user_id: req.params.userId,
-        date: req.body.date,
-        tracking_category_id: element3.categoryId
-      }
-    })
-    if (existDate != null) {
-      await existDate.update({ value: value });
-    }
-    else {
-      try {
-        let trackingCategory = await health_tracking_category.findByPk(element3.categoryId);
-        userCategory = await user_tracking_category.create({
+    let value = fixNumbers(element3.value);
+    if ((element3.categoryId == 9 && (parseInt(value, 10) > 20 && parseInt(value, 10) < 300)) ||
+      (element3.categoryId == 10 && (parseInt(value, 10) > 34 && parseInt(value, 10) < 42))) {
+
+      existDate = await user_tracking_category.findOne({
+        where: {
+          user_id: req.params.userId,
           date: req.body.date,
-          value:value
-        });
-        if (userCategory != null) {
-          await userCategory.setHealth_tracking_category(trackingCategory).catch(async function (err) {
-            let result = await handleError(userCategory, err);
-            if (!result) error = 1;
-            return;
-          })
-          await userCategory.setUser(usr).catch(async function (err) {
-            let result2 = await handleError(userCategory, err);
-            if (!result2) error = 1;
-            return;
-          })
+          tracking_category_id: element3.categoryId
         }
-      } catch (err) {
-        let result3 = await handleError(userCategory, err);
-        if (!result3) error = 1;
-        return;
+      })
+      if (existDate != null) {
+        await existDate.update({ value: value });
+      }
+      else {
+        try {
+          let trackingCategory = await health_tracking_category.findByPk(element3.categoryId);
+          userCategory = await user_tracking_category.create({
+            date: req.body.date,
+            value: value
+          });
+          if (userCategory != null) {
+            await userCategory.setHealth_tracking_category(trackingCategory).catch(async function (err) {
+              let result = await handleError(userCategory, err);
+              if (!result) error = 1;
+              return;
+            })
+            await userCategory.setUser(usr).catch(async function (err) {
+              let result2 = await handleError(userCategory, err);
+              if (!result2) error = 1;
+              return;
+            })
+          }
+        } catch (err) {
+          let result3 = await handleError(userCategory, err);
+          if (!result3) error = 1;
+          return;
+        }
+
       }
     }
   }
@@ -1087,6 +1085,11 @@ router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) =>
   }
 
   else if (req.body.status == 1 && req.body.hasValue == 1) {
+    let value = fixNumbers(req.body.value);
+    if ((req.body.categoryId == 9 && (parseInt(value, 10) < 20 || parseInt(value, 10) > 300)) ||
+      (req.body.categoryId == 10 && (parseInt(value, 10) < 34 || parseInt(value, 10) > 42))) {
+      return res.status(400).json({ message: await translate("INVALIDENTRY", req.params.lang) });
+    }
     existDate = await user_tracking_category.findOne({
       where: {
         user_id: req.params.userId,
@@ -1095,14 +1098,14 @@ router.post("/v2.1/userInfo/:userId/:lang", auth, checkDate, async (req, res) =>
       }
     })
     if (existDate != null) {
-      await existDate.update({ value: req.body.value });
+      await existDate.update({ value: value });
     }
     else {
       try {
         let trackingCategory = await health_tracking_category.findByPk(req.body.categoryId);
         userCategory = await user_tracking_category.create({
           date: req.body.date,
-          value: req.body.value,
+          value: value,
         });
         await userCategory.setHealth_tracking_category(trackingCategory);
         await userCategory.setUser(usr);
