@@ -208,8 +208,8 @@ router.post("/syncNote/:userId/:lang", auth, async (req, res) => {
           return res.status(502);
         })
       }
-
-      result.push({ id: uNote.id, title: uNote.title, content: uNote.content, date: uNote.note_date, updatedAt: uNote.updatedAt });
+      let updated=moment(uNote.updatedAt.toLocaleString('en-US', { timeZone: 'Asia/Tehran' })).format('YYYY-MM-DD HH:MM:SS');
+      result.push({ id: uNote.id, title: uNote.title, content: uNote.content, date: uNote.note_date, updatedAt: updated });
     }
 
   }
